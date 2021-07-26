@@ -1,6 +1,6 @@
 ![realworld](./docs/image/realworld.png)
 
-[![build](https://github.com/real-world-study/realworld/actions/workflows/build.yml/badge.svg)](https://github.com/real-world-study/realworld/actions/workflows/build.yml)[![codecov](https://codecov.io/gh/real-world-study/realworld/branch/main/graph/badge.svg?token=K0HJBEGZ3O)](https://codecov.io/gh/real-world-study/realworld)
+[![build](https://github.com/real-world-study/realworld/actions/workflows/build.yml/badge.svg)](https://github.com/real-world-study/realworld/actions/workflows/build.yml)   [![codecov](https://codecov.io/gh/real-world-study/realworld/branch/main/graph/badge.svg?token=K0HJBEGZ3O)](https://codecov.io/gh/real-world-study/realworld)
 
 ## Getting started
 
