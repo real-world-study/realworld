@@ -43,6 +43,31 @@ class UserTest {
     }
 
     @Test
+    void userBuilderParamUserTest() {
+
+        // given
+        User input = new User.Builder()
+                .id(1L)
+                .username(new Username("username"))
+                .email(new Email("email"))
+                .password(new Password("password"))
+                .bio("bio")
+                .image("image")
+                .build();
+
+        // when
+        User user = new User.Builder(input).build();
+
+        // then
+        assertThat(user.getId()).isEqualTo(input.getId());
+        assertThat(user.getUsername()).isEqualTo(input.getUsername());
+        assertThat(user.getEmail()).isEqualTo(input.getEmail());
+        assertThat(user.getPassword()).isEqualTo(input.getPassword());
+        assertThat(user.getBio()).isEqualTo(input.getBio());
+        assertThat(user.getImage()).isEqualTo(input.getImage());
+    }
+
+    @Test
     @DisplayName("equals hashCode 테스트")
     void userEqualsHashCodeTest() {
 

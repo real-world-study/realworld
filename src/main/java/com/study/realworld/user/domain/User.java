@@ -86,6 +86,15 @@ public class User {
         public Builder() {
         }
 
+        public Builder(User user) {
+            id = user.getId();
+            username = user.getUsername();
+            email = user.getEmail();
+            password = user.getPassword();
+            bio = user.getBio();
+            image = user.getImage();
+        }
+
         public Builder id(Long id) {
             this.id = id;
             return this;
