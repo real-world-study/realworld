@@ -13,7 +13,7 @@ public class Username {
     @NotBlank(message = "username must be provided.")
     @Size(max = 20, message = "username length must be less than 20 characters.")
     @Pattern(regexp = "^[0-9a-zA-Z가-힣]*$", message = "Invalid username name")
-    @Column(name = "username", length = 20, nullable = false)
+    @Column(name = "username", length = 20, unique = true, nullable = false)
     private String name;
 
     protected Username() {

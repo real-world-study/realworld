@@ -10,7 +10,7 @@ public class Email {
 
     @NotEmpty(message = "address must be provided.")
     @javax.validation.constraints.Email(message = "Invalid email address")
-    @Column(name = "email", length = 50, nullable = false)
+    @Column(name = "email", length = 50, unique = true, nullable = false)
     private String address;
 
     protected Email() {
