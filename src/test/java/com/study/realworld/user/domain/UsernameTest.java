@@ -125,7 +125,7 @@ class UsernameTest {
 
     @Test
     @DisplayName("equals hashCode 테스트")
-    void usernameToStringHashCodeTest() {
+    void usernameEqualsHashCodeTest() {
 
         // given
         Username username = new Username("test@test.com");

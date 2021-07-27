@@ -79,7 +79,7 @@ class EmailTest {
 
     @Test
     @DisplayName("equals hashCode 테스트")
-    void emailToStringHashCodeTest() {
+    void emailEqualsHashCodeTest() {
 
         // given
         Email email = new Email("test@test.com");
