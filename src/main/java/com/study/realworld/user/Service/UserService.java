@@ -5,9 +5,13 @@ import com.study.realworld.user.domain.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
 
 import static com.study.realworld.user.domain.Password.encode;
 
+@Validated
 @Service
 public class UserService {
 
@@ -20,7 +24,7 @@ public class UserService {
     }
 
     @Transactional
-    public User join(User user) {
+    public User join(@Valid User user) {
         userRepository.findByUsername(user.getUsername())
                 .ifPresent(param -> {
                     throw new RuntimeException("already user username");
