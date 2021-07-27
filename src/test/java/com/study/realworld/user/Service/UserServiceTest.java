@@ -1,21 +1,18 @@
 package com.study.realworld.user.Service;
 
-import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.User;
-import com.study.realworld.user.domain.UserRepository;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +21,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -66,19 +66,22 @@ class UserServiceTest {
         // setup & given
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode("password")).thenReturn("encoded_password");
         User input = new User.Builder()
                 .username(new Username("username"))
                 .email(new Email("email"))
+                .password(new Password("password"))
                 .bio("bio")
                 .image("image")
                 .build();
-        when(userRepository.save(input)).thenReturn(
+        when(userRepository.save(any())).thenReturn(
                 new User.Builder()
                         .id(1L)
-                        .username(new Username("username"))
-                        .email(new Email("email"))
-                        .bio("bio")
-                        .image("image")
+                        .username(input.getUsername())
+                        .email(input.getEmail())
+                        .password(new Password("encoded_password"))
+                        .bio(input.getBio())
+                        .image(input.getImage())
                         .build()
         );
 
@@ -89,6 +92,7 @@ class UserServiceTest {
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo(new Username("username"));
         assertThat(user.getEmail()).isEqualTo(new Email("email"));
+        assertThat(user.getPassword().getPassword()).isEqualTo(new Password("encoded_password").getPassword());
         assertThat(user.getBio()).isEqualTo("bio");
         assertThat(user.getImage()).isEqualTo("image");
     }
