@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ main, chance0523, com8599, DolphaGo, hoony-lab, jinyoungchoi95, JunHo-YH, povia, sujl95 ]
+    branches: [ main, chance0523, com8599, DolphaGo, hoony-lab, jinyoungchoi95, JunHo-YH, povia, sujl95 , kwj1270 ]
   pull_request:
-    branches: [ main, chance0523, com8599, DolphaGo, hoony-lab, jinyoungchoi95, JunHo-YH, povia, sujl95 ]
+    branches: [ main, chance0523, com8599, DolphaGo, hoony-lab, jinyoungchoi95, JunHo-YH, povia, sujl95 , kwj1270 ]
 
 jobs:
   build:
