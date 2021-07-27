@@ -9,7 +9,8 @@ CREATE TABLE user
     created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     updated_at      DATETIME        DEFAULT NULL,
     deleted_at      DATETIME        DEFAULT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT unique_email UNIQUE (email)
 );
 
 CREATE TABLE follow
