@@ -1,15 +1,19 @@
 package com.study.realworld.user.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
+@Embeddable
 public class Username {
 
     @NotBlank(message = "username must be provided.")
     @Size(max = 20, message = "username length must be less than 20 characters.")
     @Pattern(regexp = "^[0-9a-zA-Z가-힣]*$", message = "Invalid username name")
+    @Column(name = "username", length = 20, nullable = false)
     private String name;
 
     protected Username() {

@@ -1,19 +1,29 @@
 package com.study.realworld.user.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "user")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Embedded
     private Username username;
 
+    @Embedded
     private Email email;
 
+    @Embedded
     private Password password;
 
+    @Column(name = "bio")
     private String bio;
 
+    @Column(name = "image")
     private String image;
 
     public Long getId() {

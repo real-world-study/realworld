@@ -1,12 +1,16 @@
 package com.study.realworld.user.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
+@Embeddable
 public class Email {
 
     @NotEmpty(message = "address must be provided.")
     @javax.validation.constraints.Email(message = "Invalid email address")
+    @Column(name = "email", length = 50, nullable = false)
     private String address;
 
     protected Email() {
