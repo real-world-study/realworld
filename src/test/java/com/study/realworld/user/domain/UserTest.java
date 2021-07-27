@@ -1,5 +1,6 @@
 package com.study.realworld.user.domain;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,6 +40,20 @@ class UserTest {
         assertThat(user.getPassword()).isEqualTo(password);
         assertThat(user.getBio()).isEqualTo(bio);
         assertThat(user.getImage()).isEqualTo(image);
+    }
+
+    @Test
+    @DisplayName("equals hashCode 테스트")
+    void userEqualsHashCodeTest() {
+
+        // given
+        User user = new User.Builder().email(new Email("test@test.com")).build();
+        User copyUser = new User.Builder().email(new Email("test@test.com")).build();
+
+        // when & then
+        assertThat(user)
+                .isEqualTo(copyUser)
+                .hasSameHashCodeAs(copyUser);
     }
 
 }
