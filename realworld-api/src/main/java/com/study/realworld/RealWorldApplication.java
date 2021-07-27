@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class RealWorldApplication {
     public static void main(String[] args) {
-        SpringApplication.run(RealWorldApplication.class);
+        SpringApplication.run(RealWorldApplication.class, args);
     }
 }
