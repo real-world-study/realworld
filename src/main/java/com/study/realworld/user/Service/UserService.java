@@ -31,12 +31,8 @@ public class UserService {
                 });
 
         return userRepository.save(
-                new User.Builder()
-                    .username(user.getUsername())
-                    .email(user.getEmail())
+                new User.Builder(user)
                     .password(encode(user.getPassword().getPassword(), passwordEncoder))
-                    .bio(user.getBio())
-                    .image(user.getImage())
                     .build()
         );
     }
