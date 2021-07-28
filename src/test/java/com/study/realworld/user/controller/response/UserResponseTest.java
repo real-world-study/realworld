@@ -16,7 +16,7 @@ class UserResponseTest {
     void userResponseFromUserTest() {
 
         // given
-        User user = new User.Builder()
+        User user = User.Builder()
             .username(new Username("username"))
             .email(new Email("test@test.com"))
             .bio("bio")

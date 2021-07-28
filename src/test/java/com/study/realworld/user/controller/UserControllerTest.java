@@ -53,7 +53,7 @@ class UserControllerTest {
         // setup
         UserJoinRequest request = new UserJoinRequest("username", "test@test.com", "password", null,
             null);
-        User user = new User.Builder()
+        User user = User.Builder()
             .username(new Username(request.getUsername()))
             .email(new Email(request.getEmail()))
             .password(new Password(request.getPassword()))

@@ -35,7 +35,7 @@ class UserTest {
         String image = "image.jpg";
 
         // when
-        User user = new User.Builder()
+        User user = User.Builder()
             .id(id)
             .username(username)
             .email(email)
@@ -57,7 +57,7 @@ class UserTest {
     void userBuilderParamUserTest() {
 
         // given
-        User input = new User.Builder()
+        User input = User.Builder()
             .id(1L)
             .username(new Username("username"))
             .email(new Email("email"))
@@ -67,7 +67,7 @@ class UserTest {
             .build();
 
         // when
-        User user = new User.Builder(input).build();
+        User user = User.Builder(input).build();
 
         // then
         assertThat(user.getId()).isEqualTo(input.getId());
@@ -83,7 +83,7 @@ class UserTest {
     void userEncodePasswordTest() {
 
         // setup & given
-        User user = new User.Builder().password(new Password("password")).build();
+        User user = User.Builder().password(new Password("password")).build();
         when(passwordEncoder.encode(valueOf(user.getPassword()))).thenReturn("encoded_password");
 
         // when
@@ -98,8 +98,8 @@ class UserTest {
     void userEqualsHashCodeTest() {
 
         // given
-        User user = new User.Builder().email(new Email("test@test.com")).build();
-        User copyUser = new User.Builder().email(new Email("test@test.com")).build();
+        User user = User.Builder().email(new Email("test@test.com")).build();
+        User copyUser = User.Builder().email(new Email("test@test.com")).build();
 
         // when & then
         assertThat(user)

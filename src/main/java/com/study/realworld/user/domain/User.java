@@ -85,6 +85,14 @@ public class User {
         return Objects.hash(email);
     }
 
+    public static Builder Builder() {
+        return new Builder();
+    }
+
+    public static Builder Builder(User user) {
+        return new Builder(user);
+    }
+
     public static class Builder {
 
         private Long id;
@@ -94,10 +102,10 @@ public class User {
         private String bio;
         private String image;
 
-        public Builder() {
+        private Builder() {
         }
 
-        public Builder(User user) {
+        private Builder(User user) {
             id = user.getId();
             username = user.getUsername();
             email = user.getEmail();

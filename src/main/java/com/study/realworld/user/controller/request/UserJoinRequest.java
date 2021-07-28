@@ -60,7 +60,7 @@ public class UserJoinRequest {
     }
 
     public static User from(UserJoinRequest request) {
-        return new User.Builder()
+        return User.Builder()
             .username(new Username(request.getUsername()))
             .email(new Email(request.getEmail()))
             .password(new Password(request.getPassword()))

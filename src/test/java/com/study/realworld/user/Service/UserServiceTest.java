@@ -34,7 +34,7 @@ class UserServiceTest {
     void existUsernameJoinTest() {
 
         // setup & given
-        User user = new User.Builder().build();
+        User user = User.Builder().build();
         when(userRepository.findByUsername(any()))
             .thenReturn(Optional.of(user));
 
@@ -48,7 +48,7 @@ class UserServiceTest {
     void existEmailJoinTest() {
 
         // setup & given
-        User user = new User.Builder().build();
+        User user = User.Builder().build();
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
 
@@ -66,7 +66,7 @@ class UserServiceTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         Password password = new Password("password");
         when(passwordEncoder.encode(valueOf(password))).thenReturn("encoded_password");
-        User input = new User.Builder()
+        User input = User.Builder()
             .username(new Username("username"))
             .email(new Email("email"))
             .password(password)
@@ -74,7 +74,7 @@ class UserServiceTest {
             .image("image")
             .build();
         when(userRepository.save(any())).thenReturn(
-            new User.Builder()
+            User.Builder()
                 .id(1L)
                 .username(input.getUsername())
                 .email(input.getEmail())
