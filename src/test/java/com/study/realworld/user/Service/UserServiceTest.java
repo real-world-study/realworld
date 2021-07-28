@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+import static java.lang.String.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,11 +64,12 @@ class UserServiceTest {
         // setup & given
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
-        when(passwordEncoder.encode("password")).thenReturn("encoded_password");
+        Password password = new Password("password");
+        when(passwordEncoder.encode(valueOf(password))).thenReturn("encoded_password");
         User input = new User.Builder()
             .username(new Username("username"))
             .email(new Email("email"))
-            .password(new Password("password"))
+            .password(password)
             .bio("bio")
             .image("image")
             .build();
@@ -90,7 +92,7 @@ class UserServiceTest {
         assertThat(user.getUsername()).isEqualTo(new Username("username"));
         assertThat(user.getEmail()).isEqualTo(new Email("email"));
         assertThat(user.getPassword().getPassword())
-            .isEqualTo(new Password("encoded_password").getPassword());
+            .isEqualTo("encoded_password");
         assertThat(user.getBio()).isEqualTo("bio");
         assertThat(user.getImage()).isEqualTo("image");
     }
