@@ -12,8 +12,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 
-import static com.study.realworld.user.domain.Password.encode;
-
 @Validated
 @Service
 public class UserService {
