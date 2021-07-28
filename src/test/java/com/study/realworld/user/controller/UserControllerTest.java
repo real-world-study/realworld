@@ -42,8 +42,8 @@ class UserControllerTest {
     @BeforeEach
     void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
-                .alwaysExpect(status().isOk())
-                .build();
+            .alwaysExpect(status().isOk())
+            .build();
         objectMapper = new ObjectMapper();
     }
 
@@ -51,14 +51,15 @@ class UserControllerTest {
     void joinTest() throws Exception {
 
         // setup
-        UserJoinRequest request = new UserJoinRequest("username", "test@test.com", "password", null, null);
+        UserJoinRequest request = new UserJoinRequest("username", "test@test.com", "password", null,
+            null);
         User user = new User.Builder()
-                .username(new Username(request.getUsername()))
-                .email(new Email(request.getEmail()))
-                .password(new Password(request.getPassword()))
-                .bio(request.getBio())
-                .image(request.getImage())
-                .build();
+            .username(new Username(request.getUsername()))
+            .email(new Email(request.getEmail()))
+            .password(new Password(request.getPassword()))
+            .bio(request.getBio())
+            .image(request.getImage())
+            .build();
 
         when(userService.join(any())).thenReturn(user);
 
@@ -67,19 +68,19 @@ class UserControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(post(URL)
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
+            .content(objectMapper.writeValueAsString(request))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
 
         // then
         resultActions
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-                .andExpect(jsonPath("$.user.username", is("username")))
-                .andExpect(jsonPath("$.user.email", is("test@test.com")))
-                .andExpect(jsonPath("$.user.bio", is("null")))
-                .andExpect(jsonPath("$.user.image", is("null")))
+            .andExpect(jsonPath("$.user.username", is("username")))
+            .andExpect(jsonPath("$.user.email", is("test@test.com")))
+            .andExpect(jsonPath("$.user.bio", is("null")))
+            .andExpect(jsonPath("$.user.image", is("null")))
         ;
     }
 }

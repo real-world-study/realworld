@@ -20,8 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/api/users", "/api/users/login").permitAll()
-                .anyRequest().authenticated();
+            .antMatchers("/api/users", "/api/users/login").permitAll()
+            .anyRequest().authenticated();
     }
 
     @Bean

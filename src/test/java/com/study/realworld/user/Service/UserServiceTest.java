@@ -33,14 +33,15 @@ class UserServiceTest {
     void existUsernameJoinTest() {
 
         // setup
-        when(userRepository.findByUsername(any())).thenReturn(Optional.of(new User.Builder().build()));
+        when(userRepository.findByUsername(any()))
+            .thenReturn(Optional.of(new User.Builder().build()));
 
         // given
         User user = new User.Builder().build();
 
         // given & when
         assertThatExceptionOfType(Exception.class)
-                .isThrownBy(() -> userService.join(user));
+            .isThrownBy(() -> userService.join(user));
     }
 
     @Test
@@ -56,7 +57,7 @@ class UserServiceTest {
 
         // when & then
         assertThatExceptionOfType(Exception.class)
-                .isThrownBy(() -> userService.join(user));
+            .isThrownBy(() -> userService.join(user));
     }
 
     @Test
@@ -68,21 +69,21 @@ class UserServiceTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(passwordEncoder.encode("password")).thenReturn("encoded_password");
         User input = new User.Builder()
-                .username(new Username("username"))
-                .email(new Email("email"))
-                .password(new Password("password"))
-                .bio("bio")
-                .image("image")
-                .build();
+            .username(new Username("username"))
+            .email(new Email("email"))
+            .password(new Password("password"))
+            .bio("bio")
+            .image("image")
+            .build();
         when(userRepository.save(any())).thenReturn(
-                new User.Builder()
-                        .id(1L)
-                        .username(input.getUsername())
-                        .email(input.getEmail())
-                        .password(new Password("encoded_password"))
-                        .bio(input.getBio())
-                        .image(input.getImage())
-                        .build()
+            new User.Builder()
+                .id(1L)
+                .username(input.getUsername())
+                .email(input.getEmail())
+                .password(new Password("encoded_password"))
+                .bio(input.getBio())
+                .image(input.getImage())
+                .build()
         );
 
         // when
@@ -92,7 +93,8 @@ class UserServiceTest {
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo(new Username("username"));
         assertThat(user.getEmail()).isEqualTo(new Email("email"));
-        assertThat(user.getPassword().getPassword()).isEqualTo(new Password("encoded_password").getPassword());
+        assertThat(user.getPassword().getPassword())
+            .isEqualTo(new Password("encoded_password").getPassword());
         assertThat(user.getBio()).isEqualTo("bio");
         assertThat(user.getImage()).isEqualTo("image");
     }

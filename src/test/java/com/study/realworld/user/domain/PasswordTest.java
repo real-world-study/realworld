@@ -46,11 +46,12 @@ class PasswordTest {
 
         // when
         Collection<ConstraintViolation<Password>> constraintViolations
-                = validator.validate(password);
+            = validator.validate(password);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("password length must be between 6 and 20 characters.", constraintViolations.iterator().next().getMessage());
+        assertEquals("password length must be between 6 and 20 characters.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -62,11 +63,12 @@ class PasswordTest {
 
         // when
         Collection<ConstraintViolation<Password>> constraintViolations
-                = validator.validate(password);
+            = validator.validate(password);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("password length must be between 6 and 20 characters.", constraintViolations.iterator().next().getMessage());
+        assertEquals("password length must be between 6 and 20 characters.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -78,11 +80,12 @@ class PasswordTest {
 
         // when
         Collection<ConstraintViolation<Password>> constraintViolations
-                = validator.validate(password);
+            = validator.validate(password);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("password must be provided.", constraintViolations.iterator().next().getMessage());
+        assertEquals("password must be provided.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -94,11 +97,12 @@ class PasswordTest {
 
         // when
         Collection<ConstraintViolation<Password>> constraintViolations
-                = validator.validate(password);
+            = validator.validate(password);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("password must be provided.", constraintViolations.iterator().next().getMessage());
+        assertEquals("password must be provided.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test

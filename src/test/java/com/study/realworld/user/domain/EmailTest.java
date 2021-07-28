@@ -38,7 +38,7 @@ class EmailTest {
 
         // when
         Collection<ConstraintViolation<Email>> constraintViolations
-                = validator.validate(email);
+            = validator.validate(email);
 
         // then
         assertEquals(1, constraintViolations.size());
@@ -54,11 +54,12 @@ class EmailTest {
 
         // when
         Collection<ConstraintViolation<Email>> constraintViolations
-                = validator.validate(email);
+            = validator.validate(email);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("address must be provided.", constraintViolations.iterator().next().getMessage());
+        assertEquals("address must be provided.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -70,11 +71,12 @@ class EmailTest {
 
         // when
         Collection<ConstraintViolation<Email>> constraintViolations
-                = validator.validate(email);
+            = validator.validate(email);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("address must be provided.", constraintViolations.iterator().next().getMessage());
+        assertEquals("address must be provided.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -87,8 +89,8 @@ class EmailTest {
 
         // when & then
         assertThat(email)
-                .isEqualTo(copyEmail)
-                .hasSameHashCodeAs(copyEmail);
+            .isEqualTo(copyEmail)
+            .hasSameHashCodeAs(copyEmail);
     }
 
     @Test

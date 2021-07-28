@@ -53,7 +53,8 @@ public class User {
     protected User() {
     }
 
-    private User(Long id, Username username, Email email, Password password, String bio, String image) {
+    private User(Long id, Username username, Email email, Password password, String bio,
+        String image) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -64,8 +65,12 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
         return Objects.equals(email, user.email);
     }
@@ -76,6 +81,7 @@ public class User {
     }
 
     public static class Builder {
+
         private Long id;
         private Username username;
         private Email email;

@@ -25,13 +25,13 @@ class UserTest {
 
         // when
         User user = new User.Builder()
-                .id(id)
-                .username(username)
-                .email(email)
-                .password(password)
-                .bio(bio)
-                .image(image)
-                .build();
+            .id(id)
+            .username(username)
+            .email(email)
+            .password(password)
+            .bio(bio)
+            .image(image)
+            .build();
 
         // then
         assertThat(user.getId()).isEqualTo(id);
@@ -47,13 +47,13 @@ class UserTest {
 
         // given
         User input = new User.Builder()
-                .id(1L)
-                .username(new Username("username"))
-                .email(new Email("email"))
-                .password(new Password("password"))
-                .bio("bio")
-                .image("image")
-                .build();
+            .id(1L)
+            .username(new Username("username"))
+            .email(new Email("email"))
+            .password(new Password("password"))
+            .bio("bio")
+            .image("image")
+            .build();
 
         // when
         User user = new User.Builder(input).build();
@@ -77,8 +77,8 @@ class UserTest {
 
         // when & then
         assertThat(user)
-                .isEqualTo(copyUser)
-                .hasSameHashCodeAs(copyUser);
+            .isEqualTo(copyUser)
+            .hasSameHashCodeAs(copyUser);
     }
 
 }

@@ -30,20 +30,20 @@ public class UserService {
         checkOverlapByUsernameAndEmail(input.getUsername(), input.getEmail());
 
         User user = new User.Builder(input)
-                .password(encode(input.getPassword().getPassword(), passwordEncoder))
-                .build();
+            .password(encode(input.getPassword().getPassword(), passwordEncoder))
+            .build();
         return userRepository.save(user);
     }
 
     private void checkOverlapByUsernameAndEmail(Username username, Email email) {
         userRepository.findByUsername(username)
-                .ifPresent(param -> {
-                    throw new RuntimeException("already user username");
-                });
+            .ifPresent(param -> {
+                throw new RuntimeException("already user username");
+            });
         userRepository.findByEmail(email)
-                .ifPresent(param -> {
-                    throw new RuntimeException("already user email");
-                });
+            .ifPresent(param -> {
+                throw new RuntimeException("already user email");
+            });
     }
 
 }

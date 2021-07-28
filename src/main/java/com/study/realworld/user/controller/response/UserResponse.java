@@ -10,12 +10,16 @@ import static java.lang.String.valueOf;
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class UserResponse {
+
     @JsonProperty("username")
     private final String username;
+
     @JsonProperty("email")
     private final String email;
+
     @JsonProperty("bio")
     private final String bio;
+
     @JsonProperty("image")
     private final String image;
 
@@ -28,10 +32,10 @@ public class UserResponse {
 
     public static UserResponse fromUser(User user) {
         return new UserResponse(
-                valueOf(user.getUsername()),
-                valueOf(user.getEmail()),
-                valueOf(user.getBio()),
-                valueOf(user.getImage())
+            valueOf(user.getUsername()),
+            valueOf(user.getEmail()),
+            valueOf(user.getBio()),
+            valueOf(user.getImage())
         );
     }
 

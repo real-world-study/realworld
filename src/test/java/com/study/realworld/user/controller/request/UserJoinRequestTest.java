@@ -20,7 +20,7 @@ class UserJoinRequestTest {
 
         // given
         UserJoinRequest userJoinRequest = new UserJoinRequest(
-                "username", "test@test.com", "password", "bio", "image"
+            "username", "test@test.com", "password", "bio", "image"
         );
 
         // when
@@ -39,7 +39,7 @@ class UserJoinRequestTest {
 
         // given
         UserJoinRequest userJoinRequest = new UserJoinRequest(
-                "username", "test@test.com", "password", "bio", "image"
+            "username", "test@test.com", "password", "bio", "image"
         );
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -48,12 +48,12 @@ class UserJoinRequestTest {
 
         // when
         assertThat(result).isEqualTo(
-                "{\"user\":{\"username\":\"" + userJoinRequest.getUsername()
-                        + "\",\"email\":\"" + userJoinRequest.getEmail()
-                        + "\",\"password\":\"" + userJoinRequest.getPassword()
-                        + "\",\"bio\":\"" + userJoinRequest.getBio()
-                        + "\",\"image\":\"" + userJoinRequest.getImage()
-                        + "\"}}"
+            "{\"user\":{\"username\":\"" + userJoinRequest.getUsername()
+                + "\",\"email\":\"" + userJoinRequest.getEmail()
+                + "\",\"password\":\"" + userJoinRequest.getPassword()
+                + "\",\"bio\":\"" + userJoinRequest.getBio()
+                + "\",\"image\":\"" + userJoinRequest.getImage()
+                + "\"}}"
         );
     }
 

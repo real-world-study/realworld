@@ -17,11 +17,11 @@ class UserResponseTest {
 
         // given
         User user = new User.Builder()
-                .username(new Username("username"))
-                .email(new Email("test@test.com"))
-                .bio("bio")
-                .image("image")
-                .build();
+            .username(new Username("username"))
+            .email(new Email("test@test.com"))
+            .bio("bio")
+            .image("image")
+            .build();
 
         // when
         UserResponse result = fromUser(user);
@@ -38,7 +38,7 @@ class UserResponseTest {
 
         // given
         UserResponse userResponse = new UserResponse(
-                "username", "test@test.com", "bio", "image"
+            "username", "test@test.com", "bio", "image"
         );
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -47,11 +47,11 @@ class UserResponseTest {
 
         // then
         assertThat(result).isEqualTo(
-                "{\"user\":{\"username\":\"" + userResponse.getUsername()
-                        + "\",\"email\":\"" + userResponse.getEmail()
-                        + "\",\"bio\":\"" + userResponse.getBio()
-                        + "\",\"image\":\"" + userResponse.getImage()
-                        + "\"}}"
+            "{\"user\":{\"username\":\"" + userResponse.getUsername()
+                + "\",\"email\":\"" + userResponse.getEmail()
+                + "\",\"bio\":\"" + userResponse.getBio()
+                + "\",\"image\":\"" + userResponse.getImage()
+                + "\"}}"
         );
     }
 

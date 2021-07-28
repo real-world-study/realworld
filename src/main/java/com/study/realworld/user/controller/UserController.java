@@ -23,7 +23,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<UserResponse> join(@RequestBody UserJoinRequest request) {
         return new ResponseEntity<>(
-                fromUser(userService.join(from(request))), HttpStatus.OK
+            fromUser(userService.join(from(request))), HttpStatus.OK
         );
     }
 }

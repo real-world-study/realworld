@@ -37,11 +37,12 @@ class UsernameTest {
 
         // when
         Collection<ConstraintViolation<Username>> constraintViolations
-                = validator.validate(username);
+            = validator.validate(username);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("username must be provided.", constraintViolations.iterator().next().getMessage());
+        assertEquals("username must be provided.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -53,11 +54,12 @@ class UsernameTest {
 
         // when
         Collection<ConstraintViolation<Username>> constraintViolations
-                = validator.validate(username);
+            = validator.validate(username);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("username must be provided.", constraintViolations.iterator().next().getMessage());
+        assertEquals("username must be provided.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -69,7 +71,7 @@ class UsernameTest {
 
         // when
         Collection<ConstraintViolation<Username>> constraintViolations
-                = validator.validate(username);
+            = validator.validate(username);
 
         // then
         assertEquals(2, constraintViolations.size());
@@ -84,11 +86,12 @@ class UsernameTest {
 
         // when
         Collection<ConstraintViolation<Username>> constraintViolations
-                = validator.validate(username);
+            = validator.validate(username);
 
         // then
         assertEquals(1, constraintViolations.size());
-        assertEquals("username length must be less than 20 characters.", constraintViolations.iterator().next().getMessage());
+        assertEquals("username length must be less than 20 characters.",
+            constraintViolations.iterator().next().getMessage());
     }
 
     @Test
@@ -100,7 +103,7 @@ class UsernameTest {
 
         // when
         Collection<ConstraintViolation<Username>> constraintViolations
-                = validator.validate(username);
+            = validator.validate(username);
 
         // then
         assertEquals(0, constraintViolations.size());
@@ -116,7 +119,7 @@ class UsernameTest {
 
         // when
         Collection<ConstraintViolation<Username>> constraintViolations
-                = validator.validate(username);
+            = validator.validate(username);
 
         // then
         assertEquals(1, constraintViolations.size());
@@ -133,8 +136,8 @@ class UsernameTest {
 
         // when & then
         assertThat(username)
-                .isEqualTo(copyUsername)
-                .hasSameHashCodeAs(copyUsername);
+            .isEqualTo(copyUsername)
+            .hasSameHashCodeAs(copyUsername);
     }
 
     @Test
