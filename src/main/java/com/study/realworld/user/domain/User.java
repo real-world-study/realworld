@@ -65,7 +65,7 @@ public class User {
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
-        this.password = Password.encode(password, passwordEncoder);
+        this.password = Password.encode(this.password, passwordEncoder);
     }
 
     @Override
