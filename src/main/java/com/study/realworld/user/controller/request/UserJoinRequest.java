@@ -45,6 +45,14 @@ public class UserJoinRequest {
         return image;
     }
 
+    protected UserJoinRequest(String username, String email, String password, String bio, String image) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.image = image;
+    }
+
     public static User from(UserJoinRequest request) {
         return new User.Builder()
                 .username(new Username(request.getUsername()))

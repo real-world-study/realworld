@@ -1,50 +1,60 @@
 package com.study.realworld.user.controller.request;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.user.domain.User;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.study.realworld.user.controller.request.UserJoinRequest.from;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class UserJoinRequestTest {
-
-    @Mock
-    private UserJoinRequest userJoinRequest;
 
     @Test
     void userJoinRequestTest() {
         UserJoinRequest userJoinRequest = new UserJoinRequest();
-        assertThat(userJoinRequest.getUsername()).isNull();
-        assertThat(userJoinRequest.getEmail()).isNull();
-        assertThat(userJoinRequest.getPassword()).isNull();
-        assertThat(userJoinRequest.getBio()).isNull();
-        assertThat(userJoinRequest.getImage()).isNull();
     }
 
     @Test
     void userJoinRequestFromTest() {
 
         // given
-        when(userJoinRequest.getUsername()).thenReturn("username");
-        when(userJoinRequest.getEmail()).thenReturn("test@test.com");
-        when(userJoinRequest.getPassword()).thenReturn("password");
-        when(userJoinRequest.getBio()).thenReturn("bio");
-        when(userJoinRequest.getImage()).thenReturn("image");
+        UserJoinRequest userJoinRequest = new UserJoinRequest(
+                "username", "test@test.com", "password", "bio", "image"
+        );
 
         // when
         User user = from(userJoinRequest);
 
         // then
-        assertThat(user.getUsername().toString()).isEqualTo("username");
-        assertThat(user.getEmail().toString()).isEqualTo("test@test.com");
+        assertThat(user.getUsername().toString()).isEqualTo(userJoinRequest.getUsername());
+        assertThat(user.getEmail().toString()).isEqualTo(userJoinRequest.getEmail());
         assertThat(user.getPassword()).isNotNull();
-        assertThat(user.getBio()).isEqualTo("bio");
-        assertThat(user.getImage()).isEqualTo("image");
+        assertThat(user.getBio()).isEqualTo(userJoinRequest.getBio());
+        assertThat(user.getImage()).isEqualTo(userJoinRequest.getImage());
+    }
+
+    @Test
+    void userJoinRequestJacksonTest() throws JsonProcessingException {
+
+        // given
+        UserJoinRequest userJoinRequest = new UserJoinRequest(
+                "username", "test@test.com", "password", "bio", "image"
+        );
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // then
+        String result = objectMapper.writeValueAsString(userJoinRequest);
+
+        // when
+        assertThat(result).isEqualTo(
+                "{\"user\":{\"username\":\"" + userJoinRequest.getUsername()
+                        + "\",\"email\":\"" + userJoinRequest.getEmail()
+                        + "\",\"password\":\"" + userJoinRequest.getPassword()
+                        + "\",\"bio\":\"" + userJoinRequest.getBio()
+                        + "\",\"image\":\"" + userJoinRequest.getImage()
+                        + "\"}}"
+        );
     }
 
 }
