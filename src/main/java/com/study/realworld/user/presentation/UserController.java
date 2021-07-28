@@ -25,7 +25,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/users")
+    @PostMapping(value = "/users")
     public ResponseEntity<UserResponse> register(final @Valid @RequestBody UserRegisterRequest request) {
         User user = userService.register(request.toModel());
         return ResponseEntity.ok().body(toResponse(user));

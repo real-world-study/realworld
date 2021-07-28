@@ -20,7 +20,10 @@ public class UserResponse {
     @NotNull
     private final String userName;
     @NotNull
+    @JsonProperty(value = "email")
     private final String email;
+    @JsonProperty(value = "bio")
     private final String bio;
+    @JsonProperty(value = "image")
     private final String image;
 }
