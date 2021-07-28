@@ -45,7 +45,7 @@ public class UserJoinRequest {
         return image;
     }
 
-    protected UserJoinRequest(String username, String email, String password, String bio, String image) {
+    public UserJoinRequest(String username, String email, String password, String bio, String image) {
         this.username = username;
         this.email = email;
         this.password = password;
