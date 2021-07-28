@@ -32,14 +32,12 @@ class UserServiceTest {
     @DisplayName("이미 존재하는 유저네임이 들어왔을 때 Exception이 발생되어야 한다.")
     void existUsernameJoinTest() {
 
-        // setup
-        when(userRepository.findByUsername(any()))
-            .thenReturn(Optional.of(new User.Builder().build()));
-
-        // given
+        // setup & given
         User user = new User.Builder().build();
+        when(userRepository.findByUsername(any()))
+            .thenReturn(Optional.of(user));
 
-        // given & when
+        // when & then
         assertThatExceptionOfType(Exception.class)
             .isThrownBy(() -> userService.join(user));
     }
@@ -48,12 +46,10 @@ class UserServiceTest {
     @DisplayName("이미 존재하는 이메일이 들어왔을 때 Exception이 발생되어야 한다.")
     void existEmailJoinTest() {
 
-        // setup
-        when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(new User.Builder().build()));
-
-        // given
+        // setup & given
         User user = new User.Builder().build();
+        when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
 
         // when & then
         assertThatExceptionOfType(Exception.class)
