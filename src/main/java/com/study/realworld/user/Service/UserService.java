@@ -1,7 +1,9 @@
 package com.study.realworld.user.Service;
 
+import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
+import com.study.realworld.user.domain.Username;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,21 +26,24 @@ public class UserService {
     }
 
     @Transactional
-    public User join(@Valid User user) {
-        userRepository.findByUsername(user.getUsername())
+    public User join(@Valid User input) {
+        checkOverlapByUsernameAndEmail(input.getUsername(), input.getEmail());
+
+        User user = new User.Builder(input)
+                .password(encode(input.getPassword().getPassword(), passwordEncoder))
+                .build();
+        return userRepository.save(user);
+    }
+
+    private void checkOverlapByUsernameAndEmail(Username username, Email email) {
+        userRepository.findByUsername(username)
                 .ifPresent(param -> {
                     throw new RuntimeException("already user username");
                 });
-        userRepository.findByEmail(user.getEmail())
+        userRepository.findByEmail(email)
                 .ifPresent(param -> {
                     throw new RuntimeException("already user email");
                 });
-
-        return userRepository.save(
-                new User.Builder(user)
-                        .password(encode(user.getPassword().getPassword(), passwordEncoder))
-                        .build()
-        );
     }
 
 }
