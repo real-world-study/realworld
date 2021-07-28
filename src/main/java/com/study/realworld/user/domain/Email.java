@@ -33,4 +33,8 @@ public class Email {
         return Objects.hash(address);
     }
 
+    @Override
+    public String toString() {
+        return address;
+    }
 }

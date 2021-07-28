@@ -91,4 +91,18 @@ class EmailTest {
                 .hasSameHashCodeAs(copyEmail);
     }
 
+    @Test
+    @DisplayName("toString 테스트")
+    void emailToStringTest() {
+
+        // given
+        String input = "test@test.com";
+
+        // when
+        Email email = new Email(input);
+
+        // then
+        assertThat(email.toString()).isEqualTo(input);
+    }
+
 }
