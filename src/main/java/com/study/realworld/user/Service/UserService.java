@@ -4,6 +4,7 @@ import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,24 +27,30 @@ public class UserService {
     }
 
     @Transactional
-    public User join(@Valid User input) {
-        checkOverlapByUsernameAndEmail(input.getUsername(), input.getEmail());
+    public User join(@Valid User user) {
+        checkDuplicatedByUsernameOrEmail(user.getUsername(), user.getEmail());
 
-        User user = new User.Builder(input)
-            .password(encode(input.getPassword().getPassword(), passwordEncoder))
-            .build();
+        user.encodePassword(passwordEncoder);
         return userRepository.save(user);
     }
 
-    private void checkOverlapByUsernameAndEmail(Username username, Email email) {
-        userRepository.findByUsername(username)
+    private void checkDuplicatedByUsernameOrEmail(Username username, Email email) {
+        findByUsername(username)
             .ifPresent(param -> {
                 throw new RuntimeException("already user username");
             });
-        userRepository.findByEmail(email)
+        findByEmail(email)
             .ifPresent(param -> {
                 throw new RuntimeException("already user email");
             });
+    }
+
+    private Optional<User> findByUsername(Username username) {
+        return userRepository.findByUsername(username);
+    }
+
+    private Optional<User> findByEmail(Email email) {
+        return userRepository.findByEmail(email);
     }
 
 }

@@ -113,10 +113,10 @@ class PasswordTest {
         when(passwordEncoder.encode(any())).thenReturn("encoded_password");
 
         // given
-        String input = "password";
+        Password password = new Password("password");
 
         // when
-        Password result = encode(input, passwordEncoder);
+        Password result = encode(password, passwordEncoder);
 
         // then
         assertThat(result.getPassword()).isEqualTo("encoded_password");

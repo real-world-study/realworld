@@ -1,5 +1,7 @@
 package com.study.realworld.user.domain;
 
+import static java.lang.String.valueOf;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Column;
@@ -26,8 +28,8 @@ public class Password {
         this.password = password;
     }
 
-    public static Password encode(String password, PasswordEncoder passwordEncoder) {
-        return new Password(passwordEncoder.encode(password));
+    public static Password encode(Password password, PasswordEncoder passwordEncoder) {
+        return new Password(passwordEncoder.encode(valueOf(password)));
     }
 
     public boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) {

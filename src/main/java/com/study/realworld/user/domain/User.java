@@ -2,6 +2,7 @@ package com.study.realworld.user.domain;
 
 import javax.persistence.*;
 import java.util.Objects;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "user")
@@ -61,6 +62,10 @@ public class User {
         this.password = password;
         this.bio = bio;
         this.image = image;
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = Password.encode(password, passwordEncoder);
     }
 
     @Override
