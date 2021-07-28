@@ -1,5 +1,6 @@
 package com.study.realworld.user.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,13 @@ class PasswordTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    private Validator validator;
+
+    @BeforeEach
+    void beforeEach() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
     @Test
     void passwordTest() {
         Password password = new Password();
@@ -34,7 +42,6 @@ class PasswordTest {
     void passwordMaxSizeTest() {
 
         // given
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Password password = new Password("12345678901234567890123");
 
         // when
@@ -51,7 +58,6 @@ class PasswordTest {
     void passwordMinSizeTest() {
 
         // given
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Password password = new Password("12345");
 
         // when
@@ -68,7 +74,6 @@ class PasswordTest {
     void passwordNullTest() {
 
         // given
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Password password = new Password(null);
 
         // when
@@ -85,7 +90,6 @@ class PasswordTest {
     void passwordBlankTest() {
 
         // given
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Password password = new Password("         ");
 
         // when
