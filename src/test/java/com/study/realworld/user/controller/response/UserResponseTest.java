@@ -1,5 +1,7 @@
 package com.study.realworld.user.controller.response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
@@ -29,6 +31,28 @@ class UserResponseTest {
         assertThat(result.getEmail()).isEqualTo("test@test.com");
         assertThat(result.getBio()).isEqualTo("bio");
         assertThat(result.getImage()).isEqualTo("image");
+    }
+
+    @Test
+    void userResponseJacksonTest() throws JsonProcessingException {
+
+        // given
+        UserResponse userResponse = new UserResponse(
+                "username", "test@test.com", "bio", "image"
+        );
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // when
+        String result = objectMapper.writeValueAsString(userResponse);
+
+        // then
+        assertThat(result).isEqualTo(
+                "{\"user\":{\"username\":\"" + userResponse.getUsername()
+                        + "\",\"email\":\"" + userResponse.getEmail()
+                        + "\",\"bio\":\"" + userResponse.getBio()
+                        + "\",\"image\":\"" + userResponse.getImage()
+                        + "\"}}"
+        );
     }
 
 }
