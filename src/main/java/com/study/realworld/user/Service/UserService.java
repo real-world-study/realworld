@@ -36,8 +36,8 @@ public class UserService {
 
         return userRepository.save(
                 new User.Builder(user)
-                    .password(encode(user.getPassword().getPassword(), passwordEncoder))
-                    .build()
+                        .password(encode(user.getPassword().getPassword(), passwordEncoder))
+                        .build()
         );
     }
 

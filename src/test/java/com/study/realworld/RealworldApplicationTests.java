@@ -7,7 +7,7 @@ class RealworldApplicationTests {
 
     @Test
     void main() {
-        RealworldApplication.main(new String[] {});
+        RealworldApplication.main(new String[]{});
     }
 
 }

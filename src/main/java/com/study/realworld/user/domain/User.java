@@ -50,7 +50,7 @@ public class User {
         return image;
     }
 
-    protected User () {
+    protected User() {
     }
 
     private User(Long id, Username username, Email email, Password password, String bio, String image) {
