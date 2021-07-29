@@ -27,6 +27,9 @@ public class UserJoinRequest {
     @JsonProperty("image")
     private String image;
 
+    protected UserJoinRequest() {
+    }
+
     public UserJoinRequest(String username, String email, String password, String bio,
         String image) {
         this.username = username;
