@@ -17,15 +17,15 @@ public class Password {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public String getPassword() {
-        return password;
-    }
-
     protected Password() {
     }
 
     public Password(String password) {
         this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public static Password encode(Password password, PasswordEncoder passwordEncoder) {

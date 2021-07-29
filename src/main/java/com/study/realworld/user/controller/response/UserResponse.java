@@ -30,15 +30,6 @@ public class UserResponse {
         this.image = image;
     }
 
-    public static UserResponse fromUser(User user) {
-        return new UserResponse(
-            valueOf(user.getUsername()),
-            valueOf(user.getEmail()),
-            valueOf(user.getBio()),
-            valueOf(user.getImage())
-        );
-    }
-
     public String getUsername() {
         return username;
     }
@@ -53,6 +44,15 @@ public class UserResponse {
 
     public String getImage() {
         return image;
+    }
+
+    public static UserResponse fromUser(User user) {
+        return new UserResponse(
+            valueOf(user.getUsername()),
+            valueOf(user.getEmail()),
+            valueOf(user.getBio()),
+            valueOf(user.getImage())
+        );
     }
 
 }

@@ -11,11 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserJoinRequestTest {
 
     @Test
-    void userJoinRequestTest() {
-        UserJoinRequest userJoinRequest = new UserJoinRequest();
-    }
-
-    @Test
     void userJoinRequestFromTest() {
 
         // given

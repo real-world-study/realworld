@@ -27,6 +27,19 @@ public class User {
     @Column(name = "image")
     private String image;
 
+    protected User() {
+    }
+
+    private User(Long id, Username username, Email email, Password password, String bio,
+        String image) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.image = image;
+    }
+
     public Long getId() {
         return id;
     }
@@ -49,19 +62,6 @@ public class User {
 
     public String getImage() {
         return image;
-    }
-
-    protected User() {
-    }
-
-    private User(Long id, Username username, Email email, Password password, String bio,
-        String image) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.bio = bio;
-        this.image = image;
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {

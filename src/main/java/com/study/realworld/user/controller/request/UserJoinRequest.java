@@ -27,7 +27,13 @@ public class UserJoinRequest {
     @JsonProperty("image")
     private String image;
 
-    protected UserJoinRequest() {
+    public UserJoinRequest(String username, String email, String password, String bio,
+        String image) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.image = image;
     }
 
     public String getUsername() {
@@ -48,15 +54,6 @@ public class UserJoinRequest {
 
     public String getImage() {
         return image;
-    }
-
-    public UserJoinRequest(String username, String email, String password, String bio,
-        String image) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.bio = bio;
-        this.image = image;
     }
 
     public static User from(UserJoinRequest request) {
