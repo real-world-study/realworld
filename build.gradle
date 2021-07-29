@@ -3,7 +3,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'jacoco'
-    id 'idea'
 }
 
 group = 'com.study.realworld'
@@ -13,30 +12,6 @@ sourceCompatibility = '11'
 repositories {
     mavenCentral()
 }
-
-sourceSets {
-    integration {
-        java.srcDir "$projectDir/src/integration_test/java"
-        resources.srcDir "$projectDir/src/integration_test/resources"
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-    }
-}
-idea {
-    module {
-        testSourceDirs += sourceSets.integration.java.srcDirs
-        testResourceDirs += sourceSets.integration.resources.srcDirs
-    }
-}
-task integration(type: Test) {
-    testClassesDirs = sourceSets.integration.output.classesDirs
-    classpath = sourceSets.integration.runtimeClasspath
-}
-configurations {
-    integrationImplementation.extendsFrom testImplementation
-    integrationRuntime.extendsFrom testRuntime
-}
-check.dependsOn integration
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
