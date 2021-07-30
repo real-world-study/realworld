@@ -6,7 +6,7 @@ plugins {
     id 'jacoco'
 }
 
-group = 'com.tistory.povia'
+group = 'com.tistory.povia.realworld'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
