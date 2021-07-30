@@ -2,10 +2,11 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "com.diffplug.spotless" version "5.7.0"
     id 'jacoco'
 }
 
-group = 'com.study.realworld'
+group = 'com.tistory.povia'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -14,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -24,4 +25,23 @@ apply from: 'test.gradle'
 
 test {
     useJUnitPlatform()
+}
+// pre-commit hook
+// build.gradle에 적용
+// spotless
+spotless {
+    java {
+        googleJavaFormat().aosp()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+        importOrder ''
+    }
+}
+// create pre-commit
+task installGitHooks(type: Copy) {
+    from new File(rootProject.rootDir, 'pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0777
 }
