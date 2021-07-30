@@ -1,6 +1,6 @@
 package com.study.realworld.user.controller;
 
-import com.study.realworld.user.Service.UserService;
+import com.study.realworld.user.service.UserService;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.response.UserResponse;
 import org.springframework.http.HttpStatus;

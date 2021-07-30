@@ -1,4 +1,4 @@
-package com.study.realworld.user.Service;
+package com.study.realworld.user.service;
 
 import com.study.realworld.user.domain.*;
 import org.junit.jupiter.api.DisplayName;

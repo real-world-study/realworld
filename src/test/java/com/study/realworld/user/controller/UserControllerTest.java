@@ -1,9 +1,8 @@
 package com.study.realworld.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.user.Service.UserService;
+import com.study.realworld.user.service.UserService;
 import com.study.realworld.user.controller.request.UserJoinRequest;
-import com.study.realworld.user.controller.response.UserResponse;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
