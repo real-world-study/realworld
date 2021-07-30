@@ -38,7 +38,9 @@ public class User extends BaseTimeEntity {
         return password;
     }
 
-    public String changeEmail() {}
+    public void changeEmail(String email) {
+      this.email = email;
+    }
 
     public void changePassword(String password) {
         this.password = password;
