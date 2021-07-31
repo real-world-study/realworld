@@ -18,4 +18,21 @@ class UserTest {
                 () -> assertThat(user).isExactlyInstanceOf(User.class)
         );
     }
+
+    @DisplayName("User 인스턴스 빌더 테스트")
+    @Test
+    void builder_test() {
+        final User user = User.Builder()
+                .email("email")
+                .username("username")
+                .password("password")
+                .bio("bio")
+                .image("image")
+                .build();
+
+        assertAll(
+                () -> assertThat(user).isNotNull(),
+                () -> assertThat(user).isExactlyInstanceOf(User.class)
+        );
+    }
 }
