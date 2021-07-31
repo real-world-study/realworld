@@ -30,4 +30,5 @@ class UserJoiningServiceTest {
                 () -> assertThat(userJoiningService).isExactlyInstanceOf(UserJoiningService.class)
         );
     }
+
 }
