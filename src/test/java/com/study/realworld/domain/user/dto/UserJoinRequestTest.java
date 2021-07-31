@@ -8,7 +8,9 @@ import static com.study.realworld.domain.user.domain.UserTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserJoinRequestTest {
+public class UserJoinRequestTest {
+
+    public static final UserJoinRequest USER_JOIN_REQUEST = new UserJoinRequest(EMAIL, USERNAME, PASSWORD);
 
     @DisplayName("UserJoinRequest 인스턴스 생성자 테스트")
     @Test
