@@ -44,7 +44,7 @@ class UserJoiningServiceTest {
     @DisplayName("UserJoiningService 인스턴스 join() 테스트")
     @Test
     void join_test() {
-        given(userRepository.save(any())).willReturn(Optional.ofNullable(USER));
+        given(userRepository.save(any())).willReturn(USER);
 
         final UserJoinRequest userJoinRequest = USER_JOIN_REQUEST;
         final UserJoinResponse userJoinResponse = userJoiningService.join(userJoinRequest);
@@ -52,7 +52,7 @@ class UserJoiningServiceTest {
         then(userRepository).should(times(1)).save(any());
         assertAll(
                 () -> assertThat(userJoinResponse).isNotNull(),
-                () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoiningService.class)
+                () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoinResponse.class)
         );
     }
 
