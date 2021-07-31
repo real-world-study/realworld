@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.study.realworld.domain.user.domain.UserTest.USER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserJoinResponseTest {
 
@@ -21,6 +21,5 @@ public class UserJoinResponseTest {
                 () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoinResponse.class)
         );
     }
-
 
 }

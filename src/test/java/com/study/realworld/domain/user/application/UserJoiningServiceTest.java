@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.study.realworld.domain.user.domain.UserTest.USER;
 import static com.study.realworld.domain.user.dto.UserJoinRequestTest.USER_JOIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
