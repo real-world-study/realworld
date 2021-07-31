@@ -28,4 +28,13 @@ class UserRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("UserRepository 인스턴스 findById() 테스트")
+    @Test
+    void findById_test() {
+        final User expected = testEntityManager.persist(USER);
+        final User actual = userRepository.findById(1L).get();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
 }
