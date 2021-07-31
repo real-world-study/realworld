@@ -56,6 +56,10 @@ public class User {
         return new UserBuilder();
     }
 
+    public boolean checkPassword(final String otherPassword) {
+        return password.equals(otherPassword);
+    }
+
     public static class UserBuilder {
         private String email;
         private String username;

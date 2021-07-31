@@ -59,7 +59,7 @@ public class UserTest {
         final User user = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
 
         assertAll(
-                () -> assertThat(user.checkPassword(invalidPassword)).isFale(),
+                () -> assertThat(user.checkPassword(invalidPassword)).isFalse(),
                 () -> assertThat(user.checkPassword(PASSWORD)).isTrue()
         );
     }
