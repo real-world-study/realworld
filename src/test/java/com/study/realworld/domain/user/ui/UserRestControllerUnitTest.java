@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.study.realworld.domain.user.dto.UserJoinRequestTest.USER_JOIN_REQUEST;
 import static com.study.realworld.domain.user.dto.UserJoinResponseTest.USER_JOIN_RESPONSE;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,8 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class UserRestControllerUnitTest {
 
-    @Mock private UserJoiningService userJoiningService;
-    @InjectMocks private UserRestController userRestController;
+    @Mock
+    private UserJoiningService userJoiningService;
+    @InjectMocks
+    private UserRestController userRestController;
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
