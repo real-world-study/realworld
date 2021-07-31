@@ -51,4 +51,13 @@ class UserRepositoryTest {
         );
     }
 
+    @DisplayName("UserRepository 인스턴스 delete() 테스트")
+    @Test
+    void delete_test() {
+        testEntityManager.persist(USER);
+        userRepository.delete(USER);
+
+        assertThat(userRepository.count()).isEqualTo(0);
+    }
+
 }
