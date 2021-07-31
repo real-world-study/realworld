@@ -36,6 +36,22 @@ public class User {
         this.image = userBuilder.image;
     }
 
+    public String email() {
+        return email;
+    }
+
+    public String username() {
+        return username;
+    }
+
+    public String bio() {
+        return bio;
+    }
+
+    public String image() {
+        return image;
+    }
+
     public static UserBuilder Builder() {
         return new UserBuilder();
     }
