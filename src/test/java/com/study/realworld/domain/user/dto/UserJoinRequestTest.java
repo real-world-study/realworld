@@ -13,7 +13,7 @@ class UserJoinRequestTest {
     @DisplayName("UserJoinRequest 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final UserJoinRequest userJoinRequest = new UserJoinRequest(USERNAME, EMAIL, PASSWORD);
+        final UserJoinRequest userJoinRequest = new UserJoinRequest(EMAIL, USERNAME, PASSWORD);
 
         assertAll(
                 () -> assertThat(userJoinRequest).isNotNull(),
@@ -24,14 +24,15 @@ class UserJoinRequestTest {
     @DisplayName("UserJoinRequest 인스턴스 toEntity() 테스트")
     @Test
     void toEntity_test() {
-        final UserJoinRequest userJoinRequest = new UserJoinRequest(USERNAME, EMAIL, PASSWORD);
+        final UserJoinRequest userJoinRequest = new UserJoinRequest(EMAIL, USERNAME, PASSWORD);
         final User user =  userJoinRequest.toEntity();
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
                 () -> assertThat(user).isExactlyInstanceOf(User.class),
+                () -> assertThat(user.email()).isEqualTo(EMAIL),
                 () -> assertThat(user.username()).isEqualTo(USERNAME),
-                () -> assertThat(user.email()).isEqualTo(EMAIL)
+                () -> assertThat(user.checkPassword(PASSWORD)).isTrue()
         );
     }
 

@@ -32,7 +32,11 @@ public final class UserJoinRequest {
         return password;
     }
 
-    public User toEntity() {
-        return null;
+    public final User toEntity() {
+        return User.Builder()
+                .email(email)
+                .username(username)
+                .password(password)
+                .build();
     }
 }
