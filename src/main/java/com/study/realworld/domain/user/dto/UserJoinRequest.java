@@ -2,6 +2,7 @@ package com.study.realworld.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.study.realworld.domain.user.domain.User;
 
 @JsonRootName("user")
 public final class UserJoinRequest {
@@ -31,4 +32,7 @@ public final class UserJoinRequest {
         return password;
     }
 
+    public User toEntity() {
+        return null;
+    }
 }

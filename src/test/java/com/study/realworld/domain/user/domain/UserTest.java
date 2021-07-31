@@ -8,12 +8,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
-    private static final String EMAIL = "email";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-    private static final String BIO = "bio";
-    private static final String IMAGE = "image";
-
+    public static final String EMAIL = "email";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String BIO = "bio";
+    public static final String IMAGE = "image";
     public static final User USER = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
 
     @DisplayName("User 인스턴스 기본 생성자 테스트")
