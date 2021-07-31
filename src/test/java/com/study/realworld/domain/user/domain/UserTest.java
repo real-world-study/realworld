@@ -52,6 +52,18 @@ public class UserTest {
         );
     }
 
+    @DisplayName("User 인스턴스 checkPassword() 테스트")
+    @Test
+    void checkPassword_test() {
+        final String invalidPassword = "INVALID_PASSWORD";
+        final User user = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
+
+        assertAll(
+                () -> assertThat(user.checkPassword(invalidPassword)).isFale(),
+                () -> assertThat(user.checkPassword(PASSWORD)).isTrue()
+        );
+    }
+
     private static final User userBuilder(final String email, final String username,
                                           final String password, final String bio, final String image) {
         return User.Builder()
