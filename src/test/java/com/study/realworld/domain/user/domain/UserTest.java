@@ -6,7 +6,15 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserTest {
+public class UserTest {
+
+    public static final User USER = User.Builder()
+            .email("email")
+            .username("username")
+            .password("password")
+            .bio("bio")
+            .image("image")
+            .build();
 
     @DisplayName("User 인스턴스 기본 생성자 테스트")
     @Test
