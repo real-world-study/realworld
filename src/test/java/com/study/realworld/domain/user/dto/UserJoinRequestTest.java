@@ -10,12 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserJoinRequestTest {
 
-    public static final UserJoinRequest USER_JOIN_REQUEST = new UserJoinRequest(EMAIL, USERNAME, PASSWORD);
+    public static final UserJoinRequest USER_JOIN_REQUEST = new UserJoinRequest(USERNAME, EMAIL,PASSWORD);
 
     @DisplayName("UserJoinRequest 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final UserJoinRequest userJoinRequest = new UserJoinRequest(EMAIL, USERNAME, PASSWORD);
+        final UserJoinRequest userJoinRequest = new UserJoinRequest(USERNAME, EMAIL,PASSWORD);
 
         assertAll(
                 () -> assertThat(userJoinRequest).isNotNull(),
@@ -26,14 +26,14 @@ public class UserJoinRequestTest {
     @DisplayName("UserJoinRequest 인스턴스 toEntity() 테스트")
     @Test
     void toEntity_test() {
-        final UserJoinRequest userJoinRequest = new UserJoinRequest(EMAIL, USERNAME, PASSWORD);
+        final UserJoinRequest userJoinRequest = new UserJoinRequest(USERNAME, EMAIL, PASSWORD);
         final User user =  userJoinRequest.toEntity();
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
                 () -> assertThat(user).isExactlyInstanceOf(User.class),
-                () -> assertThat(user.email()).isEqualTo(EMAIL),
                 () -> assertThat(user.username()).isEqualTo(USERNAME),
+                () -> assertThat(user.email()).isEqualTo(EMAIL),
                 () -> assertThat(user.checkPassword(PASSWORD)).isTrue()
         );
     }

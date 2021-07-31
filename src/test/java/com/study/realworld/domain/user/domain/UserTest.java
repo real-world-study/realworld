@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
-    public static final String EMAIL = "email";
+    public static final String EMAIL = "sample@email.com";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String BIO = "bio";
