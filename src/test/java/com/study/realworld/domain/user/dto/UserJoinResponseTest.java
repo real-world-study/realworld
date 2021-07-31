@@ -19,4 +19,6 @@ class UserJoinResponseTest {
                 () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoinResponse.class)
         );
     }
+
+
 }
