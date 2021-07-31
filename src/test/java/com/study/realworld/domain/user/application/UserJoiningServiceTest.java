@@ -10,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
 import static com.study.realworld.domain.user.domain.UserTest.USER;
 import static com.study.realworld.domain.user.dto.UserJoinRequestTest.USER_JOIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,11 +22,8 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 class UserJoiningServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
-
-    @InjectMocks
-    private UserJoiningService userJoiningService;
+    @Mock private UserRepository userRepository;
+    @InjectMocks private UserJoiningService userJoiningService;
 
     @DisplayName("UserJoiningService 인스턴스 생성자 테스트")
     @Test
