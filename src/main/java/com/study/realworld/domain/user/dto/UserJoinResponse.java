@@ -11,6 +11,8 @@ public final class UserJoinResponse {
         return new UserJoinResponse(user);
     }
 
+    private UserJoinResponse() { }
+
     private UserJoinResponse(final User user) {
         this.email = user.email();
         this.username = user.username();
@@ -19,15 +21,15 @@ public final class UserJoinResponse {
     }
 
     @JsonProperty("email")
-    private final String email;
+    private String email;
 
     @JsonProperty("username")
-    private final String username;
+    private String username;
 
     @JsonProperty("bio")
-    private final String bio;
+    private String bio;
 
     @JsonProperty("image")
-    private final String image;
+    private String image;
 
 }
