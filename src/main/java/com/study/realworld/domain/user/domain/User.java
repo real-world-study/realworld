@@ -1,9 +1,11 @@
 package com.study.realworld.domain.user.domain;
 
+import com.study.realworld.domain.BaseTimeEntity;
+
 import javax.persistence.*;
 
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

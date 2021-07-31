@@ -24,7 +24,7 @@ public class UserRestController {
         this.userJoiningService = userJoiningService;
     }
 
-    @PostMapping("/users")
+    @PostMapping("/api/users")
     public ResponseEntity<UserJoinResponse> join(@Valid @RequestBody final UserJoinRequest userJoinRequest) {
         log.info(userJoinRequest.toString());
         return ResponseEntity.ok().body(userJoiningService.join(userJoinRequest));

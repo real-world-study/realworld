@@ -15,11 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DataJpaTest
 class UserRepositoryTest {
 
-    @Autowired
-    private TestEntityManager testEntityManager;
-
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private TestEntityManager testEntityManager;
+    @Autowired private UserRepository userRepository;
 
     @DisplayName("UserRepository 인스턴스 save() 테스트")
     @Test
