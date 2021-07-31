@@ -8,13 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
-    public static final User USER = User.Builder()
-            .email("email")
-            .username("username")
-            .password("password")
-            .bio("bio")
-            .image("image")
-            .build();
+    private static final String EMAIL = "email";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String BIO = "bio";
+    private static final String IMAGE = "image";
+
+    public static final User USER = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
 
     @DisplayName("User 인스턴스 기본 생성자 테스트")
     @Test
@@ -30,17 +30,37 @@ public class UserTest {
     @DisplayName("User 인스턴스 빌더 테스트")
     @Test
     void builder_test() {
-        final User user = User.Builder()
-                .email("email")
-                .username("username")
-                .password("password")
-                .bio("bio")
-                .image("image")
-                .build();
+        final User user = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
                 () -> assertThat(user).isExactlyInstanceOf(User.class)
         );
+    }
+
+    @DisplayName("User 인스턴스 getter() 테스트")
+    @Test
+    void getter_test() {
+        final User user = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
+
+        assertAll(
+                () -> assertThat(user).isNotNull(),
+                () -> assertThat(user).isExactlyInstanceOf(User.class),
+                () -> assertThat(user.email()).isEqualTo(EMAIL),
+                () -> assertThat(user.username()).isEqualTo(USERNAME),
+                () -> assertThat(user.bio()).isEqualTo(BIO),
+                () -> assertThat(user.image()).isEqualTo(IMAGE)
+        );
+    }
+
+    private static final User userBuilder(final String email, final String username,
+                                          final String password, final String bio, final String image) {
+        return User.Builder()
+                .email(email)
+                .username(username)
+                .password(password)
+                .bio(bio)
+                .image(image)
+                .build();
     }
 }
