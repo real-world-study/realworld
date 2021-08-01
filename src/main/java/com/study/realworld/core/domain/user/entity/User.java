@@ -34,9 +34,8 @@ public class User {
     @NotNull
     private String email;
 
-    @Column(name = "username")
     @NotNull
-    private String userName;
+    private String username;
 
     @NotNull
     private String password;

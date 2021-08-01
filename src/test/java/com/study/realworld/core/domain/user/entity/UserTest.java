@@ -17,7 +17,7 @@ class UserTest {
     void UserEntityTest() {
         final LocalDateTime now = LocalDateTime.now();
         User user = User.builder()
-                        .userName("name")
+                        .username("name")
                         .email("email")
                         .password("password")
                         .bio(null)
@@ -26,7 +26,7 @@ class UserTest {
                         .build();
 
         assertAll(() -> assertNull(user.getId()),
-                  () -> assertSame("name", user.getUserName()),
+                  () -> assertSame("name", user.getUsername()),
                   () -> assertSame("email", user.getEmail()),
                   () -> assertSame("password", user.getPassword()),
                   () -> assertNull(user.getBio()),

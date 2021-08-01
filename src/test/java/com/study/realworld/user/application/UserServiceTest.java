@@ -31,16 +31,16 @@ class UserServiceTest {
     @Test
     void registerTest() {
 
-        final String userName = "찬스";
+        final String username = "찬스";
         final String email = "chance@chance.com";
         final String password = "chance";
         final LocalDateTime now = LocalDateTime.now();
 
-        UserRegisterModel userRegisterModel = new UserRegisterModel(userName, email, password);
-        User user = User.builder().userName(userName).email(email).password(password).createdAt(now).build();
+        UserRegisterModel userRegisterModel = new UserRegisterModel(username, email, password);
+        User user = User.builder().username(username).email(email).password(password).createdAt(now).build();
 
         doReturn(user).when(userRepository).save(Mockito.any(User.class));
 
-        assertEquals(user.getUserName(), userService.register(userRegisterModel).getUserName());
+        assertEquals(user.getUsername(), userService.register(userRegisterModel).getUsername());
     }
 }

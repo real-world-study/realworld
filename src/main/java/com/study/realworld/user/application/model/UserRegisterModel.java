@@ -14,13 +14,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserRegisterModel {
 
-    private final String userName;
+    private final String username;
     private final String email;
     private final String password;
 
     public User toUser() {
         return User.builder()
-                   .userName(this.getUserName())
+                   .username(this.getUsername())
                    .email(this.getEmail())
                    .password(this.getPassword())
                    .createdAt(LocalDateTime.now())

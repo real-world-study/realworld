@@ -54,18 +54,18 @@ class UserControllerTest {
     @DisplayName("회원가입 테스트")
     void registerTest() throws Exception {
         // given
-        final String userName = "찬스";
+        final String username = "찬스";
         final String email = "chance@chance.com";
         final String password = "chance";
         final LocalDateTime now = LocalDateTime.now();
         given(userService.register(any())).willReturn(User.builder()
-                                                          .userName(userName)
+                                                          .username(username)
                                                           .email(email)
                                                           .password(password)
                                                           .createdAt(now)
                                                           .build());
 
-        UserRegisterRequest request = new UserRegisterRequest(userName, email, password);
+        UserRegisterRequest request = new UserRegisterRequest(username, email, password);
 
         String content = objectMapper.writeValueAsString(request);
 

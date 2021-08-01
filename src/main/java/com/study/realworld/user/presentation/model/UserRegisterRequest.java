@@ -5,7 +5,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.application.model.UserRegisterModel;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.WRAPPER_OBJECT;
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
@@ -15,19 +19,21 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
  */
 @JsonTypeName("user")
 @JsonTypeInfo(include = WRAPPER_OBJECT, use = NAME)
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserRegisterRequest {
 
     @JsonProperty(value = "username")
-    private final String userName;
+    private String username;
 
-    @JsonProperty(value = "email")
-    private final String email;
+    @NotBlank
+    private String email;
 
-    @JsonProperty(value = "password")
-    private final String password;
+    @NotBlank
+    private String password;
 
     public UserRegisterModel toModel() {
-        return new UserRegisterModel(userName, email, password);
+        return new UserRegisterModel(username, email, password);
     }
 }
