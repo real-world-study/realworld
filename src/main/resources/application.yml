@@ -19,6 +19,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  jpa:
+    show-sql: true
 
 server:
   port: 8080

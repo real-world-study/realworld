@@ -4,6 +4,7 @@ import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 import com.tistory.povia.realworld.user.exception.DuplicatedEmailException;
 import com.tistory.povia.realworld.user.repository.MemoryUserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,14 +32,19 @@ class UserServiceLogicTest {
   }
 
   @Test
-  @DisplayName("일반적인 방법으로는 join에 성공한 후 결과를 return해야 함")
+  @DisplayName("일반적인 방법으로는 join 에 성공한 후 결과를 return 해야 함")
   void joinSuccessTest() {
 
     User user = userService.join(username, email, password);
 
-    assertThat(user).isNotNull();
-    assertThat(user.id()).isNotNull();
-    assertThat(user.email()).isEqualTo(email);
+    Assertions.assertAll(
+      () -> assertThat(user).isNotNull(),
+      () -> assertThat(user.id()).isNotNull(),
+      () -> assertThat(user.username()).isEqualTo(username),
+      () -> assertThat(user.email()).isEqualTo(email),
+      () -> assertThat(user.password()).isNotNull()
+    );
+
   }
 
   @Test

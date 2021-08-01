@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EmailTest {
 
-  static Stream<String> blankStrings() {
+  public static Stream<String> blankStrings() {
     return Stream.of(null, "", " ", "    ");
   }
 

@@ -2,12 +2,14 @@ package com.tistory.povia.realworld.user.domain;
 
 import com.tistory.povia.realworld.common.domain.BaseTimeEntity;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity(name = "user")
+@Where(clause = "deleted_at is null")
 public class User extends BaseTimeEntity {
 
   @Id
@@ -33,6 +35,8 @@ public class User extends BaseTimeEntity {
   private User(Email email, String username, String password, String bio, String image) {
     checkArgument(StringUtils.isNotBlank(password), "password should be provided");
     checkUsername(username);
+    checkPassword(password);
+    checkImageUrl(image);
 
     this.email = email;
     this.username = username;
@@ -57,6 +61,14 @@ public class User extends BaseTimeEntity {
     return email;
   }
 
+  public String bio() {
+    return bio;
+  }
+
+  public String image() {
+    return image;
+  }
+
   public void initId(Long id){
     this.id = id;
   }
@@ -75,6 +87,15 @@ public class User extends BaseTimeEntity {
   private static void checkUsername(String username) {
     checkArgument(StringUtils.isNotBlank(username), "username should be provided");
     checkArgument(username.length() >= 1 && username.length() <= 25, "username should be between 1 to 25 characters");
+  }
+
+  private static void checkPassword(String password){
+    checkArgument(StringUtils.isNotBlank(password), "password should be provided");
+    checkArgument(password.length() >= 1 && password.length() <= 25, "username should be 1 to 25 characters");
+  }
+
+  private static void checkImageUrl(String image){
+    checkArgument(image == null || image.length() <= 255, "Image url length should be 1 to 255 characters");
   }
 
   public static Builder builder() {

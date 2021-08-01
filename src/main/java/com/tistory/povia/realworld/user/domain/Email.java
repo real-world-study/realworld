@@ -27,10 +27,6 @@ public class Email {
         return matches("[\\w~\\-.+]+@[\\w~\\-]+(\\.[\\w~\\-]+)+", address);
     }
 
-    public boolean checkSameAddress(String address){
-        return this.address.equals(address);
-    }
-
     public String address(){
         return address;
     }

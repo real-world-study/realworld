@@ -4,6 +4,11 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PostPersist;
+
+import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
@@ -11,9 +16,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public abstract class BaseTimeEntity {
 
     @Column(name = "created_at", updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
@@ -30,4 +37,5 @@ public abstract class BaseTimeEntity {
     public LocalDateTime deletedAt() {
         return deletedAt;
     }
+
 }

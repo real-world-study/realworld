@@ -7,8 +7,6 @@ import com.tistory.povia.realworld.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Transactional(readOnly = true)
 public class UserService {
@@ -20,12 +18,16 @@ public class UserService {
 
   @Transactional
   public User join(String username, Email email, String password) {
-    userRepository.findByEmail(email).ifPresent(user -> {
-      throw new DuplicatedEmailException();
-    });
+    checkDuplicatedEmail(email);
 
     User user = User.builder().email(email).username(username).password(password).build();
 
     return userRepository.save(user);
+  }
+
+  private void checkDuplicatedEmail(Email email){
+    userRepository.findByEmail(email).ifPresent(user -> {
+      throw new DuplicatedEmailException();
+    });
   }
 }
