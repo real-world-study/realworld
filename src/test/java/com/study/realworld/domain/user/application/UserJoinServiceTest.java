@@ -20,29 +20,29 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-class UserJoiningServiceTest {
+class UserJoinServiceTest {
 
     @Mock private UserRepository userRepository;
-    @InjectMocks private UserJoiningService userJoiningService;
+    @InjectMocks private UserJoinService userJoinService;
 
-    @DisplayName("UserJoiningService 인스턴스 생성자 테스트")
+    @DisplayName("UserJoinService 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final UserJoiningService userJoiningService = new UserJoiningService(userRepository);
+        final UserJoinService userJoinService = new UserJoinService(userRepository);
 
         assertAll(
-                () -> assertThat(userJoiningService).isNotNull(),
-                () -> assertThat(userJoiningService).isExactlyInstanceOf(UserJoiningService.class)
+                () -> assertThat(userJoinService).isNotNull(),
+                () -> assertThat(userJoinService).isExactlyInstanceOf(UserJoinService.class)
         );
     }
 
-    @DisplayName("UserJoiningService 인스턴스 join() 테스트")
+    @DisplayName("UserJoinService 인스턴스 join() 테스트")
     @Test
     void join_test() {
         given(userRepository.save(any())).willReturn(USER);
 
         final UserJoinRequest userJoinRequest = USER_JOIN_REQUEST;
-        final UserJoinResponse userJoinResponse = userJoiningService.join(userJoinRequest);
+        final UserJoinResponse userJoinResponse = userJoinService.join(userJoinRequest);
 
         then(userRepository).should(times(1)).save(any());
         assertAll(
