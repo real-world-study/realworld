@@ -26,18 +26,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/users")
-    public ResponseEntity<UserResponse> register(final @Valid @RequestBody UserRegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRegisterRequest request) {
         User user = userService.register(request.toModel());
-        return ResponseEntity.ok().body(toResponse(user));
-    }
-
-    private UserResponse toResponse(User user) {
-        return UserResponse.builder()
-                           .userName(user.getUserName())
-                           .email(user.getEmail())
-                           .bio(user.getBio())
-                           .image(user.getImage())
-                           .build();
+        return ResponseEntity.ok().body(UserResponse.createResponse(user));
     }
 
 }

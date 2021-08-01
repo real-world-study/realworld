@@ -65,11 +65,7 @@ class UserControllerTest {
                                                           .createdAt(now)
                                                           .build());
 
-        UserRegisterRequest request = UserRegisterRequest.builder()
-                                                         .userName(userName)
-                                                         .email(email)
-                                                         .password(password)
-                                                         .build();
+        UserRegisterRequest request = new UserRegisterRequest(userName, email, password);
 
         String content = objectMapper.writeValueAsString(request);
 

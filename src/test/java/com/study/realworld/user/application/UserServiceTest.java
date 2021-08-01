@@ -2,7 +2,7 @@ package com.study.realworld.user.application;
 
 import com.study.realworld.core.domain.user.entity.User;
 import com.study.realworld.core.domain.user.repository.UserRepository;
-import com.study.realworld.user.presentation.model.UserRegisterModel;
+import com.study.realworld.user.application.model.UserRegisterModel;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
