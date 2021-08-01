@@ -24,6 +24,12 @@ public class BaseTimeEntity {
     @Column(name = "delete_at")
     private LocalDateTime deletedAt;
 
+    BaseTimeEntity(final LocalDateTime createdAt, final LocalDateTime updatedAt, final LocalDateTime deletedAt) {
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+    }
+
     public LocalDateTime createdAt() {
         return createdAt;
     }
