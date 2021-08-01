@@ -21,14 +21,8 @@ public class BaseTimeEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "delete_at")
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    BaseTimeEntity(final LocalDateTime createdAt, final LocalDateTime updatedAt, final LocalDateTime deletedAt) {
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-    }
 
     public LocalDateTime createdAt() {
         return createdAt;
@@ -43,7 +37,7 @@ public class BaseTimeEntity {
     }
 
     // 추후 삭제시 읽어서 기록하는 방식으로 변경 예정
-    public LocalDateTime recordDeletedTime(final LocalDateTime localDateTime) {
-        return deletedAt;
+    public void recordDeletedTime(final LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }
