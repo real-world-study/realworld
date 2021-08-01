@@ -7,25 +7,26 @@ import com.study.realworld.domain.user.domain.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public final class UserJoinRequest {
 
-    @NotEmpty @NotBlank
+    @NotBlank
     @JsonProperty("username")
     private String username;
 
-    @Email @NotEmpty @NotBlank
+    @Email
+    @NotBlank
     @JsonProperty("email")
     private String email;
 
-    @NotEmpty @NotBlank
+    @NotBlank
     @JsonProperty("password")
     private String password;
 
-    private UserJoinRequest() { }
+    private UserJoinRequest() {
+    }
 
     // 테스트용 오버로딩 생성자 -> 주관적인 생각으로 이런 상황은 오버로딩으로 유연성을 주는게 좋다고 생각합니다.
     UserJoinRequest(final String username, final String email, final String password) {
@@ -34,7 +35,7 @@ public final class UserJoinRequest {
         this.password = password;
     }
 
-    public final User toEntity() {
+    public final User toUser() {
         return User.Builder()
                 .email(email)
                 .username(username)
@@ -50,4 +51,5 @@ public final class UserJoinRequest {
                 ", password='" + password + '\'' +
                 '}';
     }
+
 }

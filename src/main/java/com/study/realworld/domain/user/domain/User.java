@@ -69,6 +69,9 @@ public class User extends BaseTimeEntity {
         private String bio;
         private String image;
 
+        private UserBuilder() {
+        }
+
         public UserBuilder email(final String email) {
             this.email = email;
             return this;
@@ -99,4 +102,5 @@ public class User extends BaseTimeEntity {
         }
 
     }
+
 }

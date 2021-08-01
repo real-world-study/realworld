@@ -40,4 +40,5 @@ public class BaseTimeEntity {
     public void recordDeletedTime(final LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
+
 }

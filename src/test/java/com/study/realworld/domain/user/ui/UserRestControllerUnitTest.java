@@ -1,7 +1,7 @@
 package com.study.realworld.domain.user.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.domain.user.application.UserJoiningService;
+import com.study.realworld.domain.user.application.UserJoinService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserRestControllerUnitTest {
 
     @Mock
-    private UserJoiningService userJoiningService;
+    private UserJoinService userJoinService;
     @InjectMocks
     private UserRestController userRestController;
 
@@ -41,7 +41,7 @@ class UserRestControllerUnitTest {
     @DisplayName("UserRestController 인스턴스의 join() 단위 테스트")
     @Test
     void join_test() throws Exception {
-        given(userJoiningService.join(any())).willReturn(USER_JOIN_RESPONSE);
+        given(userJoinService.join(any())).willReturn(USER_JOIN_RESPONSE);
 
         final String userJoinRequestString = objectMapper.writeValueAsString(USER_JOIN_REQUEST);
 

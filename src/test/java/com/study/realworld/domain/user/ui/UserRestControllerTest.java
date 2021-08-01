@@ -1,7 +1,7 @@
 package com.study.realworld.domain.user.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.domain.user.application.UserJoiningService;
+import com.study.realworld.domain.user.application.UserJoinService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +25,12 @@ class UserRestControllerTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
-    @MockBean private UserJoiningService userJoiningService;
+    @MockBean private UserJoinService userJoinService;
 
     @DisplayName("UserRestController 인스턴스의 join() 테스트")
     @Test
     void join_test() throws Exception {
-        given(userJoiningService.join(any())).willReturn(USER_JOIN_RESPONSE);
+        given(userJoinService.join(any())).willReturn(USER_JOIN_RESPONSE);
 
         final String targetPath = "/api/users";
         final String userJoinRequestString = objectMapper.writeValueAsString(USER_JOIN_REQUEST);

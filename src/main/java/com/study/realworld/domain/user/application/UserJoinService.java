@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 
 @Service
-public class UserJoiningService {
+public class UserJoinService {
 
     private final UserRepository userRepository;
 
-    public UserJoiningService(final UserRepository userRepository) {
+    public UserJoinService(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Valid
     public UserJoinResponse join(final UserJoinRequest userJoinRequest) {
-        final User entity = userRepository.save(userJoinRequest.toEntity());
-        return UserJoinResponse.fromUser(entity);
+        final User user = userRepository.save(userJoinRequest.toUser());
+        return UserJoinResponse.fromUser(user);
     }
 
 }

@@ -27,7 +27,7 @@ public class UserJoinRequestTest {
     @Test
     void toEntity_test() {
         final UserJoinRequest userJoinRequest = new UserJoinRequest(USERNAME, EMAIL, PASSWORD);
-        final User user =  userJoinRequest.toEntity();
+        final User user =  userJoinRequest.toUser();
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
