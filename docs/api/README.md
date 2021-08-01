@@ -27,7 +27,7 @@ Make sure the right content type like `Content-Type: application/json; charset=u
 
 ```JSON
 {
-  "user": {
+  "com.study.realworld.user": {
     "email": "jake@jake.jake",
     "token": "jwt.token.here",
     "username": "jake",
@@ -54,7 +54,7 @@ Make sure the right content type like `Content-Type: application/json; charset=u
 
 ```JSON
 {
-  "article": {
+  "com.study.realworld.article": {
     "slug": "how-to-train-your-dragon",
     "title": "How to train your dragon",
     "description": "Ever wonder how?",
@@ -119,7 +119,7 @@ Make sure the right content type like `Content-Type: application/json; charset=u
 
 ```JSON
 {
-  "comment": {
+  "com.study.realworld.comment": {
     "id": 1,
     "createdAt": "2016-02-18T03:22:56.637Z",
     "updatedAt": "2016-02-18T03:22:56.637Z",
@@ -182,7 +182,7 @@ If a request fails any validations, expect a 422 and errors in the following for
 
 401 for Unauthorized requests, when a request requires authentication but it isn't provided
 
-403 for Forbidden requests, when a request may be valid but the user doesn't have permissions to perform the action
+403 for Forbidden requests, when a request may be valid but the com.study.realworld.user doesn't have permissions to perform the action
 
 404 for Not found requests, when a resource can't be found to fulfill the request
 
@@ -196,7 +196,7 @@ Example request body:
 
 ```JSON
 {
-  "user":{
+  "com.study.realworld.user":{
     "email": "jake@jake.jake",
     "password": "jakejake"
   }
@@ -215,7 +215,7 @@ Example request body:
 
 ```JSON
 {
-  "user":{
+  "com.study.realworld.user":{
     "username": "Jacob",
     "email": "jake@jake.jake",
     "password": "jakejake"
@@ -229,19 +229,19 @@ Required fields: `email`, `username`, `password`
 
 ### Get Current User
 
-`GET /api/user`
+`GET /api/com.study.realworld.user`
 
-Authentication required, returns a [User](#users-for-authentication) that's the current user
+Authentication required, returns a [User](#users-for-authentication) that's the current com.study.realworld.user
 
 ### Update User
 
-`PUT /api/user`
+`PUT /api/com.study.realworld.user`
 
 Example request body:
 
 ```JSON
 {
-  "user":{
+  "com.study.realworld.user":{
     "email": "jake@jake.jake",
     "bio": "I like to skateboard",
     "image": "https://i.stack.imgur.com/xHWG8.jpg"
@@ -259,17 +259,17 @@ Accepted fields: `email`, `username`, `password`, `image`, `bio`
 
 Authentication optional, returns a [Profile](#profile)
 
-### Follow user
+### Follow com.study.realworld.user
 
-`POST /api/profiles/:username/follow`
+`POST /api/profiles/:username/com.study.realworld.follow`
 
 Authentication required, returns a [Profile](#profile)
 
 No additional parameters required
 
-### Unfollow user
+### Unfollow com.study.realworld.user
 
-`DELETE /api/profiles/:username/follow`
+`DELETE /api/profiles/:username/com.study.realworld.follow`
 
 Authentication required, returns a [Profile](#profile)
 
@@ -292,7 +292,7 @@ Filter by author:
 
 `?author=jake`
 
-Favorited by user:
+Favorited by com.study.realworld.user:
 
 `?favorited=jake`
 
@@ -319,7 +319,7 @@ recent first.
 
 `GET /api/articles/:slug`
 
-No authentication required, will return [single article](#single-article)
+No authentication required, will return [single com.study.realworld.article](#single-com.study.realworld.article)
 
 ### Create Article
 
@@ -329,7 +329,7 @@ Example request body:
 
 ```JSON
 {
-  "article": {
+  "com.study.realworld.article": {
     "title": "How to train your dragon",
     "description": "Ever wonder how?",
     "body": "You have to believe",
@@ -338,7 +338,7 @@ Example request body:
 }
 ```
 
-Authentication required, will return an [Article](#single-article)
+Authentication required, will return an [Article](#single-com.study.realworld.article)
 
 Required fields: `title`, `description`, `body`
 
@@ -352,13 +352,13 @@ Example request body:
 
 ```JSON
 {
-  "article": {
+  "com.study.realworld.article": {
     "title": "Did you train your dragon?"
   }
 }
 ```
 
-Authentication required, returns the updated [Article](#single-article)
+Authentication required, returns the updated [Article](#single-com.study.realworld.article)
 
 Optional fields: `title`, `description`, `body`
 
@@ -378,13 +378,13 @@ Example request body:
 
 ```JSON
 {
-  "comment": {
+  "com.study.realworld.comment": {
     "body": "His name was my name too."
   }
 }
 ```
 
-Authentication required, returns the created [Comment](#single-comment)
+Authentication required, returns the created [Comment](#single-com.study.realworld.comment)
 
 Required field: `body`
 
@@ -402,17 +402,17 @@ Authentication required
 
 ### Favorite Article
 
-`POST /api/articles/:slug/favorite`
+`POST /api/articles/:slug/com.study.realworld.favorite`
 
-Authentication required, returns the [Article](#single-article)
+Authentication required, returns the [Article](#single-com.study.realworld.article)
 
 No additional parameters required
 
 ### Unfavorite Article
 
-`DELETE /api/articles/:slug/favorite`
+`DELETE /api/articles/:slug/com.study.realworld.favorite`
 
-Authentication required, returns the [Article](#single-article)
+Authentication required, returns the [Article](#single-com.study.realworld.article)
 
 No additional parameters required
 

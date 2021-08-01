@@ -4,7 +4,7 @@
 
 ### 리뷰어 요청 사항
 
-- 리뷰는 각각의 코드에 대해서 따로 `Add single comment` 를 남기는 것이 아닌, `Start a review`로 남겨주세요
+- 리뷰는 각각의 코드에 대해서 따로 `Add single com.study.realworld.comment` 를 남기는 것이 아닌, `Start a review`로 남겨주세요
     - comment단위가 아닌 review로 남겨야 slack에 리뷰에 대한 메시지가 발송됩니다.
 - 리뷰는 언제나 자유롭게 부탁드립니다!
 
