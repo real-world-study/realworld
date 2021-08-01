@@ -70,4 +70,5 @@ class UserRepositoryTest {
                 .image(image)
                 .build();
     }
+
 }

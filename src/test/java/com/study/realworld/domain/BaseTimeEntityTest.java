@@ -59,4 +59,5 @@ class BaseTimeEntityTest {
                 () -> assertThat(baseTimeEntity.deletedAt()).isAfter(now)
         );
     }
+
 }
