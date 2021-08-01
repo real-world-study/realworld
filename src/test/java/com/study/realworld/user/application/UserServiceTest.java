@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * @author Jeongjoon Seo
@@ -39,8 +39,8 @@ class UserServiceTest {
         UserRegisterModel userRegisterModel = new UserRegisterModel(userName, email, password);
         User user = User.builder().userName(userName).email(email).password(password).createdAt(now).build();
 
-        when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        doReturn(user).when(userRepository).save(Mockito.any(User.class));
 
-        assertEquals(userService.register(userRegisterModel).getUserName(), user.getUserName());
+        assertEquals(user.getUserName(), userService.register(userRegisterModel).getUserName());
     }
 }
