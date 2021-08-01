@@ -24,6 +24,24 @@ class BaseTimeEntityTest {
         );
     }
 
+    @DisplayName("BaseTimeEntity 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final LocalDateTime now = now();
+        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity();
+        final LocalDateTime deletedAt = now().plusMinutes(1);
+
+        ReflectionTestUtils.setField(baseTimeEntity, "createdAt", now);
+        ReflectionTestUtils.setField(baseTimeEntity, "updatedAt", now);
+        ReflectionTestUtils.setField(baseTimeEntity, "deletedAt", deletedAt); // 명시성을 위해 추가
+
+        assertAll(
+                () -> assertThat(baseTimeEntity.createdAt()).isEqualTo(now),
+                () -> assertThat(baseTimeEntity.updatedAt()).isEqualTo(now),
+                () -> assertThat(baseTimeEntity.deletedAt()).isEqualTo(deletedAt)
+        );
+    }
+
     @DisplayName("BaseTimeEntity 인스턴스 삭제 값 변경 테스트")
     @Test
     void deletedAt_test() {
@@ -33,6 +51,7 @@ class BaseTimeEntityTest {
 
         ReflectionTestUtils.setField(baseTimeEntity, "createdAt", now);
         ReflectionTestUtils.setField(baseTimeEntity, "updatedAt", now);
+        ReflectionTestUtils.setField(baseTimeEntity, "deletedAt", null); // 명시성을 위해 추가
         baseTimeEntity.recordDeletedTime(deletedAt);
 
         assertAll(
