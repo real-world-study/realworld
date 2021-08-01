@@ -11,20 +11,22 @@ class UserTest {
     private String username;
     private String password;
     private Email email;
+    private String bio;
+    private String image;
 
     @BeforeEach
     void setup() {
-        username = "";
-        password = "";
+        username = "test";
+        password = "testpassword";
         email = new Email("test@test.com");
     }
 
     @Test
-    @DisplayName("패스워드 빈칸 금지")
+    @DisplayName("비밀번호는 null, blank 가 아니어야 한다.")
     void notNullTest() {
         var builder = User.builder().email(email).password(null).username(username);
 
-        assertThatThrownBy(() -> builder.build());
+        assertThatThrownBy(() -> builder.build()).isInstanceOf(IllegalArgumentException.class).hasMessage("password should be provided");
     }
 
     @Test

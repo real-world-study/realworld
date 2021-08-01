@@ -1,10 +1,13 @@
 package com.tistory.povia.realworld.user.domain;
 
 import com.tistory.povia.realworld.common.domain.BaseTimeEntity;
-import com.tistory.povia.realworld.common.exception.EmailException;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+
+import static com.google.common.base.Preconditions.*;
 
 @Entity
 public class User extends BaseTimeEntity {
@@ -26,7 +29,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "image")
     private String image;
 
-    private User(Long id, Email email, String username, String password) {
+    private User(Long id, Email email, String username, String password, String bio, String image) {
+        checkArgument(StringUtils.isNotBlank(password), "password should be provided");
+        checkUsername(username);
+
         this.id = id;
         this.email = email;
         this.username = username;
@@ -51,14 +57,13 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    private static void checkUsername(String username){
+        checkArgument(StringUtils.isNotBlank(username), "username should be provided");
+        checkArgument(username.length() >= 1 && username.length() <= 25, "username should be between 1 to 25 characters");
     }
 
-    private void checkEmail(String email) {
-        if (email.isBlank()) {
-            throw new EmailException();
-        }
+    public static Builder builder() {
+        return new Builder();
     }
 
     static class Builder {
@@ -66,6 +71,8 @@ public class User extends BaseTimeEntity {
         private Email email;
         private String username;
         private String password;
+        private String bio;
+        private String image;
 
         public Builder id(Long id) {
             this.id = id;
@@ -87,8 +94,17 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
+        public Builder bio(String bio) {
+            this.bio = bio;
+            return this;
+        }
+        public Builder image(String image) {
+            this.image = image;
+            return this;
+        }
+
         public User build() {
-            return new User(id, email, username, password);
+            return new User(id, email, username, password, bio, image);
         }
     }
 }
