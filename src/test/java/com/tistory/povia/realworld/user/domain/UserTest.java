@@ -29,7 +29,4 @@ class UserTest {
         assertThatThrownBy(() -> builder.build()).isInstanceOf(IllegalArgumentException.class).hasMessage("password should be provided");
     }
 
-    @Test
-    @DisplayName("중복된 회원은 가입하지 못함")
-    void duplicateTest() {}
 }

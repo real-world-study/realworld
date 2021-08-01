@@ -7,104 +7,110 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity
 public class User extends BaseTimeEntity {
 
-    @Column(name = "id")
+  @Column(name = "id")
+  private Long id;
+
+  @Embedded
+  private Email email;
+
+  @Column(name = "username", length = 50, nullable = false)
+  private String username;
+
+  @Column(name = "password", nullable = false)
+  private String password;
+
+  @Column(name = "bio")
+  private String bio;
+
+  @Column(name = "image")
+  private String image;
+
+  private User(Long id, Email email, String username, String password, String bio, String image) {
+    checkArgument(StringUtils.isNotBlank(password), "password should be provided");
+    checkUsername(username);
+
+    this.id = id;
+    this.email = email;
+    this.username = username;
+    this.password = password;
+    this.bio = bio;
+    this.image = image;
+  }
+
+  public Long id() {
+    return id;
+  }
+
+  public String username() {
+    return username;
+  }
+
+  public String password() {
+    return password;
+  }
+
+  public Email email() {
+    return email;
+  }
+
+  public void changePassword(String password) {
+    this.password = password;
+  }
+
+  private static void checkUsername(String username) {
+    checkArgument(StringUtils.isNotBlank(username), "username should be provided");
+    checkArgument(username.length() >= 1 && username.length() <= 25, "username should be between 1 to 25 characters");
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  static class Builder {
     private Long id;
-
-    @Embedded private Email email;
-
-    @Column(name = "username", length = 50, nullable = false)
+    private Email email;
     private String username;
-
-    @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "bio")
     private String bio;
-
-    @Column(name = "image")
     private String image;
 
-    private User(Long id, Email email, String username, String password, String bio, String image) {
-        checkArgument(StringUtils.isNotBlank(password), "password should be provided");
-        checkUsername(username);
-
-        this.id = id;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.bio = bio;
-        this.image = image;
+    public Builder id(Long id) {
+      this.id = id;
+      return this;
     }
 
-    public Long id() {
-        return id;
+    public Builder email(Email email) {
+      this.email = email;
+      return this;
     }
 
-    public String username() {
-        return username;
+    public Builder username(String username) {
+      this.username = username;
+      return this;
     }
 
-    public String password() {
-        return password;
+    public Builder password(String password) {
+      this.password = password;
+      return this;
     }
 
-    public void changePassword(String password) {
-        this.password = password;
+    public Builder bio(String bio) {
+      this.bio = bio;
+      return this;
     }
 
-    private static void checkUsername(String username){
-        checkArgument(StringUtils.isNotBlank(username), "username should be provided");
-        checkArgument(username.length() >= 1 && username.length() <= 25, "username should be between 1 to 25 characters");
+    public Builder image(String image) {
+      this.image = image;
+      return this;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public User build() {
+      return new User(id, email, username, password, bio, image);
     }
-
-    static class Builder {
-        private Long id;
-        private Email email;
-        private String username;
-        private String password;
-        private String bio;
-        private String image;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder email(Email email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder username(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder bio(String bio) {
-            this.bio = bio;
-            return this;
-        }
-        public Builder image(String image) {
-            this.image = image;
-            return this;
-        }
-
-        public User build() {
-            return new User(id, email, username, password, bio, image);
-        }
-    }
+  }
 }
