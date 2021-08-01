@@ -2,18 +2,14 @@ package com.tistory.povia.realworld.user.service;
 
 import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
-import com.tistory.povia.realworld.user.repository.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
+import com.tistory.povia.realworld.user.repository.MemoryUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class UserServiceTest {
+class UserServiceLogicTest {
 
   private String username;
 
@@ -21,12 +17,9 @@ class UserServiceTest {
 
   private String password;
 
-  @Mock
-  private UserRepository userRepository;
+  private MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
 
-  @InjectMocks
-  @Autowired
-  private UserService userService;
+  private UserService userService = new UserService(memoryUserRepository);
 
   @BeforeEach
   void setUp() {
@@ -37,9 +30,9 @@ class UserServiceTest {
 
   @Test
   @DisplayName("일반적인 방법으로는 join에 성공한 후 결과를 return해야 함")
-  void joinSuccessTest(){
+  void joinSuccessTest() {
 
-    User user = userService.registration(username, email, password);
+    User user = userService.join(username, email, password);
 
     assertThat(user).isNotNull();
     assertThat(user.id()).isNotNull();

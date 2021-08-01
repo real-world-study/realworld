@@ -29,4 +29,10 @@ public class Email {
         return address;
     }
 
+    @Override
+    public String toString() {
+        return "Email{" +
+          "address='" + address + '\'' +
+          '}';
+    }
 }

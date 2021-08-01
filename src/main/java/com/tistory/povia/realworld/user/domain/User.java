@@ -62,6 +62,21 @@ public class User extends BaseTimeEntity {
     this.password = password;
   }
 
+  public void initId(Long id){
+    this.id = id;
+  }
+  @Override
+  public String toString() {
+    return "User{" +
+      "id=" + id +
+      ", email=" + email +
+      ", username='" + username + '\'' +
+      ", password='" + password + '\'' +
+      ", bio='" + bio + '\'' +
+      ", image='" + image + '\'' +
+      '}';
+  }
+
   private static void checkUsername(String username) {
     checkArgument(StringUtils.isNotBlank(username), "username should be provided");
     checkArgument(username.length() >= 1 && username.length() <= 25, "username should be between 1 to 25 characters");
@@ -71,7 +86,7 @@ public class User extends BaseTimeEntity {
     return new Builder();
   }
 
-  static class Builder {
+  public static class Builder {
     private Long id;
     private Email email;
     private String username;
