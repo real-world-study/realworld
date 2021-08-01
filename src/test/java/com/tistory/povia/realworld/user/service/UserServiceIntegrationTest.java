@@ -3,25 +3,29 @@ package com.tistory.povia.realworld.user.service;
 import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 import com.tistory.povia.realworld.user.exception.DuplicatedEmailException;
-import com.tistory.povia.realworld.user.repository.MemoryUserRepository;
+import com.tistory.povia.realworld.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class UserServiceLogicTest {
+@SpringBootTest
+@Transactional
+public class UserServiceIntegrationTest {
+
+  @Autowired
+  private UserService userService;
 
   private String username;
 
   private Email email;
 
   private String password;
-
-  private MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
-
-  private UserService userService = new UserService(memoryUserRepository);
 
   @BeforeEach
   void setUp() {
@@ -47,6 +51,9 @@ class UserServiceLogicTest {
 
     userService.join(username, email, password);
 
-    assertThatThrownBy(() -> userService.join(username, email, password)).isInstanceOf(DuplicatedEmailException.class).hasMessage("Duplicated Email found");
+    assertThatThrownBy(() ->
+      userService.join(username, email, password)
+    ).isInstanceOf(DuplicatedEmailException.class)
+      .hasMessage("Duplicated Email found");
   }
 }

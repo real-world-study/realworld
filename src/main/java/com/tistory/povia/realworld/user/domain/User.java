@@ -3,15 +3,15 @@ package com.tistory.povia.realworld.user.domain;
 import com.tistory.povia.realworld.common.domain.BaseTimeEntity;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-@Entity
+@Entity(name = "user")
 public class User extends BaseTimeEntity {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
 
@@ -30,11 +30,10 @@ public class User extends BaseTimeEntity {
   @Column(name = "image")
   private String image;
 
-  private User(Long id, Email email, String username, String password, String bio, String image) {
+  private User(Email email, String username, String password, String bio, String image) {
     checkArgument(StringUtils.isNotBlank(password), "password should be provided");
     checkUsername(username);
 
-    this.id = id;
     this.email = email;
     this.username = username;
     this.password = password;
@@ -56,10 +55,6 @@ public class User extends BaseTimeEntity {
 
   public Email email() {
     return email;
-  }
-
-  public void changePassword(String password) {
-    this.password = password;
   }
 
   public void initId(Long id){
@@ -87,17 +82,11 @@ public class User extends BaseTimeEntity {
   }
 
   public static class Builder {
-    private Long id;
     private Email email;
     private String username;
     private String password;
     private String bio;
     private String image;
-
-    public Builder id(Long id) {
-      this.id = id;
-      return this;
-    }
 
     public Builder email(Email email) {
       this.email = email;
@@ -125,7 +114,7 @@ public class User extends BaseTimeEntity {
     }
 
     public User build() {
-      return new User(id, email, username, password, bio, image);
+      return new User(email, username, password, bio, image);
     }
   }
 }

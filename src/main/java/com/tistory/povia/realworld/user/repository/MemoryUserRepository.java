@@ -1,5 +1,6 @@
 package com.tistory.povia.realworld.user.repository;
 
+import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 
 import java.util.Optional;
@@ -16,8 +17,12 @@ public class MemoryUserRepository implements UserRepository {
   }
 
   @Override
-  public Optional<User> findById(Long id) {
-    return Optional.ofNullable(store.get(id));
+  public Optional<User> findByEmail(Email email) {
+    Optional<User> findUser = store.values().stream()
+      .filter(user -> user.email().equals(email))
+      .findFirst();
+
+    return findUser;
   }
 
   @Override
