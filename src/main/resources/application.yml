@@ -15,6 +15,10 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
       pool-name: H2_DB
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
   h2:
     console:
       enabled: true
