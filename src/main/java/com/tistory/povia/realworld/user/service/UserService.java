@@ -23,7 +23,7 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  private void checkDuplicatedEmail(Email email){
+  private void checkDuplicatedEmail(Email email) {
     userRepository.findByEmail(email).ifPresent(user -> {
       throw new DuplicatedEmailException();
     });

@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -34,7 +33,8 @@ public class User extends BaseTimeEntity {
   @Column(name = "image")
   private String image;
 
-  protected User(){}
+  protected User() {
+  }
 
   private User(Email email, String username, String password, String bio, String image) {
     checkArgument(StringUtils.isNotBlank(password), "password should be provided");
@@ -47,6 +47,24 @@ public class User extends BaseTimeEntity {
     this.password = password;
     this.bio = bio;
     this.image = image;
+  }
+
+  private static void checkUsername(String username) {
+    checkArgument(StringUtils.isNotBlank(username), "username should be provided");
+    checkArgument(username.length() >= 1 && username.length() <= 25, "username should be between 1 to 25 characters");
+  }
+
+  private static void checkPassword(String password) {
+    checkArgument(StringUtils.isNotBlank(password), "password should be provided");
+    checkArgument(password.length() >= 1 && password.length() <= 25, "username should be 1 to 25 characters");
+  }
+
+  private static void checkImageUrl(String image) {
+    checkArgument(image == null || image.length() <= 255, "Image url length should be 1 to 255 characters");
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   public Long id() {
@@ -73,7 +91,7 @@ public class User extends BaseTimeEntity {
     return image;
   }
 
-  public void initId(Long id){
+  public void initId(Long id) {
     this.id = id;
   }
 
@@ -105,24 +123,6 @@ public class User extends BaseTimeEntity {
       ", bio='" + bio + '\'' +
       ", image='" + image + '\'' +
       '}';
-  }
-
-  private static void checkUsername(String username) {
-    checkArgument(StringUtils.isNotBlank(username), "username should be provided");
-    checkArgument(username.length() >= 1 && username.length() <= 25, "username should be between 1 to 25 characters");
-  }
-
-  private static void checkPassword(String password){
-    checkArgument(StringUtils.isNotBlank(password), "password should be provided");
-    checkArgument(password.length() >= 1 && password.length() <= 25, "username should be 1 to 25 characters");
-  }
-
-  private static void checkImageUrl(String image){
-    checkArgument(image == null || image.length() <= 255, "Image url length should be 1 to 255 characters");
-  }
-
-  public static Builder builder() {
-    return new Builder();
   }
 
   public static class Builder {

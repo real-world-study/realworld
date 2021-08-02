@@ -1,10 +1,8 @@
 package com.tistory.povia.realworld.user.controller;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 
 import java.util.Objects;
@@ -27,6 +25,21 @@ public class JoinResponse {
   @JsonProperty("image")
   private String image;
 
+  JoinResponse() {
+  }
+
+  JoinResponse(String username, String address, String password, String bio, String image) {
+    this.username = username;
+    this.address = address;
+    this.password = password;
+    this.bio = bio;
+    this.image = image;
+  }
+
+  public static JoinResponse fromUser(User user) {
+    return new JoinResponse(user.username(), user.email().address(), user.password(), user.bio(), user.image());
+  }
+
   public String username() {
     return username;
   }
@@ -37,16 +50,6 @@ public class JoinResponse {
 
   public String password() {
     return password;
-  }
-
-  JoinResponse(){}
-
-  JoinResponse(String username, String address, String password, String bio, String image) {
-    this.username = username;
-    this.address = address;
-    this.password = password;
-    this.bio = bio;
-    this.image = image;
   }
 
   // Example of JsonGetter
@@ -74,10 +77,6 @@ public class JoinResponse {
   @Override
   public int hashCode() {
     return Objects.hash(username, address, password, bio, image);
-  }
-
-  public static JoinResponse fromUser(User user) {
-    return new JoinResponse(user.username(), user.email().address(), user.password(), user.bio(), user.image());
   }
 
 }

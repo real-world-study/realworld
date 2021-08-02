@@ -1,10 +1,10 @@
 package com.tistory.povia.realworld.user.exception;
 
-public class DuplicatedEmailException extends RuntimeException{
+public class DuplicatedEmailException extends RuntimeException {
 
   private static final String EXCEPTION_MESSAGE = "Duplicated Email found";
 
-  public DuplicatedEmailException(){
+  public DuplicatedEmailException() {
     this(EXCEPTION_MESSAGE);
   }
 

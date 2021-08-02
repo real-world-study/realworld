@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -33,7 +33,7 @@ class UserControllerTest {
   private JoinRequest req;
 
   @BeforeEach
-  void setup(){
+  void setup() {
     req = new JoinRequest("povia", "povia@test.com", "543212", null, null);
   }
 
@@ -43,10 +43,10 @@ class UserControllerTest {
     ResultActions resultActions = mockMvc.
       perform(
         MockMvcRequestBuilders
-        .post("/api/users")
-        .content(objectMapper.writeValueAsString(req))
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(print());
+          .post("/api/users")
+          .content(objectMapper.writeValueAsString(req))
+          .contentType(MediaType.APPLICATION_JSON))
+      .andDo(print());
 
     resultActions
       .andExpect(status().isOk())
@@ -68,9 +68,9 @@ class UserControllerTest {
     mockMvc.
       perform(
         MockMvcRequestBuilders
-        .post("/api/users")
-        .content(objectMapper.writeValueAsString(req))
-        .contentType(MediaType.APPLICATION_JSON))
+          .post("/api/users")
+          .content(objectMapper.writeValueAsString(req))
+          .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().is4xxClientError())
       .andDo(print());
   }

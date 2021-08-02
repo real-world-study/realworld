@@ -1,10 +1,8 @@
 package com.tistory.povia.realworld.user.service;
 
-import com.tistory.povia.realworld.user.controller.JoinRequest;
 import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 import com.tistory.povia.realworld.user.exception.DuplicatedEmailException;
-import com.tistory.povia.realworld.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceIntegrationTest {
 
-  @Autowired private UserService userService;
+  @Autowired
+  private UserService userService;
 
   private String username;
 
@@ -52,7 +51,7 @@ public class UserServiceIntegrationTest {
 
   @Test
   @DisplayName("중복된 이메일로는 가입 불가능")
-  void joinFailedTest(){
+  void joinFailedTest() {
     User oldUser = User.builder().username(username).email(email).password(password).build();
     userService.join(oldUser);
 

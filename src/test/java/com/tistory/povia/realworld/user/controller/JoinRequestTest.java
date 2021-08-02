@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class JoinRequestTest {
 
@@ -19,7 +19,7 @@ class JoinRequestTest {
   private String image;
 
   @BeforeEach
-  void setup(){
+  void setup() {
     username = "abcde";
     address = "test@test.com";
     password = "asdfz";
@@ -30,7 +30,7 @@ class JoinRequestTest {
 
   @Test
   @DisplayName("전체 확인")
-  void fullParamTest(){
+  void fullParamTest() {
     JoinRequest joinRequest = new JoinRequest(username, address, password, bio, image);
     User user = joinRequest.toUser();
 

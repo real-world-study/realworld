@@ -14,14 +14,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserServiceLogicTest {
 
-  private String username;
-
-  private Email email;
-
-  private String password;
-
   private final MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
-
+  private String username;
+  private Email email;
+  private String password;
   private UserService userService = new UserService(memoryUserRepository);
 
   @BeforeEach
@@ -49,7 +45,7 @@ class UserServiceLogicTest {
 
   @Test
   @DisplayName("중복된 이메일로는 가입 불가능")
-  void joinFailedTest(){
+  void joinFailedTest() {
     User duplicateTestUser = User.builder().username(username).email(email).password(password).build();
     userService.join(duplicateTestUser);
 

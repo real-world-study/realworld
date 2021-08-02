@@ -26,6 +26,17 @@ public class JoinRequest {
   @JsonProperty("image")
   private String image;
 
+  JoinRequest() {
+  }
+
+  JoinRequest(String username, String address, String password, String bio, String image) {
+    this.username = username;
+    this.address = address;
+    this.password = password;
+    this.bio = bio;
+    this.image = image;
+  }
+
   public String username() {
     return username;
   }
@@ -36,16 +47,6 @@ public class JoinRequest {
 
   public String password() {
     return password;
-  }
-
-  JoinRequest(){}
-
-  JoinRequest(String username, String address, String password, String bio, String image) {
-    this.username = username;
-    this.address = address;
-    this.password = password;
-    this.bio = bio;
-    this.image = image;
   }
 
   public String bio() {

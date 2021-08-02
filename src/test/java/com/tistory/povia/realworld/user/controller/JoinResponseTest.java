@@ -8,8 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class JoinResponseTest {
   private User user;
@@ -27,7 +27,7 @@ class JoinResponseTest {
 
   @Test
   @DisplayName("전체 확인")
-  void fullParamTest(){
+  void fullParamTest() {
     JoinResponse joinResponse = JoinResponse.fromUser(user);
 
     assertAll(
@@ -36,7 +36,7 @@ class JoinResponseTest {
       () -> assertThat(user.password()).isEqualTo(joinResponse.password()),
       () -> assertThat(user.bio()).isEqualTo(joinResponse.bio()),
       () -> assertThat(user.image()).isEqualTo(joinResponse.image())
-      );
+    );
   }
 
   @Test
