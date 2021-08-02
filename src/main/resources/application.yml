@@ -19,9 +19,9 @@ spring:
     console:
       enabled: true
       path: /h2-console
-  jpa:
-    show-sql: true
 
+logging.level:
+  org.hibernate.SQL: debug
 server:
   port: 8080
 

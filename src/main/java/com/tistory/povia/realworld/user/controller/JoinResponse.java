@@ -1,5 +1,6 @@
 package com.tistory.povia.realworld.user.controller;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -10,7 +11,7 @@ import java.util.Objects;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class JoinRequest {
+public class JoinResponse {
   @JsonProperty("username")
   private String username;
 
@@ -38,9 +39,9 @@ public class JoinRequest {
     return password;
   }
 
-  JoinRequest(){}
+  JoinResponse(){}
 
-  JoinRequest(String username, String address, String password, String bio, String image) {
+  JoinResponse(String username, String address, String password, String bio, String image) {
     this.username = username;
     this.address = address;
     this.password = password;
@@ -48,6 +49,8 @@ public class JoinRequest {
     this.image = image;
   }
 
+  // Example of JsonGetter
+  // @JsonGetter("bio")
   public String bio() {
     return bio;
   }
@@ -60,7 +63,7 @@ public class JoinRequest {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    JoinRequest that = (JoinRequest) o;
+    JoinResponse that = (JoinResponse) o;
     return Objects.equals(username, that.username) &&
       Objects.equals(address, that.address) &&
       Objects.equals(password, that.password) &&
@@ -73,14 +76,8 @@ public class JoinRequest {
     return Objects.hash(username, address, password, bio, image);
   }
 
-  public User toUser() {
-    return User.builder()
-      .email(new Email(address))
-      .username(username)
-      .password(password)
-      .image(image)
-      .bio(bio)
-      .build();
+  public static JoinResponse fromUser(User user) {
+    return new JoinResponse(user.username(), user.email().address(), user.password(), user.bio(), user.image());
   }
 
 }

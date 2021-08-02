@@ -20,7 +20,7 @@ class UserServiceLogicTest {
 
   private String password;
 
-  private MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
+  private final MemoryUserRepository memoryUserRepository = new MemoryUserRepository();
 
   private UserService userService = new UserService(memoryUserRepository);
 
@@ -34,8 +34,8 @@ class UserServiceLogicTest {
   @Test
   @DisplayName("일반적인 방법으로는 join 에 성공한 후 결과를 return 해야 함")
   void joinSuccessTest() {
-
-    User user = userService.join(username, email, password);
+    User joinUser = User.builder().username(username).email(email).password(password).build();
+    User user = userService.join(joinUser);
 
     Assertions.assertAll(
       () -> assertThat(user).isNotNull(),
@@ -50,9 +50,9 @@ class UserServiceLogicTest {
   @Test
   @DisplayName("중복된 이메일로는 가입 불가능")
   void joinFailedTest(){
+    User duplicateTestUser = User.builder().username(username).email(email).password(password).build();
+    userService.join(duplicateTestUser);
 
-    userService.join(username, email, password);
-
-    assertThatThrownBy(() -> userService.join(username, email, password)).isInstanceOf(DuplicatedEmailException.class).hasMessage("Duplicated Email found");
+    assertThatThrownBy(() -> userService.join(duplicateTestUser)).isInstanceOf(DuplicatedEmailException.class).hasMessage("Duplicated Email found");
   }
 }

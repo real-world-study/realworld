@@ -17,10 +17,8 @@ public class UserService {
   }
 
   @Transactional
-  public User join(String username, Email email, String password) {
-    checkDuplicatedEmail(email);
-
-    User user = User.builder().email(email).username(username).password(password).build();
+  public User join(User user) {
+    checkDuplicatedEmail(user.email());
 
     return userRepository.save(user);
   }

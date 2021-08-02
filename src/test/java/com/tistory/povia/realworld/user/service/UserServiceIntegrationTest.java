@@ -1,5 +1,6 @@
 package com.tistory.povia.realworld.user.service;
 
+import com.tistory.povia.realworld.user.controller.JoinRequest;
 import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 import com.tistory.povia.realworld.user.exception.DuplicatedEmailException;
@@ -28,18 +29,11 @@ public class UserServiceIntegrationTest {
 
   private String password;
 
-  private User user;
-
-  private String bio;
-
-  private String image;
-
   @BeforeEach
   void setUp() {
     username = "tester";
     email = new Email("test@test.com");
     password = "test";
-
   }
 
   @Test
@@ -47,7 +41,7 @@ public class UserServiceIntegrationTest {
   void joinSuccessTest() {
     Email email = new Email("test2@test.com");
 
-    User user = userService.join("test", email, password);
+    User user = userService.join(User.builder().username("test").email(email).password(password).build());
 
     assertThat(user).isNotNull();
     assertThat(user.id()).isNotNull();
@@ -59,11 +53,13 @@ public class UserServiceIntegrationTest {
   @Test
   @DisplayName("중복된 이메일로는 가입 불가능")
   void joinFailedTest(){
+    User oldUser = User.builder().username(username).email(email).password(password).build();
+    userService.join(oldUser);
 
-    userService.join(username, email, password);
+    User newUser = User.builder().username("new user").email(email).password("test2").build();
 
     assertThatThrownBy(() ->
-      userService.join(username, email, password)
+      userService.join(newUser)
     ).isInstanceOf(DuplicatedEmailException.class)
       .hasMessage("Duplicated Email found");
   }

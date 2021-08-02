@@ -1,12 +1,10 @@
 package com.tistory.povia.realworld.user.controller;
 
-import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 import com.tistory.povia.realworld.user.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,9 +17,9 @@ public class UserController {
   }
 
   @PostMapping("api/users")
-  public ResponseEntity<?> join(@ModelAttribute JoinRequest joinRequest) {
-    User user = userService.join(joinRequest.username(), new Email(joinRequest.address()), joinRequest.password());
-
-    return new ResponseEntity<>(user, HttpStatus.OK);
+  public ResponseEntity<JoinResponse> join(@RequestBody JoinRequest joinRequest) {
+    User user = userService.join(joinRequest.toUser());
+    JoinResponse joinResponse = JoinResponse.fromUser(user);
+    return ResponseEntity.ok().body(joinResponse);
   }
 }

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Optional;
+
 @RestControllerAdvice
 public class ExceptionHandlingController {
 
@@ -18,7 +20,7 @@ public class ExceptionHandlingController {
   )
   public ResponseEntity<?> handleBadRequestException(Exception exception){
     log.debug("Bad Request: {}", exception.getMessage(), exception);
-    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    return ResponseEntity.badRequest().body(exception.getMessage());
   }
 
   @ExceptionHandler(
@@ -26,6 +28,6 @@ public class ExceptionHandlingController {
   )
   public ResponseEntity<?> internalErrorException(Exception exception){
     log.error("Internal Error: {}", exception.getMessage(), exception);
-    return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    return ResponseEntity.internalServerError().body(Optional.empty());
   }
 }

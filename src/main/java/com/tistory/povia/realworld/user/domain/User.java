@@ -6,6 +6,8 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity(name = "user")
@@ -31,6 +33,8 @@ public class User extends BaseTimeEntity {
 
   @Column(name = "image")
   private String image;
+
+  protected User(){}
 
   private User(Email email, String username, String password, String bio, String image) {
     checkArgument(StringUtils.isNotBlank(password), "password should be provided");
@@ -72,6 +76,25 @@ public class User extends BaseTimeEntity {
   public void initId(Long id){
     this.id = id;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    User user = (User) o;
+    return Objects.equals(id, user.id) &&
+      email.equals(user.email) &&
+      username.equals(user.username) &&
+      password.equals(user.password) &&
+      Objects.equals(bio, user.bio) &&
+      Objects.equals(image, user.image);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, email, username, password, bio, image);
+  }
+
   @Override
   public String toString() {
     return "User{" +

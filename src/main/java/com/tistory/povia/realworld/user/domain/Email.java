@@ -17,6 +17,8 @@ public class Email {
     @Column(name = "email", length = 50, updatable = false, nullable = false)
     private String address;
 
+    protected Email(){}
+
     public Email(String address) {
         checkArgument(isNotBlank(address), "email should be provided");
         checkArgument(checkAddress(address), "email should be 'xxx@xxx.xxx'");
