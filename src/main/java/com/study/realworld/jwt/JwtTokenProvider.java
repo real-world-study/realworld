@@ -8,14 +8,14 @@ import java.security.Key;
 import java.util.Date;
 import org.springframework.security.core.Authentication;
 
-public class TokenProvider {
+public class JwtTokenProvider {
 
     private final Key key;
     private final String headerType;
     private final String issuer;
     private final long accessTime;
 
-    public TokenProvider(String headerType, String issuer, String secret, long accessTime) {
+    public JwtTokenProvider(String headerType, String issuer, String secret, long accessTime) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.headerType = headerType;
@@ -40,4 +40,5 @@ public class TokenProvider {
 
         return accessToken;
     }
+
 }

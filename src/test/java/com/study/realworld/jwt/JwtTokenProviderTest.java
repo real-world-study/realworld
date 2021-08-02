@@ -1,29 +1,27 @@
 package com.study.realworld.jwt;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
 @ExtendWith(MockitoExtension.class)
-class TokenProviderTest {
+class JwtTokenProviderTest {
 
     @Mock
     private Authentication authentication;
 
-    private TokenProvider tokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 
     @BeforeEach
     void beforeEach() {
-        tokenProvider = new TokenProvider("headerType", "issuer",
+        jwtTokenProvider = new JwtTokenProvider("headerType", "issuer",
             "dGVzdF90ZXN0X3Rlc3RfdGVzdF90ZXN0X3Rlc3RfdGVzdF90ZXN0X3Rlc3RfdGVzdF90ZXN0X3Rlc3RfdGVzdF8K", 10L);
     }
 
@@ -35,9 +33,10 @@ class TokenProviderTest {
         when(authentication.getName()).thenReturn("username");
 
         // when
-        String result = tokenProvider.generateToken(authentication);
+        String result = jwtTokenProvider.generateToken(authentication);
 
         // then
         assertThat(result).isNotNull();
     }
+
 }
