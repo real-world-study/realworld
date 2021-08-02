@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.user.entity.User;
 
 import lombok.Getter;
 
@@ -22,4 +23,11 @@ public class LoginRequest {
 
     @NotBlank
     private String password;
+
+    public User toEntity() {
+        return User.builder()
+                   .email(email)
+                   .password(password)
+                   .build();
+    }
 }

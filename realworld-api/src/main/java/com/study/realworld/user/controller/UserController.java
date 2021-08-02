@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.study.realworld.user.controller.dto.request.JoinRequest;
 import com.study.realworld.user.controller.dto.request.LoginRequest;
 import com.study.realworld.user.controller.dto.request.UpdateRequest;
+import com.study.realworld.user.controller.dto.response.UserInfo;
+import com.study.realworld.user.entity.User;
 import com.study.realworld.user.service.UserService;
 
 @Slf4j
@@ -29,16 +31,19 @@ public class UserController {
 
     @PostMapping("/users/login")
     public ResponseEntity login(@RequestBody @Valid final LoginRequest loginRequest) {
-        return ok(userService.login(loginRequest));
+        final User user = userService.login(loginRequest.toEntity());
+        return ok(UserInfo.create(user));
     }
 
     @PostMapping("/users")
     public ResponseEntity join(@RequestBody @Valid final JoinRequest joinRequest) {
-        return ok(userService.join(joinRequest));
+        final User user = userService.join(joinRequest);
+        return ok(UserInfo.create(user));
     }
 
     @PutMapping("/user")
-    public ResponseEntity update(@RequestBody @Valid final UpdateRequest updateRequest){
-        return ok(userService.update(updateRequest));
+    public ResponseEntity update(@RequestBody @Valid final UpdateRequest updateRequest) {
+        final User user = userService.update(updateRequest);
+        return ok(UserInfo.create(user));
     }
 }

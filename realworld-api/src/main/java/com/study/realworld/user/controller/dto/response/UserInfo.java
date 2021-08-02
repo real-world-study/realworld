@@ -17,7 +17,7 @@ import util.TokenGenerator;
 @JsonTypeInfo(include = WRAPPER_OBJECT, use = NAME)
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 public class UserInfo {
     private String email;
     private String token;
