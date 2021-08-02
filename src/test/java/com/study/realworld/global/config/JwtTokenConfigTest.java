@@ -20,13 +20,15 @@ class JwtTokenConfigTest {
     @Test
     @DisplayName("token yml 설정값 확인")
     void jwtTokenConfigTest() {
+        String headerType = jwtTokenConfig.getHeaderType();
+        String issuer = jwtTokenConfig.getIssuer();
         String secret = jwtTokenConfig.getSecret();
         long accessTime = jwtTokenConfig.getAccessTime();
-        String authoritesKey = jwtTokenConfig.getAuthoritesKey();
 
+        assertThat(headerType).isEqualTo("JWT");
+        assertThat(issuer).isEqualTo("ori");
         assertThat(secret).isEqualTo("b3JpX3RveV9wcm9qZWN0X3JlYWxfd29ybGRfamF2YV9zcHJpbmdfYm9vdF9zZWNyZXRfand0X3NhdWx0X2tleQo=");
         assertThat(accessTime).isEqualTo(1800000);
-        assertThat(authoritesKey).isEqualTo("Authorization");
     }
 
 }
