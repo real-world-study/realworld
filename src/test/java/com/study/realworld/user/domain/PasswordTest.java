@@ -134,7 +134,7 @@ class PasswordTest {
         String input = "password";
 
         // when
-        boolean result = password.matchPassword("password", passwordEncoder);
+        boolean result = password.matchPassword(new Password("password"), passwordEncoder);
 
         // then
         assertThat(result).isTrue();
@@ -152,7 +152,7 @@ class PasswordTest {
         String input = "password";
 
         // when
-        boolean result = password.matchPassword("password", passwordEncoder);
+        boolean result = password.matchPassword(new Password("password"), passwordEncoder);
 
         // then
         assertThat(result).isFalse();

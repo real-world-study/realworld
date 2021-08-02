@@ -32,8 +32,8 @@ public class Password {
         return new Password(passwordEncoder.encode(valueOf(password)));
     }
 
-    public boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(rawPassword, this.password);
+    public boolean matchPassword(Password rawPassword, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword.getPassword(), this.password);
     }
 
 }
