@@ -1,6 +1,7 @@
 package com.study.realworld.user.service;
 
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
@@ -30,6 +31,15 @@ public class UserService {
 
         user.encodePassword(passwordEncoder);
         return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public User login(@Valid Email email, @Valid Password password) {
+        User user = findByEmail(email).orElseThrow(RuntimeException::new);  // 임시 Exception
+        if (!user.getPassword().matchPassword(password, passwordEncoder)) {
+            throw new RuntimeException("error password");   // 임시 Exception
+        }
+        return user;
     }
 
     private void checkDuplicatedByUsernameOrEmail(Username username, Email email) {

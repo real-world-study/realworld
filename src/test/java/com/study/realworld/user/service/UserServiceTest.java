@@ -97,4 +97,54 @@ class UserServiceTest {
         assertThat(user.getImage()).isEqualTo("image");
     }
 
+    @Test
+    @DisplayName("로그인 요청한 이메일이 존재하지 않는 이메일이면 Exception을 반환해야 한다.")
+    void loginFailByEmailTest() {
+
+        // setup & given
+        Email email = new Email("test@test.com");
+        Password password = new Password("password");
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        // when && then
+        assertThatExceptionOfType(Exception.class)
+            .isThrownBy(() -> userService.login(email, password));
+    }
+
+    @Test
+    @DisplayName("로그인 요청한 이메일에 매칭되지 않는 패스워드이면 Exception을 반환해야 한다.")
+    void loginFailByPasswordTest() {
+
+        // setup & given
+        Email email = new Email("test@test.com");
+        Password password = new Password("password");
+        User user = User.Builder().password(new Password("encoded_password")).build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
+        when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
+
+        // when & then
+        assertThatExceptionOfType(Exception.class)
+            .isThrownBy(() -> userService.login(email, password));
+    }
+
+    @Test
+    @DisplayName("로그인 요청한 이메일 페스워드가 실제 유저일 때 유저를 반환한다.")
+    void loginSuccessTest() {
+
+        // setup & given
+        Email email = new Email("test@test.com");
+        Password password = new Password("password");
+        User input = User.Builder().email(email).password(new Password("encoded_password")).build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.ofNullable(input));
+        when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
+
+        // when
+        User user = userService.login(email, password);
+
+        // then
+        assertThat(user).isNotNull();
+        assertThat(user.getEmail().toString()).isEqualTo("test@test.com");
+        assertThat(user.getPassword().getPassword()).isEqualTo("encoded_password");
+    }
+
 }
