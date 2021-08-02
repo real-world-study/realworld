@@ -22,6 +22,10 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 }
 
 apply from: 'test.gradle'
