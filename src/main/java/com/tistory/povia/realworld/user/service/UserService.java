@@ -10,22 +10,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class UserService {
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  public UserService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-  @Transactional
-  public User join(User user) {
-    checkDuplicatedEmail(user.email());
+    @Transactional
+    public User join(User user) {
+        checkDuplicatedEmail(user.email());
 
-    return userRepository.save(user);
-  }
+        return userRepository.save(user);
+    }
 
-  private void checkDuplicatedEmail(Email email) {
-    userRepository.findByEmail(email).ifPresent(user -> {
-      throw new DuplicatedEmailException();
-    });
-  }
+    private void checkDuplicatedEmail(Email email) {
+        userRepository
+                .findByEmail(email)
+                .ifPresent(
+                        user -> {
+                            throw new DuplicatedEmailException();
+                        });
+    }
 }
