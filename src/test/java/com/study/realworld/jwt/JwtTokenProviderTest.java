@@ -65,14 +65,16 @@ class JwtTokenProviderTest {
             .setExpiration(new Date(now + 3000))
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
+        JwtAuthenticationToken authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         // when
-        JwtAuthenticationToken authentication = jwtTokenProvider.getAuthentication(accessToken);
-        JwtAuthenticationTokenPrincipal result = (JwtAuthenticationTokenPrincipal) authentication
+        JwtAuthenticationTokenPrincipal resultPrincipal = (JwtAuthenticationTokenPrincipal) authentication
             .getPrincipal();
+        String resultCredentials = authentication.getCredentials();
 
         // then
-        assertThat(result.getId()).isEqualTo(id);
+        assertThat(resultPrincipal.getId()).isEqualTo(id);
+        assertThat(resultCredentials).isEqualTo(accessToken);
     }
 
     @Test

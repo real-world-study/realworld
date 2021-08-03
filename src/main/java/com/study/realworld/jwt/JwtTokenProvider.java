@@ -55,7 +55,7 @@ public class JwtTokenProvider {
 
         Long userId = Long.parseLong(claims.getSubject());
 
-        return new JwtAuthenticationToken(new JwtAuthenticationTokenPrincipal(userId), null);
+        return new JwtAuthenticationToken(new JwtAuthenticationTokenPrincipal(userId), accessToken);
     }
 
     public boolean validateToken(String token) {
