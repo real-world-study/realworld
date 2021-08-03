@@ -1,6 +1,16 @@
 package com.study.realworld.user.service;
 
-import com.study.realworld.user.domain.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Password;
+import com.study.realworld.user.domain.User;
+import com.study.realworld.user.domain.UserRepository;
+import com.study.realworld.user.domain.Username;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,14 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Optional;
-
-import static java.lang.String.valueOf;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -65,7 +67,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
         Password password = new Password("password");
-        when(passwordEncoder.encode(valueOf(password))).thenReturn("encoded_password");
+        when(passwordEncoder.encode(password.getPassword())).thenReturn("encoded_password");
         User input = User.Builder()
             .username(new Username("username"))
             .email(new Email("email"))
