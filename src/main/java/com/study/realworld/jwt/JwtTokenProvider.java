@@ -18,8 +18,11 @@ public class JwtTokenProvider {
     private final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     private final Key key;
+
     private final String headerType;
+
     private final String issuer;
+
     private final long accessTime;
 
     public JwtTokenProvider(String headerType, String issuer, String secret, long accessTime) {
