@@ -140,11 +140,11 @@ public class User extends BaseTimeEntity {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id)
-          && email.equals(user.email)
-          && username.equals(user.username)
-          && password.equals(user.password)
-          && Objects.equals(bio, user.bio)
-          && Objects.equals(image, user.image);
+                && email.equals(user.email)
+                && username.equals(user.username)
+                && password.equals(user.password)
+                && Objects.equals(bio, user.bio)
+                && Objects.equals(image, user.image);
     }
 
     @Override
@@ -155,22 +155,22 @@ public class User extends BaseTimeEntity {
     @Override
     public String toString() {
         return "User{"
-          + "id="
-          + id
-          + ", email="
-          + email
-          + ", username='"
-          + username
-          + '\''
-          + ", password='"
-          + password
-          + '\''
-          + ", bio='"
-          + bio
-          + '\''
-          + ", image='"
-          + image
-          + '\''
-          + '}';
+                + "id="
+                + id
+                + ", email="
+                + email
+                + ", username='"
+                + username
+                + '\''
+                + ", password='"
+                + password
+                + '\''
+                + ", bio='"
+                + bio
+                + '\''
+                + ", image='"
+                + image
+                + '\''
+                + '}';
     }
 }

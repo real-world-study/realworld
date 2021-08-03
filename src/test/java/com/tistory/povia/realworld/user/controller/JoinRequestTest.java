@@ -41,8 +41,7 @@ class JoinRequestTest {
                 () -> assertThat(user.image()).isEqualTo(joinRequest.image()),
                 () -> assertThat(joinRequest.toString()).isNotNull(),
                 () -> joinRequest.toUser().equals(user),
-                () -> joinRequest.toUser().hashCode()
-          );
+                () -> joinRequest.toUser().hashCode());
     }
 
     @Test

@@ -40,8 +40,7 @@ class JoinResponseTest {
                 () -> assertThat(user.image()).isEqualTo(joinResponse.image()),
                 () -> assertThat(joinResponse.toString()).isNotNull(),
                 () -> joinResponse.fromUser(user).equals(joinResponse),
-                () -> joinResponse.hashCode()
-        );
+                () -> joinResponse.hashCode());
     }
 
     @Test

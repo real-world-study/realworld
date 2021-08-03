@@ -57,12 +57,12 @@ public class JoinRequest {
 
     public User toUser() {
         return User.builder()
-          .email(new Email(address))
-          .username(username)
-          .password(password)
-          .image(image)
-          .bio(bio)
-          .build();
+                .email(new Email(address))
+                .username(username)
+                .password(password)
+                .image(image)
+                .bio(bio)
+                .build();
     }
 
     @Override
@@ -81,5 +81,4 @@ public class JoinRequest {
     public int hashCode() {
         return Objects.hash(username, address, password, bio, image);
     }
-
 }

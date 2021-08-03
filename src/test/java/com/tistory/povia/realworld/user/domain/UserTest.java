@@ -72,8 +72,7 @@ class UserTest {
                 () -> assertThat(user.username()).isEqualTo(username),
                 () -> assertThat(user.bio()).isEqualTo(bio),
                 () -> assertThat(user.image()).isEqualTo(image),
-                () -> assertThat(user.toString()).isNotNull()
-        );
+                () -> assertThat(user.toString()).isNotNull());
     }
 
     @Test
