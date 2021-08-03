@@ -8,6 +8,7 @@ import com.study.realworld.user.exception.UserNotFoundException;
 import com.study.realworld.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
     @PostMapping("/users")
     public ResponseEntity<UserResponse> joinUser(@RequestBody UserJoinRequest request) {
         User userRequest = UserJoinRequest.toUser(request);
+        userRequest.encodePassword(passwordEncoder);
 
         User user = userService.save(userRequest);
         String token = null;
@@ -35,7 +38,7 @@ public class UserController {
         User user = userService.findByEmail(request.getEmail());
         String token = null;
 
-        if(request.getPassword().equals(user.getPassword())) {
+        if(!user.matchesPassword(request.getPassword(), passwordEncoder)) {
             throw new UserNotFoundException(request.getPassword() + " wrong wrong wrong triple wrong");
         }
 
