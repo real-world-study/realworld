@@ -14,13 +14,13 @@ public class ExceptionHandlingController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler({IllegalArgumentException.class, DuplicatedEmailException.class})
-    public ResponseEntity<?> handleBadRequestException(Exception exception) {
+    protected ResponseEntity<?> handleBadRequestException(Exception exception) {
         log.debug("Bad Request: {}", exception.getMessage(), exception);
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
-    @ExceptionHandler({Exception.class, RuntimeException.class})
-    public ResponseEntity<?> internalErrorException(Exception exception) {
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<?> internalErrorException(Exception exception) {
         log.error("Internal Error: {}", exception.getMessage(), exception);
         return ResponseEntity.internalServerError().body(Optional.empty());
     }
