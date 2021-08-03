@@ -24,9 +24,9 @@ public class JoinResponse {
     @JsonProperty("image")
     private String image;
 
-    JoinResponse() {}
+    private JoinResponse() {}
 
-    JoinResponse(String username, String address, String password, String bio, String image) {
+    private JoinResponse(String username, String address, String password, String bio, String image) {
         this.username = username;
         this.address = address;
         this.password = password;

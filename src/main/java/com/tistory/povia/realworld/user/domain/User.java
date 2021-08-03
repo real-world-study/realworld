@@ -31,10 +31,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "image")
     private String image;
 
-    protected User() {}
+    private User() {}
 
     private User(Email email, String username, String password, String bio, String image) {
-        checkArgument(StringUtils.isNotBlank(password), "password should be provided");
         checkUsername(username);
         checkPassword(password);
         checkImageUrl(image);
@@ -57,7 +56,7 @@ public class User extends BaseTimeEntity {
         checkArgument(StringUtils.isNotBlank(password), "password should be provided");
         checkArgument(
                 password.length() >= 1 && password.length() <= 25,
-                "username should be 1 to 25 characters");
+                "password should be 1 to 25 characters");
     }
 
     private static void checkImageUrl(String image) {
@@ -98,46 +97,6 @@ public class User extends BaseTimeEntity {
         this.id = id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id)
-                && email.equals(user.email)
-                && username.equals(user.username)
-                && password.equals(user.password)
-                && Objects.equals(bio, user.bio)
-                && Objects.equals(image, user.image);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, username, password, bio, image);
-    }
-
-    @Override
-    public String toString() {
-        return "User{"
-                + "id="
-                + id
-                + ", email="
-                + email
-                + ", username='"
-                + username
-                + '\''
-                + ", password='"
-                + password
-                + '\''
-                + ", bio='"
-                + bio
-                + '\''
-                + ", image='"
-                + image
-                + '\''
-                + '}';
-    }
-
     public static class Builder {
         private Email email;
         private String username;
@@ -173,5 +132,45 @@ public class User extends BaseTimeEntity {
         public User build() {
             return new User(email, username, password, bio, image);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id)
+          && email.equals(user.email)
+          && username.equals(user.username)
+          && password.equals(user.password)
+          && Objects.equals(bio, user.bio)
+          && Objects.equals(image, user.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, username, password, bio, image);
+    }
+
+    @Override
+    public String toString() {
+        return "User{"
+          + "id="
+          + id
+          + ", email="
+          + email
+          + ", username='"
+          + username
+          + '\''
+          + ", password='"
+          + password
+          + '\''
+          + ", bio='"
+          + bio
+          + '\''
+          + ", image='"
+          + image
+          + '\''
+          + '}';
     }
 }

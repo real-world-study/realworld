@@ -14,7 +14,7 @@ public class Email {
     @Column(name = "email", length = 50, updatable = false, nullable = false)
     private String address;
 
-    protected Email() {}
+    private Email() {}
 
     public Email(String address) {
         checkArgument(isNotBlank(address), "email should be provided");
@@ -35,7 +35,7 @@ public class Email {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Email email = (Email) o;
-        return Objects.equals(address, email.address);
+        return Objects.equals(address, email.address());
     }
 
     @Override

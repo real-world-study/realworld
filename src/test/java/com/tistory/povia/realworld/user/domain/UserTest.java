@@ -1,5 +1,6 @@
 package com.tistory.povia.realworld.user.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.stream.Stream;
@@ -66,11 +67,13 @@ class UserTest {
                         .build();
 
         Assertions.assertAll(
-                () -> user.email().equals(email),
-                () -> user.password().equals(password),
-                () -> user.username().equals(username),
-                () -> user.bio().equals(bio),
-                () -> user.image().equals(image));
+                () -> assertThat(user.email()).isEqualTo(email),
+                () -> assertThat(user.password()).isEqualTo(password),
+                () -> assertThat(user.username()).isEqualTo(username),
+                () -> assertThat(user.bio()).isEqualTo(bio),
+                () -> assertThat(user.image()).isEqualTo(image),
+                () -> assertThat(user.toString()).isNotNull()
+        );
     }
 
     @Test

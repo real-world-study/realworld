@@ -38,6 +38,8 @@ class EmailTest {
         String address = "test@test.com";
         Email email = new Email(address);
 
+        assertThat(new Email(address).equals(email)).isTrue();
         assertThat(address).isEqualTo(email.address());
+        assertThat(email.toString()).isNotBlank();
     }
 }

@@ -55,6 +55,16 @@ public class JoinRequest {
         return image;
     }
 
+    public User toUser() {
+        return User.builder()
+          .email(new Email(address))
+          .username(username)
+          .password(password)
+          .image(image)
+          .bio(bio)
+          .build();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,13 +82,4 @@ public class JoinRequest {
         return Objects.hash(username, address, password, bio, image);
     }
 
-    public User toUser() {
-        return User.builder()
-                .email(new Email(address))
-                .username(username)
-                .password(password)
-                .image(image)
-                .bio(bio)
-                .build();
-    }
 }

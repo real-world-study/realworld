@@ -48,6 +48,7 @@ public class UserServiceIntegrationTest {
         assertThat(user.email()).isEqualTo(email);
         assertThat(user.createdAt()).isNotNull();
         assertThat(user.updatedAt()).isNotNull();
+        assertThat(user.deletedAt()).isNull();
     }
 
     @Test

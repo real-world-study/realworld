@@ -37,7 +37,11 @@ class JoinResponseTest {
                 () -> assertThat(user.email().address()).isEqualTo(joinResponse.address()),
                 () -> assertThat(user.password()).isEqualTo(joinResponse.password()),
                 () -> assertThat(user.bio()).isEqualTo(joinResponse.bio()),
-                () -> assertThat(user.image()).isEqualTo(joinResponse.image()));
+                () -> assertThat(user.image()).isEqualTo(joinResponse.image()),
+                () -> assertThat(joinResponse.toString()).isNotNull(),
+                () -> joinResponse.fromUser(user).equals(joinResponse),
+                () -> joinResponse.hashCode()
+        );
     }
 
     @Test
