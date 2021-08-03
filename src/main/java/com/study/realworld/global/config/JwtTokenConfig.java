@@ -1,6 +1,8 @@
 package com.study.realworld.global.config;
 
+import com.study.realworld.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -32,6 +34,11 @@ public class JwtTokenConfig {
 
     public long getAccessTime() {
         return accessTime;
+    }
+
+    @Bean
+    public JwtTokenProvider jwtTokenProvider() {
+        return new JwtTokenProvider(getHeaderType(), getIssuer(), getSecret(), getAccessTime());
     }
 
 }
