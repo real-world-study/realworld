@@ -33,7 +33,7 @@ public class JwtTokenProvider {
         this.accessTime = accessTime;
     }
 
-    public String generateToken(JwtAuthentication authentication) {
+    public String generateToken(JwtAuthenticationTokenPrincipal authentication) {
         long now = (new Date()).getTime();
 
         Date issuedAtDate = new Date();
@@ -55,7 +55,7 @@ public class JwtTokenProvider {
 
         Long userId = Long.parseLong(claims.getSubject());
 
-        return new JwtAuthenticationToken(new JwtAuthentication(userId), null);
+        return new JwtAuthenticationToken(new JwtAuthenticationTokenPrincipal(userId), null);
     }
 
     public boolean validateToken(String token) {

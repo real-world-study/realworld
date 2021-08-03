@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class JwtTokenProviderTest {
 
     @Mock
-    private JwtAuthentication authentication;
+    private JwtAuthenticationTokenPrincipal authentication;
 
     private JwtTokenProvider jwtTokenProvider;
 
@@ -68,7 +68,8 @@ class JwtTokenProviderTest {
 
         // when
         JwtAuthenticationToken authentication = jwtTokenProvider.getAuthentication(accessToken);
-        JwtAuthentication result = (JwtAuthentication) authentication.getPrincipal();
+        JwtAuthenticationTokenPrincipal result = (JwtAuthenticationTokenPrincipal) authentication
+            .getPrincipal();
 
         // then
         assertThat(result.getId()).isEqualTo(id);
@@ -152,7 +153,7 @@ class JwtTokenProviderTest {
         // given
         long now = (new Date()).getTime();
         String accessToken = Jwts.builder()
-            .claim("auth2" , "testauth")
+            .claim("auth2", "testauth")
             .setExpiration(new Date(now + 3000))
             .compact();
 
