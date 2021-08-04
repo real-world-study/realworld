@@ -4,7 +4,6 @@ import com.study.realworld.jwt.JwtAuthenticationTokenFilter;
 import com.study.realworld.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -36,12 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationTokenFilter(jwtTokenProvider, jwtTokenConfig.getHeaderType());
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/static/**", "/templates/**", "/h2/**", "/h2-console/**");
@@ -55,15 +48,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .headers()
             .disable()
             .sessionManagement()
-            // JWT 인증을 사용하므로 무상태(STATELESS) 전략 설정
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
+
             .authorizeRequests()
             .antMatchers("/api/users", "/api/users/login").permitAll()
             .anyRequest().authenticated()
             .and()
+
             .formLogin()
-            .disable();
+                .disable();
         http
             .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
