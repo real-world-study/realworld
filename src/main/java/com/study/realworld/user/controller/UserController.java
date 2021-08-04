@@ -45,4 +45,5 @@ public class UserController {
         return ResponseEntity.ok()
             .body(fromUserAndToken(user, tokenProvider.generateToken(user)));
     }
+
 }
