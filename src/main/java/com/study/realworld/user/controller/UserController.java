@@ -11,7 +11,6 @@ import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,16 +34,15 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<UserResponse> join(@RequestBody UserJoinRequest request) {
         User user = userService.join(from(request));
-        return new ResponseEntity<>(
-            fromUserAndToken(user, tokenProvider.generateToken(user)), HttpStatus.OK
-        );
+        return ResponseEntity.ok()
+            .body(fromUserAndToken(user, tokenProvider.generateToken(user)));
     }
 
     @PostMapping("/users/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
-        User user = userService.login(new Email(request.getEmail()), new Password(request.getPassword()));
-        return new ResponseEntity<>(
-            fromUserAndToken(user, tokenProvider.generateToken(user)), HttpStatus.OK
-        );
+        User user = userService
+            .login(new Email(request.getEmail()), new Password(request.getPassword()));
+        return ResponseEntity.ok()
+            .body(fromUserAndToken(user, tokenProvider.generateToken(user)));
     }
 }
