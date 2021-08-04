@@ -80,21 +80,17 @@ class JwtAuthenticationTokenFilterTest {
         // setup & given
         when(request.getHeader(any())).thenReturn("token");
         when(tokenProvider.validateToken("token")).thenReturn(true);
-        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(
-            new JwtAuthenticationTokenPrincipal(1L), null);
-        when(tokenProvider.getAuthentication("token")).thenReturn(jwtAuthenticationToken);
+        JwtAuthentication jwtAuthentication = new JwtAuthentication(1L, "token");
+        when(tokenProvider.getAuthentication("token")).thenReturn(jwtAuthentication);
         filter.doFilterInternal(request, response, filterChain);
 
         // when
-        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder
-            .getContext().getAuthentication();
-        JwtAuthenticationTokenPrincipal principal = (JwtAuthenticationTokenPrincipal) authentication
-            .getPrincipal();
+        JwtAuthentication result = (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
 
         // then
-        assertThat(authentication).isNotNull();
-        assertThat(principal.getId()).isEqualTo(1);
-        assertThat(authentication.getCredentials()).isNull();
+        assertThat(result).isNotNull();
+        assertThat(result.getPrincipal()).isEqualTo(1L);
+        assertThat(result.getCredentials()).isEqualTo("token");
     }
 
 }
