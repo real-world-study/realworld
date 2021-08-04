@@ -1,14 +1,10 @@
 package com.study.realworld.global.config;
 
-import com.study.realworld.jwt.JwtAuthenticationProvider;
 import com.study.realworld.jwt.JwtAuthenticationTokenFilter;
 import com.study.realworld.jwt.JwtTokenProvider;
-import com.study.realworld.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -36,12 +32,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider(JwtTokenProvider provider,
-        UserService service) {
-        return new JwtAuthenticationProvider(provider, service);
-    }
-
-    @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter(jwtTokenProvider, jwtTokenConfig.getHeaderType());
     }
@@ -50,12 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder builder,
-        JwtAuthenticationProvider authenticationProvider) {
-        builder.authenticationProvider(authenticationProvider);
     }
 
     @Override
