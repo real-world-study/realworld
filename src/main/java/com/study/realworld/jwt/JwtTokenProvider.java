@@ -1,5 +1,6 @@
 package com.study.realworld.jwt;
 
+import com.study.realworld.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -33,7 +34,7 @@ public class JwtTokenProvider {
         this.accessTime = accessTime;
     }
 
-    public String generateToken(JwtAuthenticationTokenPrincipal authentication) {
+    public String generateToken(User user) {
         long now = (new Date()).getTime();
 
         Date issuedAtDate = new Date();
@@ -41,7 +42,7 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
             .signWith(key, SignatureAlgorithm.HS512)            // header "alg" : HS512
             .setHeaderParam("typ", headerType)            // header "typ" : JWT
-            .setSubject(authentication.getId().toString())      // payload "sub" : userId
+            .setSubject(user.getId().toString())                // payload "sub" : userId
             .setIssuer(issuer)                                  // payload "iss" : ori
             .setExpiration(accessTokenExpiresIn)                // payload "exp"
             .setIssuedAt(issuedAtDate)                          // payload "iat"
@@ -50,12 +51,11 @@ public class JwtTokenProvider {
         return accessToken;
     }
 
-    public JwtAuthenticationToken getAuthentication(String accessToken) {
+    public JwtAuthentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
-
         Long userId = Long.parseLong(claims.getSubject());
 
-        return new JwtAuthenticationToken(new JwtAuthenticationTokenPrincipal(userId), accessToken);
+        return new JwtAuthentication(userId, accessToken);
     }
 
     public boolean validateToken(String token) {

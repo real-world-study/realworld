@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.user.domain.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -23,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class JwtTokenProviderTest {
 
     @Mock
-    private JwtAuthenticationTokenPrincipal authentication;
+    private User user;
 
     private JwtTokenProvider jwtTokenProvider;
 
@@ -42,10 +43,10 @@ class JwtTokenProviderTest {
     void generateTokenTest() {
 
         // setup && given
-        when(authentication.getId()).thenReturn(1L);
+        when(user.getId()).thenReturn(1L);
 
         // when
-        String result = jwtTokenProvider.generateToken(authentication);
+        String result = jwtTokenProvider.generateToken(user);
 
         // then
         assertThat(result).isNotNull();
@@ -65,16 +66,13 @@ class JwtTokenProviderTest {
             .setExpiration(new Date(now + 3000))
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
-        JwtAuthenticationToken authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         // when
-        JwtAuthenticationTokenPrincipal resultPrincipal = (JwtAuthenticationTokenPrincipal) authentication
-            .getPrincipal();
-        String resultCredentials = authentication.getCredentials();
+        JwtAuthentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         // then
-        assertThat(resultPrincipal.getId()).isEqualTo(id);
-        assertThat(resultCredentials).isEqualTo(accessToken);
+        assertThat((Long) authentication.getPrincipal()).isEqualTo(id);
+        assertThat(authentication.getCredentials()).isEqualTo(accessToken);
     }
 
     @Test
