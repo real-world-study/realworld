@@ -3,7 +3,7 @@ package com.study.realworld.user.controller;
 import static com.study.realworld.user.controller.request.UserJoinRequest.from;
 import static com.study.realworld.user.controller.response.UserResponse.fromUserAndToken;
 
-import com.study.realworld.jwt.JwtTokenProvider;
+import com.study.realworld.security.JwtTokenProvider;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.request.UserLoginRequest;
 import com.study.realworld.user.controller.response.UserResponse;

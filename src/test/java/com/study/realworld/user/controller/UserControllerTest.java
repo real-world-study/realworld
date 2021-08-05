@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.jwt.JwtTokenProvider;
+import com.study.realworld.security.JwtTokenProvider;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;

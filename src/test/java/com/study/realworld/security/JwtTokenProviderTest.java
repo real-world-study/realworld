@@ -1,4 +1,4 @@
-package com.study.realworld.jwt;
+package com.study.realworld.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

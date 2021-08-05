@@ -1,6 +1,6 @@
 package com.study.realworld.global.config;
 
-import com.study.realworld.jwt.JwtTokenProvider;
+import com.study.realworld.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.study.realworld.jwt;
+package com.study.realworld.security;
 
 import com.study.realworld.user.domain.User;
 import io.jsonwebtoken.Claims;

@@ -1,4 +1,4 @@
-package com.study.realworld.jwt;
+package com.study.realworld.security;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 

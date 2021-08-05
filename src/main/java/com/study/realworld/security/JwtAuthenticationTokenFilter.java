@@ -1,4 +1,4 @@
-package com.study.realworld.jwt;
+package com.study.realworld.security;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.StringUtils.hasText;
