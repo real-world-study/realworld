@@ -17,6 +17,11 @@ public class UserLoginRequest {
     protected UserLoginRequest() {
     }
 
+    public UserLoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.security.JwtTokenProvider;
 import com.study.realworld.user.controller.request.UserJoinRequest;
+import com.study.realworld.user.controller.request.UserLoginRequest;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -95,14 +96,13 @@ class UserControllerTest {
     void loginTest() throws Exception {
 
         // setup
-        UserJoinRequest request = new UserJoinRequest("username", "test@test.com", "password", null,
-            null);
+        UserLoginRequest request = new UserLoginRequest("test@test.com", "password");
         User user = User.Builder()
-            .username(new Username(request.getUsername()))
-            .email(new Email(request.getEmail()))
-            .password(new Password(request.getPassword()))
-            .bio(request.getBio())
-            .image(request.getImage())
+            .username(new Username("username"))
+            .email(new Email("test@test.com"))
+            .password(new Password("password"))
+            .bio(null)
+            .image(null)
             .build();
 
         when(userService.login(any(), any())).thenReturn(user);
