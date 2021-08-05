@@ -85,7 +85,8 @@ class JwtAuthenticationTokenFilterTest {
         filter.doFilterInternal(request, response, filterChain);
 
         // when
-        JwtAuthentication result = (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        JwtAuthentication result = (JwtAuthentication) SecurityContextHolder.getContext()
+            .getAuthentication();
 
         // then
         assertThat(result).isNotNull();

@@ -1,5 +1,6 @@
 package com.study.realworld.jwt;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.util.StringUtils.hasText;
 
 import java.io.IOException;
@@ -12,13 +13,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    private final String headerKey;
-
     private final JwtTokenProvider tokenProvider;
 
-    public JwtAuthenticationTokenFilter(JwtTokenProvider tokenProvider, String headerKey) {
+    public JwtAuthenticationTokenFilter(JwtTokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
-        this.headerKey = headerKey;
     }
 
     @Override
@@ -36,7 +34,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        return request.getHeader(headerKey);
+        return request.getHeader(AUTHORIZATION);
     }
 
 }

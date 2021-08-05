@@ -1,5 +1,7 @@
 package com.study.realworld.global.config;
 
+import static org.springframework.http.HttpMethod.POST;
+
 import com.study.realworld.jwt.JwtAuthenticationTokenFilter;
 import com.study.realworld.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -17,12 +19,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final JwtTokenConfig jwtTokenConfig;
-
-    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider,
-        JwtTokenConfig jwtTokenConfig) {
+    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.jwtTokenConfig = jwtTokenConfig;
     }
 
     @Bean
@@ -32,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-        return new JwtAuthenticationTokenFilter(jwtTokenProvider, jwtTokenConfig.getHeaderType());
+        return new JwtAuthenticationTokenFilter(jwtTokenProvider);
     }
 
     @Override
@@ -44,22 +42,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf()
-            .disable()
+            .disable();
+        http
             .headers()
-            .disable()
+            .disable();
+        http
+            .exceptionHandling()
+            .and()
+
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
 
             .authorizeRequests()
-            .antMatchers("/api/users", "/api/users/login").permitAll()
+            .antMatchers(POST, "/api/users", "/api/users/login").permitAll()
             .anyRequest().authenticated()
             .and()
 
             .formLogin()
-                .disable();
+            .disable();
         http
-            .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationTokenFilter(),
+                UsernamePasswordAuthenticationFilter.class);
     }
 
 }

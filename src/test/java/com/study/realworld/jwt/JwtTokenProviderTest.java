@@ -63,7 +63,7 @@ class JwtTokenProviderTest {
         Long id = 2L;
         String accessToken = Jwts.builder()
             .setSubject(id.toString())
-            .setExpiration(new Date(now + 3000))
+            .setExpiration(new Date(now + 300000))
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
 
