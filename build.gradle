@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "com.diffplug.spotless" version "5.7.0"
     id 'jacoco'
 }
 
@@ -18,10 +19,32 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 }
 
 apply from: 'test.gradle'
 
 test {
     useJUnitPlatform()
+}
+// pre-commit hook
+// build.gradle에 적용
+// spotless
+spotless {
+    java {
+        googleJavaFormat().aosp()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+        importOrder ''
+    }
+}
+// create pre-commit
+task installGitHooks(type: Copy) {
+    from new File(rootProject.rootDir, 'pre-commit')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0777
 }
