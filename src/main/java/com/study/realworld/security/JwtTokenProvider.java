@@ -11,6 +11,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +74,13 @@ public class JwtTokenProvider {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken)
                 .getBody();
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+            throw new RuntimeException("만료된 JWT 서명입니다.");
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            throw new MalformedJwtException("잘못된 JWT 서명입니다.");
+        } catch (UnsupportedJwtException e) {
+            throw new UnsupportedJwtException("지원되지 않는 JWT 서명입니다.");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("JWT 토큰이 잘못되었습니다.");
         }
     }
 

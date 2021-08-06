@@ -7,8 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.user.domain.User;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -91,46 +94,26 @@ class JwtTokenProviderTest {
             .compact();
 
         // when & then
-        assertThatExceptionOfType(Exception.class)
-            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken));
+        assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .withMessageMatching("만료된 JWT 서명입니다.");
     }
 
     @Test
-    @DisplayName("정상적인 토큰은 true를 반환한다.")
-    void testValidateTokenByTrueToken() {
-
-        // given
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        Key key = Keys.hmacShaKeyFor(keyBytes);
-        long now = (new Date()).getTime();
-        String accessToken = Jwts.builder()
-            .setExpiration(new Date(now + 3000))
-            .signWith(key, SignatureAlgorithm.HS512)
-            .compact();
-
-        // when
-        boolean validateion = jwtTokenProvider.validateToken(accessToken);
-
-        // then
-        assertTrue(validateion);
-    }
-
-    @Test
-    @DisplayName("잘못 입력된 토큰은 false를 반환한다.")
+    @DisplayName("잘못 입력된 토큰은 잘못된 JWT 서명 Excpetion을 반환한다.")
     void testValidateTokenByMalFormedToken() {
 
         // given
         String accessToken = "te.st.";
 
-        // when
-        boolean validation = jwtTokenProvider.validateToken(accessToken);
-
-        // then
-        assertFalse(validation);
+        // when & then
+        assertThatExceptionOfType(MalformedJwtException.class)
+            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .withMessageMatching("잘못된 JWT 서명입니다.");
     }
 
     @Test
-    @DisplayName("만료된 토큰은 false를 반환한다.")
+    @DisplayName("만료된 토큰은 만료된 JWT 서명 Exception을 반환한다.")
     void testValidateTokenByExpiredToken() {
 
         // given
@@ -139,11 +122,10 @@ class JwtTokenProviderTest {
             .setExpiration(new Date(now - 100))
             .compact();
 
-        // when
-        boolean validation = jwtTokenProvider.validateToken(accessToken);
-
-        // then
-        assertFalse(validation);
+        // when & then
+        assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .withMessageMatching("만료된 JWT 서명입니다.");
     }
 
     @Test
@@ -157,11 +139,10 @@ class JwtTokenProviderTest {
             .setExpiration(new Date(now + 3000))
             .compact();
 
-        // when
-        boolean validation = jwtTokenProvider.validateToken(accessToken);
-
-        // then
-        assertFalse(validation);
+        // when & then
+        assertThatExceptionOfType(UnsupportedJwtException.class)
+            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .withMessageMatching("지원되지 않는 JWT 서명입니다.");
     }
 
     @Test
@@ -171,11 +152,10 @@ class JwtTokenProviderTest {
         // given
         String accessToken = "";
 
-        // when
-        boolean validation = jwtTokenProvider.validateToken(accessToken);
-
-        // then
-        assertFalse(validation);
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .withMessageMatching("JWT 토큰이 잘못되었습니다.");
     }
 
 }
