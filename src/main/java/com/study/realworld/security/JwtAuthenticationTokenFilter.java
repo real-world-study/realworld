@@ -1,9 +1,12 @@
 package com.study.realworld.security;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.util.StringUtils.hasText;
 
+import com.study.realworld.user.domain.User;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,28 +16,44 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider tokenProvider;
+    private static final Pattern SCHEMA = Pattern.compile("^Token$", Pattern.CASE_INSENSITIVE);
 
-    public JwtAuthenticationTokenFilter(JwtTokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
+    private final JwtService jwtService;
+
+    public JwtAuthenticationTokenFilter(JwtService jwtService) {
+        this.jwtService = jwtService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        String accessToken = resolveToken(request);
-
-        if (hasText(accessToken) && tokenProvider.validateToken(accessToken)) {
-            JwtAuthentication authentication = tokenProvider.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
+        resolveToken(request).ifPresent(
+            token -> jwtService.getUser(token).ifPresent(
+                user -> {
+                    JwtAuthentication authentication = new JwtAuthentication(user.getId(),
+                        token);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            )
+        );
 
         filterChain.doFilter(request, response);
     }
 
-    private String resolveToken(HttpServletRequest request) {
-        return request.getHeader(AUTHORIZATION);
+    public Optional<String> resolveToken(HttpServletRequest request) {
+        final String header = request.getHeader(AUTHORIZATION);
+        if (Objects.isNull(header)) {
+            return Optional.empty();
+        }
+        return checkMatch(header.split(" "));
+    }
+
+    private Optional<String> checkMatch(String[] parts) {
+        if (parts.length == 2 && SCHEMA.matcher(parts[0]).matches()) {
+            return  Optional.ofNullable(parts[1]);
+        }
+        return Optional.empty();
     }
 
 }
