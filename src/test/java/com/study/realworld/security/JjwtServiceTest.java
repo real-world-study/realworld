@@ -1,13 +1,12 @@
 package com.study.realworld.security;
 
+import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.user.domain.User;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.study.realworld.user.domain.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,6 +15,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,12 +24,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class JwtTokenProviderTest {
+class JjwtServiceTest {
 
     @Mock
     private User user;
 
-    private JwtTokenProvider jwtTokenProvider;
+    @Mock
+    private UserRepository userRepository;
+
+    private JjwtService jwtTokenProvider;
 
     private String headerType = "headerType";
     private String issuser = "issuer";
@@ -38,26 +41,30 @@ class JwtTokenProviderTest {
 
     @BeforeEach
     void beforeEach() {
-        jwtTokenProvider = new JwtTokenProvider(headerType, issuser, secret, accessTime);
+        jwtTokenProvider = new JjwtService(headerType, issuser, secret, accessTime, userRepository);
     }
 
     @Test
     @DisplayName("generateToken()으로 토큰이 생성된다.")
-    void generateTokenTest() {
+    void createTokenTest() {
 
         // setup && given
         when(user.getId()).thenReturn(1L);
 
         // when
-        String result = jwtTokenProvider.generateToken(user);
+        String result = jwtTokenProvider.createToken(user);
 
         // then
         assertThat(result).isNotNull();
     }
 
     @Test
-    @DisplayName("입력받은 토큰으로 유저의 Authentication을 반환할 수 있다.")
-    void getAuthenticationTest() {
+    @DisplayName("입력받은 토큰으로 유저를 반환할 수 있다.")
+    void getUserTest() {
+
+        // setup
+        User user = User.Builder().build();
+        when(userRepository.findById(2L)).thenReturn(ofNullable(user));
 
         // given
         byte[] keyBytes = Decoders.BASE64.decode(secret);
@@ -71,16 +78,16 @@ class JwtTokenProviderTest {
             .compact();
 
         // when
-        JwtAuthentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        Optional<User> result = jwtTokenProvider.getUser(accessToken);
 
         // then
-        assertThat((Long) authentication.getPrincipal()).isEqualTo(id);
-        assertThat(authentication.getCredentials()).isEqualTo(accessToken);
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(ofNullable(user));
     }
 
     @Test
     @DisplayName("입력받은 토큰이 만료되면 Authentication을 반환할 수 없고 Exception이 발생해야 한다.")
-    void getAuthenticationByExpiredTokenTest() {
+    void getUserByExpiredTokenTest() {
 
         // given
         byte[] keyBytes = Decoders.BASE64.decode(secret);
@@ -95,7 +102,7 @@ class JwtTokenProviderTest {
 
         // when & then
         assertThatExceptionOfType(RuntimeException.class)
-            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
             .withMessageMatching("만료된 JWT 서명입니다.");
     }
 
@@ -108,7 +115,7 @@ class JwtTokenProviderTest {
 
         // when & then
         assertThatExceptionOfType(MalformedJwtException.class)
-            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
             .withMessageMatching("잘못된 JWT 서명입니다.");
     }
 
@@ -124,7 +131,7 @@ class JwtTokenProviderTest {
 
         // when & then
         assertThatExceptionOfType(RuntimeException.class)
-            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
             .withMessageMatching("만료된 JWT 서명입니다.");
     }
 
@@ -141,7 +148,7 @@ class JwtTokenProviderTest {
 
         // when & then
         assertThatExceptionOfType(UnsupportedJwtException.class)
-            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
             .withMessageMatching("지원되지 않는 JWT 서명입니다.");
     }
 
@@ -154,7 +161,7 @@ class JwtTokenProviderTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> jwtTokenProvider.getAuthentication(accessToken))
+            .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
             .withMessageMatching("JWT 토큰이 잘못되었습니다.");
     }
 

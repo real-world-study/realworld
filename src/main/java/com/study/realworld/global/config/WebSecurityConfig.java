@@ -3,7 +3,7 @@ package com.study.realworld.global.config;
 import static org.springframework.http.HttpMethod.POST;
 
 import com.study.realworld.security.JwtAuthenticationTokenFilter;
-import com.study.realworld.security.JwtTokenProvider;
+import com.study.realworld.security.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,10 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtService jwtService;
 
-    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public WebSecurityConfig(JwtService jwtService) {
+        this.jwtService = jwtService;
     }
 
     @Bean
@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-        return new JwtAuthenticationTokenFilter(jwtTokenProvider);
+        return new JwtAuthenticationTokenFilter(jwtService);
     }
 
     @Override

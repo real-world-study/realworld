@@ -1,6 +1,7 @@
 package com.study.realworld.security;
 
 import com.study.realworld.user.domain.User;
+import com.study.realworld.user.domain.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -12,12 +13,11 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-public class JwtTokenProvider {
-
-    private final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
+@Component
+public class JjwtService implements JwtService {
 
     private final Key key;
 
@@ -27,15 +27,22 @@ public class JwtTokenProvider {
 
     private final long accessTime;
 
-    public JwtTokenProvider(String headerType, String issuer, String secret, long accessTime) {
+    private final UserRepository userRepository;
+
+    public JjwtService(@Value("${jwt.token.header-type}") String headerType,
+        @Value("${jwt.token.issuer}") String issuer,
+        @Value("${jwt.token.secret}") String secret,
+        @Value("${jwt.token.access-time}") long accessTime,
+        UserRepository userRepository) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.headerType = headerType;
         this.issuer = issuer;
         this.accessTime = accessTime;
+        this.userRepository = userRepository;
     }
 
-    public String generateToken(User user) {
+    public String createToken(User user) {
         return Jwts.builder()
             .signWith(key, SignatureAlgorithm.HS512)
             .setHeaderParam("typ", headerType)
@@ -46,33 +53,12 @@ public class JwtTokenProvider {
             .compact();
     }
 
-    public JwtAuthentication getAuthentication(String accessToken) {
-        Claims claims = parseClaims(accessToken);
-        Long userId = Long.parseLong(claims.getSubject());
-
-        return new JwtAuthentication(userId, accessToken);
-    }
-
-    public boolean validateToken(String token) {
+    public Optional<User> getUser(String accessToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
-    }
-
-    private Claims parseClaims(String accessToken) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken)
-                .getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(accessToken).getBody();
+            Long userId = Long.parseLong(claims.getSubject());
+            return userRepository.findById(userId);
         } catch (ExpiredJwtException e) {
             throw new RuntimeException("만료된 JWT 서명입니다.");
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
