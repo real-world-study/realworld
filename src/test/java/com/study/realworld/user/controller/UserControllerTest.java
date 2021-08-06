@@ -10,7 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.security.JwtTokenProvider;
+import com.study.realworld.security.JjwtService;
+import com.study.realworld.security.JwtService;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.request.UserLoginRequest;
 import com.study.realworld.user.domain.Email;
@@ -36,7 +37,7 @@ class UserControllerTest {
     private UserService userService;
 
     @Mock
-    private JwtTokenProvider tokenProvider;
+    private JwtService jwtService;
 
     @InjectMocks
     private UserController userController;
@@ -68,7 +69,7 @@ class UserControllerTest {
             .build();
 
         when(userService.join(any())).thenReturn(user);
-        when(tokenProvider.generateToken(user)).thenReturn("token");
+        when(jwtService.createToken(user)).thenReturn("token");
 
         // given
         final String URL = "/api/users";
@@ -106,7 +107,7 @@ class UserControllerTest {
             .build();
 
         when(userService.login(any(), any())).thenReturn(user);
-        when(tokenProvider.generateToken(user)).thenReturn("token");
+        when(jwtService.createToken(user)).thenReturn("token");
 
         // given
         final String URL = "/api/users/login";

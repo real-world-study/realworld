@@ -3,7 +3,8 @@ package com.study.realworld.user.controller;
 import static com.study.realworld.user.controller.request.UserJoinRequest.from;
 import static com.study.realworld.user.controller.response.UserResponse.fromUserAndToken;
 
-import com.study.realworld.security.JwtTokenProvider;
+import com.study.realworld.security.JjwtService;
+import com.study.realworld.security.JwtService;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.request.UserLoginRequest;
 import com.study.realworld.user.controller.response.UserResponse;
@@ -23,19 +24,18 @@ public class UserController {
 
     private final UserService userService;
 
-    private final JwtTokenProvider tokenProvider;
+    private final JwtService jwtService;
 
-    public UserController(UserService userService,
-        JwtTokenProvider tokenProvider) {
+    public UserController(UserService userService, JwtService jwtService) {
         this.userService = userService;
-        this.tokenProvider = tokenProvider;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/users")
     public ResponseEntity<UserResponse> join(@RequestBody UserJoinRequest request) {
         User user = userService.join(from(request));
         return ResponseEntity.ok()
-            .body(fromUserAndToken(user, tokenProvider.generateToken(user)));
+            .body(fromUserAndToken(user, jwtService.createToken(user)));
     }
 
     @PostMapping("/users/login")
@@ -43,7 +43,7 @@ public class UserController {
         User user = userService
             .login(new Email(request.getEmail()), new Password(request.getPassword()));
         return ResponseEntity.ok()
-            .body(fromUserAndToken(user, tokenProvider.generateToken(user)));
+            .body(fromUserAndToken(user, jwtService.createToken(user)));
     }
 
 }
