@@ -1,9 +1,6 @@
 package com.study.realworld.security;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 

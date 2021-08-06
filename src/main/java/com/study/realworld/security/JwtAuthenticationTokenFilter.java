@@ -2,7 +2,6 @@ package com.study.realworld.security;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.study.realworld.user.domain.User;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
@@ -51,7 +50,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     private Optional<String> checkMatch(String[] parts) {
         if (parts.length == 2 && SCHEMA.matcher(parts[0]).matches()) {
-            return  Optional.ofNullable(parts[1]);
+            return Optional.ofNullable(parts[1]);
         }
         return Optional.empty();
     }
