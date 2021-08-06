@@ -59,13 +59,13 @@ public class UserJoinRequest {
         return image;
     }
 
-    public static User from(UserJoinRequest request) {
+    public User toUser() {
         return User.Builder()
-            .username(new Username(request.getUsername()))
-            .email(new Email(request.getEmail()))
-            .password(new Password(request.getPassword()))
-            .bio(request.getBio())
-            .image(request.getImage())
+            .username(new Username(username))
+            .email(new Email(email))
+            .password(new Password(password))
+            .bio(bio)
+            .image(image)
             .build();
     }
 

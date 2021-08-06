@@ -1,6 +1,5 @@
 package com.study.realworld.user.controller;
 
-import static com.study.realworld.user.controller.request.UserJoinRequest.from;
 import static com.study.realworld.user.controller.response.UserResponse.fromUserAndToken;
 
 import com.study.realworld.security.JwtService;
@@ -32,7 +31,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<UserResponse> join(@RequestBody UserJoinRequest request) {
-        User user = userService.join(from(request));
+        User user = userService.join(request.toUser());
         return ResponseEntity.ok()
             .body(fromUserAndToken(user, jwtService.createToken(user)));
     }

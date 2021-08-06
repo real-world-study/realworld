@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.user.domain.User;
 import org.junit.jupiter.api.Test;
 
-import static com.study.realworld.user.controller.request.UserJoinRequest.from;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserJoinRequestTest {
@@ -19,7 +18,7 @@ class UserJoinRequestTest {
         );
 
         // when
-        User user = from(userJoinRequest);
+        User user = userJoinRequest.toUser();
 
         // then
         assertThat(user.getUsername().toString()).isEqualTo(userJoinRequest.getUsername());
