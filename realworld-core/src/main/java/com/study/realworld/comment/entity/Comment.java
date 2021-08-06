@@ -13,8 +13,11 @@ import com.study.realworld.article.entity.Article;
 import com.study.realworld.common.BaseEntity;
 import com.study.realworld.user.entity.User;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 public class Comment extends BaseEntity {

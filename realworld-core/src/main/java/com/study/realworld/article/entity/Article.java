@@ -13,8 +13,11 @@ import javax.persistence.OneToMany;
 import com.study.realworld.comment.entity.Comment;
 import com.study.realworld.common.BaseEntity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 public class Article extends BaseEntity {

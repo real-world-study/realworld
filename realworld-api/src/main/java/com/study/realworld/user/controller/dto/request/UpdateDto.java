@@ -8,13 +8,19 @@ import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.user.entity.User;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @JsonTypeName("user")
 @JsonTypeInfo(include = WRAPPER_OBJECT, use = NAME)
-@Getter
-public class UpdateRequest {
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class UpdateDto {
     @Email
     @NotBlank
     private String email;
@@ -24,4 +30,16 @@ public class UpdateRequest {
 
     @NotBlank
     private String image;
+
+    public static UpdateDto create(String email, String bio, String image) {
+        return new UpdateDto(email, bio, image);
+    }
+
+    public User toEntity() {
+        return User.builder()
+                   .email(email)
+                   .bio(bio)
+                   .image(image)
+                   .build();
+    }
 }

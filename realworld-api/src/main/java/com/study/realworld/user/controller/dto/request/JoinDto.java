@@ -10,24 +10,37 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.entity.User;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = WRAPPER_OBJECT, use = NAME)
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class LoginRequest {
+public class JoinDto {
 
     @Email
     @NotBlank
     private String email;
 
     @NotBlank
+    private String username;
+
+    @NotBlank
     private String password;
 
-    public User toEntity() {
+    public static JoinDto create(String email, String username, String password) {
+        return new JoinDto(email, username, password);
+    }
+
+    public User toEntity(String encodedPassword) {
         return User.builder()
+                   .username(username)
                    .email(email)
-                   .password(password)
+                   .password(encodedPassword)
                    .build();
     }
 }
