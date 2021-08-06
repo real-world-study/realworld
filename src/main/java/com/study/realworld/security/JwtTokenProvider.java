@@ -35,20 +35,14 @@ public class JwtTokenProvider {
     }
 
     public String generateToken(User user) {
-        long now = (new Date()).getTime();
-
-        Date issuedAtDate = new Date();
-        Date accessTokenExpiresIn = new Date(now + accessTime);
-        String accessToken = Jwts.builder()
-            .signWith(key, SignatureAlgorithm.HS512)            // header "alg" : HS512
-            .setHeaderParam("typ", headerType)            // header "typ" : JWT
-            .setSubject(user.getId().toString())                // payload "sub" : userId
-            .setIssuer(issuer)                                  // payload "iss" : ori
-            .setExpiration(accessTokenExpiresIn)                // payload "exp"
-            .setIssuedAt(issuedAtDate)                          // payload "iat"
+        return Jwts.builder()
+            .signWith(key, SignatureAlgorithm.HS512)
+            .setHeaderParam("typ", headerType)
+            .setSubject(user.getId().toString())
+            .setIssuer(issuer)
+            .setExpiration(new Date((new Date()).getTime() + accessTime))
+            .setIssuedAt(new Date())
             .compact();
-
-        return accessToken;
     }
 
     public JwtAuthentication getAuthentication(String accessToken) {
