@@ -3,7 +3,6 @@ package com.study.realworld.global.config;
 import static org.springframework.http.HttpMethod.POST;
 
 import com.study.realworld.security.JwtAuthenticationTokenFilter;
-import com.study.realworld.security.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
