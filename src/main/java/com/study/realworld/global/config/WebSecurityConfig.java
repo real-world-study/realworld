@@ -17,20 +17,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtService jwtService;
+    private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
-    public WebSecurityConfig(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public WebSecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter) {
+        this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
-    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
-        return new JwtAuthenticationTokenFilter(jwtService);
     }
 
     @Override
@@ -62,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
             .disable();
         http
-            .addFilterBefore(jwtAuthenticationTokenFilter(),
+            .addFilterBefore(jwtAuthenticationTokenFilter,
                 UsernamePasswordAuthenticationFilter.class);
     }
 
