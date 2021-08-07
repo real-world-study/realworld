@@ -34,3 +34,10 @@ compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
 
+bootJar{
+    enabled = false
+}
+
+jar{
+    enabled = true
+}
