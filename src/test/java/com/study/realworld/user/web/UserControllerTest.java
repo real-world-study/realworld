@@ -4,22 +4,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.dto.UserJoinRequest;
 import com.study.realworld.user.dto.UserLoginRequest;
+import com.study.realworld.user.dto.UserResponse;
 import com.study.realworld.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.ResultActions;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@WebMvcTest(UserController.class)
 class UserControllerTest {
 
     private static final Long ID = 1L;
@@ -29,56 +33,34 @@ class UserControllerTest {
     private static final String BIO = "bio";
     private static final String IMAGE = "image";
 
-    @Autowired
+    @MockBean
     private UserService userService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private WebApplicationContext context;
-
     private MockMvc mvc;
+
+//    private WebApplicationContext context;
 
     @BeforeEach
     void setUp() {
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .build();
+//        mvc = MockMvcBuilders
+//                .webAppContextSetup(context)
+//                .build();
     }
 
     @Test
     void POST_api_users() throws Exception {
 
         // given
-        UserJoinRequest request = UserJoinRequest.builder()
+        final String URL = "/api/users";
+
+        final UserJoinRequest request = UserJoinRequest.builder()
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
                 .build();
 
-        String url = "/api/users";
-
-        // when
-        mvc.perform(post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(status().isOk());
-
-        // then
-        User user = userService.findByEmail(EMAIL);
-        assertAll(
-                () -> assertEquals(EMAIL, user.getEmail()),
-                () -> assertEquals(USERNAME, user.getUsername()),
-                () -> assertTrue(user.matchesPassword(PASSWORD, passwordEncoder))
-        );
-    }
-
-    @Test
-    void POST_api_users_login() throws Exception {
-
-        // given
-        User userGiven = User.builder()
+        final User user = User.builder()
                 .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
@@ -86,28 +68,96 @@ class UserControllerTest {
                 .bio(BIO)
                 .image(IMAGE)
                 .build();
-        userGiven.encodePassword(passwordEncoder);
-        userService.save(userGiven);
 
-        UserLoginRequest request = UserLoginRequest.builder()
+        final UserResponse response = UserResponse.builder()
+                .email(EMAIL)
+                .token(null)
+                .username(USERNAME)
+                .bio(BIO)
+                .image(IMAGE)
+                .build();
+
+        /**
+         * org.mockito.exceptions.base.MockitoException:
+         * The used MockMaker SubclassByteBuddyMockMaker does not support the creation of static mocks
+         *
+         * Mockito's inline mock maker supports static mocks based on the Instrumentation API.
+         * You can simply enable this mock mode, by placing the 'mockito-inline' artifact where you are currently using 'mockito-core'.
+         * Note that Mockito's inline mock maker is not supported on Android.
+         */
+//        mockStatic(UserResponse.class)
+//                .when(() -> UserResponse.of(any(), anyString()))
+//                .thenReturn(response);
+
+        when(userService.save(any()))
+                .thenReturn(user);
+
+        // when
+        ResultActions result = mvc.perform(post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(request)))
+//                .andDo(print())
+                ;
+
+        // https://www.infoworld.com/article/3543268/junit-5-tutorial-part-2-unit-testing-spring-mvc-with-junit-5.html?page=3
+        // then
+        verify(userService).save(any());
+        result
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.user.email", is(EMAIL)))
+                .andExpect(jsonPath("$.user.username", is(USERNAME)))
+                .andExpect(jsonPath("$.user.bio", is(BIO)))
+                .andExpect(jsonPath("$.user.image", is(IMAGE)));
+    }
+
+    @Test
+    void POST_api_users_login() throws Exception {
+
+        // given
+        final String URL = "/api/users/login";
+
+        final UserLoginRequest request = UserLoginRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
                 .build();
 
-        String url = "/api/users/login";
+        final User user = User.builder()
+                .id(ID)
+                .email(EMAIL)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .bio(BIO)
+                .image(IMAGE)
+                .build();
+
+        final UserResponse response = UserResponse.builder()
+                .email(EMAIL)
+                .token(null)
+                .username(USERNAME)
+                .bio(BIO)
+                .image(IMAGE)
+                .build();
+
+        when(userService.login(any()))
+                .thenReturn(user);
 
         // when
-        mvc.perform(post(url)
+        ResultActions result = mvc.perform(post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(status().isOk());
+//                .andDo(print())
+                ;
 
         // then
-        User user = userService.findByEmail(EMAIL);
-        assertAll(
-                () -> assertEquals(userGiven.getEmail(), user.getEmail()),
-                () -> assertEquals(userGiven.getUsername(), user.getUsername())
-        );
+        verify(userService).login(any());
+        result
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.user.email", is(EMAIL)))
+                .andExpect(jsonPath("$.user.username", is(USERNAME)))
+                .andExpect(jsonPath("$.user.bio", is(BIO)))
+                .andExpect(jsonPath("$.user.image", is(IMAGE)));
     }
 
 }
