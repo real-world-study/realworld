@@ -43,8 +43,3 @@ subprojects {
     }
 }
 
-apply from: 'test.gradle'
-
-test {
-    useJUnitPlatform()
-}

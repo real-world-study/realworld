@@ -1,3 +1,5 @@
+apply from: '../test.gradle'
+
 dependencies {
     implementation project(':realworld-core')
     implementation project(':realworld-support')
