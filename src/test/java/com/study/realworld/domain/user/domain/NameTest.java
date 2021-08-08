@@ -19,4 +19,16 @@ class NameTest {
         );
     }
 
+    @DisplayName("Name 인스턴스 생성자 테스트")
+    @Test
+    void constructor_test() {
+        final String nameString = "test";
+        final Name name = new Name(nameString);
+
+        assertAll(
+                () -> assertThat(name).isNotNull(),
+                () -> assertThat(name).isExactlyInstanceOf(Name.class)
+        );
+    }
+
 }
