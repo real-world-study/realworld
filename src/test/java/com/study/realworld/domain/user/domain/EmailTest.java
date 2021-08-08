@@ -31,4 +31,12 @@ class EmailTest {
         );
     }
 
+    @DisplayName("Email 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final String emailString = "kwj1270@naver.com";
+        final Email email = new Email(emailString);
+
+        assertThat(email.email()).isEqualTo(emailString);
+    }
 }
