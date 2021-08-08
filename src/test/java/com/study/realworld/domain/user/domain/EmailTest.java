@@ -82,7 +82,7 @@ public class EmailTest {
         );
     }
 
-    @DisplayName("Email 인스턴스 equals and hashcode 검증 테스트")
+    @DisplayName("Email 인스턴스 equals and hashcode 동등성 검증 테스트")
     @Test
     void equals_and_hashcode_test() {
         final String emailString = "test@test.com";
@@ -91,7 +91,7 @@ public class EmailTest {
 
         assertAll(
                 () -> assertThat(firstEmail).isEqualTo(secondEmail),
-                () -> assertThat(hashCode()).isEqualTo(secondEmail.hashCode())
+                () -> assertThat(firstEmail.hashCode()).isEqualTo(secondEmail.hashCode())
         );
     }
 
