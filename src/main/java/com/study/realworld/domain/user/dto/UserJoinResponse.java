@@ -3,9 +3,9 @@ package com.study.realworld.domain.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.User;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @JsonTypeName("user")
@@ -16,10 +16,8 @@ public final class UserJoinResponse {
     @JsonProperty("username")
     private String username;
 
-    @Email
-    @NotBlank
     @JsonProperty("email")
-    private String email;
+    private Email email;
 
     @JsonProperty("bio")
     private String bio;

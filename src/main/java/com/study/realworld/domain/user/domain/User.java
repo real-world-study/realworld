@@ -9,11 +9,13 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "user_email", length = 50, nullable = false, unique = true)
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "email", column =
+    @Column(name = "email", length = 50, nullable = false, unique = true))
+    private Email email;
 
     @Column(name = "user_username", length = 20, nullable = false)
     private String username;
@@ -38,7 +40,7 @@ public class User extends BaseTimeEntity {
         this.image = userBuilder.image;
     }
 
-    public String email() {
+    public Email email() {
         return email;
     }
 
@@ -63,7 +65,7 @@ public class User extends BaseTimeEntity {
     }
 
     public static class UserBuilder {
-        private String email;
+        private Email email;
         private String username;
         private String password;
         private String bio;
@@ -72,7 +74,7 @@ public class User extends BaseTimeEntity {
         private UserBuilder() {
         }
 
-        public UserBuilder email(final String email) {
+        public UserBuilder email(final Email email) {
             this.email = email;
             return this;
         }

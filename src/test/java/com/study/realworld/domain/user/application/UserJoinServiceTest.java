@@ -1,7 +1,11 @@
 package com.study.realworld.domain.user.application;
 
+import com.study.realworld.domain.user.domain.Email;
+import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.domain.UserRepository;
+import com.study.realworld.domain.user.domain.UserTest;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
+import com.study.realworld.domain.user.dto.UserJoinRequestTest;
 import com.study.realworld.domain.user.dto.UserJoinResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.study.realworld.domain.user.domain.UserTest.USER;
-import static com.study.realworld.domain.user.dto.UserJoinRequestTest.USER_JOIN_REQUEST;
+import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.UserTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,9 +43,10 @@ class UserJoinServiceTest {
     @DisplayName("UserJoinService 인스턴스 join() 테스트")
     @Test
     void join_test() {
-        given(userRepository.save(any())).willReturn(USER);
+        final User user = UserTest.userBuilder(new Email(EMAIL), USERNAME, PASSWORD, BIO, IMAGE);
+        given(userRepository.save(any())).willReturn(user);
 
-        final UserJoinRequest userJoinRequest = USER_JOIN_REQUEST;
+        final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(USERNAME, new Email(EMAIL), PASSWORD);
         final UserJoinResponse userJoinResponse = userJoinService.join(userJoinRequest);
 
         then(userRepository).should(times(1)).save(any());

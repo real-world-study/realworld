@@ -15,8 +15,9 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EmailTest {
+public class EmailTest {
 
+    public static final String EMAIL = "test@tset.com";
     private static Validator validator;
 
     @BeforeAll
@@ -50,7 +51,7 @@ class EmailTest {
     @DisplayName("Email 인스턴스 getter 테스트")
     @Test
     void getter_test() {
-        final String emailString = "kwj1270@naver.com";
+        final String emailString = "test@test.com";
         final Email email = new Email(emailString);
 
         assertThat(email.email()).isEqualTo(emailString);
@@ -69,7 +70,7 @@ class EmailTest {
     }
 
     @DisplayName("Email 인스턴스 값 이메일 형식 검증 테스트")
-    @ValueSource(strings = {" ", "test_test.com", "test@@test", "@test.com"})
+    @ValueSource(strings = {"test_test.com", "test@@test", "@test.com"})
     @ParameterizedTest
     void email_format_test(final String emailString) {
         final Email email = new Email(emailString);
