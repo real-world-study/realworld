@@ -12,6 +12,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Set;
 
+import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -93,6 +94,15 @@ public class EmailTest {
                 () -> assertThat(firstEmail).isEqualTo(secondEmail),
                 () -> assertThat(firstEmail.hashCode()).isEqualTo(secondEmail.hashCode())
         );
+    }
+
+    @DisplayName("Email 인스턴스 toString 테스트")
+    @Test
+    void toString_test() {
+        final String emailString = "test@test.com";
+        final Email email = new Email(emailString);
+
+        assertThat(email.toString()).isEqualTo(format("Email{email='%s'}", emailString));
     }
 
 }
