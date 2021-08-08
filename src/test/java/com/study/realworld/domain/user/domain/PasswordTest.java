@@ -18,7 +18,7 @@ class PasswordTest {
         passwordEncoder = new PasswordEncoder() {
             @Override
             public String encode(CharSequence plainTextPassword) {
-                return BCrypt.hashpw(plainTextPassword.toString(),BCrypt.gensalt(8));
+                return BCrypt.hashpw(plainTextPassword.toString(),BCrypt.gensalt(15));
             }
 
             @Override
