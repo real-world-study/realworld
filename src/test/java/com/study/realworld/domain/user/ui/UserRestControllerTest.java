@@ -3,6 +3,7 @@ package com.study.realworld.domain.user.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.domain.user.application.UserJoinService;
 import com.study.realworld.domain.user.domain.Email;
+import com.study.realworld.domain.user.domain.Name;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
 import com.study.realworld.domain.user.dto.UserJoinResponse;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.UserTest.*;
 import static com.study.realworld.domain.user.dto.UserJoinRequestTest.userJoinRequest;
 import static com.study.realworld.domain.user.dto.UserJoinResponseTest.*;
@@ -29,15 +31,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserRestController.class)
 class UserRestControllerTest {
 
-    @Autowired private MockMvc mockMvc;
-    @Autowired private ObjectMapper objectMapper;
-    @MockBean private UserJoinService userJoinService;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @MockBean
+    private UserJoinService userJoinService;
 
     @DisplayName("UserRestController 인스턴스의 join() 테스트")
     @Test
     void join_test() throws Exception {
-        final UserJoinRequest userJoinRequest = userJoinRequest(USERNAME, new Email(EMAIL), PASSWORD);
-        final User user = userBuilder(new Email(EMAIL), USERNAME, PASSWORD, BIO, IMAGE);
+        final UserJoinRequest userJoinRequest = userJoinRequest(new Name(USERNAME), new Email(EMAIL), PASSWORD);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), PASSWORD, BIO, IMAGE);
         final UserJoinResponse userJoinResponse = userJoinResponse(user);
 
         given(userJoinService.join(any())).willReturn(userJoinResponse);

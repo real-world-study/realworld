@@ -17,8 +17,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "email", length = 50, nullable = false, unique = true))
     private Email email;
 
-    @Column(name = "user_username", length = 20, nullable = false)
-    private String username;
+    @Embedded
+    @AttributeOverride(name = "name", column =
+    @Column(name = "username", length = 20, nullable = false))
+    private Name username;
 
     @Column(name = "uesr_password", nullable = false)
     private String password;
@@ -44,7 +46,7 @@ public class User extends BaseTimeEntity {
         return email;
     }
 
-    public String username() {
+    public Name username() {
         return username;
     }
 
@@ -66,7 +68,7 @@ public class User extends BaseTimeEntity {
 
     public static class UserBuilder {
         private Email email;
-        private String username;
+        private Name username;
         private String password;
         private String bio;
         private String image;
@@ -79,7 +81,7 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
-        public UserBuilder username(final String username) {
+        public UserBuilder username(final Name username) {
             this.username = username;
             return this;
         }

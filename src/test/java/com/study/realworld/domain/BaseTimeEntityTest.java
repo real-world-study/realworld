@@ -16,11 +16,11 @@ class BaseTimeEntityTest {
     @Test
     void constructor_test() {
         final LocalDateTime now = now();
-        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity();
+        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity(){};
 
         assertAll(
                 () -> assertThat(baseTimeEntity).isNotNull(),
-                () -> assertThat(baseTimeEntity).isExactlyInstanceOf(BaseTimeEntity.class)
+                () -> assertThat(baseTimeEntity).isInstanceOf(BaseTimeEntity.class)
         );
     }
 
@@ -28,7 +28,7 @@ class BaseTimeEntityTest {
     @Test
     void getter_test() {
         final LocalDateTime now = now();
-        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity();
+        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity(){};
         final LocalDateTime deletedAt = now().plusMinutes(1);
 
         ReflectionTestUtils.setField(baseTimeEntity, "createdAt", now);
@@ -46,7 +46,7 @@ class BaseTimeEntityTest {
     @Test
     void deletedAt_test() {
         final LocalDateTime now = now();
-        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity();
+        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity(){};
         final LocalDateTime deletedAt = now().plusMinutes(1);
 
         ReflectionTestUtils.setField(baseTimeEntity, "createdAt", now);

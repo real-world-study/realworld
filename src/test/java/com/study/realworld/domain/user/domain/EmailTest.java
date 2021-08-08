@@ -87,7 +87,7 @@ public class EmailTest {
         final Set<ConstraintViolation<Email>> violations = validator.validate(email);
 
         assertAll(
-                () -> assertThat(violations.size()).isGreaterThanOrEqualTo(1),
+                () -> assertThat(violations.size()).isEqualTo(1),
                 () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Email must have not blank")
         );
     }
@@ -100,7 +100,7 @@ public class EmailTest {
         final Set<ConstraintViolation<Email>> violations = validator.validate(email);
 
         assertAll(
-                () -> assertThat(violations.size()).isGreaterThanOrEqualTo(1),
+                () -> assertThat(violations.size()).isEqualTo(1),
                 () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Invalid email address")
         );
     }

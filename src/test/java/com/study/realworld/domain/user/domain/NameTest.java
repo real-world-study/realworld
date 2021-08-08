@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class NameTest {
 
+    public static final String USERNAME = "test";
     private static Validator validator;
 
     @BeforeAll
@@ -84,7 +85,7 @@ public class NameTest {
         final Set<ConstraintViolation<Name>> violations = validator.validate(name);
 
         assertAll(
-                () -> assertThat(violations.size()).isGreaterThanOrEqualTo(1),
+                () -> assertThat(violations.size()).isEqualTo(1),
                 () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Name must have not blank")
         );
     }

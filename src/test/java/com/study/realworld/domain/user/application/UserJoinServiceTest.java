@@ -1,9 +1,6 @@
 package com.study.realworld.domain.user.application;
 
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.User;
-import com.study.realworld.domain.user.domain.UserRepository;
-import com.study.realworld.domain.user.domain.UserTest;
+import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
 import com.study.realworld.domain.user.dto.UserJoinRequestTest;
 import com.study.realworld.domain.user.dto.UserJoinResponse;
@@ -15,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.UserTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,8 +24,10 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 class UserJoinServiceTest {
 
-    @Mock private UserRepository userRepository;
-    @InjectMocks private UserJoinService userJoinService;
+    @Mock
+    private UserRepository userRepository;
+    @InjectMocks
+    private UserJoinService userJoinService;
 
     @DisplayName("UserJoinService 인스턴스 생성자 테스트")
     @Test
@@ -43,10 +43,10 @@ class UserJoinServiceTest {
     @DisplayName("UserJoinService 인스턴스 join() 테스트")
     @Test
     void join_test() {
-        final User user = UserTest.userBuilder(new Email(EMAIL), USERNAME, PASSWORD, BIO, IMAGE);
+        final User user = UserTest.userBuilder(new Email(EMAIL), new Name(USERNAME), PASSWORD, BIO, IMAGE);
         given(userRepository.save(any())).willReturn(user);
 
-        final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(USERNAME, new Email(EMAIL), PASSWORD);
+        final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), PASSWORD);
         final UserJoinResponse userJoinResponse = userJoinService.join(userJoinRequest);
 
         then(userRepository).should(times(1)).save(any());

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.domain.user.domain.Email;
+import com.study.realworld.domain.user.domain.Name;
 import com.study.realworld.domain.user.domain.User;
 
 import javax.validation.constraints.NotBlank;
@@ -12,9 +13,8 @@ import javax.validation.constraints.NotBlank;
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public final class UserJoinRequest {
 
-    @NotBlank
     @JsonProperty("username")
-    private String username;
+    private Name username;
 
     @JsonProperty("email")
     private Email email;
@@ -27,7 +27,7 @@ public final class UserJoinRequest {
     }
 
     // 테스트용 오버로딩 생성자 -> 주관적인 생각으로 이런 상황은 오버로딩으로 유연성을 주는게 좋다고 생각합니다.
-    UserJoinRequest(final String username, final Email email, final String password) {
+    UserJoinRequest(final Name username, final Email email, final String password) {
         this.username = username;
         this.email = email;
         this.password = password;

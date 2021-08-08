@@ -1,5 +1,7 @@
 package com.study.realworld.domain.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
@@ -18,6 +20,7 @@ public class Name {
         this.name = name;
     }
 
+    @JsonValue
     public String name() {
         return name;
     }
