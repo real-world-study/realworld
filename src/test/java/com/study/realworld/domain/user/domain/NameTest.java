@@ -40,4 +40,17 @@ class NameTest {
         assertThat(name.name()).isEqualTo(nameString);
     }
 
+    @DisplayName("Name 인스턴스 equals and hashcode 테스트")
+    @Test
+    void equals_and_hashcode_test() {
+        final String nameString = "test";
+        final Name firstName = new Name(nameString);
+        final Name secondName = new Name(nameString);
+
+        assertAll(
+                () -> assertThat(firstName).isEqualTo(secondName),
+                () -> assertThat(firstName.hashCode()).isEqualTo(secondName.hashCode())
+        );
+    }
+
 }
