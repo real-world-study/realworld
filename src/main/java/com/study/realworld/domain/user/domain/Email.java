@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 public class Email {
 
     @javax.validation.constraints.Email(message = "Invalid email address")
-    @NotBlank
+    @NotBlank(message = "Email must have not blank")
     private String email;
 
     protected Email() {

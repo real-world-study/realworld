@@ -1,5 +1,6 @@
 package com.study.realworld.domain.user.domain;
 
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,9 +56,20 @@ class EmailTest {
         assertThat(email.email()).isEqualTo(emailString);
     }
 
+    @DisplayName("Email 인스턴스 값 공백 검증 테스트")
+    @Test
+    void email_empty_test() {
+        final Email email = new Email(Strings.EMPTY);
+        final Set<ConstraintViolation<Email>> violations = validator.validate(email);
 
-    @DisplayName("Email 인스턴스 값이 이메일 형식이 맞는지 테스트")
-    @ValueSource(strings = {"test_test.com", "test@@test", "@test.com"})
+        assertAll(
+                () -> assertThat(violations.size()).isGreaterThanOrEqualTo(1),
+                () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Email must have not blank")
+        );
+    }
+
+    @DisplayName("Email 인스턴스 값 이메일 형식 검증 테스트")
+    @ValueSource(strings = {" ", "test_test.com", "test@@test", "@test.com"})
     @ParameterizedTest
     void email_format_test(final String emailString) {
         final Email email = new Email(emailString);
