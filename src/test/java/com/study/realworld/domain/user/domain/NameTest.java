@@ -1,12 +1,25 @@
 package com.study.realworld.domain.user.domain;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.Set;
 
-class NameTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+public class NameTest {
+
+    private static Validator validator;
+
+    @BeforeAll
+    static void setUp() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
     @DisplayName("Name 인스턴스 기본 생성자 테스트")
     @Test
@@ -60,6 +73,20 @@ class NameTest {
         final Name name = new Name(nameString);
 
         assertThat(name.toString()).isEqualTo(String.format("Name{name='%s'}", nameString));
+    }
+
+    @DisplayName("Name 인스턴스 값 공백 검증 테스트")
+    @Test
+    void name_blank_test() {
+        final String nameString = " ";
+        final Name name = new Name(nameString);
+
+        final Set<ConstraintViolation<Name>> violations = validator.validate(name);
+
+        assertAll(
+                () -> assertThat(violations.size()).isGreaterThanOrEqualTo(1),
+                () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Name must have not blank")
+        );
     }
 
 }
