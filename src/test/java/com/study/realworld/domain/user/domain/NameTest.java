@@ -31,4 +31,13 @@ class NameTest {
         );
     }
 
+    @DisplayName("Name 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final String nameString = "test";
+        final Name name = new Name(nameString);
+
+        assertThat(name.name()).isEqualTo(nameString);
+    }
+
 }
