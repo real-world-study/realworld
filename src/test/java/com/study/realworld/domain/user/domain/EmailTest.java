@@ -58,6 +58,28 @@ public class EmailTest {
         assertThat(email.email()).isEqualTo(emailString);
     }
 
+    @DisplayName("Email 인스턴스 equals and hashcode 동등성 검증 테스트")
+    @Test
+    void equals_and_hashcode_test() {
+        final String emailString = "test@test.com";
+        final Email firstEmail = new Email(emailString);
+        final Email secondEmail = new Email(emailString);
+
+        assertAll(
+                () -> assertThat(firstEmail).isEqualTo(secondEmail),
+                () -> assertThat(firstEmail.hashCode()).isEqualTo(secondEmail.hashCode())
+        );
+    }
+
+    @DisplayName("Email 인스턴스 toString 테스트")
+    @Test
+    void toString_test() {
+        final String emailString = "test@test.com";
+        final Email email = new Email(emailString);
+
+        assertThat(email.toString()).isEqualTo(format("Email{email='%s'}", emailString));
+    }
+
     @DisplayName("Email 인스턴스 값 공백 검증 테스트")
     @Test
     void email_empty_test() {
@@ -81,28 +103,6 @@ public class EmailTest {
                 () -> assertThat(violations.size()).isGreaterThanOrEqualTo(1),
                 () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Invalid email address")
         );
-    }
-
-    @DisplayName("Email 인스턴스 equals and hashcode 동등성 검증 테스트")
-    @Test
-    void equals_and_hashcode_test() {
-        final String emailString = "test@test.com";
-        final Email firstEmail = new Email(emailString);
-        final Email secondEmail = new Email(emailString);
-
-        assertAll(
-                () -> assertThat(firstEmail).isEqualTo(secondEmail),
-                () -> assertThat(firstEmail.hashCode()).isEqualTo(secondEmail.hashCode())
-        );
-    }
-
-    @DisplayName("Email 인스턴스 toString 테스트")
-    @Test
-    void toString_test() {
-        final String emailString = "test@test.com";
-        final Email email = new Email(emailString);
-
-        assertThat(email.toString()).isEqualTo(format("Email{email='%s'}", emailString));
     }
 
 }

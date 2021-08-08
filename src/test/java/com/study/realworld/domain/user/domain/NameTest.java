@@ -40,7 +40,7 @@ class NameTest {
         assertThat(name.name()).isEqualTo(nameString);
     }
 
-    @DisplayName("Name 인스턴스 equals and hashcode 테스트")
+    @DisplayName("Name 인스턴스 equals and hashcode 동등성 검증 테스트")
     @Test
     void equals_and_hashcode_test() {
         final String nameString = "test";
@@ -51,6 +51,15 @@ class NameTest {
                 () -> assertThat(firstName).isEqualTo(secondName),
                 () -> assertThat(firstName.hashCode()).isEqualTo(secondName.hashCode())
         );
+    }
+
+    @DisplayName("Name 인스턴스 toString 테스트")
+    @Test
+    void toString_test() {
+        final String nameString = "test";
+        final Name name = new Name(nameString);
+
+        assertThat(name.toString()).isEqualTo(String.format("Name{name='%s'}", nameString));
     }
 
 }
