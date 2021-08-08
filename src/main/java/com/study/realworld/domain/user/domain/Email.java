@@ -37,13 +37,13 @@ public class Email {
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(email());
     }
 
     @Override
     public String toString() {
         return "Email{" +
-                "email='" + email + '\'' +
+                "email='" + email() + '\'' +
                 '}';
     }
 
