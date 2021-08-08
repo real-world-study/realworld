@@ -68,4 +68,5 @@ class EmailTest {
                 () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Invalid email address")
         );
     }
+
 }
