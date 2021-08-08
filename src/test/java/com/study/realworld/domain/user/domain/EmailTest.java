@@ -19,5 +19,16 @@ class EmailTest {
         );
     }
 
+    @DisplayName("Email 인스턴스 생성자 테스트")
+    @Test
+    void constructor_test() {
+        final String emailString = "kwj1270@naver.com";
+        final Email email = new Email(emailString);
+
+        assertAll(
+                () -> assertThat(email).isNotNull(),
+                () -> assertThat(email).isExactlyInstanceOf(Email.class)
+        );
+    }
 
 }
