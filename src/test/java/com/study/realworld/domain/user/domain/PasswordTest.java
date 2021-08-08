@@ -14,7 +14,7 @@ class PasswordTest {
     private static PasswordEncoder passwordEncoder;
 
     @BeforeAll
-    void setUp() {
+    static void setUp() {
         passwordEncoder = new PasswordEncoder() {
             @Override
             public String encode(CharSequence plainTextPassword) {
