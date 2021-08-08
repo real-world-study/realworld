@@ -1,11 +1,15 @@
 package com.study.realworld.domain.user.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Embeddable
 public class Name {
 
+    @NotBlank(message = "Name must have not blank")
+    @Column(name = "name")
     private String name;
 
     protected Name() { }
