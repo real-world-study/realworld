@@ -15,4 +15,7 @@ public class Email {
         this.email = email;
     }
 
+    public String email() {
+        return email;
+    }
 }

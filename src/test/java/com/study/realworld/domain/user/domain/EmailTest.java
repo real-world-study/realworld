@@ -39,4 +39,5 @@ class EmailTest {
 
         assertThat(email.email()).isEqualTo(emailString);
     }
+
 }
