@@ -51,17 +51,17 @@ class PasswordTest {
         );
     }
 
-//    @DisplayName("Password 인스턴스 값이 비교 대상과 같은지 검증 테스트")
-//    @Test
-//    void checkPassword_test() {
-//        final String passwordString = "password";
-//        final String invalidPasswordString = "invalidPassword";
-//        final Password password = Password.createWithEncoder(passwordString, passwordEncoder);
-//
-//        assertAll(
-//                () -> assertThat(password.checkPassword(passwordString, passwordEncoder)).isTrue(),
-//                () -> assertThat(password.checkPassword(invalidPasswordString, passwordEncoder)).isFalse()
-//        );
-//    }
+    @DisplayName("Password 인스턴스 값이 비교 대상과 같은지 검증 테스트")
+    @Test
+    void checkPassword_test() {
+        final String passwordString = "password";
+        final String invalidPasswordString = "invalidPassword";
+        final Password password = Password.createWithEncoder(passwordString, passwordEncoder);
+
+        assertAll(
+                () -> assertThat(password.checkPasswordWithEncoder(passwordString, passwordEncoder)).isTrue(),
+                () -> assertThat(password.checkPasswordWithEncoder(invalidPasswordString, passwordEncoder)).isFalse()
+        );
+    }
 
 }
