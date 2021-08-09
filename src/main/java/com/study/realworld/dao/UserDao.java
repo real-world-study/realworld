@@ -1,5 +1,6 @@
-package com.study.realworld.bean;
+package com.study.realworld.dao;
 
+import com.study.realworld.bean.User;
 import com.study.realworld.dao.PSSetDao;
 import com.study.realworld.dao.ResultDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,11 @@ import java.sql.Statement;
 import java.util.Map;
 
 @Component
-public class UserBean {
+public class UserDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserBean(JdbcTemplate jdbcTemplate) {
+    public UserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -34,8 +35,8 @@ public class UserBean {
         return jdbcTemplate.update(query, new PSSetDao.PSSForTripleString(username, email, password));
     }
 
-    public Map<String, Object> getUsers(String email) {     //getUsers
+    public User getUsers(String email) {     //getUsers
         final String query = "select email,username,bio,image from USER where email=?";
-        return (Map<String, Object>) jdbcTemplate.query(query, new PSSetDao.PSSForString(email), new ResultDao.RSEForResult());
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> new User(rs.getString("email"), rs.getString("username"), rs.getString("bio"), rs.getString("image")), email);
     }
 }
