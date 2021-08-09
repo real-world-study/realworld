@@ -1,16 +1,10 @@
 package com.study.realworld.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.study.realworld.bean.User;
-import com.study.realworld.dao.UserDao;
-import com.study.realworld.common.Errors;
-import com.study.realworld.common.Func;
 import com.study.realworld.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

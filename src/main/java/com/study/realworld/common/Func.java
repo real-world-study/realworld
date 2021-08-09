@@ -1,9 +1,6 @@
 package com.study.realworld.common;
 
 import com.google.gson.JsonObject;
-import com.study.realworld.secure.SecurityFunc;
-
-import java.security.Key;
 
 public class Func {
     public static String getErrorJson(Errors error, Object... objects) {

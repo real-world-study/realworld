@@ -1,4 +1,4 @@
-package com.study.realworld.bean;
+package com.study.realworld.domain;
 
 public class User {
     private String email;
