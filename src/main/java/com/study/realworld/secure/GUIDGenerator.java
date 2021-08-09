@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class GUIDGenerator implements IGenerator {
 	
-	protected final int _length;
-	protected final Random _random;
+	protected final int length;
+	protected final Random random;
 	
 	public GUIDGenerator(int length) throws Exception {
 		if( length < 1 ) throw new IllegalArgumentException("length < 1: " + length);
