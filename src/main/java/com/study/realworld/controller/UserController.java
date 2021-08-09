@@ -20,12 +20,17 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class UserController{
+public class UserController {
+    UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @ApiOperation(value = "사용자 등록", notes = "사용자 등록")
     @PostMapping("/users")   //post 등록 api
     public String users(@RequestBody Map<String, Object> param) throws JsonProcessingException {
         JsonObject user = new Gson().toJsonTree(param).getAsJsonObject();
-        return UserService.users((JsonObject) user.get("user"));
+        return userService.users((JsonObject) user.get("user"));
     }
 }

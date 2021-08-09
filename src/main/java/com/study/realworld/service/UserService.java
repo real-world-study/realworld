@@ -7,19 +7,19 @@ import com.study.realworld.bean.User;
 import com.study.realworld.common.Errors;
 import com.study.realworld.common.Func;
 import com.study.realworld.dao.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Service
+@Repository
 public class UserService {
-    private static UserDao userDao;
+    private final UserDao userDao;
 
-    @Autowired
     public UserService(UserDao userDao) {
         this.userDao = userDao;
     }
 
-    public static String users(JsonObject user) throws JsonProcessingException {
+    public String users(JsonObject user) throws JsonProcessingException {
         if (userDao.checkSameName(getString(user, "username"))) {  //닉네임 체크
             return Func.getErrorJson(Errors.SAME_NICKNAME);
         } else if (userDao.checkSameEmail(getString(user, "email"))) { //email 체크
@@ -44,7 +44,7 @@ public class UserService {
         return Func.getResultJson(result);
     }
     
-    static String getString(JsonObject jsonObject, String name) {
+    String getString(JsonObject jsonObject, String name) {
         return jsonObject.get(name).toString();
     }
 }
