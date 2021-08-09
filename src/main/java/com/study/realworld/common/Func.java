@@ -11,10 +11,12 @@ public class Func {
 
         json.addProperty("E", String.valueOf(error.getCode()));
 
-        if(objects != null && objects.length > 0) {
-            for(int i = 0; i < objects.length; i = i + 2) {
-                json.addProperty(String.valueOf(objects[i]), String.valueOf(objects[i + 1]));
-            }
+        if(objects == null && objects.length == 0) {
+            return json.toString();
+        }
+        
+        for(int i = 0; i < objects.length; i = i + 2) {
+            json.addProperty(String.valueOf(objects[i]), String.valueOf(objects[i + 1]));
         }
         System.out.println(error.name() + " - " + error.getCode() + " - " + error.getDesc());
 
