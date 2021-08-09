@@ -34,7 +34,7 @@ public class UserBean {
         return jdbcTemplate.update(query, new PSSetDao.PSSForTripleString(username, email, password));
     }
 
-    public Map<String, Object> getUsers(String email) {
+    public Map<String, Object> getUsers(String email) {     //getUsers
         final String query = "select email,username,bio,image from USER where email=?";
         return (Map<String, Object>) jdbcTemplate.query(query, new PSSetDao.PSSForString(email), new ResultDao.RSEForResult());
     }
