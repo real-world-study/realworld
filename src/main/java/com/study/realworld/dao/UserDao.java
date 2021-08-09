@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Map;
 
-@Component
 @Repository
 public class UserDao {
     private final JdbcTemplate jdbcTemplate;
