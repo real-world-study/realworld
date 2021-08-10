@@ -28,8 +28,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "password", nullable = false))
     private Password password;
 
-    @Column(name = "user_bio")
-    private String bio;
+    @Embedded
+    @AttributeOverride(name = "bio", column =
+    @Column(name = "bio"))
+    private Bio bio;
 
     @Column(name = "user_image")
     private String image;
@@ -53,7 +55,7 @@ public class User extends BaseTimeEntity {
         return username;
     }
 
-    public String bio() {
+    public Bio bio() {
         return bio;
     }
 
@@ -78,7 +80,7 @@ public class User extends BaseTimeEntity {
         private Email email;
         private Name username;
         private Password password;
-        private String bio;
+        private Bio bio;
         private String image;
 
         private UserBuilder() {
@@ -99,7 +101,7 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
-        public UserBuilder bio(final String bio) {
+        public UserBuilder bio(final Bio bio) {
             this.bio = bio;
             return this;
         }

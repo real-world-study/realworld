@@ -24,7 +24,7 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 save() 테스트")
     @Test
     void save_test() {
-        final User expected = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User expected = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
         final User actual = userRepository.save(expected);
 
         assertThat(actual).isEqualTo(expected);
@@ -33,7 +33,7 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 findById() 테스트")
     @Test
     void findById_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
         final User expected = testEntityManager.persist(user);
         final User actual = userRepository.findById(1L).get();
 
@@ -43,7 +43,7 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 findAll() 테스트")
     @Test
     void findAll_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
         final User expected = testEntityManager.persist(user);
         final List<User> users = (List<User>) userRepository.findAll();
 
@@ -56,7 +56,7 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 delete() 테스트")
     @Test
     void delete_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
         testEntityManager.persist(user);
         userRepository.delete(user);
 

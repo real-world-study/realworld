@@ -29,7 +29,7 @@ public class UserTest {
     @DisplayName("User 인스턴스 빌더 테스트")
     @Test
     void builder_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
@@ -40,14 +40,14 @@ public class UserTest {
     @DisplayName("User 인스턴스 getter() 테스트")
     @Test
     void getter_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
                 () -> assertThat(user).isExactlyInstanceOf(User.class),
                 () -> assertThat(user.email().email()).isEqualTo(EMAIL),
                 () -> assertThat(user.username().name()).isEqualTo(USERNAME),
-                () -> assertThat(user.bio()).isEqualTo(BIO),
+                () -> assertThat(user.bio().bio()).isEqualTo(BIO),
                 () -> assertThat(user.image()).isEqualTo(IMAGE)
         );
     }
@@ -56,7 +56,7 @@ public class UserTest {
     @Test
     void checkPassword_test() {
         final String invalidPassword = "INVALID_PASSWORD";
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE).encode(PASSWORD_ENCODER);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE).encode(PASSWORD_ENCODER);
 
         assertAll(
                 () -> assertThat(user.checkPassword(invalidPassword, PASSWORD_ENCODER)).isFalse(),
@@ -65,7 +65,7 @@ public class UserTest {
     }
 
     public static final User userBuilder(final Email email, final Name username,
-                                         final Password password, final String bio, final String image) {
+                                         final Password password, final Bio bio, final String image) {
         return User.Builder()
                 .email(email)
                 .username(username)

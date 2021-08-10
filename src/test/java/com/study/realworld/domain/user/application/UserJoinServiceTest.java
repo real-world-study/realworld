@@ -42,7 +42,7 @@ class UserJoinServiceTest {
     @DisplayName("UserJoinService 인스턴스 join() 테스트")
     @Test
     void join_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
         given(userRepository.save(any())).willReturn(user);
 
         final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));

@@ -2,10 +2,7 @@ package com.study.realworld.domain.user.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.domain.user.application.UserJoinService;
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Name;
-import com.study.realworld.domain.user.domain.Password;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
 import com.study.realworld.domain.user.dto.UserJoinRequestTest;
 import com.study.realworld.domain.user.dto.UserJoinResponse;
@@ -52,7 +49,7 @@ class UserRestControllerUnitTest {
     void join_test() throws Exception {
         final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
         final String userJoinRequestString = objectMapper.writeValueAsString(userJoinRequest);
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE).encode(PASSWORD_ENCODER);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD),new Bio(BIO), IMAGE).encode(PASSWORD_ENCODER);
         final UserJoinResponse userJoinResponse = userJoinResponse(user);
 
         given(userJoinService.join(any())).willReturn(userJoinResponse);

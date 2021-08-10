@@ -1,5 +1,7 @@
 package com.study.realworld.domain.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.Objects;
@@ -17,6 +19,7 @@ public class Bio {
         this.bio = bio;
     }
 
+    @JsonValue
     public String bio() {
         return bio;
     }

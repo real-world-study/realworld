@@ -1,9 +1,6 @@
 package com.study.realworld.domain.user.dto;
 
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Name;
-import com.study.realworld.domain.user.domain.Password;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +27,7 @@ public class UserJoinResponseTest {
     @DisplayName("UserJoinResponse 인스턴스 fromUser() 테스트")
     @Test
     void fromUser_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
         final UserJoinResponse userJoinResponse = UserJoinResponse.fromUser(user);
 
         assertAll(
