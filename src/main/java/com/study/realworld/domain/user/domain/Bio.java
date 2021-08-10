@@ -16,4 +16,7 @@ public class Bio {
         this.bio = bio;
     }
 
+    public String bio() {
+        return bio;
+    }
 }
