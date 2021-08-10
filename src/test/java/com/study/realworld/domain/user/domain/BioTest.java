@@ -22,12 +22,22 @@ class BioTest {
     @DisplayName("Bio 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final Bio bio = new Bio("bio");
+        final String bioString = "bio";
+        final Bio bio = new Bio(bioString);
 
         assertAll(
                 () -> assertThat(bio).isNotNull(),
                 () -> assertThat(bio).isExactlyInstanceOf(Bio.class)
         );
+    }
+
+    @DisplayName("Bio 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final String bioString = "bio";
+        final Bio bio = new Bio(bioString);
+
+        assertThat(bio.bio()).isEqualTo(bioString);
     }
 
 }
