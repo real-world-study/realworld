@@ -1,8 +1,7 @@
 package com.study.realworld.service;
 
 import com.google.gson.JsonObject;
-import com.study.realworld.common.Errors;
-import com.study.realworld.common.Func;
+import com.study.realworld.common.ErrorCode;
 import com.study.realworld.dao.UserDao;
 import org.springframework.stereotype.Service;
 
@@ -14,24 +13,21 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public String users(JsonObject user) {
-        if (userDao.checkSameName(getString(user, "username"))) {  //닉네임 체크
-            return Func.getErrorJson(Errors.SAME_NICKNAME);
-        } else if (userDao.checkSameEmail(getString(user, "email"))) { //email 체크
-            return Func.getErrorJson(Errors.SAME_EMAIL);
+    public Object users(JsonObject user) {
+        if (userDao.getUserByName(getString(user, "username")) != null) {  //닉네임 체크
+            return ErrorCode.SAME_NICKNAME;
+        } else if (userDao.getUserByEmail(getString(user, "email")) != null) { //email 체크
+            return ErrorCode.SAME_EMAIL;
         }
 
-        if (userDao.registUser(getString(user, "username"),
+        if (userDao.insertUser(getString(user, "username"),
                 getString(user, "email"),
                 getString(user, "password")) < 0) {
             //등록하다가 에러났을경우
-            return Func.getErrorJson(Errors.DB);
+            return ErrorCode.DB;
         }
 
-        JsonObject result = new JsonObject();
-        result.add("user", user);
-
-        return Func.getResultJson(result);
+        return user;
     }
 
     String getString(JsonObject jsonObject, String name) {

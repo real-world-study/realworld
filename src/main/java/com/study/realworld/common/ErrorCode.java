@@ -1,6 +1,6 @@
 package com.study.realworld.common;
 
-public enum Errors {
+public enum ErrorCode {
     EXCEPTION(-1, "통신중 에러가 발생했습니다."),
     NONE(0, "이상없음"),
     INVALID_REQUEST(1, "잘못된 요청입니다."),
@@ -16,7 +16,7 @@ public enum Errors {
     private int code;
     private String desc;
 
-    Errors(int code, String desc) {
+    ErrorCode(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -29,8 +29,8 @@ public enum Errors {
         return desc;
     }
 
-    public static Errors parse(int code) {
-        for (Errors e : Errors.values()) {
+    public static ErrorCode parse(int code) {
+        for (ErrorCode e : ErrorCode.values()) {
             if (code == e.getCode()) {
                 return e;
             }

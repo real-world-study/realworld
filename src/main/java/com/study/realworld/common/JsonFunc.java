@@ -2,20 +2,20 @@ package com.study.realworld.common;
 
 import com.google.gson.JsonObject;
 
-public class Func {
-    public static String getErrorJson(Errors error, Object... objects) {
+public class JsonFunc {
+    public static String getErrorJson(ErrorCode errorCode, Object... objects) {
         JsonObject json = new JsonObject();
 
-        json.addProperty("E", String.valueOf(error.getCode()));
+        json.addProperty("E", String.valueOf(errorCode.getCode()));
 
-        if (objects == null && objects.length == 0) {
+        if (objects == null || objects.length == 0) {
             return json.toString();
         }
 
         for (int i = 0; i < objects.length; i = i + 2) {
             json.addProperty(String.valueOf(objects[i]), String.valueOf(objects[i + 1]));
         }
-        System.out.println(error.name() + " - " + error.getCode() + " - " + error.getDesc());
+        System.out.println(errorCode.name() + " - " + errorCode.getCode() + " - " + errorCode.getDesc());
 
         return json.toString();
     }

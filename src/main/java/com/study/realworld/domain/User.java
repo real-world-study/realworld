@@ -1,6 +1,7 @@
 package com.study.realworld.domain;
 
 public class User {
+    private Long id;
     private String email;
     private String token;
     private String username;
