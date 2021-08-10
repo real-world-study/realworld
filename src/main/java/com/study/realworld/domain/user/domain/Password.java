@@ -20,7 +20,7 @@ public class Password {
     protected Password() {
     }
 
-    protected Password(final String password) {
+    public Password(final String password) {
         this.password = password;
     }
 

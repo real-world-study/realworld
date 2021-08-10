@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.domain.user.application.UserJoinService;
 import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.Name;
+import com.study.realworld.domain.user.domain.Password;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
 import com.study.realworld.domain.user.dto.UserJoinRequestTest;
@@ -21,6 +22,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
 import static com.study.realworld.domain.user.domain.UserTest.*;
 import static com.study.realworld.domain.user.dto.UserJoinResponseTest.userJoinResponse;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,9 +50,9 @@ class UserRestControllerUnitTest {
     @DisplayName("UserRestController 인스턴스의 join() 단위 테스트")
     @Test
     void join_test() throws Exception {
-        final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), PASSWORD);
+        final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
         final String userJoinRequestString = objectMapper.writeValueAsString(userJoinRequest);
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), PASSWORD, BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE).encode(PASSWORD_ENCODER);
         final UserJoinResponse userJoinResponse = userJoinResponse(user);
 
         given(userJoinService.join(any())).willReturn(userJoinResponse);

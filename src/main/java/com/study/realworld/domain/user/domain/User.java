@@ -1,6 +1,7 @@
 package com.study.realworld.domain.user.domain;
 
 import com.study.realworld.domain.BaseTimeEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -22,8 +23,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "username", length = 20, nullable = false))
     private Name username;
 
-    @Column(name = "uesr_password", nullable = false)
-    private String password;
+    @Embedded
+    @AttributeOverride(name = "password", column =
+    @Column(name = "password", nullable = false))
+    private Password password;
 
     @Column(name = "user_bio")
     private String bio;
@@ -62,14 +65,19 @@ public class User extends BaseTimeEntity {
         return new UserBuilder();
     }
 
-    public boolean checkPassword(final String otherPassword) {
-        return password.equals(otherPassword);
+    public boolean checkPassword(final String rawPassword, final PasswordEncoder passwordEncoder) {
+        return password.checkPasswordWithEncoder(rawPassword, passwordEncoder);
+    }
+
+    public User encode(final PasswordEncoder passwordEncoder) {
+        this.password = Password.encode(password, passwordEncoder);
+        return this;
     }
 
     public static class UserBuilder {
         private Email email;
         private Name username;
-        private String password;
+        private Password password;
         private String bio;
         private String image;
 
@@ -86,7 +94,7 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
-        public UserBuilder password(final String password) {
+        public UserBuilder password(final Password password) {
             this.password = password;
             return this;
         }

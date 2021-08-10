@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserTest {
 
-    public static final String PASSWORD = "password";
     public static final String BIO = "bio";
     public static final String IMAGE = "image";
 
@@ -28,7 +29,7 @@ public class UserTest {
     @DisplayName("User 인스턴스 빌더 테스트")
     @Test
     void builder_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), PASSWORD, BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
@@ -39,7 +40,7 @@ public class UserTest {
     @DisplayName("User 인스턴스 getter() 테스트")
     @Test
     void getter_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), PASSWORD, BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE);
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
@@ -55,16 +56,16 @@ public class UserTest {
     @Test
     void checkPassword_test() {
         final String invalidPassword = "INVALID_PASSWORD";
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), PASSWORD, BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), BIO, IMAGE).encode(PASSWORD_ENCODER);
 
         assertAll(
-                () -> assertThat(user.checkPassword(invalidPassword)).isFalse(),
-                () -> assertThat(user.checkPassword(PASSWORD)).isTrue()
+                () -> assertThat(user.checkPassword(invalidPassword, PASSWORD_ENCODER)).isFalse(),
+                () -> assertThat(user.checkPassword(PASSWORD, PASSWORD_ENCODER)).isTrue()
         );
     }
 
     public static final User userBuilder(final Email email, final Name username,
-                                          final String password, final String bio, final String image) {
+                                         final Password password, final String bio, final String image) {
         return User.Builder()
                 .email(email)
                 .username(username)

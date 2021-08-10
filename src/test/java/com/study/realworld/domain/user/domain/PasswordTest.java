@@ -1,39 +1,29 @@
 package com.study.realworld.domain.user.domain;
 
+import com.study.realworld.domain.user.domain.testUtil.TestPasswordEncoder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-class PasswordTest {
+public class PasswordTest {
 
-    private static PasswordEncoder passwordEncoder;
+    public static final String PASSWORD = "password";
+    public static PasswordEncoder PASSWORD_ENCODER = new TestPasswordEncoder();
+
     private static Validator validator;
 
     @BeforeAll
     static void setUp() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
-        passwordEncoder = new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence plainTextPassword) {
-                return BCrypt.hashpw(plainTextPassword.toString(), BCrypt.gensalt(15));
-            }
-
-            @Override
-            public boolean matches(CharSequence plainTextPassword, String passwordInDatabase) {
-                return BCrypt.checkpw(plainTextPassword.toString(), passwordInDatabase);
-            }
-        };
     }
 
     @DisplayName("Password 인스턴스 기본 생성자 테스트")
@@ -64,11 +54,11 @@ class PasswordTest {
     void checkPassword_test() {
         final String passwordString = "password";
         final String invalidPasswordString = "invalidPassword";
-        final Password password = Password.encode(new Password(passwordString), passwordEncoder);
+        final Password password = Password.encode(new Password(passwordString), PASSWORD_ENCODER);
 
         assertAll(
-                () -> assertThat(password.checkPasswordWithEncoder(passwordString, passwordEncoder)).isTrue(),
-                () -> assertThat(password.checkPasswordWithEncoder(invalidPasswordString, passwordEncoder)).isFalse()
+                () -> assertThat(password.checkPasswordWithEncoder(passwordString, PASSWORD_ENCODER)).isTrue(),
+                () -> assertThat(password.checkPasswordWithEncoder(invalidPasswordString, PASSWORD_ENCODER)).isFalse()
         );
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.Name;
+import com.study.realworld.domain.user.domain.Password;
 import com.study.realworld.domain.user.domain.User;
 
 import javax.validation.constraints.NotBlank;
@@ -19,15 +20,14 @@ public final class UserJoinRequest {
     @JsonProperty("email")
     private Email email;
 
-    @NotBlank
     @JsonProperty("password")
-    private String password;
+    private Password password;
 
     private UserJoinRequest() {
     }
 
     // 테스트용 오버로딩 생성자 -> 주관적인 생각으로 이런 상황은 오버로딩으로 유연성을 주는게 좋다고 생각합니다.
-    UserJoinRequest(final Name username, final Email email, final String password) {
+    UserJoinRequest(final Name username, final Email email, final Password password) {
         this.username = username;
         this.email = email;
         this.password = password;
