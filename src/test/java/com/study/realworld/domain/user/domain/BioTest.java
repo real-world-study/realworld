@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class BioTest {
 
@@ -51,6 +51,15 @@ class BioTest {
                 () -> assertThat(firstBio).isEqualTo(secondBio),
                 () -> assertThat(firstBio.hashCode()).isEqualTo(secondBio.hashCode())
         );
+    }
+
+    @DisplayName("Bio 인스턴스 toString 테스트")
+    @Test
+    void toString_test() {
+        final String bioString = "bio";
+        final Bio bio = new Bio(bioString);
+
+        assertThat(bio.toString()).isEqualTo(String.format("Bio{bio='%s'}", bioString));
     }
 
 }
