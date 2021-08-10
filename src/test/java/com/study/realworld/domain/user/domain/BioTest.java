@@ -40,4 +40,17 @@ class BioTest {
         assertThat(bio.bio()).isEqualTo(bioString);
     }
 
+    @DisplayName("Bio 인스턴스 equals and hashcode 동등성 검증 테스트")
+    @Test
+    void equals_and_hashcode_test() {
+        final String bioString = "bio";
+        final Bio firstBio = new Bio(bioString);
+        final Bio secondBio = new Bio(bioString);
+
+        assertAll(
+                () -> assertThat(firstBio).isEqualTo(secondBio),
+                () -> assertThat(firstBio.hashCode()).isEqualTo(secondBio.hashCode())
+        );
+    }
+
 }
