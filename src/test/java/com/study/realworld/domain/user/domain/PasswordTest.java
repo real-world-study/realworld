@@ -6,24 +6,32 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PasswordTest {
 
     private static PasswordEncoder passwordEncoder;
+    private static Validator validator;
 
     @BeforeAll
     static void setUp() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
         passwordEncoder = new PasswordEncoder() {
             @Override
             public String encode(CharSequence plainTextPassword) {
-                return BCrypt.hashpw(plainTextPassword.toString(),BCrypt.gensalt(15));
+                return BCrypt.hashpw(plainTextPassword.toString(), BCrypt.gensalt(15));
             }
 
             @Override
             public boolean matches(CharSequence plainTextPassword, String passwordInDatabase) {
-                return BCrypt.checkpw(plainTextPassword.toString(),passwordInDatabase);
+                return BCrypt.checkpw(plainTextPassword.toString(), passwordInDatabase);
             }
         };
     }
@@ -43,7 +51,7 @@ class PasswordTest {
     @Test
     void static_factory_method_test() {
         final String passwordString = "password";
-        final Password password = Password.createWithEncoder(passwordString, passwordEncoder);
+        final Password password = new Password(passwordString);
 
         assertAll(
                 () -> assertThat(password).isNotNull(),
@@ -56,11 +64,24 @@ class PasswordTest {
     void checkPassword_test() {
         final String passwordString = "password";
         final String invalidPasswordString = "invalidPassword";
-        final Password password = Password.createWithEncoder(passwordString, passwordEncoder);
+        final Password password = Password.encode(new Password(passwordString), passwordEncoder);
 
         assertAll(
                 () -> assertThat(password.checkPasswordWithEncoder(passwordString, passwordEncoder)).isTrue(),
                 () -> assertThat(password.checkPasswordWithEncoder(invalidPasswordString, passwordEncoder)).isFalse()
+        );
+    }
+
+    @DisplayName("Password 인스턴스 값 공백 검증 테스트")
+    @Test
+    void password_blank_test() {
+        final String passwordString = "    ";
+        final Password password = new Password(passwordString);
+
+        final Set<ConstraintViolation<Password>> violations = validator.validate(password);
+        assertAll(
+                () -> assertThat(violations.size()).isEqualTo(1),
+                () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("Password must have not blank")
         );
     }
 
