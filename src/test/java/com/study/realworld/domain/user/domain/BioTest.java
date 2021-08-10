@@ -19,4 +19,15 @@ class BioTest {
         );
     }
 
+    @DisplayName("Bio 인스턴스 생성자 테스트")
+    @Test
+    void constructor_test() {
+        final Bio bio = new Bio("bio");
+
+        assertAll(
+                () -> assertThat(bio).isNotNull(),
+                () -> assertThat(bio).isExactlyInstanceOf(Bio.class)
+        );
+    }
+
 }
