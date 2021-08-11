@@ -22,7 +22,7 @@ class ImageTest {
     @DisplayName("Image 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final String imagePath = "iamgePath";
+        final String imagePath = "imagePath";
         final Image image = new Image(imagePath);
 
         assertAll(
@@ -34,10 +34,23 @@ class ImageTest {
     @DisplayName("Image 인스턴스 getter 기능 테스트")
     @Test
     void getter_test() {
-        final String imagePath = "iamgePath";
+        final String imagePath = "imagePath";
         final Image image = new Image(imagePath);
 
         assertThat(image.path()).isEqualTo(imagePath);
+    }
+
+    @DisplayName("Image 인스턴스 equals and hashcode 동등성 검증 테스트")
+    @Test
+    void equals_and_hashcode_test() {
+        final String imagePath = "imagePath";
+        final Image firstImage = new Image(imagePath);
+        final Image secondImage = new Image(imagePath);
+
+        assertAll(
+                () -> assertThat(firstImage).isEqualTo(secondImage),
+                () -> assertThat(firstImage.hashCode()).isEqualTo(firstImage.hashCode())
+        );
     }
 
 }
