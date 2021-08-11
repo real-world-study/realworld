@@ -31,4 +31,13 @@ class ImageTest {
         );
     }
 
+    @DisplayName("Image 인스턴스 getter 기능 테스트")
+    @Test
+    void getter_test() {
+        final String imagePath = "iamgePath";
+        final Image image = new Image(imagePath);
+
+        assertThat(image.path()).isEqualTo(imagePath);
+    }
+
 }
