@@ -10,8 +10,20 @@ class ImageTest {
 
     @DisplayName("Image 인스턴스 기본 생성자 테스트")
     @Test
-    void constructor_test() {
+    void default_constructor_test() {
         final Image image = new Image();
+
+        assertAll(
+                () -> assertThat(image).isNotNull(),
+                () -> assertThat(image).isExactlyInstanceOf(Email.class)
+        );
+    }
+
+    @DisplayName("Image 인스턴스 생성자 테스트")
+    @Test
+    void constructor_test() {
+        final String imagePath = "iamgePath";
+        final Image image = new Image(imagePath);
 
         assertAll(
                 () -> assertThat(image).isNotNull(),
