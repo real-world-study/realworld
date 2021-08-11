@@ -2,6 +2,7 @@ package com.study.realworld.user.presentation;
 
 import com.study.realworld.core.domain.user.entity.User;
 import com.study.realworld.user.application.UserService;
+import com.study.realworld.user.presentation.model.UserLoginRequest;
 import com.study.realworld.user.presentation.model.UserRegisterRequest;
 import com.study.realworld.user.presentation.model.UserResponse;
 
@@ -31,4 +32,9 @@ public class UserController {
         return ResponseEntity.ok().body(UserResponse.createResponse(user));
     }
 
+    @PostMapping(value = "/users/login")
+    public ResponseEntity<UserResponse> login(@Valid @RequestBody UserLoginRequest request) {
+        User user = userService.login(request.toModel());
+        return ResponseEntity.ok().body(UserResponse.createResponse(user));
+    }
 }

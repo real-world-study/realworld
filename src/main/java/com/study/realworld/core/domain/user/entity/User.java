@@ -1,5 +1,7 @@
 package com.study.realworld.core.domain.user.entity;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -53,4 +55,8 @@ public class User {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public boolean isMatchesPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword, this.password);
+    }
 }
