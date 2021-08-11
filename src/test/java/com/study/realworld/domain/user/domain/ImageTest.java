@@ -59,7 +59,7 @@ class ImageTest {
         final String imagePath = "imagePath";
         final Image image = new Image(imagePath);
 
-        System.out.println(image);
+        assertThat(image.toString()).isEqualTo(String.format("Image{path='%s'}", imagePath));
     }
 
 }
