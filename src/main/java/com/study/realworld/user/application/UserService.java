@@ -7,8 +7,7 @@ import com.study.realworld.user.application.model.UserRegisterModel;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +26,7 @@ public class UserService {
         return userRepository.save(userRegisterModel.toUser());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User login(UserLoginModel userLoginModel) {
         User findUser = userLoginModel.toUser();
         User user = userRepository.findByEmail(findUser.getEmail())
