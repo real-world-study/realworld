@@ -3,7 +3,9 @@ package com.study.realworld.domain.user.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
@@ -11,9 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserTest {
-
-    public static final String BIO = "bio";
-    public static final String IMAGE = "image";
 
     @DisplayName("User 인스턴스 기본 생성자 테스트")
     @Test
@@ -29,7 +28,7 @@ public class UserTest {
     @DisplayName("User 인스턴스 빌더 테스트")
     @Test
     void builder_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
 
         assertAll(
                 () -> assertThat(user).isNotNull(),
@@ -40,15 +39,13 @@ public class UserTest {
     @DisplayName("User 인스턴스 getter() 테스트")
     @Test
     void getter_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
 
         assertAll(
-                () -> assertThat(user).isNotNull(),
-                () -> assertThat(user).isExactlyInstanceOf(User.class),
                 () -> assertThat(user.email().email()).isEqualTo(EMAIL),
                 () -> assertThat(user.username().name()).isEqualTo(USERNAME),
                 () -> assertThat(user.bio().bio()).isEqualTo(BIO),
-                () -> assertThat(user.image()).isEqualTo(IMAGE)
+                () -> assertThat(user.image().path()).isEqualTo(IMAGE)
         );
     }
 
@@ -56,7 +53,7 @@ public class UserTest {
     @Test
     void checkPassword_test() {
         final String invalidPassword = "INVALID_PASSWORD";
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), IMAGE).encode(PASSWORD_ENCODER);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
 
         assertAll(
                 () -> assertThat(user.checkPassword(invalidPassword, PASSWORD_ENCODER)).isFalse(),
@@ -65,7 +62,7 @@ public class UserTest {
     }
 
     public static final User userBuilder(final Email email, final Name username,
-                                         final Password password, final Bio bio, final String image) {
+                                         final Password password, final Bio bio, final Image image) {
         return User.Builder()
                 .email(email)
                 .username(username)

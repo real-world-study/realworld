@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class BioTest {
+public class BioTest {
+
+    public static final String BIO = "bio";
 
     @DisplayName("Bio 인스턴스 기본 생성자 테스트")
     @Test

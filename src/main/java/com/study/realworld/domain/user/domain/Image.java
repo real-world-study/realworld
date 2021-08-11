@@ -1,9 +1,15 @@
 package com.study.realworld.domain.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Embeddable
 public class Image {
 
+    @Column(name = "image")
     private String path;
 
     protected Image() {
@@ -13,6 +19,7 @@ public class Image {
         this.path = path;
     }
 
+    @JsonValue
     public String path() {
         return path;
     }

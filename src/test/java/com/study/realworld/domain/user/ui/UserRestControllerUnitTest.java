@@ -17,7 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
@@ -49,7 +51,7 @@ class UserRestControllerUnitTest {
     void join_test() throws Exception {
         final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
         final String userJoinRequestString = objectMapper.writeValueAsString(userJoinRequest);
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD),new Bio(BIO), IMAGE).encode(PASSWORD_ENCODER);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
         final UserJoinResponse userJoinResponse = userJoinResponse(user);
 
         given(userJoinService.join(any())).willReturn(userJoinResponse);

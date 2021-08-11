@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ImageTest {
+public class ImageTest {
+
+    public static final String IMAGE = "image";
 
     @DisplayName("Image 인스턴스 기본 생성자 테스트")
     @Test
