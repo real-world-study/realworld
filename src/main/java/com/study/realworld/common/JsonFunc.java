@@ -1,6 +1,9 @@
 package com.study.realworld.common;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class JsonFunc {
     public static String getErrorJson(ErrorCode errorCode, Object... objects) {
@@ -20,11 +23,12 @@ public class JsonFunc {
         return json.toString();
     }
 
-    public static String getResultJson(JsonObject result) {
+    public static String getResultJson(Object result) throws JsonProcessingException {
         JsonObject json = new JsonObject();
 
-        json.add("R", result);
+        ObjectMapper objectMapper = new ObjectMapper();
+        json.add("R", new JsonParser().parse(objectMapper.writeValueAsString(result)));
 
-        return result.toString();
+        return json.toString();
     }
 }

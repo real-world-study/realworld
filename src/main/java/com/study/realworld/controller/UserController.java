@@ -1,17 +1,15 @@
 package com.study.realworld.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.study.realworld.common.ErrorCode;
 import com.study.realworld.common.JsonFunc;
+import com.study.realworld.domain.User;
 import com.study.realworld.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -24,9 +22,8 @@ public class UserController {
 
     @ApiOperation(value = "사용자 등록", notes = "사용자 등록")
     @PostMapping("/users")   //post 등록 api
-    public String users(@RequestBody Map<String, Object> param) {
-        JsonObject user = new Gson().toJsonTree(param).getAsJsonObject();
-        Object result = userService.users((JsonObject) user.get("user"));
+    public String users(@JsonProperty("user") User user) throws JsonProcessingException {
+        Object result = userService.users(user);
         if (result instanceof ErrorCode) {
             return JsonFunc.getErrorJson((ErrorCode) result);
         }
