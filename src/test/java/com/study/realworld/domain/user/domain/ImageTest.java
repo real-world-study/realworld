@@ -15,7 +15,7 @@ class ImageTest {
 
         assertAll(
                 () -> assertThat(image).isNotNull(),
-                () -> assertThat(image).isExactlyInstanceOf(Email.class)
+                () -> assertThat(image).isExactlyInstanceOf(Image.class)
         );
     }
 
@@ -27,7 +27,7 @@ class ImageTest {
 
         assertAll(
                 () -> assertThat(image).isNotNull(),
-                () -> assertThat(image).isExactlyInstanceOf(Email.class)
+                () -> assertThat(image).isExactlyInstanceOf(Image.class)
         );
     }
 
