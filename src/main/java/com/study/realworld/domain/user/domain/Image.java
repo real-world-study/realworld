@@ -11,4 +11,8 @@ public class Image {
         this.path = path;
     }
 
+    public String path() {
+        return path;
+    }
+
 }
