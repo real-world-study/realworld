@@ -3,6 +3,7 @@ package com.study.realworld.user.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.core.domain.user.entity.User;
 import com.study.realworld.user.application.UserService;
+import com.study.realworld.user.presentation.model.UserLoginRequest;
 import com.study.realworld.user.presentation.model.UserRegisterRequest;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -76,5 +77,27 @@ class UserControllerTest {
 
         // then
         then(userService).should().register(any());
+    }
+
+    @Test
+    @DisplayName("로그인 기능")
+    void loginTest() throws Exception {
+        // given
+        final String email = "chance@chance.com";
+        final String password = "chance";
+
+        given(userService.login(any())).willReturn(User.builder().email(email).password(password).build());
+
+        UserLoginRequest request = new UserLoginRequest(email, password);
+
+        String content = objectMapper.writeValueAsString(request);
+
+        // when
+        mockMvc.perform(post("/api/users/login").content(content)
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        // then
+        then(userService).should().login(any());
     }
 }
