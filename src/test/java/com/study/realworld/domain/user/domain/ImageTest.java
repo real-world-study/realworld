@@ -53,4 +53,13 @@ class ImageTest {
         );
     }
 
+    @DisplayName("Image 인스턴스 toString 테스트")
+    @Test
+    void toString_test() {
+        final String imagePath = "imagePath";
+        final Image image = new Image(imagePath);
+
+        System.out.println(image);
+    }
+
 }

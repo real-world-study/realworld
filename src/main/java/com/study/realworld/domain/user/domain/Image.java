@@ -30,4 +30,11 @@ public class Image {
         return Objects.hash(path());
     }
 
+    @Override
+    public String toString() {
+        return "Image{" +
+                "path='" + path + '\'' +
+                '}';
+    }
+
 }
