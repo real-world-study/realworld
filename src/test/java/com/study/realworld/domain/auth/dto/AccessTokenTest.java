@@ -31,4 +31,13 @@ class AccessTokenTest {
         );
     }
 
+    @DisplayName("AccessToken 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final String accessTokenString = "accessToken";
+        final AuthToken accessToken = AccessToken.ofString(accessTokenString);
+
+        assertThat(accessToken.accessToken()).isEqualTo(accessTokenString);
+    }
+
 }
