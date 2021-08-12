@@ -18,7 +18,6 @@ class UserTest {
 
         // when
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -28,7 +27,6 @@ class UserTest {
 
         // then
         assertAll("Should be equal with User's properties",
-                () -> assertEquals(ID, user.getId()),
                 () -> assertEquals(EMAIL, user.getEmail()),
                 () -> assertEquals(USERNAME, user.getUsername()),
                 () -> assertEquals(PASSWORD, user.getPassword()),
@@ -42,7 +40,6 @@ class UserTest {
 
         // when
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -51,7 +48,6 @@ class UserTest {
                 .build();
 
         final User userTest = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)

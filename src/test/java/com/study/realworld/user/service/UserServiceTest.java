@@ -45,7 +45,6 @@ class UserServiceTest {
 
         // given
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -62,7 +61,6 @@ class UserServiceTest {
         // then
         verify(userRepository).findAll();
         assertAll(
-                () -> assertEquals(user.getId(), result.getId()),
                 () -> assertEquals(user.getEmail(), result.getEmail()),
                 () -> assertEquals(user.getUsername(), result.getUsername()),
                 () -> assertEquals(user.getPassword(), result.getPassword()),
@@ -76,7 +74,6 @@ class UserServiceTest {
 
         // given
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -88,12 +85,11 @@ class UserServiceTest {
                 .thenReturn(Optional.ofNullable(user));
 
         // when
-        User result = userService.findById(user.getId());
+        User result = userService.findById(ID);
 
         // then
-        verify(userRepository).findById(user.getId());
+        verify(userRepository).findById(ID);
         assertAll(
-                () -> assertEquals(user.getId(), result.getId()),
                 () -> assertEquals(user.getEmail(), result.getEmail()),
                 () -> assertEquals(user.getUsername(), result.getUsername()),
                 () -> assertEquals(user.getPassword(), result.getPassword()),
@@ -107,7 +103,6 @@ class UserServiceTest {
 
         // given
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -144,7 +139,6 @@ class UserServiceTest {
                 .build();
 
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(passwordEncoder.encode(PASSWORD))
@@ -171,7 +165,6 @@ class UserServiceTest {
     void deleteById() {
 
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(passwordEncoder.encode(PASSWORD))
@@ -224,7 +217,6 @@ class UserServiceTest {
                 .build();
 
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)

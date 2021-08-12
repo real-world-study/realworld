@@ -30,7 +30,6 @@ class UserRepositoryTest {
 
         // given
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)

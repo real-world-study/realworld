@@ -61,7 +61,6 @@ class UserControllerTest {
                 .build();
 
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
@@ -123,7 +122,6 @@ class UserControllerTest {
                 .build();
 
         final User user = User.builder()
-                .id(ID)
                 .email(EMAIL)
                 .username(USERNAME)
                 .password(PASSWORD)
