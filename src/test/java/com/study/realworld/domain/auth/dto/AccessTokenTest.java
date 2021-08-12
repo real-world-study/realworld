@@ -19,4 +19,16 @@ class AccessTokenTest {
         );
     }
 
+    @DisplayName("AccessToken 인스턴스 정적 팩토리 메서드 테스트")
+    @Test
+    void static_factory_method_test() {
+        final String accessTokenString = "accessToken";
+        final AuthToken accessToken = AccessToken.ofString(accessTokenString);
+
+        assertAll(
+                () -> assertThat(accessToken).isNotNull(),
+                () -> assertThat(accessToken).isInstanceOf(AccessToken.class)
+        );
+    }
+
 }
