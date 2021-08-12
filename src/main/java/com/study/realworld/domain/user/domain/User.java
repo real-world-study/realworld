@@ -1,6 +1,7 @@
 package com.study.realworld.domain.user.domain;
 
 import com.study.realworld.domain.BaseTimeEntity;
+import com.study.realworld.domain.user.exception.PasswordMissMatchException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;

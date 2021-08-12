@@ -1,5 +1,6 @@
 package com.study.realworld.domain.user.domain;
 
+import com.study.realworld.domain.user.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -56,7 +57,7 @@ public class UserTest {
         final String invalidPassword = "INVALID_PASSWORD";
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
 
-        assertThatThrownBy(() -> user.passwordMatches(PASSWORD, PASSWORD_ENCODER))
+        assertThatThrownBy(() -> user.passwordMatches(invalidPassword, PASSWORD_ENCODER))
                 .isInstanceOf(PasswordMissMatchException.class)
                 .hasMessage("password is not match");
     }
