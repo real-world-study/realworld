@@ -30,8 +30,10 @@ public class Password {
         return new Password(passwordEncoder.encode(password.password));
     }
 
-    public boolean matchPassword(Password rawPassword, PasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(rawPassword.password, this.password);
+    public void matchPassword(Password rawPassword, PasswordEncoder passwordEncoder) {
+        if (!passwordEncoder.matches(rawPassword.password, this.password)) {
+            throw new RuntimeException("비밀번호가 다릅니다.");
+        }
     }
 
 }
