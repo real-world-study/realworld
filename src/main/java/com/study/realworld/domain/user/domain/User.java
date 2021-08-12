@@ -42,7 +42,7 @@ public class User extends BaseTimeEntity {
     protected User() {
     }
 
-    private User(final UserBuilder userBuilder) {
+    protected User(final UserBuilder userBuilder) {
         this.email = userBuilder.email;
         this.username = userBuilder.username;
         this.password = userBuilder.password;

@@ -48,7 +48,8 @@ class UserJoinServiceTest {
         given(userRepository.save(any())).willReturn(user);
 
         final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
-        final UserJoinResponse userJoinResponse = userJoinService.join(userJoinRequest);
+        final User joinedUser = userJoinService.join(userJoinRequest.toUser());
+        final UserJoinResponse userJoinResponse = UserJoinResponse.ofUser(joinedUser);
 
         then(userRepository).should(times(1)).save(any());
         assertAll(

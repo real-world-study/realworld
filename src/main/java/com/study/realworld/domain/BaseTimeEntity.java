@@ -36,7 +36,6 @@ public abstract class BaseTimeEntity {
         return deletedAt;
     }
 
-    // 추후 삭제시 읽어서 기록하는 방식으로 변경 예정
     public void recordDeletedTime(final LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }

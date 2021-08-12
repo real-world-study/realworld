@@ -15,9 +15,8 @@ public class UserJoinService {
         this.userRepository = userRepository;
     }
 
-    public UserJoinResponse join(final UserJoinRequest userJoinRequest) {
-        final User user = userRepository.save(userJoinRequest.toUser());
-        return UserJoinResponse.ofUser(user);
+    public User join(final User user) {
+        return userRepository.save(user);
     }
 
 }
