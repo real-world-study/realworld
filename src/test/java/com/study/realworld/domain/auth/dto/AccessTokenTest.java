@@ -11,7 +11,7 @@ class AccessTokenTest {
     @DisplayName("AccessToken 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final AuthToken accessToken = new AccessToken();
+        final AccessToken accessToken = new AccessToken();
 
         assertAll(
                 () -> assertThat(accessToken).isNotNull(),
@@ -23,7 +23,7 @@ class AccessTokenTest {
     @Test
     void static_factory_method_test() {
         final String accessTokenString = "accessToken";
-        final AuthToken accessToken = AccessToken.ofString(accessTokenString);
+        final AccessToken accessToken = AccessToken.ofString(accessTokenString);
 
         assertAll(
                 () -> assertThat(accessToken).isNotNull(),
@@ -35,7 +35,7 @@ class AccessTokenTest {
     @Test
     void getter_test() {
         final String accessTokenString = "accessToken";
-        final AuthToken accessToken = AccessToken.ofString(accessTokenString);
+        final AccessToken accessToken = AccessToken.ofString(accessTokenString);
 
         assertThat(accessToken.accessToken()).isEqualTo(accessTokenString);
     }

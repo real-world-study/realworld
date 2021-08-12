@@ -1,10 +1,12 @@
 package com.study.realworld.domain.auth.dto;
 
-public final class AccessToken implements AuthToken {
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public final class AccessToken {
 
     private String accessToken;
 
-    public static final AuthToken ofString(final String accessToken) {
+    public static final AccessToken ofString(final String accessToken) {
         return new AccessToken(accessToken);
     }
 
@@ -13,6 +15,11 @@ public final class AccessToken implements AuthToken {
 
     public AccessToken(final String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    @JsonValue
+    public String accessToken() {
+        return accessToken;
     }
 
 }
