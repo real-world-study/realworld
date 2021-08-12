@@ -56,12 +56,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public User login(UserLoginRequest request) {
         User user = this.findByEmail(request.getEmail());
-
-        if(!user.matchesPassword(request.getPassword(), passwordEncoder)) {
-            throw new NoSuchElementException(request.getPassword() + " wrong wrong wrong triple wrong" + user.getPassword());
-        }
+        validateMatchesPassword(user, request.getPassword());
 
         return user;
+    }
+
+    private void validateMatchesPassword(User user, String rawPassword) {
+        if(!user.matchesPassword(rawPassword, passwordEncoder)) {
+            throw new NoSuchElementException(rawPassword + " wrong wrong wrong triple wrong" + user.getPassword());
+        }
     }
 
 }
