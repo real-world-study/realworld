@@ -69,8 +69,10 @@ public class User extends BaseTimeEntity {
         return new UserBuilder();
     }
 
-    public boolean checkPassword(final String rawPassword, final PasswordEncoder passwordEncoder) {
-        return password.checkPasswordWithEncoder(rawPassword, passwordEncoder);
+    public void passwordMatches(final String rawPassword, final PasswordEncoder passwordEncoder) {
+        if(!password.matches(rawPassword, passwordEncoder)){
+            throw new PasswordMissMatchException();
+        }
     }
 
     public User encode(final PasswordEncoder passwordEncoder) {

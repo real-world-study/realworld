@@ -30,7 +30,7 @@ public class UserJoinResponseTest {
     @Test
     void fromUser_test() {
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
-        final UserJoinResponse userJoinResponse = UserJoinResponse.fromUser(user);
+        final UserJoinResponse userJoinResponse = UserJoinResponse.ofUser(user);
 
         assertAll(
                 () -> assertThat(userJoinResponse).isNotNull(),
@@ -39,7 +39,7 @@ public class UserJoinResponseTest {
     }
 
     public static final UserJoinResponse userJoinResponse(final User user) {
-        return UserJoinResponse.fromUser(user);
+        return UserJoinResponse.ofUser(user);
     }
 
 }

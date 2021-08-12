@@ -38,7 +38,7 @@ public class UserJoinRequestTest {
                 () -> assertThat(user).isExactlyInstanceOf(User.class),
                 () -> assertThat(user.username().name()).isEqualTo(USERNAME),
                 () -> assertThat(user.email().email()).isEqualTo(EMAIL),
-                () -> assertThat(user.checkPassword(PASSWORD, PASSWORD_ENCODER)).isTrue()
+                () -> assertThat(user.matches(PASSWORD, PASSWORD_ENCODER)).isTrue()
         );
     }
 

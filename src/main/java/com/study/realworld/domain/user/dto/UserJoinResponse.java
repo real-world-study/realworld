@@ -21,7 +21,7 @@ public final class UserJoinResponse {
     @JsonProperty("image")
     private Image image;
 
-    public static final UserJoinResponse fromUser(final User user) {
+    public static final UserJoinResponse ofUser(final User user) {
         return new UserJoinResponse(user);
     }
 

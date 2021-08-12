@@ -6,8 +6,6 @@ import com.study.realworld.domain.user.dto.UserJoinRequest;
 import com.study.realworld.domain.user.dto.UserJoinResponse;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-
 @Service
 public class UserJoinService {
 
@@ -17,10 +15,9 @@ public class UserJoinService {
         this.userRepository = userRepository;
     }
 
-    @Valid
     public UserJoinResponse join(final UserJoinRequest userJoinRequest) {
         final User user = userRepository.save(userJoinRequest.toUser());
-        return UserJoinResponse.fromUser(user);
+        return UserJoinResponse.ofUser(user);
     }
 
 }

@@ -10,6 +10,7 @@ import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserTest {
@@ -49,16 +50,15 @@ public class UserTest {
         );
     }
 
-    @DisplayName("User 인스턴스 checkPassword() 테스트")
+    @DisplayName("User 인스턴스 passwordMatches() 테스트")
     @Test
-    void checkPassword_test() {
+    void passwordMatches_test() {
         final String invalidPassword = "INVALID_PASSWORD";
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
 
-        assertAll(
-                () -> assertThat(user.checkPassword(invalidPassword, PASSWORD_ENCODER)).isFalse(),
-                () -> assertThat(user.checkPassword(PASSWORD, PASSWORD_ENCODER)).isTrue()
-        );
+        assertThatThrownBy(() -> user.passwordMatches(PASSWORD, PASSWORD_ENCODER))
+                .isInstanceOf(PasswordMissMatchException.class)
+                .hasMessage("password is not match");
     }
 
     public static final User userBuilder(final Email email, final Name username,

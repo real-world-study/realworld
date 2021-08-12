@@ -24,7 +24,7 @@ public class Password {
         this.password = password;
     }
 
-    public boolean checkPasswordWithEncoder(final String rawPassword, final PasswordEncoder passwordEncoder) {
+    public boolean matches(final String rawPassword, final PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(rawPassword, password);
     }
 

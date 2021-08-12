@@ -57,8 +57,8 @@ public class PasswordTest {
         final Password password = Password.encode(new Password(passwordString), PASSWORD_ENCODER);
 
         assertAll(
-                () -> assertThat(password.checkPasswordWithEncoder(passwordString, PASSWORD_ENCODER)).isTrue(),
-                () -> assertThat(password.checkPasswordWithEncoder(invalidPasswordString, PASSWORD_ENCODER)).isFalse()
+                () -> assertThat(password.matches(passwordString, PASSWORD_ENCODER)).isTrue(),
+                () -> assertThat(password.matches(invalidPasswordString, PASSWORD_ENCODER)).isFalse()
         );
     }
 
