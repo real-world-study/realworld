@@ -153,7 +153,6 @@ class UserServiceTest {
         User result = userService.save(request);
 
         // then
-        verify(userRepository).findByEmail(request.getEmail());
         verify(userRepository).save(user);
         assertAll(
                 () -> assertEquals(request.getEmail(), result.getEmail()),

@@ -39,9 +39,6 @@ public class UserService {
     }
 
     public User save(UserJoinRequest request) {
-        userRepository.findByEmail(request.getEmail())
-                .ifPresent(o -> new DuplicateKeyException(o.getEmail() + " already exist"));
-
         User user = UserJoinRequest.toUser(request);
         user.encodePassword(passwordEncoder);
 
@@ -58,8 +55,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User login(UserLoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new NoSuchElementException(request.getEmail() + " not found"));
+        User user = this.findByEmail(request.getEmail());
 
         if(!user.matchesPassword(request.getPassword(), passwordEncoder)) {
             throw new NoSuchElementException(request.getPassword() + " wrong wrong wrong triple wrong" + user.getPassword());
