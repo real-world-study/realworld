@@ -1,6 +1,8 @@
 package com.study.realworld.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.DisplayName;
@@ -89,6 +91,38 @@ class UserTest {
 
         // then
         assertThat(user.getPassword().getPassword()).isEqualTo("encoded_password");
+    }
+
+    @Test
+    @DisplayName("입력된 비밀번호가 존재하는 비밀번호와 같으면 Exception이 반환되지 않아야 한다.")
+    void passwordMatchTest() {
+
+        // setup
+        when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
+
+        // given
+        User user = User.Builder().password(new Password("encoded_password")).build();
+        Password password = new Password("password");
+
+        // when & then
+        assertDoesNotThrow(() -> user.matchPassword(password, passwordEncoder));
+    }
+
+    @Test
+    @DisplayName("입력된 비밀번호가 존재하는 비밀번호와 다르면 Excpetion을 반환해야 한다.")
+    void passwordDismatchTest() {
+
+        // setup
+        when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
+
+        // given
+        User user = User.Builder().password(new Password("encoded_password")).build();
+        Password password = new Password("password");
+
+        // when & then
+        assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(() -> user.matchPassword(password, passwordEncoder))
+            .withMessageMatching("비밀번호가 다릅니다.");
     }
 
     @Test
