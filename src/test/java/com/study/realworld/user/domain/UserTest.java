@@ -105,7 +105,7 @@ class UserTest {
         Password password = new Password("password");
 
         // when & then
-        assertDoesNotThrow(() -> user.matchPassword(password, passwordEncoder));
+        assertDoesNotThrow(() -> user.login(password, passwordEncoder));
     }
 
     @Test
@@ -121,7 +121,7 @@ class UserTest {
 
         // when & then
         assertThatExceptionOfType(RuntimeException.class)
-            .isThrownBy(() -> user.matchPassword(password, passwordEncoder))
+            .isThrownBy(() -> user.login(password, passwordEncoder))
             .withMessageMatching("비밀번호가 다릅니다.");
     }
 

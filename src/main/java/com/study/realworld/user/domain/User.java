@@ -68,7 +68,7 @@ public class User {
         this.password = Password.encode(this.password, passwordEncoder);
     }
 
-    public void matchPassword(Password rawPassword, PasswordEncoder passwordEncoder) {
+    public void login(Password rawPassword, PasswordEncoder passwordEncoder) {
         this.password.matchPassword(rawPassword, passwordEncoder);
     }
 

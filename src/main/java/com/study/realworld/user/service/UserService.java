@@ -35,10 +35,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User login(@Valid Email email, @Valid Password password) {
-        User user = findByEmail(email).orElseThrow(RuntimeException::new);  // 임시 Exception
-        if (!user.getPassword().matchPassword(password, passwordEncoder)) {
-            throw new RuntimeException("error password");   // 임시 Exception
-        }
+        User user = findByEmail(email).orElseThrow(RuntimeException::new);
+        user.login(password, passwordEncoder);
         return user;
     }
 
