@@ -1,4 +1,4 @@
-package com.study.realworld.domain.auth.dto;
+package com.study.realworld.domain.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

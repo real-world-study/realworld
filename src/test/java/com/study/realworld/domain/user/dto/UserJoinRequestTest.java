@@ -16,6 +16,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserJoinRequestTest {
 
+    @DisplayName("UserJoinRequest 인스턴스 기본 생성자 테스트")
+    @Test
+    void default_constructor_test() {
+        final UserJoinRequest userJoinRequest = new UserJoinRequest();
+
+        assertAll(
+                () -> assertThat(userJoinRequest).isNotNull(),
+                () -> assertThat(userJoinRequest).isExactlyInstanceOf(UserJoinRequest.class)
+        );
+    }
+
     @DisplayName("UserJoinRequest 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {

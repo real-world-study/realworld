@@ -21,7 +21,7 @@ public final class UserJoinRequest {
     @JsonProperty("password")
     private Password password;
 
-    private UserJoinRequest() {
+    UserJoinRequest() {
     }
 
     UserJoinRequest(final Name username, final Email email, final Password password) {

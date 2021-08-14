@@ -1,5 +1,6 @@
 package com.study.realworld.domain.auth.dto;
 
+import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.EmailTest;
 import com.study.realworld.domain.user.domain.Password;
 import com.study.realworld.domain.user.domain.PasswordTest;
@@ -27,11 +28,26 @@ class LoginRequestTest {
     @DisplayName("LoginRequest 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD);
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final LoginRequest loginRequest = new LoginRequest(email, password);
 
         assertAll(
                 () -> assertThat(loginRequest).isNotNull(),
                 () -> assertThat(loginRequest).isExactlyInstanceOf(LoginRequest.class)
+        );
+    }
+
+    @DisplayName("LoginRequest 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final LoginRequest loginRequest = new LoginRequest(email, password);
+
+        assertAll(
+                () -> assertThat(loginRequest.email()).isEqualTo(email),
+                () -> assertThat(loginRequest.password()).isEqualTo(password)
         );
     }
 

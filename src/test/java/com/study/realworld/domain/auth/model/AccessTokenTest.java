@@ -1,5 +1,6 @@
-package com.study.realworld.domain.auth.dto;
+package com.study.realworld.domain.auth.model;
 
+import com.study.realworld.domain.auth.model.AccessToken;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
