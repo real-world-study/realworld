@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
@@ -19,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class AuthLoginServiceTest {
@@ -42,15 +46,20 @@ class AuthLoginServiceTest {
     @DisplayName("AuthLoginService 인스턴스 login 테스트")
     @Test
     void login_test() {
-        final User user = UserTest.userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
-        final UserResponse userResponse = ofUser(user);
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final User joinedUser = UserTest.userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(joinedUser));
 
+        final User user = authLoginService.login(email, password);
 
+        then(userRepository.findByEmail(any())).should(times(1));
         assertAll(
-                () -> assertThat(authLoginService).isNotNull(),
-                () -> assertThat(authLoginService).isExactlyInstanceOf(AuthLoginService.class)
+                () -> assertThat(user.username()).isEqualTo(joinedUser.username()),
+                () -> assertThat(user.bio()).isEqualTo(joinedUser.bio()),
+                () -> assertThat(user.image()).isEqualTo(joinedUser.image()),
+                () -> assertThat(user.email()).isEqualTo(joinedUser.email())
         );
     }
-
 
 }
