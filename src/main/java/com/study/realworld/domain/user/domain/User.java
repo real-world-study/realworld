@@ -70,7 +70,7 @@ public class User extends BaseTimeEntity {
         return new UserBuilder();
     }
 
-    public void passwordMatches(final Password rawPassword, final PasswordEncoder passwordEncoder) {
+    public void login(final Password rawPassword, final PasswordEncoder passwordEncoder) {
         if(!password.matches(rawPassword, passwordEncoder)){
             throw new PasswordMissMatchException();
         }
