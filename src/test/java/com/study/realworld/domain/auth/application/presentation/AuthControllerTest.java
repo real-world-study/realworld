@@ -17,7 +17,7 @@ class AuthControllerTest {
     @Mock private AuthLoginService authLoginService;
     @InjectMocks private AuthController authController;
 
-    @DisplayName("AuthController 인스턴스 생성 여부 테스트")
+    @DisplayName("AuthController 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
         final AuthController authController = new AuthController(authLoginService);
