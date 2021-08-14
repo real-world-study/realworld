@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class AuthControllerTest {
+class AuthControllerUnitTest {
 
     @Mock private AuthLoginService authLoginService;
     @InjectMocks private AuthController authController;
@@ -61,8 +61,8 @@ class AuthControllerTest {
         final User user = UserTest.userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final LoginRequest loginRequest = loginRequest(new Email(EMAIL), new Password(PASSWORD));
         final String loginRequestString = objectMapper.writeValueAsString(loginRequest);
-
         given(authLoginService.login(any(), any())).willReturn(user);
+
         mockMvc.perform(post("/api/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginRequestString))
