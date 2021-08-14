@@ -1,13 +1,25 @@
 package com.study.realworld.domain.auth.model;
 
-import com.study.realworld.domain.auth.model.AccessToken;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Set;
+
+import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class AccessTokenTest {
+
+    private static Validator validator;
+
+    @BeforeAll
+    static void setUp() {
+        validator = buildDefaultValidatorFactory().getValidator();
+    }
 
     @DisplayName("AccessToken 인스턴스 생성자 테스트")
     @Test
@@ -24,7 +36,7 @@ class AccessTokenTest {
     @Test
     void static_factory_method_test() {
         final String accessTokenString = "accessToken";
-        final AccessToken accessToken = AccessToken.ofString(accessTokenString);
+        final AccessToken accessToken = AccessToken.valueOfString(accessTokenString);
 
         assertAll(
                 () -> assertThat(accessToken).isNotNull(),
@@ -36,9 +48,22 @@ class AccessTokenTest {
     @Test
     void getter_test() {
         final String accessTokenString = "accessToken";
-        final AccessToken accessToken = AccessToken.ofString(accessTokenString);
+        final AccessToken accessToken = AccessToken.valueOfString(accessTokenString);
 
         assertThat(accessToken.accessToken()).isEqualTo(accessTokenString);
+    }
+
+    @DisplayName("AccessToken 인스턴스 @NotBlank 테스트")
+    @Test
+    void accessToken_notBlank_test() {
+        final String accessTokenString = "   ";
+        final AccessToken accessToken = AccessToken.valueOfString(accessTokenString);
+        final Set<ConstraintViolation<AccessToken>> violations = validator.validate(accessToken);
+
+        assertAll(
+                () -> assertThat(violations.size()).isEqualTo(1),
+                () -> assertThat(violations.iterator().next().getMessage()).isEqualTo("AccessToken must have not blank")
+        );
     }
 
 }

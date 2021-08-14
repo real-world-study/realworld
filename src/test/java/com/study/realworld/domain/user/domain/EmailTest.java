@@ -80,9 +80,9 @@ public class EmailTest {
         assertThat(email.toString()).isEqualTo(format("Email{email='%s'}", emailString));
     }
 
-    @DisplayName("Email 인스턴스 값 공백 검증 테스트")
+    @DisplayName("Email 인스턴스 @NotBlank 테스트")
     @Test
-    void email_empty_test() {
+    void email_notBlank_test() {
         final Email email = new Email(Strings.EMPTY);
         final Set<ConstraintViolation<Email>> violations = validator.validate(email);
 
@@ -92,10 +92,10 @@ public class EmailTest {
         );
     }
 
-    @DisplayName("Email 인스턴스 값 이메일 형식 검증 테스트")
+    @DisplayName("Email 인스턴스 @Email 테스트")
     @ValueSource(strings = {"test_test.com", "test@@test", "@test.com"})
     @ParameterizedTest
-    void email_format_test(final String emailString) {
+    void email_emailFormat_test(final String emailString) {
         final Email email = new Email(emailString);
         final Set<ConstraintViolation<Email>> violations = validator.validate(email);
 

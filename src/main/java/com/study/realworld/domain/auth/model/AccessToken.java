@@ -2,11 +2,14 @@ package com.study.realworld.domain.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import javax.validation.constraints.NotBlank;
+
 public final class AccessToken {
 
+    @NotBlank
     private String accessToken;
 
-    public static final AccessToken ofString(final String accessToken) {
+    public static final AccessToken valueOfString(final String accessToken) {
         return new AccessToken(accessToken);
     }
 
@@ -18,7 +21,7 @@ public final class AccessToken {
     }
 
     @JsonValue
-    public String accessToken() {
+    public final String accessToken() {
         return accessToken;
     }
 
