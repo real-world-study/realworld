@@ -1,8 +1,6 @@
 package com.study.realworld.domain.auth.application;
 
 import com.study.realworld.domain.user.domain.*;
-import com.study.realworld.domain.user.domain.testUtil.TestPasswordEncoder;
-import com.study.realworld.domain.user.dto.UserResponse;
 import com.study.realworld.domain.user.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +17,9 @@ import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
-import static com.study.realworld.domain.user.dto.UserResponse.ofUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -33,9 +30,7 @@ class AuthLoginServiceTest {
 
     @Mock private UserRepository userRepository;
     @Mock private PasswordEncoder passwordEncoder;
-
-    @InjectMocks
-    private AuthLoginService authLoginService;
+    @InjectMocks private AuthLoginService authLoginService;
 
     @DisplayName("AuthLoginService 인스턴스 생성자 테스트")
     @Test
