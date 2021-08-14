@@ -4,6 +4,7 @@ import com.study.realworld.domain.user.domain.testUtil.TestPasswordEncoder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.ConstraintViolation;
@@ -52,12 +53,12 @@ public class PasswordTest {
     @DisplayName("Password 인스턴스 값이 비교 대상과 같은지 검증 테스트")
     @Test
     void checkPassword_test() {
-        final String passwordString = "password";
-        final String invalidPasswordString = "invalidPassword";
-        final Password password = Password.encode(new Password(passwordString), PASSWORD_ENCODER);
+        final Password validPassword = new Password("password");
+        final Password invalidPasswordString = new Password("invalidPassword");
+        final Password password = Password.encode(validPassword, PASSWORD_ENCODER);
 
         assertAll(
-                () -> assertThat(password.matches(passwordString, PASSWORD_ENCODER)).isTrue(),
+                () -> assertThat(password.matches(validPassword, PASSWORD_ENCODER)).isTrue(),
                 () -> assertThat(password.matches(invalidPasswordString, PASSWORD_ENCODER)).isFalse()
         );
     }

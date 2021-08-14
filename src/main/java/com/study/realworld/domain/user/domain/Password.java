@@ -24,8 +24,8 @@ public class Password {
         this.password = password;
     }
 
-    public boolean matches(final String rawPassword, final PasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(rawPassword, password);
+    public boolean matches(final Password rawPassword, final PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword.password, this.password);
     }
 
 }

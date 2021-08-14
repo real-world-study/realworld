@@ -53,7 +53,7 @@ class AuthLoginServiceTest {
 
         final User user = authLoginService.login(email, password);
 
-        then(userRepository.findByEmail(any())).should(times(1));
+        then(userRepository).should(times(1)).findByEmail(any());
         assertAll(
                 () -> assertThat(user.username()).isEqualTo(joinedUser.username()),
                 () -> assertThat(user.bio()).isEqualTo(joinedUser.bio()),
