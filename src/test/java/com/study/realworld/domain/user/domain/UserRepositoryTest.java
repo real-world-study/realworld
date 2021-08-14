@@ -42,6 +42,17 @@ class UserRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("UserRepository 인스턴스 findByEmail() 테스트")
+    @Test
+    void findByEmail_test() {
+        final Email email = new Email(EMAIL);
+        final User user = userBuilder(email, new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final User expected = testEntityManager.persist(user);
+        final User actual = userRepository.findByEmail(email).get();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
     @DisplayName("UserRepository 인스턴스 findAll() 테스트")
     @Test
     void findAll_test() {

@@ -13,16 +13,16 @@ import static com.study.realworld.domain.user.domain.UserTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class UserJoinResponseTest {
+public class UserResponseTest {
 
     @DisplayName("UserJoinResponse 인스턴스 기본 생성자 테스트")
     @Test
     void default_constructor_test() {
-        final UserJoinResponse userJoinResponse = new UserJoinResponse();
+        final UserResponse userResponse = new UserResponse();
 
         assertAll(
-                () -> assertThat(userJoinResponse).isNotNull(),
-                () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoinResponse.class)
+                () -> assertThat(userResponse).isNotNull(),
+                () -> assertThat(userResponse).isExactlyInstanceOf(UserResponse.class)
         );
     }
 
@@ -30,16 +30,16 @@ public class UserJoinResponseTest {
     @Test
     void fromUser_test() {
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
-        final UserJoinResponse userJoinResponse = UserJoinResponse.ofUser(user);
+        final UserResponse userResponse = UserResponse.ofUser(user);
 
         assertAll(
-                () -> assertThat(userJoinResponse).isNotNull(),
-                () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoinResponse.class)
+                () -> assertThat(userResponse).isNotNull(),
+                () -> assertThat(userResponse).isExactlyInstanceOf(UserResponse.class)
         );
     }
 
-    public static final UserJoinResponse userJoinResponse(final User user) {
-        return UserJoinResponse.ofUser(user);
+    public static final UserResponse userJoinResponse(final User user) {
+        return UserResponse.ofUser(user);
     }
 
 }

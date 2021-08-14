@@ -7,7 +7,7 @@ import com.study.realworld.domain.user.domain.*;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public final class UserJoinResponse {
+public final class UserResponse {
 
     @JsonProperty("username")
     private Name username;
@@ -21,14 +21,14 @@ public final class UserJoinResponse {
     @JsonProperty("image")
     private Image image;
 
-    public static final UserJoinResponse ofUser(final User user) {
-        return new UserJoinResponse(user);
+    public static final UserResponse ofUser(final User user) {
+        return new UserResponse(user);
     }
 
-    UserJoinResponse() {
+    UserResponse() {
     }
 
-    private UserJoinResponse(final User user) {
+    private UserResponse(final User user) {
         this.email = user.email();
         this.username = user.username();
         this.bio = user.bio();

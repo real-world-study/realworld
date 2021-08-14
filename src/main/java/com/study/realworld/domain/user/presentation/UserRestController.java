@@ -3,7 +3,7 @@ package com.study.realworld.domain.user.presentation;
 import com.study.realworld.domain.user.application.UserJoinService;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
-import com.study.realworld.domain.user.dto.UserJoinResponse;
+import com.study.realworld.domain.user.dto.UserResponse;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +27,11 @@ public class UserRestController {
     }
 
     @PostMapping("/api/users")
-    public ResponseEntity<UserJoinResponse> join(@Valid @RequestBody final UserJoinRequest userJoinRequest) {
+    public ResponseEntity<UserResponse> join(@Valid @RequestBody final UserJoinRequest userJoinRequest) {
         log.info(JOIN_REQUEST_LOG_MESSAGE, userJoinRequest.toString());
         final User user = userJoinService.join(userJoinRequest.toUser());
-        final UserJoinResponse userJoinResponse = UserJoinResponse.ofUser(user);
-        return ResponseEntity.ok().body(userJoinResponse);
+        final UserResponse userResponse = UserResponse.ofUser(user);
+        return ResponseEntity.ok().body(userResponse);
     }
 
 }

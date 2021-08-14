@@ -3,7 +3,7 @@ package com.study.realworld.domain.user.application;
 import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
 import com.study.realworld.domain.user.dto.UserJoinRequestTest;
-import com.study.realworld.domain.user.dto.UserJoinResponse;
+import com.study.realworld.domain.user.dto.UserResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,12 +49,12 @@ class UserJoinServiceTest {
 
         final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
         final User joinedUser = userJoinService.join(userJoinRequest.toUser());
-        final UserJoinResponse userJoinResponse = UserJoinResponse.ofUser(joinedUser);
+        final UserResponse userResponse = UserResponse.ofUser(joinedUser);
 
         then(userRepository).should(times(1)).save(any());
         assertAll(
-                () -> assertThat(userJoinResponse).isNotNull(),
-                () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoinResponse.class)
+                () -> assertThat(userResponse).isNotNull(),
+                () -> assertThat(userResponse).isExactlyInstanceOf(UserResponse.class)
         );
     }
 
