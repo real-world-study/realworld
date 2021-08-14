@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 
 public final class AccessToken {
 
-    @NotBlank
+    @NotBlank(message = "AccessToken must have not blank")
     private String accessToken;
 
     public static final AccessToken valueOfString(final String accessToken) {
