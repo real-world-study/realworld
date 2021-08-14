@@ -21,9 +21,14 @@ public class AuthLoginService {
     }
 
     public User login(final Email email, final Password password) {
-        final User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        final User user = findByEmail(email);
         user.login(password, passwordEncoder);
         return user;
+    }
+
+    private User findByEmail(final Email email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
 }
