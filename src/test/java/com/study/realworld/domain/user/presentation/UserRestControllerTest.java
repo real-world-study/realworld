@@ -1,20 +1,16 @@
-package com.study.realworld.domain.user.ui;
+package com.study.realworld.domain.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.domain.user.application.UserJoinService;
 import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
-import com.study.realworld.domain.user.dto.UserJoinRequestTest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
@@ -23,40 +19,37 @@ import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
 import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
+import static com.study.realworld.domain.user.dto.UserJoinRequestTest.userJoinRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
-class UserRestControllerUnitTest {
+// 시큐리티 필터 제거
+@AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(UserRestController.class)
+class UserRestControllerTest {
 
-    @Mock private UserJoinService userJoinService;
-    @InjectMocks private UserRestController userRestController;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+    @MockBean private UserJoinService userJoinService;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userRestController).build();
-        objectMapper = new ObjectMapper();
-    }
-
-    @DisplayName("UserRestController 인스턴스의 join() 단위 테스트")
+    @DisplayName("UserRestController 인스턴스의 join() 테스트")
     @Test
     void join_test() throws Exception {
-        final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
-        final String userJoinRequestString = objectMapper.writeValueAsString(userJoinRequest);
+        final UserJoinRequest userJoinRequest = userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
-
         given(userJoinService.join(any())).willReturn(user);
+
+        final String userJoinRequestString = objectMapper.writeValueAsString(userJoinRequest);
+
         mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(userJoinRequestString))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentType(APPLICATION_JSON));
     }
 
 }
