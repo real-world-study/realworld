@@ -1,15 +1,15 @@
 package com.study.realworld.domain.auth.application.presentation;
 
 import com.study.realworld.domain.auth.application.AuthLoginService;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class AuthController {
 
-    private final AuthLoginService authLoginServicel;
+    private final AuthLoginService authLoginService;
 
-    public AuthController(final AuthLoginService authLoginServicel) {
-        this.authLoginServicel = authLoginServicel;
+    public AuthController(final AuthLoginService authLoginService) {
+        this.authLoginService = authLoginService;
     }
 
 }

@@ -1,9 +1,7 @@
 package com.study.realworld.domain.auth.dto;
 
 import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.EmailTest;
 import com.study.realworld.domain.user.domain.Password;
-import com.study.realworld.domain.user.domain.PasswordTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +10,7 @@ import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoginRequestTest {
+public class LoginRequestTest {
 
     @DisplayName("LoginRequest 인스턴스 기본 생성자 테스트")
     @Test
@@ -49,6 +47,10 @@ class LoginRequestTest {
                 () -> assertThat(loginRequest.email()).isEqualTo(email),
                 () -> assertThat(loginRequest.password()).isEqualTo(password)
         );
+    }
+
+    public static final LoginRequest loginRequest(final Email email, final Password password) {
+        return new LoginRequest(email, password);
     }
 
 }

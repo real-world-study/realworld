@@ -23,6 +23,7 @@ import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
 import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
+import static com.study.realworld.domain.user.dto.UserJoinRequestTest.userJoinRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,7 +48,7 @@ class UserRestControllerUnitTest {
     @DisplayName("UserRestController 인스턴스의 join() 단위 테스트")
     @Test
     void join_test() throws Exception {
-        final UserJoinRequest userJoinRequest = UserJoinRequestTest.userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
+        final UserJoinRequest userJoinRequest = userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
         final String userJoinRequestString = objectMapper.writeValueAsString(userJoinRequest);
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
 
