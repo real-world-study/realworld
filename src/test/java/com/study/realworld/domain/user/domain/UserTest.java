@@ -46,6 +46,7 @@ public class UserTest {
         assertAll(
                 () -> assertThat(user.email().email()).isEqualTo(EMAIL),
                 () -> assertThat(user.username().name()).isEqualTo(USERNAME),
+                () -> assertThat(user.password().password()).isEqualTo(PASSWORD),
                 () -> assertThat(user.bio().bio()).isEqualTo(BIO),
                 () -> assertThat(user.image().path()).isEqualTo(IMAGE)
         );

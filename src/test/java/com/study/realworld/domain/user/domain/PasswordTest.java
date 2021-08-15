@@ -63,6 +63,15 @@ public class PasswordTest {
         );
     }
 
+    @DisplayName("Password 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final String passwordString = "password";
+        final Password password = new Password(passwordString);
+
+        assertThat(password.password()).isEqualTo(passwordString);
+    }
+
     @DisplayName("Password 인스턴스 값 공백 검증 테스트")
     @Test
     void password_blank_test() {
