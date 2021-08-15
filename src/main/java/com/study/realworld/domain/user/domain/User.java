@@ -9,6 +9,8 @@ import javax.persistence.*;
 @Entity
 public class User extends BaseTimeEntity {
 
+    public static final String DEFAULT_AUTHORITY = "USER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
@@ -79,6 +81,10 @@ public class User extends BaseTimeEntity {
     public User encode(final PasswordEncoder passwordEncoder) {
         this.password = Password.encode(password, passwordEncoder);
         return this;
+    }
+
+    public Password password() {
+        return password;
     }
 
     public static class UserBuilder {

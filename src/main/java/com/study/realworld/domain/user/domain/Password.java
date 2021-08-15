@@ -28,4 +28,8 @@ public class Password {
         return passwordEncoder.matches(rawPassword.password, this.password);
     }
 
+    public String password() {
+        return password;
+    }
+
 }
