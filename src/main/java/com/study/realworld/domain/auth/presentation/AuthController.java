@@ -1,4 +1,4 @@
-package com.study.realworld.domain.auth.application.presentation;
+package com.study.realworld.domain.auth.presentation;
 
 import com.study.realworld.domain.auth.application.AuthLoginService;
 import com.study.realworld.domain.auth.dto.LoginRequest;

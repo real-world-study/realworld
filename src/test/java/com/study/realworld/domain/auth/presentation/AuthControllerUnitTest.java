@@ -1,4 +1,4 @@
-package com.study.realworld.domain.auth.application.presentation;
+package com.study.realworld.domain.auth.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.domain.auth.application.AuthLoginService;
