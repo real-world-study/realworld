@@ -24,17 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                 userService
                         .findByEmail(new Email(email))
                         .orElseThrow(IllegalArgumentException::new);
-        return mapToSecurityUser(user);
+        return new org.springframework.security.core.userdetails.User(user.email().address(), user.password(), Collections.singleton(new SimpleGrantedAuthority(Role.USER.value()))) {
+        };
     }
 
-    private UserDetails mapToSecurityUser(final User user) {
-        final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Role.USER.value());
-        return generateSecurityUser(user.email(), user.password(), authority);
-    }
-
-    private org.springframework.security.core.userdetails.User generateSecurityUser(
-            Email email, String password, final SimpleGrantedAuthority authority) {
-        return new org.springframework.security.core.userdetails.User(
-                email.address(), password, Collections.singleton(authority));
-    }
 }
