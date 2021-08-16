@@ -1,4 +1,4 @@
-package com.study.realworld.domain.auth.model;
+package com.study.realworld.domain.auth.dto.token;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -8,10 +8,6 @@ public final class AccessToken {
 
     @NotBlank(message = "AccessToken must have not blank")
     private String accessToken;
-
-    public static final AccessToken valueOfString(final String accessToken) {
-        return new AccessToken(accessToken);
-    }
 
     AccessToken() {
     }

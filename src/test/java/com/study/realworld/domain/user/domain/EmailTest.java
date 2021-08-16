@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class EmailTest {
 
     public static final String EMAIL = "test@tset.com";
+
     private static Validator validator;
 
     @BeforeAll

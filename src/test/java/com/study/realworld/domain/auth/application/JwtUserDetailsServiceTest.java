@@ -20,7 +20,6 @@ import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
-import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
 import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -28,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class JwtUserDetailsServiceTest {
+public class JwtUserDetailsServiceTest {
 
     @Mock private UserRepository userRepository;
     @InjectMocks private JwtUserDetailsService jwtUserDetailsService;
@@ -58,6 +57,19 @@ class JwtUserDetailsServiceTest {
                 () -> assertThat(userDetails.getAuthorities()).isEqualTo(authorities),
                 () -> assertThat(userDetails.getUsername()).isEqualTo(EMAIL),
                 () -> assertThat(userDetails.getPassword()).isEqualTo(PASSWORD)
+        );
+    }
+
+    public static UserDetails mapToSecurityUser(final User user) {
+        final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(User.DEFAULT_AUTHORITY);
+        return generateSecurityUser(user.email(), user.password(), authority);
+    }
+
+    public static org.springframework.security.core.userdetails.User generateSecurityUser(final Email email, final Password password, final SimpleGrantedAuthority authority) {
+        return new org.springframework.security.core.userdetails.User(
+                email.email(),
+                password.password(),
+                Collections.singleton(authority)
         );
     }
 

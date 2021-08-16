@@ -1,10 +1,11 @@
-package com.study.realworld.domain.auth.model;
+package com.study.realworld.domain.auth.dto.token;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ class AccessTokenTest {
 
     @BeforeAll
     static void setUp() {
-        validator = buildDefaultValidatorFactory().getValidator();
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
     @DisplayName("AccessToken 인스턴스 생성자 테스트")
@@ -36,7 +37,7 @@ class AccessTokenTest {
     @Test
     void static_factory_method_test() {
         final String accessTokenString = "accessToken";
-        final AccessToken accessToken = AccessToken.valueOfString(accessTokenString);
+        final AccessToken accessToken = new AccessToken(accessTokenString);
 
         assertAll(
                 () -> assertThat(accessToken).isNotNull(),
@@ -48,7 +49,7 @@ class AccessTokenTest {
     @Test
     void getter_test() {
         final String accessTokenString = "accessToken";
-        final AccessToken accessToken = AccessToken.valueOfString(accessTokenString);
+        final AccessToken accessToken = new AccessToken(accessTokenString);
 
         assertThat(accessToken.accessToken()).isEqualTo(accessTokenString);
     }
@@ -57,7 +58,7 @@ class AccessTokenTest {
     @Test
     void accessToken_notBlank_test() {
         final String accessTokenString = "   ";
-        final AccessToken accessToken = AccessToken.valueOfString(accessTokenString);
+        final AccessToken accessToken = new AccessToken(accessTokenString);
         final Set<ConstraintViolation<AccessToken>> violations = validator.validate(accessToken);
 
         assertAll(

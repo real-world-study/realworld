@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 @Embeddable
 public class Password {
 
-    @JsonValue
     @NotBlank(message = "Password must have not blank")
     private String password;
 
@@ -28,8 +27,16 @@ public class Password {
         return passwordEncoder.matches(rawPassword.password, this.password);
     }
 
+    @JsonValue
     public String password() {
         return password;
+    }
+
+    @Override
+    public String toString() {
+        return "Password{" +
+                "password='" + password() + '\'' +
+                '}';
     }
 
 }

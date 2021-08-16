@@ -4,7 +4,6 @@ import com.study.realworld.domain.user.domain.testUtil.TestPasswordEncoder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.ConstraintViolation;
@@ -18,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class PasswordTest {
 
     public static final String PASSWORD = "password";
+
     public static PasswordEncoder PASSWORD_ENCODER = new TestPasswordEncoder();
 
     private static Validator validator;

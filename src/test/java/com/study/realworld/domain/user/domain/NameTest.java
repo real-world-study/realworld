@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class NameTest {
 
     public static final String USERNAME = "test";
+
     private static Validator validator;
 
     @BeforeAll

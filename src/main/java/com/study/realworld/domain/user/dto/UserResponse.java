@@ -3,6 +3,7 @@ package com.study.realworld.domain.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.domain.auth.dto.ResponseToken;
 import com.study.realworld.domain.user.domain.*;
 
 @JsonTypeName("user")
@@ -21,16 +22,20 @@ public final class UserResponse {
     @JsonProperty("image")
     private Image image;
 
-    public static final UserResponse ofUser(final User user) {
-        return new UserResponse(user);
+    @JsonProperty("token")
+    private ResponseToken responseToken;
+
+    public static final UserResponse fromUserWithToken(final User user, final ResponseToken responseToken) {
+        return new UserResponse(user, responseToken);
     }
 
     UserResponse() {
     }
 
-    private UserResponse(final User user) {
+    private UserResponse(final User user, ResponseToken responseToken) {
         this.email = user.email();
         this.username = user.username();
+        this.responseToken = responseToken;
         this.bio = user.bio();
         this.image = user.image();
     }
