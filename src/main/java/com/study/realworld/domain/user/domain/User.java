@@ -93,7 +93,7 @@ public class User extends BaseTimeEntity {
         private Password password;
         private Bio bio;
         private Image image;
-
+      
         private UserBuilder() {
         }
 
