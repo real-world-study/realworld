@@ -34,14 +34,14 @@ public class UserController {
 
     @ApiOperation("SignIn")
     @PostMapping("/users/login")
-    public ResponseEntity login(@RequestBody @Valid final LoginDto loginDto) {
+    public ResponseEntity<UserInfo> login(@RequestBody @Valid final LoginDto loginDto) {
         final User user = userService.login(loginDto.toEntity());
         return ok(UserInfo.create(user));
     }
 
     @ApiOperation("SignUp")
     @PostMapping("/users")
-    public ResponseEntity join(@RequestBody @Valid final JoinDto joinDto) {
+    public ResponseEntity<UserInfo> join(@RequestBody @Valid final JoinDto joinDto) {
         final String encodedPassword = passwordEncoder.encode(joinDto.getPassword());
         final User user = userService.join(joinDto.toEntity(encodedPassword));
         return ok(UserInfo.create(user));
@@ -49,7 +49,7 @@ public class UserController {
 
     @ApiOperation("Edit UserInfo")
     @PutMapping("/user")
-    public ResponseEntity update(@RequestBody @Valid final UpdateDto updateDto) {
+    public ResponseEntity<UserInfo> update(@RequestBody @Valid final UpdateDto updateDto) {
         final User user = userService.update(updateDto.toEntity());
         return ok(UserInfo.create(user));
     }

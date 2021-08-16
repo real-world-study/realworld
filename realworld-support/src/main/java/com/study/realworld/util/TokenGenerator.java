@@ -1,4 +1,4 @@
-package util;
+package com.study.realworld.util;
 
 public class TokenGenerator {
 
