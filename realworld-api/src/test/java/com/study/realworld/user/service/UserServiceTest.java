@@ -76,7 +76,6 @@ class UserServiceTest {
         @Test
         void login_correct() {
             final User user = getUser();
-            final TokenDto tokenDto = getTokenDto();
             final AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
             final Authentication auth = mock(Authentication.class);
 

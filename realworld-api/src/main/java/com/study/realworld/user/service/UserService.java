@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import com.study.realworld.exception.CustomException;
+import com.study.realworld.exception.ErrorCode;
 import com.study.realworld.user.entity.User;
 import com.study.realworld.user.jwt.TokenDto;
 import com.study.realworld.user.jwt.TokenProvider;
@@ -45,12 +47,12 @@ public class UserService {
     }
 
     private User getUserByEmail(final String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException("The user does not exist."));
+        return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
 
     private void validateEmail(final String email) {
         userRepository.findByEmail(email).ifPresent(user -> {
-            throw new IllegalStateException("This user already exists.");
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         });
     }
 
