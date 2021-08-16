@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.realworld.domain.auth.dto.token.AccessToken;
 import com.study.realworld.domain.auth.dto.token.RefreshToken;
 
-public class ResponseToken {
+public final class ResponseToken {
 
     @JsonProperty("accessToken")
     private AccessToken accessToken;

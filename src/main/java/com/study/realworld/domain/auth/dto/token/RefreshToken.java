@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import javax.validation.constraints.NotBlank;
 
-public class RefreshToken {
+public final class RefreshToken {
 
     @NotBlank(message = "AccessToken must have not blank")
     private String refreshToken;
