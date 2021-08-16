@@ -8,8 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import com.study.realworld.common.BaseEntity;
 
@@ -46,6 +47,9 @@ public class User extends BaseEntity {
     @Column(name = "activated")
     private boolean activated = true;
 
+    @Transient
+    private MySecurity mySecurity = new MySecurity();
+
     @Builder
     public User(final String email, final String username, final String password, final String bio, final String image) {
         this.email = email;
@@ -61,12 +65,16 @@ public class User extends BaseEntity {
         this.image = image;
     }
 
-    public boolean hasSamePassword(final PasswordEncoder passwordEncoder, final String rawPassword) {
-        return passwordEncoder.matches(rawPassword, this.password);
-    }
-
-    public void delete(){
+    public void delete() {
         activated = false;
         setDeleteAt(LocalDateTime.now());
+    }
+
+    public UsernamePasswordAuthenticationToken toAuthenticationToken() {
+        return new UsernamePasswordAuthenticationToken(email, password);
+    }
+
+    public void setAccessToken(final String accessToken) {
+        this.getMySecurity().setAccessToken(accessToken);
     }
 }

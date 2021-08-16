@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,9 +17,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 
 import com.study.realworld.user.entity.User;
+import com.study.realworld.user.jwt.TokenDto;
+import com.study.realworld.user.jwt.TokenProvider;
 import com.study.realworld.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,18 +37,35 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;
+    private TokenProvider tokenProvider;
+
+    private AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    @BeforeEach
+    void setUp() {
+    }
 
     private static final String username = "DolphaGo";
     private static final String email = "dolphago@test.net";
     private static final String password = "1%^$asd^&!@$";
+    private static final String image = "/test/aaa.jpg";
+    private static final String bio = "Hello, world";
 
     private User getUser() {
         return User.builder()
                    .username(username)
                    .email(email)
                    .password(password)
+                   .bio(bio)
+                   .image(image)
                    .build();
+    }
+
+    private TokenDto getTokenDto() {
+        return TokenDto.builder()
+                       .accessToken("accessToken")
+                       .refreshToken("refreshToken")
+                       .build();
     }
 
     @DisplayName("Login Test")
@@ -53,12 +76,15 @@ class UserServiceTest {
         @Test
         void login_correct() {
             final User user = getUser();
-            final User mockUser = mock(User.class);
+            final TokenDto tokenDto = getTokenDto();
+            final AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
+            final Authentication auth = mock(Authentication.class);
 
             when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
-            when(passwordEncoder.matches(any(), any())).thenReturn(true);
+            when(authenticationManagerBuilder.getObject()).thenReturn(authenticationManager);
+            when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
 
-            final User loginUser = userService.login(mockUser);
+            final User loginUser = userService.login(user);
 
             assertAll(
                     () -> assertThat(loginUser.getUsername()).isEqualTo(user.getUsername()),
@@ -74,7 +100,6 @@ class UserServiceTest {
             final User mockUser = mock(User.class);
 
             when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
-            when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
             assertThatExceptionOfType(IllegalStateException.class)
                     .isThrownBy(() -> userService.login(mockUser))
