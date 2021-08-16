@@ -24,6 +24,7 @@ jacocoTestCoverageVerification {
                 minimum = 0.5
             }
 
+            excludes = ['*.*Config*']
         }
         rule {
             enabled = true;
@@ -34,6 +35,8 @@ jacocoTestCoverageVerification {
                 value = 'COVEREDRATIO'
                 minimum = 1.0
             }
+
+            excludes = ['*.*Config*']
         }
     }
 }
