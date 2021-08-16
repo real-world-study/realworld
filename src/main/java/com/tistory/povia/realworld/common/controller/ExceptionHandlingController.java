@@ -13,7 +13,11 @@ public class ExceptionHandlingController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler({IllegalArgumentException.class, DuplicatedEmailException.class, ExpiredJwtException.class})
+    @ExceptionHandler({
+        IllegalArgumentException.class,
+        DuplicatedEmailException.class,
+        ExpiredJwtException.class
+    })
     protected ResponseEntity<?> handleBadRequestException(Exception exception) {
         log.debug("Bad Request: {}", exception.getMessage(), exception);
         return ResponseEntity.badRequest().body(exception.getMessage());

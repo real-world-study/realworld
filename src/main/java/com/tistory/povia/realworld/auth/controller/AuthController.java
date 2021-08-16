@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class AuthController {
 
-  private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-  public AuthController(AuthenticationManager authenticationManager){
-    this.authenticationManager = authenticationManager;
-  }
+    public AuthController(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
-  @PostMapping("/api/users/login")
-  public AuthResponse login(@RequestBody AuthRequest authRequest){
+    @PostMapping("/api/users/login")
+    public AuthResponse login(@RequestBody AuthRequest authRequest) {
 
-    return null;
-  }
+        return null;
+    }
 }

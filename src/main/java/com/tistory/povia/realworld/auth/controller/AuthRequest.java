@@ -8,25 +8,24 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class AuthRequest {
 
-  @JsonProperty("email")
-  private String email;
+    @JsonProperty("email")
+    private String email;
 
-  @JsonProperty("password")
-  private String password;
+    @JsonProperty("password")
+    private String password;
 
-  public AuthRequest() {
-  }
+    public AuthRequest() {}
 
-  public AuthRequest(String email, String password) {
-    this.email = email;
-    this.password = password;
-  }
+    public AuthRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
-  public String email() {
-    return email;
-  }
+    public String email() {
+        return email;
+    }
 
-  public String password() {
-    return password;
-  }
+    public String password() {
+        return password;
+    }
 }

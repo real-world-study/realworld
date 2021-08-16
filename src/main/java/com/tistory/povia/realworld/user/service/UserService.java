@@ -4,10 +4,9 @@ import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
 import com.tistory.povia.realworld.user.exception.DuplicatedEmailException;
 import com.tistory.povia.realworld.user.repository.UserRepository;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,7 +17,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> findByEmail(Email email){
+    public Optional<User> findByEmail(Email email) {
         return userRepository.findByEmail(email);
     }
 

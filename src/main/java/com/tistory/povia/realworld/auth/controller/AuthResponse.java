@@ -7,36 +7,35 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class AuthResponse {
 
-  private String email;
+    private String email;
 
-  private String token;
+    private String token;
 
-  private String username;
+    private String username;
 
-  private String bio;
+    private String bio;
 
-  private String image;
+    private String image;
 
-  public AuthResponse() {
-  }
+    public AuthResponse() {}
 
-  public String email() {
-    return email;
-  }
+    public String email() {
+        return email;
+    }
 
-  public String token() {
-    return token;
-  }
+    public String token() {
+        return token;
+    }
 
-  public String username() {
-    return username;
-  }
+    public String username() {
+        return username;
+    }
 
-  public String bio() {
-    return bio;
-  }
+    public String bio() {
+        return bio;
+    }
 
-  public String image() {
-    return image;
-  }
+    public String image() {
+        return image;
+    }
 }
