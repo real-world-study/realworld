@@ -7,6 +7,8 @@ import com.tistory.povia.realworld.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 public class UserService {
@@ -14,6 +16,10 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public Optional<User> findByEmail(Email email){
+        return userRepository.findByEmail(email);
     }
 
     @Transactional

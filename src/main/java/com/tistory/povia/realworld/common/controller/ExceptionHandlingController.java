@@ -1,6 +1,7 @@
 package com.tistory.povia.realworld.common.controller;
 
 import com.tistory.povia.realworld.user.exception.DuplicatedEmailException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ public class ExceptionHandlingController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler({IllegalArgumentException.class, DuplicatedEmailException.class})
+    @ExceptionHandler({IllegalArgumentException.class, DuplicatedEmailException.class, ExpiredJwtException.class})
     protected ResponseEntity<?> handleBadRequestException(Exception exception) {
         log.debug("Bad Request: {}", exception.getMessage(), exception);
         return ResponseEntity.badRequest().body(exception.getMessage());
