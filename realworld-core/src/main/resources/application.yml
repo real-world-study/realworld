@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: realworld
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    cache-duration: PT1H
+  datasource:
+    sql:
+      init:
+        platform: h2
+
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:real-world;MODE=MYSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+      pool-name: H2_DB
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+logging:
+  level:
+    org.hibernate.SQL: debug
