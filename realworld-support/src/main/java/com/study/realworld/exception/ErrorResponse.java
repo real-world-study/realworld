@@ -1,18 +1,23 @@
 package com.study.realworld.exception;
 
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.WRAPPER_OBJECT;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
+
 import lombok.Getter;
 
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
+@JsonTypeName("errors")
+@JsonTypeInfo(include = WRAPPER_OBJECT, use = NAME)
 @Getter
 public class ErrorResponse {
-    private LocalDateTime timestamp;
-    private int status;
-    private String error;
-    private String code;
-    private String message;
+
+    private List<String> body;
 
     public static ResponseEntity<ErrorResponse> of(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
@@ -20,10 +25,6 @@ public class ErrorResponse {
     }
 
     private ErrorResponse(final ErrorCode errorCode) {
-        timestamp = LocalDateTime.now();
-        status = errorCode.getHttpStatus().value();
-        error = errorCode.getHttpStatus().name();
-        code = errorCode.name();
-        message = errorCode.getDescription();
+        body = List.of(errorCode.getDescription());
     }
 }
