@@ -2,6 +2,7 @@ package com.tistory.povia.realworld.configuration;
 
 import com.tistory.povia.realworld.security.JwtAuthenticationEntryPoint;
 import com.tistory.povia.realworld.security.JwtRequestFilter;
+import com.tistory.povia.realworld.user.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/api/**")
-                .permitAll()
+                .hasRole(Role.USER.name())
                 .anyRequest()
                 .authenticated()
                 .and()

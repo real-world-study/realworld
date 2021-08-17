@@ -29,27 +29,27 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         final String requestTokenHeader = request.getHeader("Authorization");
 
-        String email = null;
+        String address = null;
         String jwtToken = null;
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
-            email = jwtUtil.getUsernameFromToken(jwtToken);
+            address = jwtUtil.getUsernameFromToken(jwtToken);
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
         }
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+        if (address != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(address);
 
             if (jwtUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
+                  new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request));
+                  new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext()
-                        .setAuthentication(usernamePasswordAuthenticationToken);
+                  .setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
         filterChain.doFilter(request, response);
