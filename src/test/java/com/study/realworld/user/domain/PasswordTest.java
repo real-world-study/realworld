@@ -1,5 +1,17 @@
 package com.study.realworld.user.domain;
 
+import static com.study.realworld.user.domain.Password.encode;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.Collection;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,17 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import java.util.Collection;
-
-import static com.study.realworld.user.domain.Password.encode;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PasswordTest {
@@ -123,7 +124,7 @@ class PasswordTest {
     }
 
     @Test
-    @DisplayName("입력된 비밀번호가 존재하는 비밀번호와 같으면 true를 반환해야 한다.")
+    @DisplayName("입력된 비밀번호가 존재하는 비밀번호와 같으면 Exception이 반환되지 않아야 한다.")
     void passwordMathckTest() {
 
         // setup
@@ -133,15 +134,12 @@ class PasswordTest {
         Password password = new Password("encoded_password");
         String input = "password";
 
-        // when
-        boolean result = password.matchPassword("password", passwordEncoder);
-
-        // then
-        assertThat(result).isTrue();
+        // when & then
+        assertDoesNotThrow(() -> password.matchPassword(new Password("password"), passwordEncoder));
     }
 
     @Test
-    @DisplayName("입력된 비밀번호가 존재하는 비밀번호와 다르면 false를 반환해야 한다.")
+    @DisplayName("입력된 비밀번호가 존재하는 비밀번호와 다르면 Excpetion을 반환해야 한다.")
     void passwordDismatchTest() {
 
         // setup
@@ -151,11 +149,10 @@ class PasswordTest {
         Password password = new Password("encoded_password");
         String input = "password";
 
-        // when
-        boolean result = password.matchPassword("password", passwordEncoder);
-
-        // then
-        assertThat(result).isFalse();
+        // when & then
+        assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(() -> password.matchPassword(new Password("password"), passwordEncoder))
+            .withMessageMatching("비밀번호가 다릅니다.");
     }
 
 }
