@@ -1,11 +1,11 @@
 package com.study.realworld.user.controller.request;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.user.domain.User;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class UserJoinRequestTest {
 

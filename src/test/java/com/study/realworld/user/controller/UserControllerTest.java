@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.security.JjwtService;
 import com.study.realworld.security.JwtService;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.request.UserLoginRequest;
@@ -130,4 +129,5 @@ class UserControllerTest {
             .andExpect(jsonPath("$.user.token", is("token")))
         ;
     }
+
 }
