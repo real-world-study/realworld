@@ -9,10 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.security.JwtService;
-import com.study.realworld.user.controller.request.UserJoinRequest;
-import com.study.realworld.user.controller.request.UserLoginRequest;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -43,28 +40,21 @@ class UserControllerTest {
 
     private MockMvc mockMvc;
 
-    private ObjectMapper objectMapper;
-
     @BeforeEach
     void beforeEach() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
             .alwaysExpect(status().isOk())
             .build();
-        objectMapper = new ObjectMapper();
     }
 
     @Test
     void joinTest() throws Exception {
 
         // setup
-        UserJoinRequest request = new UserJoinRequest("username", "test@test.com", "password", null,
-            null);
         User user = User.Builder()
-            .username(new Username(request.getUsername()))
-            .email(new Email(request.getEmail()))
-            .password(new Password(request.getPassword()))
-            .bio(request.getBio())
-            .image(request.getImage())
+            .username(new Username("username"))
+            .email(new Email("test@test.com"))
+            .password(new Password("password"))
             .build();
 
         when(userService.join(any())).thenReturn(user);
@@ -72,10 +62,14 @@ class UserControllerTest {
 
         // given
         final String URL = "/api/users";
+        final String content = "{\"user\":{\"username\":\"" + "username"
+            + "\",\"email\":\"" + "test@test.com"
+            + "\",\"password\":\"" + "password"
+            + "\"}}";
 
         // when
         ResultActions resultActions = mockMvc.perform(post(URL)
-            .content(objectMapper.writeValueAsString(request))
+            .content(content)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
@@ -96,13 +90,10 @@ class UserControllerTest {
     void loginTest() throws Exception {
 
         // setup
-        UserLoginRequest request = new UserLoginRequest("test@test.com", "password");
         User user = User.Builder()
             .username(new Username("username"))
             .email(new Email("test@test.com"))
             .password(new Password("password"))
-            .bio(null)
-            .image(null)
             .build();
 
         when(userService.login(any(), any())).thenReturn(user);
@@ -110,10 +101,13 @@ class UserControllerTest {
 
         // given
         final String URL = "/api/users/login";
+        final String content = "{\"user\":{\"email\":\"" + "test@test.com"
+            + "\",\"password\":\"" + "password"
+            + "\"}}";
 
         // when
         ResultActions resultActions = mockMvc.perform(post(URL)
-            .content(objectMapper.writeValueAsString(request))
+            .content(content)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 

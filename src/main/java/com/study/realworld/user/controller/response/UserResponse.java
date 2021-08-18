@@ -12,21 +12,24 @@ import com.study.realworld.user.domain.User;
 public class UserResponse {
 
     @JsonProperty("username")
-    private final String username;
+    private String username;
 
     @JsonProperty("email")
-    private final String email;
+    private String email;
 
     @JsonProperty("bio")
-    private final String bio;
+    private String bio;
 
     @JsonProperty("image")
-    private final String image;
+    private String image;
 
     @JsonProperty("token")
-    private final String token;
+    private String token;
 
-    protected UserResponse(String username, String email, String bio, String image, String token) {
+    protected UserResponse() {
+    }
+
+    private UserResponse(String username, String email, String bio, String image, String token) {
         this.username = username;
         this.email = email;
         this.bio = bio;
