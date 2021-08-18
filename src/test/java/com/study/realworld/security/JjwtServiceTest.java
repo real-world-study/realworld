@@ -73,7 +73,7 @@ class JjwtServiceTest {
         Long id = 2L;
         String accessToken = Jwts.builder()
             .setSubject(id.toString())
-            .setExpiration(new Date(now + 300000))
+            .setExpiration(new Date(now + 300_000))
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
 
@@ -96,7 +96,7 @@ class JjwtServiceTest {
         Long id = 2L;
         String accessToken = Jwts.builder()
             .setSubject(id.toString())
-            .setExpiration(new Date(now - 3000))
+            .setExpiration(new Date(now - 3_000))
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
 

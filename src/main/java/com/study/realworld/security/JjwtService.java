@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class JjwtService implements JwtService {
 
+    private final static String JWT_HEADER_PARAM_TYPE = "typ";
+
     private final Key key;
 
     private final String headerType;
@@ -45,7 +47,7 @@ public class JjwtService implements JwtService {
     public String createToken(User user) {
         return Jwts.builder()
             .signWith(key, SignatureAlgorithm.HS512)
-            .setHeaderParam("typ", headerType)
+            .setHeaderParam(JWT_HEADER_PARAM_TYPE, headerType)
             .setSubject(user.getId().toString())
             .setIssuer(issuer)
             .setExpiration(new Date((new Date()).getTime() + accessTime))
@@ -61,7 +63,7 @@ public class JjwtService implements JwtService {
             return userRepository.findById(userId);
         } catch (ExpiredJwtException e) {
             throw new RuntimeException("만료된 JWT 서명입니다.");
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException e) {
             throw new MalformedJwtException("잘못된 JWT 서명입니다.");
         } catch (UnsupportedJwtException e) {
             throw new UnsupportedJwtException("지원되지 않는 JWT 서명입니다.");

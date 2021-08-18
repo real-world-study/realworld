@@ -10,6 +10,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -44,7 +45,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     public Optional<String> resolveToken(HttpServletRequest request) {
         final String header = request.getHeader(AUTHORIZATION);
-        if (Objects.isNull(header)) {
+        if (Strings.isEmpty(header)) {
             return Optional.empty();
         }
         return checkMatch(header.split(" "));
