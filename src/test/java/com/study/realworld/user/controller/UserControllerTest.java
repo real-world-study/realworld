@@ -1,8 +1,15 @@
 package com.study.realworld.user.controller;
 
+import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentRequest;
+import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -22,11 +29,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
 class UserControllerTest {
 
     @Mock
@@ -41,8 +51,9 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
+            .apply(documentationConfiguration(restDocumentationContextProvider))
             .alwaysExpect(status().isOk())
             .build();
     }
@@ -83,8 +94,25 @@ class UserControllerTest {
             .andExpect(jsonPath("$.user.bio", is("null")))
             .andExpect(jsonPath("$.user.image", is("null")))
             .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-join",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드")
+                ),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                )
+            ))
         ;
     }
+
 
     @Test
     void loginTest() throws Exception {
@@ -121,6 +149,21 @@ class UserControllerTest {
             .andExpect(jsonPath("$.user.bio", is("null")))
             .andExpect(jsonPath("$.user.image", is("null")))
             .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-login",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드")
+                ),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                )
+            ))
         ;
     }
 
