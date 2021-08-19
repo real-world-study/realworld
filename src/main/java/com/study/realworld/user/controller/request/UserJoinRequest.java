@@ -30,15 +30,6 @@ public class UserJoinRequest {
     protected UserJoinRequest() {
     }
 
-    public UserJoinRequest(String username, String email, String password, String bio,
-        String image) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.bio = bio;
-        this.image = image;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -61,11 +52,11 @@ public class UserJoinRequest {
 
     public User toUser() {
         return User.Builder()
-            .username(new Username(username))
-            .email(new Email(email))
-            .password(new Password(password))
-            .bio(bio)
-            .image(image)
+            .username(new Username(getUsername()))
+            .email(new Email(getEmail()))
+            .password(new Password(getPassword()))
+            .bio(getBio())
+            .image(getImage())
             .build();
     }
 

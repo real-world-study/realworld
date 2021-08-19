@@ -3,11 +3,16 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'jacoco'
+    id "org.asciidoctor.convert" version "1.5.9.2"
 }
 
 group = 'com.study.realworld'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+ext {
+    set("snippetsDir", file("build/generated-snippets"))
+}
 
 repositories {
     mavenCentral()
@@ -22,6 +27,9 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
     compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
@@ -31,5 +39,19 @@ dependencies {
 apply from: 'test.gradle'
 
 test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    copy {
+        from "build/asciidoc/html5"
+        into "src/main/resources/static/docs/"
+    }
 }

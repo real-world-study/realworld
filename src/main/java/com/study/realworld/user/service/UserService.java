@@ -6,12 +6,11 @@ import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 
 @Validated
 @Service

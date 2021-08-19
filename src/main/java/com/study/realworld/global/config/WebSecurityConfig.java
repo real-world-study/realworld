@@ -29,7 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/static/**", "/templates/**", "/h2/**", "/h2-console/**");
+        web.ignoring().antMatchers("/static/**", "/templates/**", "/h2/**", "/h2-console/**",
+            "/docs/index.html", "/resources/**");
     }
 
     @Override

@@ -84,7 +84,8 @@ class UserTest {
 
         // setup & given
         User user = User.Builder().password(new Password("password")).build();
-        when(passwordEncoder.encode(user.getPassword().getPassword())).thenReturn("encoded_password");
+        when(passwordEncoder.encode(user.getPassword().getPassword()))
+            .thenReturn("encoded_password");
 
         // when
         user.encodePassword(passwordEncoder);

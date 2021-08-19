@@ -1,19 +1,22 @@
 package com.study.realworld.user.controller;
 
+import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentRequest;
+import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.security.JjwtService;
 import com.study.realworld.security.JwtService;
-import com.study.realworld.user.controller.request.UserJoinRequest;
-import com.study.realworld.user.controller.request.UserLoginRequest;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -26,11 +29,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
 class UserControllerTest {
 
     @Mock
@@ -44,28 +50,22 @@ class UserControllerTest {
 
     private MockMvc mockMvc;
 
-    private ObjectMapper objectMapper;
-
     @BeforeEach
-    void beforeEach() {
+    void beforeEach(RestDocumentationContextProvider restDocumentationContextProvider) {
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
+            .apply(documentationConfiguration(restDocumentationContextProvider))
             .alwaysExpect(status().isOk())
             .build();
-        objectMapper = new ObjectMapper();
     }
 
     @Test
     void joinTest() throws Exception {
 
         // setup
-        UserJoinRequest request = new UserJoinRequest("username", "test@test.com", "password", null,
-            null);
         User user = User.Builder()
-            .username(new Username(request.getUsername()))
-            .email(new Email(request.getEmail()))
-            .password(new Password(request.getPassword()))
-            .bio(request.getBio())
-            .image(request.getImage())
+            .username(new Username("username"))
+            .email(new Email("test@test.com"))
+            .password(new Password("password"))
             .build();
 
         when(userService.join(any())).thenReturn(user);
@@ -73,10 +73,14 @@ class UserControllerTest {
 
         // given
         final String URL = "/api/users";
+        final String content = "{\"user\":{\"username\":\"" + "username"
+            + "\",\"email\":\"" + "test@test.com"
+            + "\",\"password\":\"" + "password"
+            + "\"}}";
 
         // when
         ResultActions resultActions = mockMvc.perform(post(URL)
-            .content(objectMapper.writeValueAsString(request))
+            .content(content)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
@@ -90,20 +94,34 @@ class UserControllerTest {
             .andExpect(jsonPath("$.user.bio", is("null")))
             .andExpect(jsonPath("$.user.image", is("null")))
             .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-join",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드")
+                ),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                )
+            ))
         ;
     }
+
 
     @Test
     void loginTest() throws Exception {
 
         // setup
-        UserLoginRequest request = new UserLoginRequest("test@test.com", "password");
         User user = User.Builder()
             .username(new Username("username"))
             .email(new Email("test@test.com"))
             .password(new Password("password"))
-            .bio(null)
-            .image(null)
             .build();
 
         when(userService.login(any(), any())).thenReturn(user);
@@ -111,10 +129,13 @@ class UserControllerTest {
 
         // given
         final String URL = "/api/users/login";
+        final String content = "{\"user\":{\"email\":\"" + "test@test.com"
+            + "\",\"password\":\"" + "password"
+            + "\"}}";
 
         // when
         ResultActions resultActions = mockMvc.perform(post(URL)
-            .content(objectMapper.writeValueAsString(request))
+            .content(content)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
@@ -128,6 +149,22 @@ class UserControllerTest {
             .andExpect(jsonPath("$.user.bio", is("null")))
             .andExpect(jsonPath("$.user.image", is("null")))
             .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-login",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드")
+                ),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                )
+            ))
         ;
     }
+
 }

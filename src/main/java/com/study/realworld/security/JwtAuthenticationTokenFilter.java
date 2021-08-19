@@ -3,7 +3,6 @@ package com.study.realworld.security;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.servlet.FilterChain;

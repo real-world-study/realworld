@@ -1,9 +1,9 @@
 package com.study.realworld.user.domain;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotEmpty;
-import java.util.Objects;
 
 @Embeddable
 public class Email {
