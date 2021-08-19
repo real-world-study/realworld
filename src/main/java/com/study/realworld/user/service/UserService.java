@@ -39,6 +39,11 @@ public class UserService {
         return user;
     }
 
+    @Transactional(readOnly = true)
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
     private void checkDuplicatedByUsernameOrEmail(Username username, Email email) {
         findByUsername(username)
             .ifPresent(param -> {

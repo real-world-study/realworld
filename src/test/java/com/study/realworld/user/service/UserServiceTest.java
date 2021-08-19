@@ -1,5 +1,7 @@
 package com.study.realworld.user.service;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,7 +53,7 @@ class UserServiceTest {
 
         // setup & given
         User user = User.Builder().build();
-        when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(any())).thenReturn(empty());
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
 
         // when & then
@@ -64,8 +66,8 @@ class UserServiceTest {
     void successJoinTest() {
 
         // setup & given
-        when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
-        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername(any())).thenReturn(empty());
+        when(userRepository.findByEmail(any())).thenReturn(empty());
         Password password = new Password("password");
         when(passwordEncoder.encode(password.getPassword())).thenReturn("encoded_password");
         User input = User.Builder()
@@ -106,7 +108,7 @@ class UserServiceTest {
         // setup & given
         Email email = new Email("test@test.com");
         Password password = new Password("password");
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(email)).thenReturn(empty());
 
         // when && then
         assertThatExceptionOfType(Exception.class)
@@ -121,7 +123,7 @@ class UserServiceTest {
         Email email = new Email("test@test.com");
         Password password = new Password("password");
         User user = User.Builder().password(new Password("encoded_password")).build();
-        when(userRepository.findByEmail(email)).thenReturn(Optional.ofNullable(user));
+        when(userRepository.findByEmail(email)).thenReturn(ofNullable(user));
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
 
         // when & then
@@ -137,7 +139,7 @@ class UserServiceTest {
         Email email = new Email("test@test.com");
         Password password = new Password("password");
         User input = User.Builder().email(email).password(new Password("encoded_password")).build();
-        when(userRepository.findByEmail(email)).thenReturn(Optional.ofNullable(input));
+        when(userRepository.findByEmail(email)).thenReturn(ofNullable(input));
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
 
         // when
@@ -147,6 +149,51 @@ class UserServiceTest {
         assertThat(user).isNotNull();
         assertThat(user.getEmail().toString()).isEqualTo("test@test.com");
         assertThat(user.getPassword().getPassword()).isEqualTo("encoded_password");
+    }
+
+    @Test
+    @DisplayName("id를 가지고 유저를 조회할 때 해당 유저가 존재하면 해당 유저를 반환한다.")
+    void findByIdSuccessTest() {
+
+        // setup & given
+        User user = User.Builder().email(new Email("test@test.com")).build();
+        Long userId = 2L;
+        when(userRepository.findById(userId)).thenReturn(ofNullable(user));
+
+        // when
+        Optional<User> result = userService.findById(userId);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.get().getEmail()).isEqualTo(user.getEmail());
+    }
+
+    @Test
+    @DisplayName("null인 id를 가지고 유저를 조회할 때  IllegalArgumentException이 발생되어야 한다.")
+    void findByNullIdFailTest() {
+
+        // setup & given
+        Long userId = null;
+        when(userRepository.findById(userId)).thenThrow(IllegalArgumentException.class);
+
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> userService.findById(userId));
+    }
+
+    @Test
+    @DisplayName("없는 유저의 id를 가지고 유저를 조회할 때 Optional.empty()가 반환되어야 한다.")
+    void findByNoUserIdFailTest() {
+
+        // setup & given
+        Long userId = 2L;
+        when(userRepository.findById(userId)).thenReturn(empty());
+
+        // when
+        Optional<User> result = userService.findById(userId);
+
+        // then
+        assertThat(result).isEqualTo(empty());
     }
 
 }
