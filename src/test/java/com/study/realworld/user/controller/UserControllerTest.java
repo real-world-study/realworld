@@ -10,18 +10,21 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.study.realworld.security.JwtAuthentication;
 import com.study.realworld.security.JwtService;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +35,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -100,7 +105,11 @@ class UserControllerTest {
                 requestFields(
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
-                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드")
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 ),
                 responseFields(
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
