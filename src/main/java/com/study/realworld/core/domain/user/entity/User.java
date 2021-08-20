@@ -59,4 +59,10 @@ public class User {
     public boolean isMatchesPassword(String rawPassword, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(rawPassword, this.password);
     }
+
+    public static void checkPassword(User user, User findUser, PasswordEncoder passwordEncoder) {
+        if (!user.isMatchesPassword(findUser.getPassword(), passwordEncoder)) {
+            throw new IllegalArgumentException("invalid password");
+        }
+    }
 }

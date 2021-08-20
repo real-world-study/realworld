@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.application.model.UserLoginModel;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,11 +21,12 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 @JsonTypeName("user")
 @JsonTypeInfo(include = WRAPPER_OBJECT, use = NAME)
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class UserLoginRequest {
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank

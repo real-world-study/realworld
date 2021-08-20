@@ -23,7 +23,7 @@ public class UserService {
 
     @Transactional
     public User register(UserRegisterModel userRegisterModel) {
-        return userRepository.save(userRegisterModel.toUser());
+        return userRepository.save(userRegisterModel.toUser(passwordEncoder));
     }
 
     @Transactional(readOnly = true)
@@ -32,9 +32,7 @@ public class UserService {
         User user = userRepository.findByEmail(findUser.getEmail())
                                   .orElseThrow(() -> new IllegalArgumentException("invalid email")); // TODO: Exception 커스터마이징
 
-        if (!user.isMatchesPassword(findUser.getPassword(), passwordEncoder)) {
-            throw new IllegalArgumentException("invalid password");
-        }
+        User.checkPassword(user, findUser, passwordEncoder);
 
         return user;
     }
