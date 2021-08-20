@@ -176,4 +176,48 @@ class UserControllerTest {
         ;
     }
 
+    @Test
+    void getCurrentUserTest() throws Exception {
+
+        // setup
+        User user = User.Builder()
+            .username(new Username("username"))
+            .email(new Email("test@test.com"))
+            .password(new Password("password"))
+            .build();
+        when(userService.findById(any())).thenReturn(Optional.ofNullable(user));
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
+
+        // given
+        final String URL = "/api/user";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get(URL)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.user.username", is("username")))
+            .andExpect(jsonPath("$.user.email", is("test@test.com")))
+            .andExpect(jsonPath("$.user.bio", is("null")))
+            .andExpect(jsonPath("$.user.image", is("null")))
+            .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-get-current",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                )
+            ))
+        ;
+    }
+
 }
