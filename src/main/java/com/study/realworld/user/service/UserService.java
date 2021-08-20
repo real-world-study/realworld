@@ -26,7 +26,8 @@ public class UserService {
 
     @Transactional
     public User join(@Valid User user) {
-        checkDuplicatedByUsernameOrEmail(user.getUsername(), user.getEmail());
+        checkDuplicatedByUsername(user.getUsername());
+        checkDuplicatedByEmail(user.getEmail());
 
         user.encodePassword(passwordEncoder);
         return userRepository.save(user);
@@ -44,15 +45,19 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    private void checkDuplicatedByUsernameOrEmail(Username username, Email email) {
+    private void checkDuplicatedByUsername(@Valid Username username) {
         findByUsername(username)
             .ifPresent(param -> {
                 throw new RuntimeException("already user username");
             });
+    }
+
+    private void checkDuplicatedByEmail(@Valid Email email) {
         findByEmail(email)
             .ifPresent(param -> {
                 throw new RuntimeException("already user email");
             });
+
     }
 
     private Optional<User> findByUsername(Username username) {
