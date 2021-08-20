@@ -19,7 +19,11 @@ spring:
     console:
       enabled: true
       path: /h2-console
-
+security:
+  jwt:
+    token:
+      secret-key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+      expire-length: 3600
 logging.level:
   org.hibernate.SQL: debug
 server:

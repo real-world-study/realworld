@@ -65,6 +65,12 @@ public class User extends BaseTimeEntity {
                 "Image url length should be 1 to 255 characters");
     }
 
+    public void checkSamePassword(String password) {
+        if (StringUtils.equals(this.password, password)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public static Builder builder() {
         return new Builder();
     }
