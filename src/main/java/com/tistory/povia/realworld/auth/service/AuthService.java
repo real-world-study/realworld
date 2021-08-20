@@ -2,6 +2,7 @@ package com.tistory.povia.realworld.auth.service;
 
 import com.tistory.povia.realworld.auth.controller.AuthRequest;
 import com.tistory.povia.realworld.auth.controller.AuthResponse;
+import com.tistory.povia.realworld.auth.exception.AuthException;
 import com.tistory.povia.realworld.auth.infra.JwtTokenProvider;
 import com.tistory.povia.realworld.user.domain.Email;
 import com.tistory.povia.realworld.user.domain.User;
@@ -29,8 +30,7 @@ public class AuthService {
 
     public AuthResponse findByToken(String credentials) {
         if (!jwtTokenProvider.validateToken(credentials)) {
-            // TODO Exception 변경
-            throw new IllegalArgumentException();
+            throw new AuthException();
         }
 
         String address = jwtTokenProvider.getPayload(credentials);

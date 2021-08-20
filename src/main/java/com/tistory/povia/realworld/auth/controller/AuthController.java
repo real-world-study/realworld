@@ -1,11 +1,12 @@
 package com.tistory.povia.realworld.auth.controller;
 
 import com.tistory.povia.realworld.auth.service.AuthService;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class AuthController {
 
     private final AuthService authService;
@@ -15,8 +16,9 @@ public class AuthController {
     }
 
     @PostMapping("/api/users/login")
-    public AuthResponse login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
+        AuthResponse response = authService.login(authRequest);
 
-        return null;
+        return ResponseEntity.ok().body(response);
     }
 }

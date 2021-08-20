@@ -1,8 +1,6 @@
 package com.tistory.povia.realworld.auth.infra;
 
 import io.jsonwebtoken.*;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -19,11 +17,12 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder().setClaims(claims)
-          .setIssuedAt(now)
-          .setExpiration(validity)
-          .signWith(SignatureAlgorithm.HS256, secretKey)
-          .compact();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
     public boolean validateToken(String token) {
