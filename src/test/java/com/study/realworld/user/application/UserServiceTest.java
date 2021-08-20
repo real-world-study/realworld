@@ -80,7 +80,8 @@ class UserServiceTest {
         doReturn(Optional.of(user)).when(userRepository).findByEmail(email);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
 
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> userService.login(userLoginModel))
-                                                                 .withMessage("invalid password");
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> userService.login(userLoginModel))
+            .withMessage("invalid password");
     }
 }
