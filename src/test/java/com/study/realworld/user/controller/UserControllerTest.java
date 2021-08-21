@@ -58,6 +58,7 @@ class UserControllerTest {
 
     @BeforeEach
     void beforeEach(RestDocumentationContextProvider restDocumentationContextProvider) {
+        SecurityContextHolder.clearContext();
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
             .apply(documentationConfiguration(restDocumentationContextProvider))
             .alwaysExpect(status().isOk())
