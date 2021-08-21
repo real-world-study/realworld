@@ -53,10 +53,8 @@ public class UserController {
     public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal Long loginId) {
         User user = userService
             .findById(loginId).orElseThrow(RuntimeException::new);   // 임시
-        String token = SecurityContextHolder.getContext().getAuthentication().getCredentials()
-            .toString();
         return ResponseEntity.ok()
-            .body(fromUserAndToken(user, token));
+            .body(fromUserAndToken(user, getTokenByContextHolder()));
     }
 
     @PutMapping("/user")
@@ -64,10 +62,12 @@ public class UserController {
         @AuthenticationPrincipal Long loginId) {
         User user = userService
             .update(request.toUserUpdateModel(), loginId);
-        String token = SecurityContextHolder.getContext().getAuthentication().getCredentials()
-            .toString();
         return ResponseEntity.ok()
-            .body(fromUserAndToken(user, token));
+            .body(fromUserAndToken(user, getTokenByContextHolder()));
+    }
+
+    private String getTokenByContextHolder() {
+        return SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
     }
 
 }
