@@ -10,9 +10,13 @@ import java.security.Key;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-@Service
+/**
+ * jwt를 생성하거나 jwt를 복호화하는 provider이다.
+ * User를 받아 user내부에 있는 식별자 값을 subject에 저장하여 jwt를 생성한다.
+ * accessToken을 받아 accessToken내부에 이미 저장한 subject를 가져와서 이를 반환한다.
+ */
+@Component
 public class JwtProvider {
 
     private final Key key;
