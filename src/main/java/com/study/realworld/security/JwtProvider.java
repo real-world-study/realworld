@@ -10,15 +10,16 @@ import java.security.Key;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class JwtProvider {
 
     private final Key key;
 
     private final long accessTime = 1800000;    // 30분
 
-    public JwtProvider(@Value("${jwt.token") String secret) {
+    public JwtProvider(@Value("${jwt.token}") String secret) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -32,7 +33,7 @@ public class JwtProvider {
             .compact();
     }
 
-    public Long getUserId(String accessToken) throws Exception {
+    public Long getUserId(String accessToken) {
         try {
             Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -41,7 +42,7 @@ public class JwtProvider {
                 .getBody();
             return Long.parseLong(claims.getSubject());
         } catch (Exception e) {
-            throw new Exception();
+            throw new RuntimeException();
         }
     }
 
