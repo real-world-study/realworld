@@ -70,6 +70,26 @@ public class User {
         return image;
     }
 
+    public void changeUsername(Username username) {
+        this.username = username;
+    }
+
+    public void changeEmail(Email email) {
+        this.email = email;
+    }
+
+    public void changePassword(Password password) {
+        this.password = password;
+    }
+
+    public void changeBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void changeImage(String image) {
+        this.image = image;
+    }
+
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = Password.encode(this.password, passwordEncoder);
     }

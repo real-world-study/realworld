@@ -12,8 +12,11 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -194,6 +197,323 @@ class UserServiceTest {
 
         // then
         assertThat(result).isEqualTo(empty());
+    }
+
+    @Test
+    @DisplayName("없는 유저의 id를 가지고 update 요청 시 exception이 발생되어야 한다.")
+    void updateFailByNotFoundUserTest() {
+
+        // setup & given
+        Long userId = 2L;
+        UserUpdateModel userUpdateModel = new UserUpdateModel(
+            new Username("username"),
+            new Email("email"),
+            new Password("password"),
+            "bio",
+            "image"
+        );
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(() -> userService.update(userUpdateModel, userId));
+    }
+
+    @Nested
+    @DisplayName("User를 update할 때")
+    class UserUpdateTest {
+
+        private User user;
+        private User originUser;
+        private Long userId = 1L;
+
+        @BeforeEach
+        void beforeEach() {
+            user = User.Builder()
+                .username(new Username("username"))
+                .email(new Email("test@test.com"))
+                .password(new Password("encoded_password"))
+                .bio("bio")
+                .image("image")
+                .build();
+            originUser = User.Builder()
+                .username(new Username("username"))
+                .email(new Email("test@test.com"))
+                .password(new Password("encoded_password"))
+                .bio("bio")
+                .image("image")
+                .build();
+            when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(user));
+        }
+
+        @Nested
+        @DisplayName("[username]")
+        class UsernameTest {
+
+            @Test
+            @DisplayName("현재 user와 동일한 username이 들이어오면 변경되지 않아야 한다.")
+            void updateFailByEqualWithNowUsernameTest() {
+
+                // given
+                Username username = new Username("username");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
+                    null, null, null);
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
+            }
+
+            @Test
+            @DisplayName("기본에 있는 username이 업데이트 요청이 들어오면 Exception이 발생되어야한다.")
+            void updateFailByDuplicatedUsernameTest() {
+
+                // setup & given
+                Username username = new Username("usernameChange");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
+                    null, null, null);
+                when(userRepository.findByUsername(username))
+                    .thenReturn(Optional.ofNullable(User.Builder().build()));
+
+                // when & then
+                assertThatExceptionOfType(RuntimeException.class)
+                    .isThrownBy(() -> userService.update(userUpdateModel, userId));
+            }
+
+            @Test
+            @DisplayName("username이 변경가능 할 경우 변경되어야 한다.")
+            void updateSuccessByUsernameTest() {
+
+                // setup & given
+                Username username = new Username("usernameChange");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
+                    null, null, null);
+                when(userRepository.findByUsername(username))
+                    .thenReturn(Optional.empty());
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getUsername()).isEqualTo(username);
+                assertThat(result.getUsername()).isNotEqualTo(originUser.getUsername());
+
+                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
+                assertThat(result.getPassword().getPassword())
+                    .isEqualTo(originUser.getPassword().getPassword());
+                assertThat(result.getBio()).isEqualTo(originUser.getBio());
+                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+            }
+        }
+
+        @Nested
+        @DisplayName("[email]")
+        class EmailTest {
+
+            @Test
+            @DisplayName("현재 user와 동일한 email이 들이어오면 변경되지 않아야 한다.")
+            void updateFailByEqualWithNowEmailTest() {
+
+                // given
+                Email email = new Email("test@test.com");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, email,
+                    null, null, null);
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
+            }
+
+            @Test
+            @DisplayName("기본에 있는 email이 업데이트 요청이 들어오면 Exception이 발생되어야한다.")
+            void updateFailByDuplicatedEmailTest() {
+
+                // setup & given
+                Email email = new Email("change@change.com");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, email,
+                    null, null, null);
+                when(userRepository.findByEmail(email))
+                    .thenReturn(Optional.ofNullable(User.Builder().build()));
+
+                // when & then
+                assertThatExceptionOfType(RuntimeException.class)
+                    .isThrownBy(() -> userService.update(userUpdateModel, userId));
+            }
+
+            @Test
+            @DisplayName("email이 변경가능 할 경우 변경되어야 한다.")
+            void updateSuccessByEmailTest() {
+
+                // setup & given
+                Email email = new Email("change@change.com");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, email,
+                    null, null, null);
+                when(userRepository.findByEmail(email))
+                    .thenReturn(Optional.empty());
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
+
+                assertThat(result.getEmail()).isEqualTo(email);
+                assertThat(result.getEmail()).isNotEqualTo(originUser.getEmail());
+
+                assertThat(result.getPassword().getPassword())
+                    .isEqualTo(originUser.getPassword().getPassword());
+                assertThat(result.getBio()).isEqualTo(originUser.getBio());
+                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+            }
+        }
+
+        @Nested
+        @DisplayName("[password]")
+        class PasswordTest {
+
+            @Test
+            @DisplayName("현재 user와 동일한 password가 들이어오면 변경되지 않아야 한다.")
+            void updateFailByEqualWithNowPasswordTest() {
+
+                // setup & given
+                Password password = new Password("password");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
+                    password, null, null);
+                when(passwordEncoder.matches("password", "encoded_password"))
+                    .thenReturn(true);
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getPassword().getPassword())
+                    .isEqualTo(originUser.getPassword().getPassword());
+            }
+
+            @Test
+            @DisplayName("password가 변경가능 할 경우 변경되어야 한다.")
+            void updateSuccessByPasswordTest() {
+
+                // setup & given
+                Password password = new Password("passwordChange");
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
+                    password, null, null);
+                when(passwordEncoder.matches("passwordChange", "encoded_password"))
+                    .thenReturn(false);
+                when(passwordEncoder.encode("passwordChange"))
+                    .thenReturn("encoded_passwordChange");
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
+                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
+
+                assertThat(result.getPassword().getPassword())
+                    .isEqualTo("encoded_passwordChange");
+                assertThat(result.getPassword().getPassword())
+                    .isNotEqualTo(originUser.getPassword().getPassword());
+
+                assertThat(result.getBio()).isEqualTo(originUser.getBio());
+                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+            }
+        }
+
+        @Nested
+        @DisplayName("[bio]")
+        class BioTest {
+
+            @Test
+            @DisplayName("현재 user와 동일한 bio가 들이어오면 변경되지 않아야 한다.")
+            void updateFailByEqualWithNowBioTest() {
+
+                // given
+                String bio = "bio";
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
+                    null, bio, null);
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getBio()).isEqualTo(originUser.getBio());
+            }
+
+            @Test
+            @DisplayName("bio가 변경가능 할 경우 변경되어야 한다.")
+            void updateSuccessByBioTest() {
+
+                // given
+                String bio = "bioChange";
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
+                    null, bio, null);
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
+                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
+                assertThat(result.getPassword().getPassword())
+                    .isEqualTo(originUser.getPassword().getPassword());
+
+                assertThat(result.getBio()).isEqualTo(bio);
+                assertThat(result.getBio()).isNotEqualTo(originUser.getBio());
+
+                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+            }
+        }
+
+        @Nested
+        @DisplayName("[image]")
+        class ImageTest {
+
+            @Test
+            @DisplayName("현재 user와 동일한 image가 들이어오면 변경되지 않아야 한다.")
+            void updateFailByEqualWithNowImageTest() {
+
+                // given
+                String image = "image";
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
+                    null, null, image);
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+            }
+
+            @Test
+            @DisplayName("image가 변경가능 할 경우 변경되어야 한다.")
+            void updateSuccessByImageTest() {
+
+                // given
+                String image = "imageChange";
+                UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
+                    null, null, image);
+
+                // when
+                User result = userService.update(userUpdateModel, userId);
+
+                // then
+                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
+                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
+                assertThat(result.getPassword().getPassword())
+                    .isEqualTo(originUser.getPassword().getPassword());
+                assertThat(result.getBio()).isEqualTo(originUser.getBio());
+
+                assertThat(result.getImage()).isEqualTo(image);
+                assertThat(result.getImage()).isNotEqualTo(originUser.getImage());
+            }
+
+        }
+
     }
 
 }
