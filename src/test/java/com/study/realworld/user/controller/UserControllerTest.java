@@ -12,6 +12,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -208,6 +209,69 @@ class UserControllerTest {
             .andDo(document("user-get-current",
                 getDocumentRequest(),
                 getDocumentResponse(),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                )
+            ))
+        ;
+    }
+
+    @Test
+    void updateTest() throws Exception {
+
+        // setup
+        User user = User.Builder()
+            .username(new Username("usernameChange"))
+            .email(new Email("change@change.com"))
+            .password(new Password("passwordChange"))
+            .bio("bioChange")
+            .image("imageChange")
+            .build();
+
+        when(userService.update(any(), any())).thenReturn(user);
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
+
+        // given
+        final String URL = "/api/user";
+        final String content = "{\"user\":{\"username\":\"" + "usernameChange"
+            + "\",\"email\":\"" + "change@change.com"
+            + "\",\"password\":\"" + "passwordChange"
+            + "\",\"bio\":\"" + "bioChange"
+            + "\",\"image\":\"" + "imageChange"
+            + "\"}}";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(put(URL)
+            .content(content)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.user.username", is("usernameChange")))
+            .andExpect(jsonPath("$.user.email", is("change@change.com")))
+            .andExpect(jsonPath("$.user.bio", is("bioChange")))
+            .andExpect(jsonPath("$.user.image", is("imageChange")))
+            .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-update",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("변경유저이름"),
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("변경이메일"),
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("변경패스워드"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("변경bio")
+                        .optional(),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("변경이미지")
+                        .optional()
+                ),
                 responseFields(
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),

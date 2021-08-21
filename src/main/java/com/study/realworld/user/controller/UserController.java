@@ -5,6 +5,7 @@ import static com.study.realworld.user.controller.response.UserResponse.fromUser
 import com.study.realworld.security.JwtService;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.request.UserLoginRequest;
+import com.study.realworld.user.controller.request.UserUpdateRequest;
 import com.study.realworld.user.controller.response.UserResponse;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,6 +53,17 @@ public class UserController {
     public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal Long loginId) {
         User user = userService
             .findById(loginId).orElseThrow(RuntimeException::new);   // 임시
+        String token = SecurityContextHolder.getContext().getAuthentication().getCredentials()
+            .toString();
+        return ResponseEntity.ok()
+            .body(fromUserAndToken(user, token));
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest request,
+        @AuthenticationPrincipal Long loginId) {
+        User user = userService
+            .update(request.toUserUpdateModel(), loginId);
         String token = SecurityContextHolder.getContext().getAuthentication().getCredentials()
             .toString();
         return ResponseEntity.ok()
