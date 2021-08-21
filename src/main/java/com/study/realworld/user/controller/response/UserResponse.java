@@ -61,8 +61,8 @@ public class UserResponse {
         return new UserResponse(
             valueOf(user.getUsername()),
             valueOf(user.getEmail()),
-            valueOf(user.getBio()),
-            valueOf(user.getImage()),
+            user.getBio(),
+            user.getImage(),
             valueOf(accessToken)
         );
     }

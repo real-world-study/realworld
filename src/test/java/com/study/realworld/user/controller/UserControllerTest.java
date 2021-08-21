@@ -3,6 +3,7 @@ package com.study.realworld.user.controller;
 import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentRequest;
 import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -96,8 +97,8 @@ class UserControllerTest {
 
             .andExpect(jsonPath("$.user.username", is("username")))
             .andExpect(jsonPath("$.user.email", is("test@test.com")))
-            .andExpect(jsonPath("$.user.bio", is("null")))
-            .andExpect(jsonPath("$.user.image", is("null")))
+            .andExpect(jsonPath("$.user.bio", is(nullValue())))
+            .andExpect(jsonPath("$.user.image", is(nullValue())))
             .andExpect(jsonPath("$.user.token", is("token")))
             .andDo(document("user-join",
                 getDocumentRequest(),
@@ -115,8 +116,10 @@ class UserControllerTest {
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
                     fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 )
             ))
         ;
@@ -155,8 +158,8 @@ class UserControllerTest {
 
             .andExpect(jsonPath("$.user.username", is("username")))
             .andExpect(jsonPath("$.user.email", is("test@test.com")))
-            .andExpect(jsonPath("$.user.bio", is("null")))
-            .andExpect(jsonPath("$.user.image", is("null")))
+            .andExpect(jsonPath("$.user.bio", is(nullValue())))
+            .andExpect(jsonPath("$.user.image", is(nullValue())))
             .andExpect(jsonPath("$.user.token", is("token")))
             .andDo(document("user-login",
                 getDocumentRequest(),
@@ -169,8 +172,10 @@ class UserControllerTest {
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
                     fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 )
             ))
         ;
@@ -203,8 +208,8 @@ class UserControllerTest {
 
             .andExpect(jsonPath("$.user.username", is("username")))
             .andExpect(jsonPath("$.user.email", is("test@test.com")))
-            .andExpect(jsonPath("$.user.bio", is("null")))
-            .andExpect(jsonPath("$.user.image", is("null")))
+            .andExpect(jsonPath("$.user.bio", is(nullValue())))
+            .andExpect(jsonPath("$.user.image", is(nullValue())))
             .andExpect(jsonPath("$.user.token", is("token")))
             .andDo(document("user-get-current",
                 getDocumentRequest(),
@@ -213,8 +218,10 @@ class UserControllerTest {
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
                     fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 )
             ))
         ;
@@ -276,8 +283,10 @@ class UserControllerTest {
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
                     fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 )
             ))
         ;
