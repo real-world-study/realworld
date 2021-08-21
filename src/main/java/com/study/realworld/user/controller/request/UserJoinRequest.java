@@ -21,11 +21,11 @@ public class UserJoinRequest {
 
     public User toEntity() {
         return User.builder()
-            .username(this.username)
-            .email(this.email)
-            .password(this.password)
-            .bio(this.bio)
-            .image(this.image)
+            .username(username)
+            .email(email)
+            .password(password)
+            .bio(bio)
+            .image(image)
             .build();
     }
 
