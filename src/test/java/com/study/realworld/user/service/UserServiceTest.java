@@ -76,11 +76,11 @@ class UserServiceTest {
     void loginFailByPasswordTest() {
 
         // setup & given
-        User user = User.builder().build();
+        User user = User.builder().email("test@test.com").password("password").build();
         String email = "test@test.com";
-        String password = "password";
-        when(userRepository.findByEmail(any()))
-            .thenReturn(Optional.ofNullable(User.builder().build()));
+        String password = "password1";
+        when(userRepository.findByEmail(email))
+            .thenReturn(Optional.ofNullable(user));
 
         // when & then
         assertThatExceptionOfType(RuntimeException.class)
