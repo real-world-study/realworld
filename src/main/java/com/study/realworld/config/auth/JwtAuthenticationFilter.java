@@ -40,13 +40,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             final UserLoginRequest userLoginRequest = objectMapper.readValue(request.getInputStream(), UserLoginRequest.class);
             authToken = new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword());
-            logger.info("attemptAuthentication : " + authToken);
+            log.info("attemptAuthentication : {}", authToken);
         } catch (Exception e) {
-            logger.info("attemptAuthentication Exception : " + e.getMessage());
+            log.info("attemptAuthentication Exception : {}", e.getMessage());
             throw new RuntimeException();
         }
 
-//        setDetails(request, authToken);
         return super.getAuthenticationManager().authenticate(authToken);
     }
 
@@ -62,7 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        logger.info("unsuccessfulAuthentication : " + failed.getMessage());
+        log.info("unsuccessfulAuthentication : {}", failed.getMessage());
 
         super.unsuccessfulAuthentication(request, response, failed);
     }
