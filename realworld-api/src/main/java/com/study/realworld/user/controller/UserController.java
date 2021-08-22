@@ -4,6 +4,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import javax.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,15 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import com.study.realworld.user.controller.dto.request.JoinDto;
 import com.study.realworld.user.controller.dto.request.LoginDto;
 import com.study.realworld.user.controller.dto.request.UpdateDto;
 import com.study.realworld.user.controller.dto.response.UserInfo;
 import com.study.realworld.user.service.UserService;
+import com.study.realworld.util.CurrentUserEmail;
 
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping(value = "/api")
 @RestController
@@ -42,8 +42,8 @@ public class UserController {
     }
 
     @ApiOperation("Edit UserInfo")
-    @PutMapping("/user")
-    public ResponseEntity<UserInfo> update(@RequestBody @Valid final UpdateDto updateDto) {
-        return ok(userService.update(updateDto));
+    @PutMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserInfo> update(@RequestBody @Valid final UpdateDto updateDto, @CurrentUserEmail String currentUserEmail) {
+        return ok(userService.update(updateDto, currentUserEmail));
     }
 }

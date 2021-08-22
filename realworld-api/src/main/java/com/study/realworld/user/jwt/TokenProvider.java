@@ -9,9 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 
 import com.study.realworld.exception.CustomException;
 import com.study.realworld.exception.ErrorCode;
+import com.study.realworld.user.entity.User.Authority;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,9 +38,13 @@ public class TokenProvider {
     }
 
     public String createToken(Authentication authentication) {
-        final String authorities = authentication.getAuthorities().stream()
-                                                 .map(GrantedAuthority::getAuthority)
-                                                 .collect(Collectors.joining(",")); // ROLE_USER
+        String authorities = authentication.getAuthorities().stream()
+                                           .map(GrantedAuthority::getAuthority)
+                                           .collect(Collectors.joining(",")); // ROLE_USER
+
+        if (!StringUtils.hasText(authorities)) {
+            authorities = Authority.ROLE_USER.toString();
+        }
 
         final long now = (new Date()).getTime();
         final Date accessTokenExpireDate = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
@@ -67,11 +71,11 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(email, accessToken, authorities);
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String accessToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            getClaims(accessToken);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException e) {
             log.error("Malformed JWT signingKey: {}", e);
         } catch (ExpiredJwtException e) {
             log.error("Jwt token is Expired: {}", e);
@@ -85,11 +89,7 @@ public class TokenProvider {
 
     private Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parserBuilder()
-                       .setSigningKey(key)
-                       .build()
-                       .parseClaimsJws(accessToken)
-                       .getBody();
+            return getClaims(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
@@ -97,14 +97,17 @@ public class TokenProvider {
 
     public String getUserEmail(String accessToken) {
         try {
-            final Claims claims = Jwts.parserBuilder()
-                                      .setSigningKey(key)
-                                      .build()
-                                      .parseClaimsJws(accessToken)
-                                      .getBody();
+            final Claims claims = parseClaims(accessToken);
             return claims.getSubject();
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         }
+    }
+
+    private Jws<Claims> getClaims(final String accessToken) {
+        return Jwts.parserBuilder()
+                   .setSigningKey(key)
+                   .build()
+                   .parseClaimsJws(accessToken);
     }
 }

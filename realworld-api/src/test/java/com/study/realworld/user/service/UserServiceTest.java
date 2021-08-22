@@ -148,24 +148,21 @@ class UserServiceTest {
         @DisplayName("Normal Update - bio/image update")
         @Test
         void update() {
-            try (final MockedStatic<SecurityUtil> securityUtilMockedStatic = Mockito.mockStatic(SecurityUtil.class)) {
-                securityUtilMockedStatic.when(SecurityUtil::getCurrentUserToken).thenReturn("userToken");
+            final UpdateDto updateDto = UpdateDto.create("dolphago@test.net", "DolphaGo", "1q2w3e4r");
+            User user = getUser("dolphago@test.net");
 
-                final UpdateDto updateDto = UpdateDto.create("dolphago@test.net", "DolphaGo", "1q2w3e4r");
-                User user = getUser("dolphago@test.net");
+            when(userRepository.findByEmail(updateDto.getEmail())).thenReturn(Optional.of(user));
+            when(tokenProvider.createToken(any())).thenReturn("renew-token");
 
-                when(userRepository.findByEmail(updateDto.getEmail())).thenReturn(Optional.of(user));
+            final UserInfo updateUser = userService.update(updateDto, user.getEmail());
 
-                final UserInfo updateUser = userService.update(updateDto);
-
-                assertAll(
-                        () -> assertThat(updateUser.getUsername()).isEqualTo(user.getUsername()),
-                        () -> assertThat(updateUser.getEmail()).isEqualTo(user.getEmail()),
-                        () -> assertThat(updateUser.getAccessToken()).isEqualTo("userToken"),
-                        () -> assertThat(updateUser.getBio()).isEqualTo(updateDto.getBio()),
-                        () -> assertThat(updateUser.getImage()).isEqualTo(updateDto.getImage())
-                );
-            }
+            assertAll(
+                    () -> assertThat(updateUser.getUsername()).isEqualTo(user.getUsername()),
+                    () -> assertThat(updateUser.getEmail()).isEqualTo(user.getEmail()),
+                    () -> assertThat(updateUser.getAccessToken()).isEqualTo("renew-token"),
+                    () -> assertThat(updateUser.getBio()).isEqualTo(updateDto.getBio()),
+                    () -> assertThat(updateUser.getImage()).isEqualTo(updateDto.getImage())
+            );
         }
     }
 }

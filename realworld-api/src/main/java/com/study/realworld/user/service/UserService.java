@@ -48,11 +48,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfo update(final UpdateDto dto) {
-        final User findUser = getUserByEmail(dto.getEmail());
+    public UserInfo update(final UpdateDto dto, final String currentUserEmail) {
+        if(!currentUserEmail.equals(dto.getEmail())){
+            validateEmail(dto.getEmail());
+        }
+
+        final User findUser = getUserByEmail(currentUserEmail);
         findUser.update(dto.getEmail(), dto.getBio(), dto.getImage());
-        final String currentUserToken = SecurityUtil.getCurrentUserToken();
-        return UserInfo.create(findUser, currentUserToken);
+        final String token = tokenProvider.createToken(findUser.toAuthenticationToken());
+        return UserInfo.create(findUser, token);
     }
 
     private User getUserByEmail(final String email) {

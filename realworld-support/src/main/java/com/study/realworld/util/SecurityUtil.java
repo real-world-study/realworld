@@ -11,16 +11,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class SecurityUtil {
 
-    public static String getCurrentMemberEmail() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || authentication.getName() == null) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED_MEMBER);
-        }
-
-        return authentication.getPrincipal().toString();
-    }
-
     public static String getCurrentUserToken() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

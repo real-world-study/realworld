@@ -20,8 +20,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,6 +56,7 @@ class UserControllerTest {
                    .email(email)
                    .username("DolphaGo")
                    .bio("hello")
+                   .image("/test/image.jpg")
                    .build();
     }
 
@@ -86,6 +90,7 @@ class UserControllerTest {
                    .andExpect(jsonPath("$.user.email", is(user.getEmail())))
                    .andExpect(jsonPath("$.user.username", is(user.getUsername())))
                    .andExpect(jsonPath("$.user.bio", is(user.getBio())))
+                   .andExpect(jsonPath("$.user.image", is(user.getImage())))
                    .andExpect(jsonPath("$.user.token", is(accessToken)));
         }
 
@@ -157,23 +162,21 @@ class UserControllerTest {
         @DisplayName("update Request")
         @Test
         void update() throws Exception {
-            final UpdateDto updateDto = UpdateDto.create("dolphago@test.net", "update-bio", "/path/image.png");
-            final User updatedUser = getUser(updateDto.getEmail());
+            final UpdateDto updateDto = UpdateDto.create("asdklfals@test.net", "update-bio", "/path/image.png");
+            final User updatedUser = getUser("dolphago@test.net");
             updatedUser.update(updateDto.getEmail(), updateDto.getBio(), updateDto.getImage());
-            final String accessToken = "accessToken";
+            UserInfo userInfo = UserInfo.create(updatedUser, "token");
 
-            final UserInfo userInfo = UserInfo.create(updatedUser, accessToken);
+            when(userService.update(any(), any())).thenReturn(userInfo);
 
-            when(userService.update(any(UpdateDto.class))).thenReturn(userInfo);
+            final ResultActions perform = mockMvc.perform(
+                    put("/api/user")
+                            .content(objectMapper.writeValueAsString(updateDto))
+                            .contentType(APPLICATION_JSON));
 
-            mockMvc.perform(
-                           put("/api/user")
-                                   .content(objectMapper.writeValueAsString(updateDto))
-                                   .contentType(APPLICATION_JSON))
-                   .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON))
-                   .andExpect(jsonPath("$.user.email", is("dolphago@test.net")))
+            perform.andExpect(status().isOk())
                    .andExpect(jsonPath("$.user.username", is("DolphaGo")))
+                   .andExpect(jsonPath("$.user.email", is(updateDto.getEmail())))
                    .andExpect(jsonPath("$.user.bio", is(updateDto.getBio())))
                    .andExpect(jsonPath("$.user.image", is(updateDto.getImage())));
         }
@@ -187,8 +190,10 @@ class UserControllerTest {
         })
         void invalid_argument(String email, String bio, String image) throws Exception {
             final UpdateDto updateDto = UpdateDto.create(email, bio, image);
+            AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("dolphago@test.net", "1q2w3e4r");
             mockMvc.perform(
                            put("/api/user")
+                                   .principal(authenticationToken)
                                    .content(objectMapper.writeValueAsString(updateDto))
                                    .contentType(APPLICATION_JSON))
                    .andExpect(status().isBadRequest());
