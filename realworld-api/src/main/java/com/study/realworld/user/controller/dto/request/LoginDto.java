@@ -42,7 +42,4 @@ public class LoginDto {
         return new LoginDto(email, password);
     }
 
-    public UsernamePasswordAuthenticationToken toAuthenticationToken() {
-        return new UsernamePasswordAuthenticationToken(email, password);
-    }
 }

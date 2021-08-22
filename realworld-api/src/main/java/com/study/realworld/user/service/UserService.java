@@ -42,7 +42,7 @@ public class UserService {
             throw new CustomException(ErrorCode.WRONG_PASSWORD);
         }
 
-        final Authentication authentication = loginDto.toAuthenticationToken();
+        final Authentication authentication = user.toAuthenticationToken();
         final String accessToken = tokenProvider.createToken(authentication);
         return UserInfo.create(user, accessToken);
     }
