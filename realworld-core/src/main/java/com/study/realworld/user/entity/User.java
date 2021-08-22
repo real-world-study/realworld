@@ -4,13 +4,15 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.study.realworld.common.BaseEntity;
 
@@ -18,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Entity
@@ -47,8 +50,16 @@ public class User extends BaseEntity {
     @Column(name = "activated")
     private boolean activated = true;
 
-    @Transient
-    private MySecurity mySecurity = new MySecurity();
+    @Enumerated(EnumType.STRING)
+    private Authority authority = Authority.ROLE_USER;
+
+    public boolean matchPassword(final PasswordEncoder passwordEncoder, final String rawPassword) {
+        return passwordEncoder.matches(rawPassword, password);
+    }
+
+    public enum Authority{
+        ROLE_USER, ROLE_ADMIN
+    }
 
     @Builder
     public User(final String email, final String username, final String password, final String bio, final String image) {
@@ -74,7 +85,8 @@ public class User extends BaseEntity {
         return new UsernamePasswordAuthenticationToken(email, password);
     }
 
-    public void setAccessToken(final String accessToken) {
-        this.getMySecurity().setAccessToken(accessToken);
+    public User encrypt(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
+        return this;
     }
 }

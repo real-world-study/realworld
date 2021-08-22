@@ -1,0 +1,12 @@
+PUT http://127.0.0.1:8080/api/user
+Content-Type: application/json
+Authorization: Token eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QubmV0IiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTYyOTYyMTQyNH0.tK6dg-_qOhB698-WH1cq1aoxnjbd6rFOjzBncMWzL_2IDbMuFy7VgpjB41oh4tLPmS9ElnRZxGbsQNpNbBgmgQ
+
+{
+  "user": {
+    "email": "test@test.net",
+    "bio": "1q2w3e4r",
+    "image": "/image"
+  }
+}
+

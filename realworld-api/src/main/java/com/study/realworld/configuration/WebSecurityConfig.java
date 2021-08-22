@@ -2,6 +2,8 @@ package com.study.realworld.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,6 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService()).passwordEncoder(getPasswordEncoder());
+    }
+
+    @Override
     public void configure(WebSecurity web) {
         web.ignoring()
            .antMatchers("/h2-console/**", "/favicon.ico", "/health/**")
@@ -46,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().disable()
             .csrf().disable()
             .formLogin().disable()
-            .headers().frameOptions().sameOrigin()
+            .headers().frameOptions().disable()
 
             .and()
             .exceptionHandling()

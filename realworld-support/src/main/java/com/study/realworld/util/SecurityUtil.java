@@ -18,6 +18,16 @@ public class SecurityUtil {
             throw new CustomException(ErrorCode.UNAUTHORIZED_MEMBER);
         }
 
-        return authentication.getName();
+        return authentication.getPrincipal().toString();
+    }
+
+    public static String getCurrentUserToken() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getName() == null) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_MEMBER);
+        }
+
+        return authentication.getCredentials().toString();
     }
 }

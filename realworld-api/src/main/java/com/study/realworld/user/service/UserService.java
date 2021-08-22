@@ -1,9 +1,7 @@
 package com.study.realworld.user.service;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,57 +10,58 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.study.realworld.exception.CustomException;
 import com.study.realworld.exception.ErrorCode;
+import com.study.realworld.user.controller.dto.request.JoinDto;
+import com.study.realworld.user.controller.dto.request.LoginDto;
+import com.study.realworld.user.controller.dto.request.UpdateDto;
+import com.study.realworld.user.controller.dto.response.UserInfo;
 import com.study.realworld.user.entity.User;
-import com.study.realworld.user.jwt.TokenDto;
 import com.study.realworld.user.jwt.TokenProvider;
 import com.study.realworld.user.repository.UserRepository;
+import com.study.realworld.util.SecurityUtil;
 
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class UserService {
-
+    private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserRepository userRepository;
 
-    public User login(final User user) {
-        final Authentication authentication = authenticate(user.toAuthenticationToken());
-        final TokenDto token = tokenProvider.createToken(authentication);
-        return getUserWithTokenByEmail(user.getEmail(), token.getAccessToken());
+    @Transactional
+    public UserInfo join(final JoinDto dto) {
+        validateEmail(dto.getEmail());
+        final User savedUser = userRepository.save(dto.toEntity().encrypt(passwordEncoder));
+        final String accessToken = tokenProvider.createToken(savedUser.toAuthenticationToken());
+        return UserInfo.create(savedUser, accessToken);
+    }
+
+    public UserInfo login(final LoginDto loginDto) {
+        final User user = getUserByEmail(loginDto.getEmail());
+        if(!user.matchPassword(passwordEncoder, loginDto.getPassword())){
+            throw new CustomException(ErrorCode.WRONG_PASSWORD);
+        }
+
+        final Authentication authentication = loginDto.toAuthenticationToken();
+        final String accessToken = tokenProvider.createToken(authentication);
+        return UserInfo.create(user, accessToken);
     }
 
     @Transactional
-    public User join(final User user) {
-        validateEmail(user.getEmail());
-        return userRepository.save(user);
-    }
-
-    @Transactional
-    public User update(final User user) {
-        final User findUser = getUserByEmail(user.getEmail());
-        findUser.update(user.getEmail(), user.getBio(), user.getImage());
-        return findUser;
+    public UserInfo update(final UpdateDto dto) {
+        final User findUser = getUserByEmail(dto.getEmail());
+        findUser.update(dto.getEmail(), dto.getBio(), dto.getImage());
+        final String currentUserToken = SecurityUtil.getCurrentUserToken();
+        return UserInfo.create(findUser, currentUserToken);
     }
 
     private User getUserByEmail(final String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
+        return userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_EXIST));
     }
 
     private void validateEmail(final String email) {
         userRepository.findByEmail(email).ifPresent(user -> {
             throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         });
-    }
-
-    private Authentication authenticate(UsernamePasswordAuthenticationToken authenticationToken) {
-        return authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-    }
-
-    private User getUserWithTokenByEmail(final String email, final String accessToken) {
-        final User findUser = getUserByEmail(email);
-        findUser.setAccessToken(accessToken);
-        return findUser;
     }
 }

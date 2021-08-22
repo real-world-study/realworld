@@ -39,35 +39,22 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto createToken(Authentication authentication) {
+    public String createToken(Authentication authentication) {
         final String authorities = authentication.getAuthorities().stream()
                                                  .map(GrantedAuthority::getAuthority)
-                                                 .collect(Collectors.joining(","));
+                                                 .collect(Collectors.joining(",")); // ROLE_USER
 
         final long now = (new Date()).getTime();
-
         final Date accessTokenExpireDate = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        final String accessToken = Jwts.builder()
-                                       .setSubject(authentication.getName())
-                                       .claim(AUTHORITIES_KEY, authorities)
-                                       .setExpiration(accessTokenExpireDate)
-                                       .signWith(key, SignatureAlgorithm.HS512)
-                                       .compact();
-
-        final String refreshToken = Jwts.builder()
-                                        .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                                        .signWith(key, SignatureAlgorithm.HS512)
-                                        .compact();
-
-        return TokenDto.builder()
-                       .grantType(TOKEN_PREFIX)
-                       .accessToken(accessToken)
-                       .accessTokenExpireDate(accessTokenExpireDate.getTime())
-                       .refreshToken(refreshToken)
-                       .build();
+        return Jwts.builder()
+                   .setSubject(authentication.getName())
+                   .claim(AUTHORITIES_KEY, authorities)
+                   .setExpiration(accessTokenExpireDate)
+                   .signWith(key, SignatureAlgorithm.HS512)
+                   .compact();
     }
 
-    public Authentication getAuthentication(String accessToken) {
+    public Authentication getAuthentication(String email, String accessToken) {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get(AUTHORITIES_KEY) == null) {
@@ -79,9 +66,7 @@ public class TokenProvider {
                       .map(SimpleGrantedAuthority::new)
                       .collect(Collectors.toList());
 
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return new UsernamePasswordAuthenticationToken(email, accessToken, authorities);
     }
 
     public boolean validateToken(String token) {
@@ -110,5 +95,19 @@ public class TokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public String getUserEmail(String accessToken) {
+        try {
+            final Claims claims = Jwts.parserBuilder()
+                                      .setSigningKey(key)
+                                      .build()
+                                      .parseClaimsJws(accessToken)
+                                      .getBody();
+            return claims.getSubject();
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+
     }
 }

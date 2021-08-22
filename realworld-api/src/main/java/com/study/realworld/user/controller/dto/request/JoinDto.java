@@ -36,11 +36,11 @@ public class JoinDto {
         return new JoinDto(email, username, password);
     }
 
-    public User toEntity(String encodedPassword) {
+    public User toEntity() {
         return User.builder()
                    .username(username)
                    .email(email)
-                   .password(encodedPassword)
+                   .password(password)
                    .build();
     }
 }

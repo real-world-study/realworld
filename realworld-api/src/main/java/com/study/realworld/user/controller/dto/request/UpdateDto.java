@@ -34,12 +34,4 @@ public class UpdateDto {
     public static UpdateDto create(String email, String bio, String image) {
         return new UpdateDto(email, bio, image);
     }
-
-    public User toEntity() {
-        return User.builder()
-                   .email(email)
-                   .bio(bio)
-                   .image(image)
-                   .build();
-    }
 }

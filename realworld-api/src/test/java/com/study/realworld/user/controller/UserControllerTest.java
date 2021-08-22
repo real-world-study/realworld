@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.user.controller.dto.request.JoinDto;
 import com.study.realworld.user.controller.dto.request.LoginDto;
 import com.study.realworld.user.controller.dto.request.UpdateDto;
+import com.study.realworld.user.controller.dto.response.UserInfo;
 import com.study.realworld.user.entity.User;
 import com.study.realworld.user.service.UserService;
 
@@ -47,6 +48,14 @@ class UserControllerTest {
 
     private ObjectMapper objectMapper;
 
+    private User getUser(String email) {
+        return User.builder()
+                   .email(email)
+                   .username("DolphaGo")
+                   .bio("hello")
+                   .build();
+    }
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
@@ -60,16 +69,13 @@ class UserControllerTest {
         @DisplayName("SignIn Request")
         @Test
         void login() throws Exception {
+            LoginDto loginDto = LoginDto.create("dolphago@test.net", "1q2w3e4r");
 
-            User user = User.builder()
-                            .email("dolphago@test.net")
-                            .username("DolphaGo")
-                            .bio("hello")
-                            .build();
+            User user = getUser(loginDto.getEmail());
+            String accessToken = "accessToken";
+            UserInfo userInfo = UserInfo.create(user, accessToken);
 
-            when(userService.login(any(User.class))).thenReturn(user);
-
-            LoginDto loginDto = LoginDto.create("dolphago@test.net", "12345678");
+            when(userService.login(any(LoginDto.class))).thenReturn(userInfo);
 
             mockMvc.perform(
                            post("/api/users/login")
@@ -79,7 +85,8 @@ class UserControllerTest {
                    .andExpect(content().contentType(APPLICATION_JSON))
                    .andExpect(jsonPath("$.user.email", is(user.getEmail())))
                    .andExpect(jsonPath("$.user.username", is(user.getUsername())))
-                   .andExpect(jsonPath("$.user.bio", is(user.getBio())));
+                   .andExpect(jsonPath("$.user.bio", is(user.getBio())))
+                   .andExpect(jsonPath("$.user.token", is(accessToken)));
         }
 
         @ParameterizedTest
@@ -106,15 +113,13 @@ class UserControllerTest {
         @DisplayName("SignUp Request")
         @Test
         void join() throws Exception {
-
             final JoinDto joinDto = JoinDto.create("dolphago@test.net", "DolphaGo", "1q2w3e4r");
 
-            User user = User.builder()
-                            .email("dolphago@test.net")
-                            .username("DolphaGo")
-                            .build();
+            User user = getUser(joinDto.getEmail());
+            String accessToken = "accessToken";
+            UserInfo userInfo = UserInfo.create(user, accessToken);
 
-            when(userService.join(any(User.class))).thenReturn(user);
+            when(userService.join(any(JoinDto.class))).thenReturn(userInfo);
 
             mockMvc.perform(
                            post("/api/users")
@@ -123,7 +128,8 @@ class UserControllerTest {
                    .andExpect(status().isOk())
                    .andExpect(content().contentType(APPLICATION_JSON))
                    .andExpect(jsonPath("$.user.email", is("dolphago@test.net")))
-                   .andExpect(jsonPath("$.user.username", is("DolphaGo")));
+                   .andExpect(jsonPath("$.user.username", is("DolphaGo")))
+                   .andExpect(jsonPath("$.user.token", is("accessToken")));
         }
 
         @ParameterizedTest
@@ -151,17 +157,14 @@ class UserControllerTest {
         @DisplayName("update Request")
         @Test
         void update() throws Exception {
-
             final UpdateDto updateDto = UpdateDto.create("dolphago@test.net", "update-bio", "/path/image.png");
+            final User updatedUser = getUser(updateDto.getEmail());
+            updatedUser.update(updateDto.getEmail(), updateDto.getBio(), updateDto.getImage());
+            final String accessToken = "accessToken";
 
-            User user = User.builder()
-                            .email("dolphago@test.net")
-                            .username("DolphaGo")
-                            .bio(updateDto.getBio())
-                            .image(updateDto.getImage())
-                            .build();
+            final UserInfo userInfo = UserInfo.create(updatedUser, accessToken);
 
-            when(userService.update(any(User.class))).thenReturn(user);
+            when(userService.update(any(UpdateDto.class))).thenReturn(userInfo);
 
             mockMvc.perform(
                            put("/api/user")

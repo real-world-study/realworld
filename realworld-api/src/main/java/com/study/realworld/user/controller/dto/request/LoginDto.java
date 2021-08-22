@@ -6,6 +6,8 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.entity.User;
@@ -38,5 +40,9 @@ public class LoginDto {
 
     public static LoginDto create(String email, String password){
         return new LoginDto(email, password);
+    }
+
+    public UsernamePasswordAuthenticationToken toAuthenticationToken() {
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 }
