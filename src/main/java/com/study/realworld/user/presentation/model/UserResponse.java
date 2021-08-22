@@ -33,12 +33,15 @@ public class UserResponse {
 
     private final String image;
 
-    public static UserResponse createResponse(User user) {
+    private final String accessToken;
+
+    public static UserResponse createResponse(User user, String accessToken) {
         return UserResponse.builder()
                            .username(user.getUsername())
                            .email(user.getEmail())
                            .bio(user.getBio())
                            .image(user.getImage())
+                           .accessToken(accessToken)
                            .build();
     }
 }

@@ -1,7 +1,11 @@
 package com.study.realworld.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.realworld.core.configuration.SecurityConfig;
 import com.study.realworld.core.domain.user.entity.User;
+import com.study.realworld.core.jwt.JwtAccessDeniedHandler;
+import com.study.realworld.core.jwt.JwtAuthenticationEntryPoint;
+import com.study.realworld.core.jwt.TokenProvider;
 import com.study.realworld.user.application.UserService;
 import com.study.realworld.user.presentation.model.UserLoginRequest;
 import com.study.realworld.user.presentation.model.UserRegisterRequest;
@@ -32,7 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Jeongjoon Seo
  */
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(UserController.class)
+//@Formatter:off
+@WebMvcTest({UserController.class, SecurityConfig.class, JwtAuthenticationEntryPoint.class, JwtAccessDeniedHandler.class})
+//@Formatter:on
 class UserControllerTest {
 
     private MockMvc mockMvc;
@@ -40,13 +46,16 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private TokenProvider tokenProvider;
+
     @Qualifier("jacksonObjectMapper")
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService, tokenProvider))
                                  .addFilters(new CharacterEncodingFilter("UTF-8", true))
                                  .build();
     }

@@ -28,6 +28,6 @@ server:
   port: 8080
 
 jwt:
-  secret : c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWNoYW5jZS1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
+  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWNoYW5jZS1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
   token-validity-in-seconds: 1800
 # $ echo 'spring-boot-security-jwt-tutorial-chance-spring-boot-security-jwt-tutorial' | base64
