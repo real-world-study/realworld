@@ -19,6 +19,7 @@ public class UserController {
     @PostMapping("api/users")
     public ResponseEntity<JoinResponse> join(@RequestBody JoinRequest joinRequest) {
         User user = userService.join(joinRequest.toUser());
+
         JoinResponse joinResponse = JoinResponse.fromUser(user);
         return ResponseEntity.ok().body(joinResponse);
     }

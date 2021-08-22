@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 class UserServiceLogicTest {
 
@@ -18,7 +19,8 @@ class UserServiceLogicTest {
     private String username;
     private Email email;
     private String password;
-    private UserService userService = new UserService(memoryUserRepository);
+    private UserService userService =
+            new UserService(memoryUserRepository, new BCryptPasswordEncoder());
 
     @BeforeEach
     void setUp() {
