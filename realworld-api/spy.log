@@ -8,3 +8,8 @@
 1629641094389|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists favorite CASCADE |drop table if exists favorite CASCADE 
 1629641094389|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists follow CASCADE |drop table if exists follow CASCADE 
 1629641094390|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists users CASCADE |drop table if exists users CASCADE 
+1629647399356|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists article CASCADE |drop table if exists article CASCADE 
+1629647399357|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists comment CASCADE |drop table if exists comment CASCADE 
+1629647399357|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists favorite CASCADE |drop table if exists favorite CASCADE 
+1629647399357|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists follow CASCADE |drop table if exists follow CASCADE 
+1629647399358|0|statement|connection 9|url jdbc:h2:mem:real-world|drop table if exists users CASCADE |drop table if exists users CASCADE 

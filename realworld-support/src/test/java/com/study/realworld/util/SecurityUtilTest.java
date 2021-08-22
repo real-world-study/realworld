@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class SecurityUtilTest {
-
     @Test
     void static_method_mocking() {
         try(final MockedStatic<SecurityUtil> securityUtilMockedStatic = Mockito.mockStatic(SecurityUtil.class)){
@@ -18,5 +17,4 @@ class SecurityUtilTest {
             assertThat(SecurityUtil.getCurrentUserToken()).isEqualTo("userToken");
         }
     }
-
 }
