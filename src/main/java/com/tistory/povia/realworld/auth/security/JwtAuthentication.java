@@ -1,4 +1,4 @@
-package com.tistory.povia.realworld.security;
+package com.tistory.povia.realworld.auth.security;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 

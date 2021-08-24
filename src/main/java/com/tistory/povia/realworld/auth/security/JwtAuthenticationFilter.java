@@ -1,4 +1,4 @@
-package com.tistory.povia.realworld.security;
+package com.tistory.povia.realworld.auth.security;
 
 import com.tistory.povia.realworld.auth.infra.JwtTokenProvider;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.tistory.povia.realworld.configuration;
 
-import com.tistory.povia.realworld.security.JwtAuthenticationFilter;
+import com.tistory.povia.realworld.auth.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
