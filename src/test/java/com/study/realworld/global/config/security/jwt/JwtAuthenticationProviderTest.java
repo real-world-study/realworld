@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +21,7 @@ import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
 import static com.study.realworld.global.config.security.jwt.JwtAuthentication.initAuthentication;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -83,6 +85,18 @@ class JwtAuthenticationProviderTest {
                 () -> assertThat(jwtAuthenticationProvider.validateToken(TEST_TOKEN)).isTrue(),
                 () -> assertThat(jwtAuthenticationProvider.validateToken("failToken")).isFalse()
         );
+    }
+
+    @DisplayName("JwtAuthenticationProvider 인스턴스 validateUserDetailsNull() 테스트")
+    @Test
+    void validateUserDetailsNull_test() {
+        doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
+        doReturn(null).when(jwtUserDetailsService).loadUserByUsername(any());
+
+        final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
+        assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(jwtAuthenticationProvider.authenticate(jwtAuthentication)))
+                .isInstanceOf(InternalAuthenticationServiceException.class)
+                .hasMessage("UserDetailsService returned null, which is an interface contract violation");
     }
 
     private UserDetails securityUser() {
