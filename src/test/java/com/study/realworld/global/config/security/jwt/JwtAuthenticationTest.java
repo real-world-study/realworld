@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Set;
 
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
-import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
 import static org.assertj.core.api.Assertions.assertThat;

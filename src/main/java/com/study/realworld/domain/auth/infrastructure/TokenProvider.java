@@ -59,7 +59,7 @@ public class TokenProvider {
         }
     }
 
-    public final String mapToUsername(final String token) {
+    public String mapToUsername(final String token) {
         return parseClaims(token).getSubject();
     }
 

@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class TokenProviderTest {
 
     // spring-boot-security-jwt-tutorial-jiwoon-spring-boot-security-jwt-tutorial
-    private static final String TEST_KEY = "c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK";
-    private static final String TEST_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWtlQGpha2UuamFrZSIsImV4cCI6MTYyOTk4OTU2OH0.5LJXRjabGDwbRWh2p-jVOSvvPbkCvUVVKKViRD5QkN4jVf--QMJs4q75PRJbLonadseD6hMeptOdf1RhY5ZCZA";
+    public static final String TEST_KEY = "c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK";
+    public static final String TEST_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWtlQGpha2UuamFrZSIsImV4cCI6MTYyOTk4OTU2OH0.5LJXRjabGDwbRWh2p-jVOSvvPbkCvUVVKKViRD5QkN4jVf--QMJs4q75PRJbLonadseD6hMeptOdf1RhY5ZCZA";
 
     @DisplayName("TokenProvider 인스턴스 생성자 테스트")
     @Test
