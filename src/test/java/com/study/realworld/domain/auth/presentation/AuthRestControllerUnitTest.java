@@ -38,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthRestControllerUnitTest {
 
     @Mock private AuthLoginService authLoginService;
-    @Mock private JwtUserDetailsService jwtUserDetailsService;
     @Mock private TokenProvider tokenProvider;
     @InjectMocks private AuthRestController authRestController;
 
@@ -54,7 +53,7 @@ class AuthRestControllerUnitTest {
     @DisplayName("AuthController 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final AuthRestController authRestController = new AuthRestController(authLoginService, jwtUserDetailsService, tokenProvider);
+        final AuthRestController authRestController = new AuthRestController(authLoginService, tokenProvider);
 
         assertAll(
                 () -> assertThat(authRestController).isNotNull(),
@@ -68,11 +67,9 @@ class AuthRestControllerUnitTest {
         final User user = UserTest.userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final LoginRequest loginRequest = loginRequest(new Email(EMAIL), new Password(PASSWORD));
         final String loginRequestString = objectMapper.writeValueAsString(loginRequest);
-        final UserDetails userDetails = JwtUserDetailsServiceTest.mapToSecurityUser(user);
         final ResponseToken responseToken = new ResponseToken("accessToken", "refreshToken");
 
         doReturn(user).when(authLoginService).login(any(), any());
-        doReturn(userDetails).when(jwtUserDetailsService).loadUserByUsername(any());
         doReturn(responseToken).when(tokenProvider).createToken(any());
 
         mockMvc.perform(post("/api/users/login")

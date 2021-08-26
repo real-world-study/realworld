@@ -25,7 +25,7 @@ public final class UserJoinResponse {
         return new UserJoinResponse(user);
     }
 
-    private UserJoinResponse() {
+    UserJoinResponse() {
     }
 
     private UserJoinResponse(final User user) {

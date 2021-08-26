@@ -1,9 +1,9 @@
 package com.study.realworld.domain.auth.presentation;
 
 import com.study.realworld.domain.auth.application.AuthLoginService;
-import com.study.realworld.domain.auth.application.JwtUserDetailsService;
 import com.study.realworld.domain.auth.dto.LoginRequest;
 import com.study.realworld.domain.auth.dto.ResponseToken;
+import com.study.realworld.domain.user.domain.Password;
 import com.study.realworld.global.config.security.jwt.JwtAuthentication;
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
 import com.study.realworld.domain.user.domain.Email;
@@ -17,18 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
+
 @RestController
 public class AuthRestController {
 
     private final AuthLoginService authLoginService;
-    private final JwtUserDetailsService jwtUserDetailsService;
     private final TokenProvider tokenProvider;
 
     public AuthRestController(final AuthLoginService authLoginService,
-                              final JwtUserDetailsService jwtUserDetailsService,
                               final TokenProvider tokenProvider) {
         this.authLoginService = authLoginService;
-        this.jwtUserDetailsService = jwtUserDetailsService;
         this.tokenProvider = tokenProvider;
     }
 
@@ -41,10 +40,19 @@ public class AuthRestController {
     }
 
     private ResponseToken responseToken(final User user) {
-        final Email securityUsername = user.email();
-        final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(securityUsername.email());
+        final UserDetails userDetails = mapToSecurityUser(user);
         final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUserDetails(userDetails);
         return tokenProvider.createToken(jwtAuthentication);
+    }
+
+    private UserDetails mapToSecurityUser(final User user) {
+        final Email securityUsername = user.email();
+        final Password password = user.password();
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(securityUsername.email())
+                .password(password.password())
+                .authorities(DEFAULT_AUTHORITY)
+                .build();
     }
 
 }

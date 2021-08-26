@@ -48,10 +48,10 @@ class JwtAuthenticationTest {
         );
     }
 
-    @DisplayName("JwtAuthentication 인스턴스 initAuthentication() 정적 팩토리 메서드 테스트")
+    @DisplayName("JwtAuthentication 인스턴스 ofUserDetails() 정적 팩토리 메서드 테스트")
     @Test
     void static_factory_method_ofUserDetails_test() {
-        final UserDetails securityUser = securityUser();
+        final UserDetails securityUser = securityUser(EMAIL, PASSWORD, DEFAULT_AUTHORITY);
         final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUserDetails(securityUser);
 
         assertAll(
@@ -61,13 +61,24 @@ class JwtAuthenticationTest {
         );
     }
 
-    private UserDetails securityUser() {
-        return User.builder()
-                .username(USERNAME)
-                .password(PASSWORD)
-                .authorities(DEFAULT_AUTHORITY)
-                .build();
+    @DisplayName("JwtAuthentication 인스턴스 getter 기능 테스트")
+    @Test
+    void getter_test() {
+        final UserDetails securityUser = securityUser(EMAIL, PASSWORD, DEFAULT_AUTHORITY);
+        final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUserDetails(securityUser);
+
+        assertAll(
+                () -> assertThat(jwtAuthentication.getPrincipal()).isEqualTo(EMAIL),
+                () -> assertThat(jwtAuthentication.getCredentials()).isEqualTo(PASSWORD)
+        );
     }
 
+    private UserDetails securityUser(final String email, final String password, final String authority) {
+        return User.builder()
+                .username(email)
+                .password(password)
+                .authorities(authority)
+                .build();
+    }
 
 }

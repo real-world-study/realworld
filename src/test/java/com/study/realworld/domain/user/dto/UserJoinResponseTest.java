@@ -15,9 +15,21 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class UserJoinResponseTest {
 
+
+    @DisplayName("UserJoinResponse 인스턴스 기본 생성자 테스트")
+    @Test
+    void default_constructor_test() {
+        final UserJoinResponse userJoinResponse = new UserJoinResponse();
+
+        assertAll(
+                () -> assertThat(userJoinResponse).isNotNull(),
+                () -> assertThat(userJoinResponse).isExactlyInstanceOf(UserJoinResponse.class)
+        );
+    }
+
     @DisplayName("UserJoinResponse 인스턴스 fromUser() 테스트")
     @Test
-    void fromUser_test() {
+    void static_factory_method_fromUser_test() {
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final UserJoinResponse userJoinResponse = UserJoinResponse.fromUser(user);
 
