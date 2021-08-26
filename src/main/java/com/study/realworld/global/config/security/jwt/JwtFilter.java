@@ -18,16 +18,16 @@ import static java.util.Objects.isNull;
 import static org.springframework.util.StringUtils.hasText;
 
 @Component
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class JwtFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer";
     private static final int BEARER_TOKEN_BEGIN_INDEX = 7;
 
-    private final JwtAuthenticationProviderManager jwtAuthenticationProviderManager;
+    private final JwtProviderManager jwtProviderManager;
 
-    public JwtAuthenticationFilter(final JwtAuthenticationProviderManager jwtAuthenticationProviderManager) {
-        this.jwtAuthenticationProviderManager = jwtAuthenticationProviderManager;
+    public JwtFilter(final JwtProviderManager jwtProviderManager) {
+        this.jwtProviderManager = jwtProviderManager;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private Authentication attemptAuthentication(final HttpServletRequest request) {
         final String jwt = resolveToken(request);
         final Authentication authentication = initAuthentication(jwt);
-        return jwtAuthenticationProviderManager.authenticate(authentication);
+        return jwtProviderManager.authenticate(authentication);
     }
 
     private String resolveToken(final HttpServletRequest request) {

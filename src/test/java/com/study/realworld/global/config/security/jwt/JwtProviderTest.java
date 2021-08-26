@@ -27,22 +27,22 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-class JwtAuthenticationProviderTest {
+class JwtProviderTest {
 
     @Mock private TokenProvider tokenProvider;
     @Mock private JwtUserDetailsService jwtUserDetailsService;
-    @InjectMocks private JwtAuthenticationProvider jwtAuthenticationProvider;
+    @InjectMocks private JwtProvider jwtProvider;
 
     @DisplayName("JwtAuthenticationProvider 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final JwtAuthenticationProvider jwtAuthenticationProvider =
-                new JwtAuthenticationProvider(jwtUserDetailsService, tokenProvider);
+        final JwtProvider jwtProvider =
+                new JwtProvider(jwtUserDetailsService, tokenProvider);
 
         assertAll(
-                () -> assertThat(jwtAuthenticationProvider).isNotNull(),
-                () -> assertThat(jwtAuthenticationProvider).isInstanceOf(AuthenticationProvider.class),
-                () -> assertThat(jwtAuthenticationProvider).isExactlyInstanceOf(JwtAuthenticationProvider.class)
+                () -> assertThat(jwtProvider).isNotNull(),
+                () -> assertThat(jwtProvider).isInstanceOf(AuthenticationProvider.class),
+                () -> assertThat(jwtProvider).isExactlyInstanceOf(JwtProvider.class)
         );
     }
 
@@ -54,7 +54,7 @@ class JwtAuthenticationProviderTest {
         doReturn(userDetails).when(jwtUserDetailsService).loadUserByUsername(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
-        final Authentication authenticate = jwtAuthenticationProvider.authenticate(jwtAuthentication);
+        final Authentication authenticate = jwtProvider.authenticate(jwtAuthentication);
 
         assertAll(
                 () -> assertThat(authenticate).isNotNull(),
@@ -70,8 +70,8 @@ class JwtAuthenticationProviderTest {
         final TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(USERNAME, PASSWORD);
 
         assertAll(
-                () -> assertThat(jwtAuthenticationProvider.supports(jwtAuthentication.getClass())).isTrue(),
-                () -> assertThat(jwtAuthenticationProvider.supports(testingAuthenticationToken.getClass())).isFalse()
+                () -> assertThat(jwtProvider.supports(jwtAuthentication.getClass())).isTrue(),
+                () -> assertThat(jwtProvider.supports(testingAuthenticationToken.getClass())).isFalse()
         );
     }
 
@@ -82,8 +82,8 @@ class JwtAuthenticationProviderTest {
         doReturn(true).when(tokenProvider).validateToken(TEST_TOKEN);
 
         assertAll(
-                () -> assertThat(jwtAuthenticationProvider.validateToken(TEST_TOKEN)).isTrue(),
-                () -> assertThat(jwtAuthenticationProvider.validateToken("failToken")).isFalse()
+                () -> assertThat(jwtProvider.validateToken(TEST_TOKEN)).isTrue(),
+                () -> assertThat(jwtProvider.validateToken("failToken")).isFalse()
         );
     }
 
@@ -94,7 +94,7 @@ class JwtAuthenticationProviderTest {
         doReturn(null).when(jwtUserDetailsService).loadUserByUsername(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
-        assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(jwtAuthenticationProvider.authenticate(jwtAuthentication)))
+        assertThatThrownBy(() -> jwtProvider.authenticate(jwtProvider.authenticate(jwtAuthentication)))
                 .isInstanceOf(InternalAuthenticationServiceException.class)
                 .hasMessage("UserDetailsService returned null, which is an interface contract violation");
     }

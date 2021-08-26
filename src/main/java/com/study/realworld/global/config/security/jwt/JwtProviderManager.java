@@ -1,34 +1,36 @@
 package com.study.realworld.global.config.security.jwt;
 
+import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTypeException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtAuthenticationProviderManager implements AuthenticationManager {
+public class JwtProviderManager implements AuthenticationManager {
 
-    private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final JwtProvider jwtProvider;
 
-    public JwtAuthenticationProviderManager(final JwtAuthenticationProvider jwtAuthenticationProvider) {
-        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
+    public JwtProviderManager(final JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
     }
 
     @Override
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
         validateSupportable(authentication);
         validateToken((String) authentication.getDetails());
-        return jwtAuthenticationProvider.authenticate(authentication);
+        return jwtProvider.authenticate(authentication);
     }
 
     private void validateSupportable(final Authentication authentication) {
-        if (jwtAuthenticationProvider.supports(authentication.getClass())) {
-            throw new IllegalArgumentException();
+        if (!jwtProvider.supports(authentication.getClass())) {
+            final Class<? extends Authentication> authenticationClass = authentication.getClass();
+            throw new JwtProviderNotSupportTypeException(authenticationClass.getSimpleName());
         }
     }
 
     private void validateToken(final String jwt) {
-        if (jwtAuthenticationProvider.validateToken(jwt)) {
+        if (!jwtProvider.validateToken(jwt)) {
             throw new IllegalArgumentException();
         }
     }

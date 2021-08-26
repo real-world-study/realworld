@@ -1,11 +1,13 @@
 package com.study.realworld.global.config.security.jwt;
 
+import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTypeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,40 +19,52 @@ import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
 import static com.study.realworld.global.config.security.jwt.JwtAuthentication.initAuthentication;
 import static com.study.realworld.global.config.security.jwt.JwtAuthentication.ofUserDetails;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-class JwtAuthenticationProviderManagerTest {
+class JwtProviderManagerTest {
 
     @Mock
-    private JwtAuthenticationProvider jwtAuthenticationProvider;
+    private JwtProvider jwtProvider;
     @InjectMocks
-    private JwtAuthenticationProviderManager jwtAuthenticationProviderManager;
+    private JwtProviderManager jwtProviderManager;
 
     @DisplayName("JwtAuthenticationProviderManager 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final JwtAuthenticationProviderManager jwtAuthenticationProviderManager =
-                new JwtAuthenticationProviderManager(jwtAuthenticationProvider);
+        final JwtProviderManager jwtProviderManager =
+                new JwtProviderManager(jwtProvider);
 
         assertAll(
-                () -> assertThat(jwtAuthenticationProviderManager).isNotNull(),
-                () -> assertThat(jwtAuthenticationProviderManager)
-                        .isExactlyInstanceOf(JwtAuthenticationProviderManager.class)
+                () -> assertThat(jwtProviderManager).isNotNull(),
+                () -> assertThat(jwtProviderManager)
+                        .isExactlyInstanceOf(JwtProviderManager.class)
         );
     }
 
-    @DisplayName("JwtAuthenticationProviderManager 인스턴스 authenticate() 테스트")
+    @DisplayName("JwtAuthenticationProviderManager 인스턴스 validateSupportable() 실패 테스트")
+    @Test
+    void fail_validateSupportable_test() {
+        doReturn(false).when(jwtProvider).supports(any());
+
+        final TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(USERNAME, PASSWORD);
+        assertThatThrownBy(() -> jwtProviderManager.authenticate(testingAuthenticationToken))
+                .isInstanceOf(JwtProviderNotSupportTypeException.class)
+                .hasMessage("[ TestingAuthenticationToken ] is not supported in JwtProvider");
+    }
+
+    @DisplayName("JwtAuthenticationProviderManager 인스턴스 support() 테스트")
     @Test
     void authenticate_test() {
         final UserDetails userDetails = securityUser();
         final JwtAuthentication returnedAuthentication = ofUserDetails(userDetails);
-        doReturn(returnedAuthentication).when(jwtAuthenticationProvider).authenticate(any());
+        doReturn(returnedAuthentication).when(jwtProvider).authenticate(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
-        final Authentication authentication = jwtAuthenticationProviderManager.authenticate(jwtAuthentication);
+        final Authentication authentication = jwtProviderManager.authenticate(jwtAuthentication);
         assertAll(
                 () -> assertThat(authentication).isNotNull(),
                 () -> assertThat(authentication.getPrincipal()).isEqualTo(USERNAME),

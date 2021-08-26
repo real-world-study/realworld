@@ -1,6 +1,6 @@
 package com.study.realworld.global.config.security;
 
-import com.study.realworld.global.config.security.jwt.JwtAuthenticationFilter;
+import com.study.realworld.global.config.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,10 +15,10 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtFilter jwtFilter;
 
-    public SecurityConfiguration(final JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    public SecurityConfiguration(final JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .disable();
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 }

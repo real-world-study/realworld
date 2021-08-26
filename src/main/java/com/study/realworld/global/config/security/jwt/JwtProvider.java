@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 import static java.util.Objects.isNull;
 
 @Component
-public class JwtAuthenticationProvider implements AuthenticationProvider {
+public class JwtProvider implements AuthenticationProvider {
 
     private static final String USER_DETAILS_SERVICE_RETURNED_NULL_MESSAGE = "UserDetailsService returned null, which is an interface contract violation";
 
     private final UserDetailsService userDetailsService;
     private final TokenProvider tokenProvider;
 
-    public JwtAuthenticationProvider(final UserDetailsService userDetailsService,
-                                     final TokenProvider tokenProvider) {
+    public JwtProvider(final UserDetailsService userDetailsService,
+                       final TokenProvider tokenProvider) {
         this.userDetailsService = userDetailsService;
         this.tokenProvider = tokenProvider;
     }
