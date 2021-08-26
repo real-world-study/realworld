@@ -32,4 +32,18 @@ class JwtAuthenticationTest {
         );
     }
 
+    @DisplayName("JwtAuthentication 인스턴스 initAuthentication 정적 팩토리 메서드 테스트")
+    @Test
+    void static_factory_method_test() {
+        final String token = "token";
+        final JwtAuthentication jwtAuthentication = JwtAuthentication.initAuthentication(token);
+
+        assertAll(
+                () -> assertThat(jwtAuthentication).isNotNull(),
+                () -> assertThat(jwtAuthentication).isInstanceOf(Authentication.class),
+                () -> assertThat(jwtAuthentication).isExactlyInstanceOf(JwtAuthentication.class)
+        );
+    }
+
+
 }
