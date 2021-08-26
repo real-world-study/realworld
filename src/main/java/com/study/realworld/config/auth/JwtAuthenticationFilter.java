@@ -1,69 +1,44 @@
 package com.study.realworld.config.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.global.util.JwtTokenUtil;
-import com.study.realworld.user.dto.UserLoginRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static com.study.realworld.global.common.Constants.AUTHENTICATION;
-import static com.study.realworld.global.common.Constants.AUTHORIZATION;
+import java.util.Collections;
 
 @Slf4j
-public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+@RequiredArgsConstructor
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthenticationManager authenticationManager;
-    private final ObjectMapper objectMapper;
-
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper) {
-        super.setAuthenticationManager(authenticationManager);
-        this.authenticationManager = authenticationManager;
-        this.objectMapper = objectMapper;
-    }
+    private final JwtProvider jwtProvider;
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        log.info("{} : {}", request.getRequestURI(), request.getHeader(AUTHORIZATION));
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("{} {} : {}", request.getMethod(), request.getRequestURI(), request.getHeader(HttpHeaders.AUTHORIZATION));
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        final UsernamePasswordAuthenticationToken authToken;
-        try {
-            final UserLoginRequest userLoginRequest = objectMapper.readValue(request.getInputStream(), UserLoginRequest.class);
-            authToken = new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword());
-            log.info("attemptAuthentication : {}", authToken);
-        } catch (Exception e) {
-            log.info("attemptAuthentication Exception : {}", e.getMessage());
-            throw new RuntimeException();
+        if(header != null) {
+            String accessToken = header.split(" ")[1];
+
+            if(jwtProvider.isValidToken(accessToken)) {
+                String email = jwtProvider.getSubjectFromToken(accessToken);
+                final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, accessToken, Collections.emptyList());
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
-        return super.getAuthenticationManager().authenticate(authToken);
-    }
-
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        logger.info("successfulAuthentication : " + authResult.getPrincipal().toString());
-
-        org.springframework.security.core.userdetails.User user = (User) authResult.getPrincipal();
-        response.addHeader(AUTHENTICATION, "Bearer " + JwtTokenUtil.generateJwtToken(user));
-
-        super.successfulAuthentication(request, response, chain, authResult);
-    }
-
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        log.info("unsuccessfulAuthentication : {}", failed.getMessage());
-
-        super.unsuccessfulAuthentication(request, response, failed);
+        filterChain.doFilter(request, response);
     }
 
 }
