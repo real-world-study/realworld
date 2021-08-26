@@ -5,8 +5,10 @@ import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.dto.UserJoinRequest;
 import com.study.realworld.user.dto.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -34,18 +36,19 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException(email + " not found"));
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.NEVER)
     public User save(UserJoinRequest request) {
         User user = UserJoinRequest.toUser(request);
         user.encodePassword(passwordEncoder);
+
+        validateDuplicateUser(user);
 
         return userRepository.save(user);
     }
 
     @Transactional
     public User deleteById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(id + " not found"));
+        User user = this.findById(id);
 
         userRepository.delete(user);
         return user;
@@ -53,6 +56,7 @@ public class UserService {
 
     public User login(UserLoginRequest request) {
         User user = this.findByEmail(request.getEmail());
+
         validateMatchesPassword(user, request.getPassword());
 
         return user;
@@ -61,6 +65,12 @@ public class UserService {
     private void validateMatchesPassword(User user, String rawPassword) {
         if(!user.matchesPassword(rawPassword, passwordEncoder)) {
             throw new NoSuchElementException(rawPassword + " wrong wrong wrong triple wrong" + user.getPassword());
+        }
+    }
+
+    private void validateDuplicateUser(User user) {
+        if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new DuplicateKeyException(user.getEmail() + " duplicated email");
         }
     }
 
