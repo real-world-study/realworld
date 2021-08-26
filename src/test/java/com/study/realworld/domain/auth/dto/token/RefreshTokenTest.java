@@ -32,4 +32,13 @@ public class RefreshTokenTest {
         );
     }
 
+    @DisplayName("RefreshToken 인스턴스 getter 테스트")
+    @Test
+    void getter_test() {
+        final String refreshTokenString = "refreshToken";
+        final RefreshToken refreshToken = new RefreshToken(refreshTokenString);
+
+        assertThat(refreshToken.refreshToken()).isEqualTo(refreshTokenString);
+    }
+
 }
