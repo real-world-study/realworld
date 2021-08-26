@@ -123,7 +123,7 @@ class UserTest {
         // when & then
         assertThatExceptionOfType(RuntimeException.class)
             .isThrownBy(() -> user.login(password, passwordEncoder))
-            .withMessageMatching("비밀번호가 다릅니다.");
+            .withMessageMatching("password is different from old password.");
     }
 
     @Test

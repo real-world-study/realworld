@@ -70,7 +70,6 @@ public class UserService {
                     .matches(password.getPassword(), user.getPassword().getPassword()))
             .ifPresent(
                 password -> {
-                    validByPassword(password);
                     user.changePassword(Password.encode(password, passwordEncoder));
                 });
         updateUser.getBio()
@@ -81,9 +80,6 @@ public class UserService {
             .ifPresent(user::changeImage);
 
         return user;
-    }
-
-    private void validByPassword(@Valid Password password) {
     }
 
     private void checkDuplicatedByUsername(@Valid Username username) {

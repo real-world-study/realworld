@@ -402,10 +402,8 @@ class UserServiceTest {
                 Password password = new Password("passwordChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     password, null, null);
-                when(passwordEncoder.matches("passwordChange", "encoded_password"))
-                    .thenReturn(false);
-                when(passwordEncoder.encode("passwordChange"))
-                    .thenReturn("encoded_passwordChange");
+                when(passwordEncoder.matches("passwordChange", "encoded_password")).thenReturn(false);
+                when(passwordEncoder.encode("passwordChange")).thenReturn("encoded_Change");
 
                 // when
                 User result = userService.update(userUpdateModel, userId);
@@ -415,7 +413,7 @@ class UserServiceTest {
                 assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
 
                 assertThat(result.getPassword().getPassword())
-                    .isEqualTo("encoded_passwordChange");
+                    .isEqualTo("encoded_Change");
                 assertThat(result.getPassword().getPassword())
                     .isNotEqualTo(originUser.getPassword().getPassword());
 
