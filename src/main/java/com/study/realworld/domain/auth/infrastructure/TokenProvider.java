@@ -15,7 +15,6 @@ import java.util.Date;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS512;
 import static java.lang.Math.addExact;
-import static java.util.Objects.isNull;
 
 @Component
 public class TokenProvider {

@@ -55,4 +55,11 @@ class TokenProviderTest {
         );
     }
 
+    @DisplayName("TokenProvider 인스턴스 mapToUsername() 테스트")
+    @Test
+    void mapToUser_test() {
+        final TokenProvider tokenProvider = new TokenProvider(TEST_KEY);
+        assertThat(tokenProvider.mapToUsername(TEST_TOKEN)).isEqualTo("jake@jake.jake");
+    }
+
 }
