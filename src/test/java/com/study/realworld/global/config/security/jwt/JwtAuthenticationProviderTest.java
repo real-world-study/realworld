@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,12 +27,9 @@ import static org.mockito.Mockito.doReturn;
 @ExtendWith(MockitoExtension.class)
 class JwtAuthenticationProviderTest {
 
-    @Mock
-    private TokenProvider tokenProvider;
-    @Mock
-    private JwtUserDetailsService jwtUserDetailsService;
-    @InjectMocks
-    private JwtAuthenticationProvider jwtAuthenticationProvider;
+    @Mock private TokenProvider tokenProvider;
+    @Mock private JwtUserDetailsService jwtUserDetailsService;
+    @InjectMocks private JwtAuthenticationProvider jwtAuthenticationProvider;
 
     @DisplayName("JwtAuthenticationProvider 인스턴스 생성자 테스트")
     @Test
@@ -74,6 +70,18 @@ class JwtAuthenticationProviderTest {
         assertAll(
                 () -> assertThat(jwtAuthenticationProvider.supports(jwtAuthentication.getClass())).isTrue(),
                 () -> assertThat(jwtAuthenticationProvider.supports(testingAuthenticationToken.getClass())).isFalse()
+        );
+    }
+
+    @DisplayName("JwtAuthenticationProvider 인스턴스 validateToken() 테스트")
+    @Test
+    void validate_test() {
+        doReturn(true).when(tokenProvider).validateToken(any());
+        doReturn(false).when(tokenProvider).validateToken(TEST_TOKEN);
+
+        assertAll(
+                () -> assertThat(jwtAuthenticationProvider.validateToken(TEST_TOKEN)).isTrue(),
+                () -> assertThat(jwtAuthenticationProvider.validateToken("failToken")).isFalse()
         );
     }
 
