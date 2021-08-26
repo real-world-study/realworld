@@ -13,7 +13,9 @@ import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class AccessTokenTest {
+public class AccessTokenTest {
+
+    public static final String ACCESS_TOKEN = "accessToken";
 
     private static Validator validator;
 

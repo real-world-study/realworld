@@ -15,7 +15,6 @@ class BaseTimeEntityTest {
     @DisplayName("BaseTimeEntity 인스턴스 생성 테스트")
     @Test
     void constructor_test() {
-        final LocalDateTime now = now();
         final BaseTimeEntity baseTimeEntity = new BaseTimeEntity(){};
 
         assertAll(
