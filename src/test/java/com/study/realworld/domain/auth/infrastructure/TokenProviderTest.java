@@ -14,7 +14,7 @@ import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class TokenProviderTest {
+public class TokenProviderTest {
 
     // spring-boot-security-jwt-tutorial-jiwoon-spring-boot-security-jwt-tutorial
     private static final String TEST_KEY = "c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK";
@@ -60,6 +60,10 @@ class TokenProviderTest {
     void mapToUser_test() {
         final TokenProvider tokenProvider = new TokenProvider(TEST_KEY);
         assertThat(tokenProvider.mapToUsername(TEST_TOKEN)).isEqualTo("jake@jake.jake");
+    }
+
+    public static TokenProvider tokenProvider() {
+        return new TokenProvider(TEST_KEY);
     }
 
 }
