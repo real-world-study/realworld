@@ -76,8 +76,8 @@ class JwtAuthenticationProviderTest {
     @DisplayName("JwtAuthenticationProvider 인스턴스 validateToken() 테스트")
     @Test
     void validate_test() {
-        doReturn(true).when(tokenProvider).validateToken(any());
-        doReturn(false).when(tokenProvider).validateToken(TEST_TOKEN);
+        doReturn(false).when(tokenProvider).validateToken(any());
+        doReturn(true).when(tokenProvider).validateToken(TEST_TOKEN);
 
         assertAll(
                 () -> assertThat(jwtAuthenticationProvider.validateToken(TEST_TOKEN)).isTrue(),
