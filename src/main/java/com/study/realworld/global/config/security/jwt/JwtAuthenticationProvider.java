@@ -34,7 +34,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private String determineUsername(final Authentication authentication) {
         final String token = (String) authentication.getDetails();
-        return tokenProvider.determineUsername(token);
+        return tokenProvider.mapToUsername(token);
     }
 
     private UserDetails retrieveUser(final String email) {
