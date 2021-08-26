@@ -25,7 +25,7 @@ public class JwtAuthentication extends AbstractAuthenticationToken {
         return new JwtAuthentication(username, password, authorities);
     }
 
-    public JwtAuthentication(final String details) {
+    private JwtAuthentication(final String details) {
         super(null);
         super.setDetails(details);
     }
