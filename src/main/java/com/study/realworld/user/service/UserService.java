@@ -51,19 +51,16 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
 
         updateUser.getUsername()
-            .ifPresent(
-                username -> {
+            .ifPresent(username -> {
                     checkDuplicatedByUsername(username);
                     user.changeUsername(username);
                 });
         updateUser.getEmail()
-            .ifPresent(
-                email -> {
+            .ifPresent(email -> {
                     checkDuplicatedByEmail(email);
                     user.changeEmail(email);
                 });
-        updateUser.getPassword()
-            .ifPresent(password -> user.changePassword(Password.encode(password, passwordEncoder)));
+        updateUser.getPassword().ifPresent(password -> user.changePassword(password, passwordEncoder));
         updateUser.getBio().ifPresent(user::changeBio);
         updateUser.getImage().ifPresent(user::changeImage);
 

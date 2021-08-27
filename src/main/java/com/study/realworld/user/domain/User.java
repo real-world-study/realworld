@@ -77,8 +77,8 @@ public class User {
         this.email = email;
     }
 
-    public void changePassword(Password password) {
-        this.password = password;
+    public void changePassword(Password password, PasswordEncoder passwordEncoder) {
+        this.password = Password.encode(password, passwordEncoder);
     }
 
     public void changeBio(String bio) {
