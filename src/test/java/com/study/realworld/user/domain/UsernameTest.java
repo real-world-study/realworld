@@ -1,26 +1,14 @@
 package com.study.realworld.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import java.util.Collection;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class UsernameTest {
-
-    private Validator validator;
-
-    @BeforeEach
-    void beforeEach() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
-    }
 
     @Test
     void usernameTest() {
@@ -32,48 +20,23 @@ class UsernameTest {
     void usernameNullTest() {
 
         // given
-        Username username = new Username(null);
+        String input = null;
 
-        // when
-        Collection<ConstraintViolation<Username>> constraintViolations
-            = validator.validate(username);
-
-        // then
-        assertEquals(1, constraintViolations.size());
-        assertEquals("username must be provided.",
-            constraintViolations.iterator().next().getMessage());
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> new Username(input))
+            .withMessageMatching("username must be provided.");
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "    "})
     @DisplayName("유저 네임은 빈칸이 들어오면 invalid되어야 한다.")
-    void usernameNothingTest() {
+    void usernameNothingTest(String input) {
 
-        // given
-        Username username = new Username("");
-
-        // when
-        Collection<ConstraintViolation<Username>> constraintViolations
-            = validator.validate(username);
-
-        // then
-        assertEquals(1, constraintViolations.size());
-        assertEquals("username must be provided.",
-            constraintViolations.iterator().next().getMessage());
-    }
-
-    @Test
-    @DisplayName("유저 네임은 공백이 들어오면 invalid되어야 한다.")
-    void usernameBlankTest() {
-
-        // given
-        Username username = new Username(" ");
-
-        // when
-        Collection<ConstraintViolation<Username>> constraintViolations
-            = validator.validate(username);
-
-        // then
-        assertEquals(2, constraintViolations.size());
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> new Username(input))
+            .withMessageMatching("username must be provided.");
     }
 
     @Test
@@ -81,16 +44,12 @@ class UsernameTest {
     void usernameMaxSizeTest() {
 
         // given
-        Username username = new Username("123456789012345678901");
+        String input = "123456789012345678901";
 
-        // when
-        Collection<ConstraintViolation<Username>> constraintViolations
-            = validator.validate(username);
-
-        // then
-        assertEquals(1, constraintViolations.size());
-        assertEquals("username length must be less than 20 characters.",
-            constraintViolations.iterator().next().getMessage());
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> new Username(input))
+            .withMessageMatching("username length must be less then 20 characters.");
     }
 
     @Test
@@ -98,14 +57,13 @@ class UsernameTest {
     void usernameValidTest() {
 
         // given
-        Username username = new Username("123가믜힣abcABC");
+        String input = "123가믜힣abcABC";
 
         // when
-        Collection<ConstraintViolation<Username>> constraintViolations
-            = validator.validate(username);
+        Username username = new Username(input);
 
         // then
-        assertEquals(0, constraintViolations.size());
+        assertThat(username.toString()).isEqualTo(input);
     }
 
     @ParameterizedTest
@@ -113,16 +71,10 @@ class UsernameTest {
     @DisplayName("유저네임에 한글, 숫자, 영어 말고 다른 값이 들어오면 invalid되어야한다.")
     void usernameInvalidTest(String input) {
 
-        // given
-        Username username = new Username(input);
-
-        // when
-        Collection<ConstraintViolation<Username>> constraintViolations
-            = validator.validate(username);
-
-        // then
-        assertEquals(1, constraintViolations.size());
-        assertEquals("Invalid username name", constraintViolations.iterator().next().getMessage());
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> new Username(input))
+            .withMessageMatching("usernmae must be provided by limited pattern.");
     }
 
     @Test
@@ -130,8 +82,8 @@ class UsernameTest {
     void usernameEqualsHashCodeTest() {
 
         // given
-        Username username = new Username("test@test.com");
-        Username copyUsername = new Username("test@test.com");
+        Username username = new Username("username");
+        Username copyUsername = new Username("username");
 
         // when & then
         assertThat(username)
