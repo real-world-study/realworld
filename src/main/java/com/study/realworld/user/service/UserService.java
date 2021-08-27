@@ -50,16 +50,14 @@ public class UserService {
     public User update(UserUpdateModel updateUser, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
 
-        updateUser.getUsername()
-            .ifPresent(username -> {
-                    checkDuplicatedByUsername(username);
-                    user.changeUsername(username);
-                });
-        updateUser.getEmail()
-            .ifPresent(email -> {
-                    checkDuplicatedByEmail(email);
-                    user.changeEmail(email);
-                });
+        updateUser.getUsername().ifPresent(username -> {
+            checkDuplicatedByUsername(username);
+            user.changeUsername(username);
+        });
+        updateUser.getEmail().ifPresent(email -> {
+            checkDuplicatedByEmail(email);
+            user.changeEmail(email);
+        });
         updateUser.getPassword().ifPresent(password -> user.changePassword(password, passwordEncoder));
         updateUser.getBio().ifPresent(user::changeBio);
         updateUser.getImage().ifPresent(user::changeImage);
@@ -69,14 +67,14 @@ public class UserService {
 
     private void checkDuplicatedByUsername(@Valid Username username) {
         findByUsername(username).ifPresent(param -> {
-                throw new RuntimeException("already user username");
-            });
+            throw new RuntimeException("already user username");
+        });
     }
 
     private void checkDuplicatedByEmail(@Valid Email email) {
         findByEmail(email).ifPresent(param -> {
-                throw new RuntimeException("already user email");
-            });
+            throw new RuntimeException("already user email");
+        });
     }
 
     private Optional<User> findByUsername(Username username) {
