@@ -1,5 +1,6 @@
 package com.study.realworld.global.config.security.jwt;
 
+import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTokenException;
 import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTypeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,12 +57,25 @@ class JwtProviderManagerTest {
                 .hasMessage("[ TestingAuthenticationToken ] is not supported in JwtProvider");
     }
 
+    @DisplayName("JwtAuthenticationProviderManager 인스턴스 validateToken() 실패 테스트")
+    @Test
+    void fail_validateToken_test() {
+        doReturn(true).when(jwtProvider).supports(any());
+
+        final JwtAuthentication jwtAuthentication = JwtAuthentication.initAuthentication("failToken");
+        assertThatThrownBy(() -> jwtProviderManager.authenticate(jwtAuthentication))
+                .isInstanceOf(JwtProviderNotSupportTokenException.class)
+                .hasMessage("this token is not supported in JwtProvider");
+    }
+
     @DisplayName("JwtAuthenticationProviderManager 인스턴스 support() 테스트")
     @Test
     void authenticate_test() {
         final UserDetails userDetails = securityUser();
         final JwtAuthentication returnedAuthentication = ofUserDetails(userDetails);
         doReturn(returnedAuthentication).when(jwtProvider).authenticate(any());
+        doReturn(true).when(jwtProvider).supports(any());
+        doReturn(true).when(jwtProvider).validateToken(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
         final Authentication authentication = jwtProviderManager.authenticate(jwtAuthentication);

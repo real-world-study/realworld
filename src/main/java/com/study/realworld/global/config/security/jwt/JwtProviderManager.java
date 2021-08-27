@@ -1,5 +1,6 @@
 package com.study.realworld.global.config.security.jwt;
 
+import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTokenException;
 import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTypeException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -31,7 +32,7 @@ public class JwtProviderManager implements AuthenticationManager {
 
     private void validateToken(final String jwt) {
         if (!jwtProvider.validateToken(jwt)) {
-            throw new IllegalArgumentException();
+            throw new JwtProviderNotSupportTokenException();
         }
     }
 

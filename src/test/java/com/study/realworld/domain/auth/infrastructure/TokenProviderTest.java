@@ -18,7 +18,7 @@ public class TokenProviderTest {
 
     // spring-boot-security-jwt-tutorial-jiwoon-spring-boot-security-jwt-tutorial
     public static final String TEST_KEY = "c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK";
-    public static final String TEST_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWtlQGpha2UuamFrZSIsImV4cCI6MTYzMDA2MzQ5MX0.trsevChtngLE98tJ8l4zqecw1BUSlVWJuLLcadpX15qsmoUVa1uKMN3htmm-U3Qi7CjOpFI0ijtwZv_GZ96byw";
+    public static final String TEST_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWtlQGpha2UuamFrZSIsImV4cCI6MTYzMDA2NTgxM30.vptw2W1PQcKGeKuWRUmU5qLx6D_pLoMcrt9l3Xib9JPt8zLZRg3BAFjAe4qMziQFOJwj5g8TbStCfxUjlPRKkg";
 
     @DisplayName("TokenProvider 인스턴스 생성자 테스트")
     @Test
