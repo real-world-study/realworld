@@ -1,20 +1,21 @@
 package com.study.realworld.global.config.security.jwt;
 
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Password;
+import com.study.realworld.domain.user.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collections;
 import java.util.Set;
 
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
+import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -50,8 +51,8 @@ class JwtAuthenticationTest {
     @DisplayName("JwtAuthentication 인스턴스 ofUserDetails() 정적 팩토리 메서드 테스트")
     @Test
     void static_factory_method_ofUserDetails_test() {
-        final UserDetails securityUser = securityUser(EMAIL, PASSWORD, DEFAULT_AUTHORITY);
-        final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUserDetails(securityUser);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUser(user);
 
         assertAll(
                 () -> assertThat(jwtAuthentication).isNotNull(),
@@ -63,21 +64,13 @@ class JwtAuthenticationTest {
     @DisplayName("JwtAuthentication 인스턴스 getter 기능 테스트")
     @Test
     void getter_test() {
-        final UserDetails securityUser = securityUser(EMAIL, PASSWORD, DEFAULT_AUTHORITY);
-        final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUserDetails(securityUser);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUser(user);
 
         assertAll(
                 () -> assertThat(jwtAuthentication.getPrincipal()).isEqualTo(EMAIL),
                 () -> assertThat(jwtAuthentication.getCredentials()).isEqualTo(PASSWORD)
         );
-    }
-
-    private UserDetails securityUser(final String email, final String password, final String authority) {
-        return User.builder()
-                .username(email)
-                .password(password)
-                .authorities(authority)
-                .build();
     }
 
 }

@@ -2,8 +2,6 @@ package com.study.realworld.domain.auth.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.domain.auth.application.AuthLoginService;
-import com.study.realworld.domain.auth.application.JwtUserDetailsService;
-import com.study.realworld.domain.auth.application.JwtUserDetailsServiceTest;
 import com.study.realworld.domain.auth.dto.LoginRequest;
 import com.study.realworld.domain.auth.dto.ResponseToken;
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
@@ -16,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 

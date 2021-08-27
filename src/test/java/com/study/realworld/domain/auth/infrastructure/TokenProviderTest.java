@@ -1,7 +1,7 @@
 package com.study.realworld.domain.auth.infrastructure;
 
 import com.study.realworld.domain.auth.dto.ResponseToken;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.global.config.security.jwt.JwtAuthentication;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +15,10 @@ import java.security.Key;
 import java.util.Collections;
 import java.util.Date;
 
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -39,24 +42,12 @@ public class TokenProviderTest {
     @Test
     void createToken_test() {
         final TokenProvider tokenProvider = new TokenProvider(TEST_KEY);
-        final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(User.DEFAULT_AUTHORITY);
-        final JwtAuthentication authentication = new JwtAuthentication(EMAIL, PASSWORD, Collections.singleton(authority));
+        final User user = UserTest.userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
 
-        final ResponseToken token = tokenProvider.createToken(authentication);
+        final ResponseToken token = tokenProvider.createToken(user);
         assertAll(
                 () -> assertThat(token).isNotNull(),
                 () -> assertThat(token).isInstanceOf(ResponseToken.class)
-        );
-    }
-
-    @DisplayName("TokenProvider 인스턴스 validateToken() 테스트")
-    @Test
-    void validateToken_test() {
-        final TokenProvider tokenProvider = new TokenProvider(TEST_KEY);
-
-        assertAll(
-                () -> assertThat(tokenProvider.validateToken(testToken())).isTrue(),
-                () -> assertThat(tokenProvider.validateToken("failToken")).isFalse()
         );
     }
 

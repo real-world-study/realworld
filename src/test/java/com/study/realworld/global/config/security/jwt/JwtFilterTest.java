@@ -1,5 +1,6 @@
 package com.study.realworld.global.config.security.jwt;
 
+import com.study.realworld.domain.user.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,17 +10,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
 import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.testToken;
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
-import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
+import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,25 +54,17 @@ class JwtFilterTest {
         final FilterChain chain = mock(FilterChain.class);
         request.addHeader("Authorization", testToken());
 
-        final UserDetails userDetails = securityUser();
-        final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUserDetails(userDetails);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUser(user);
         doReturn(jwtAuthentication).when(jwtProviderManager).authenticate(any());
 
         jwtFilter.doFilter(request, response, chain);
         final Authentication authentication = getContext().getAuthentication();
         assertAll(
                 () -> assertThat(authentication).isNotNull(),
-                () -> assertThat(authentication.getPrincipal()).isEqualTo(USERNAME),
+                () -> assertThat(authentication.getPrincipal()).isEqualTo(EMAIL),
                 () -> assertThat(authentication.getCredentials()).isEqualTo(PASSWORD)
         );
-    }
-
-    private UserDetails securityUser() {
-        return User.builder()
-                .username(USERNAME)
-                .password(PASSWORD)
-                .authorities(DEFAULT_AUTHORITY)
-                .build();
     }
 
 }

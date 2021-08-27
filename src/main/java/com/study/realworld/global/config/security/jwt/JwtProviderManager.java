@@ -1,6 +1,5 @@
 package com.study.realworld.global.config.security.jwt;
 
-import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTokenException;
 import com.study.realworld.domain.auth.exception.JwtProviderNotSupportTypeException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,6 @@ public class JwtProviderManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
         validateSupportable(authentication);
-        validateToken((String) authentication.getDetails());
         return jwtProvider.authenticate(authentication);
     }
 
@@ -27,12 +25,6 @@ public class JwtProviderManager implements AuthenticationManager {
         if (!jwtProvider.supports(authentication.getClass())) {
             final Class<? extends Authentication> authenticationClass = authentication.getClass();
             throw new JwtProviderNotSupportTypeException(authenticationClass.getSimpleName());
-        }
-    }
-
-    private void validateToken(final String jwt) {
-        if (!jwtProvider.validateToken(jwt)) {
-            throw new JwtProviderNotSupportTokenException();
         }
     }
 

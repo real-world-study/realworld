@@ -1,7 +1,8 @@
 package com.study.realworld.global.config.security.jwt;
 
-import com.study.realworld.domain.auth.application.JwtUserDetailsService;
+import com.study.realworld.domain.user.application.UserFindService;
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
+import com.study.realworld.domain.user.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,13 +13,16 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.testToken;
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
+import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
 import static com.study.realworld.global.config.security.jwt.JwtAuthentication.initAuthentication;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -30,14 +34,13 @@ import static org.mockito.Mockito.doReturn;
 class JwtProviderTest {
 
     @Mock private TokenProvider tokenProvider;
-    @Mock private JwtUserDetailsService jwtUserDetailsService;
+    @Mock private UserFindService userFindService;
     @InjectMocks private JwtProvider jwtProvider;
 
     @DisplayName("JwtAuthenticationProvider 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final JwtProvider jwtProvider =
-                new JwtProvider(jwtUserDetailsService, tokenProvider);
+        final JwtProvider jwtProvider = new JwtProvider(userFindService, tokenProvider);
 
         assertAll(
                 () -> assertThat(jwtProvider).isNotNull(),
@@ -49,16 +52,16 @@ class JwtProviderTest {
     @DisplayName("JwtAuthenticationProvider 인스턴스 authenticate() 테스트")
     @Test
     void authenticate_test() {
-        final UserDetails userDetails = securityUser();
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
-        doReturn(userDetails).when(jwtUserDetailsService).loadUserByUsername(any());
+        doReturn(user).when(userFindService).findUserByEmail(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         final Authentication authenticate = jwtProvider.authenticate(jwtAuthentication);
 
         assertAll(
                 () -> assertThat(authenticate).isNotNull(),
-                () -> assertThat(authenticate.getPrincipal()).isEqualTo(USERNAME),
+                () -> assertThat(authenticate.getPrincipal()).isEqualTo(EMAIL),
                 () -> assertThat(authenticate.getCredentials()).isEqualTo(PASSWORD)
         );
     }
@@ -75,36 +78,16 @@ class JwtProviderTest {
         );
     }
 
-    @DisplayName("JwtAuthenticationProvider 인스턴스 validateToken() 테스트")
-    @Test
-    void validate_test() {
-        doReturn(false).when(tokenProvider).validateToken(any());
-        doReturn(true).when(tokenProvider).validateToken(testToken());
-
-        assertAll(
-                () -> assertThat(jwtProvider.validateToken(testToken())).isTrue(),
-                () -> assertThat(jwtProvider.validateToken("failToken")).isFalse()
-        );
-    }
-
     @DisplayName("JwtAuthenticationProvider 인스턴스 validateUserDetailsNull() 테스트")
     @Test
     void validateUserDetailsNull_test() {
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
-        doReturn(null).when(jwtUserDetailsService).loadUserByUsername(any());
+        doReturn(null).when(userFindService).findUserByEmail(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         assertThatThrownBy(() -> jwtProvider.authenticate(jwtProvider.authenticate(jwtAuthentication)))
                 .isInstanceOf(InternalAuthenticationServiceException.class)
                 .hasMessage("UserDetailsService returned null, which is an interface contract violation");
-    }
-
-    private UserDetails securityUser() {
-        return User.builder()
-                .username(USERNAME)
-                .password(PASSWORD)
-                .authorities(DEFAULT_AUTHORITY)
-                .build();
     }
 
 }

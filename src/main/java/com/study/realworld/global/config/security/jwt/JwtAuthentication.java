@@ -1,11 +1,15 @@
 package com.study.realworld.global.config.security.jwt;
 
+import com.study.realworld.domain.user.domain.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.Collections;
+
+import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
 
 public class JwtAuthentication extends AbstractAuthenticationToken {
 
@@ -18,11 +22,11 @@ public class JwtAuthentication extends AbstractAuthenticationToken {
         return new JwtAuthentication(jwt);
     }
 
-    public static JwtAuthentication ofUserDetails(final UserDetails userDetails) {
-        final String username = userDetails.getUsername();
-        final String password = userDetails.getPassword();
-        final Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-        return new JwtAuthentication(username, password, authorities);
+    public static JwtAuthentication ofUser(final User user) {
+        final String username = user.email().email();
+        final String password = user.password().password();
+        final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(DEFAULT_AUTHORITY);
+        return new JwtAuthentication(username, password, Collections.singleton(authority));
     }
 
     private JwtAuthentication(final String details) {

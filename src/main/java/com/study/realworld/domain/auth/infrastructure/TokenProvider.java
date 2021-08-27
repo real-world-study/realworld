@@ -3,6 +3,8 @@ package com.study.realworld.domain.auth.infrastructure;
 import com.study.realworld.domain.auth.dto.ResponseToken;
 import com.study.realworld.domain.auth.dto.token.AccessToken;
 import com.study.realworld.domain.auth.dto.token.RefreshToken;
+import com.study.realworld.domain.user.domain.Email;
+import com.study.realworld.domain.user.domain.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,17 +32,17 @@ public class TokenProvider {
     }
 
     @Valid
-    public ResponseToken createToken(final Authentication authentication) {
+    public ResponseToken createToken(final User user) {
         final long now = (new Date()).getTime();
-        final AccessToken accessToken = accessToken(authentication, now);
+        final AccessToken accessToken = accessToken(user.email(), now);
         final RefreshToken refreshToken = refreshResponseToken(now);
         return new ResponseToken(accessToken, refreshToken);
     }
 
-    private AccessToken accessToken(final Authentication authentication, final long now) {
+    private AccessToken accessToken(final Email email, final long now) {
         return new AccessToken(Jwts.builder()
                 .signWith(key, HS512)
-                .setSubject(authentication.getName())
+                .setSubject(email.email())
                 .setExpiration(new Date(addExact(now, ACCESS_TOKEN_EXPIRE_TIME)))
                 .compact());
     }
@@ -50,15 +52,6 @@ public class TokenProvider {
                 .signWith(key, HS512)
                 .setExpiration(new Date(addExact(now, REFRESH_TOKEN_EXPIRE_TIME)))
                 .compact());
-    }
-
-    public boolean validateToken(final String token) {
-        try {
-            parseClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     public String mapToUsername(final String token) {
