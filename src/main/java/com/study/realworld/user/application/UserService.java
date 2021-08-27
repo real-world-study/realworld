@@ -36,4 +36,10 @@ public class UserService {
 
         return user;
     }
+
+    @Transactional(readOnly = true)
+    public User getLoginUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow();
+    }
+
 }

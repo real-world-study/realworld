@@ -5,6 +5,7 @@ import com.study.realworld.core.domain.user.repository.UserRepository;
 import com.study.realworld.user.application.model.UserLoginModel;
 import com.study.realworld.user.application.model.UserRegisterModel;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,8 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -83,5 +86,35 @@ class UserServiceTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> userService.login(userLoginModel))
             .withMessage("invalid password");
+    }
+
+    @Test
+    @DisplayName("현재 로그인된 유저 정보 반환 - 성공")
+    void getLoginUserTest() {
+
+        final String email = "chance@chance.com";
+        final String password = "chance";
+        final Long userId = 1L;
+
+        User user = User.builder().email(email).password(password).build();
+
+        doReturn(Optional.ofNullable(user)).when(userRepository).findById(userId);
+
+        Optional<User> loginUser = userRepository.findById(userId);
+
+        assertThat(loginUser.get().getEmail()).isEqualTo(email);
+    }
+
+    @Test
+    @DisplayName("현재 로그인된 유저 정보 반환 - repository에서 찾기 못했을 때")
+    void getLoginUserNotExistTest() {
+
+        final Long userId = 1L;
+
+        doReturn(Optional.empty()).when(userRepository).findById(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThatExceptionOfType(NoSuchElementException.class)
+            .isThrownBy(() -> userService.getLoginUser(userId));
     }
 }
