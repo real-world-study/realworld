@@ -21,8 +21,6 @@ import static org.springframework.util.StringUtils.hasText;
 public class JwtFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer";
-    private static final int BEARER_TOKEN_BEGIN_INDEX = 7;
 
     private final JwtProviderManager jwtProviderManager;
 
@@ -48,8 +46,8 @@ public class JwtFilter extends GenericFilterBean {
     }
 
     private boolean isRunnableFilter(final HttpServletRequest request) {
-        final String bearerToken = mapToAuthorization(request);
-        return (!isNull(bearerToken) && hasText(bearerToken) && bearerToken.startsWith(BEARER));
+        final String token = resolveToken(request);
+        return (!isNull(token) && hasText(token));
     }
 
     private Authentication attemptAuthentication(final HttpServletRequest request) {
@@ -59,11 +57,6 @@ public class JwtFilter extends GenericFilterBean {
     }
 
     private String resolveToken(final HttpServletRequest request) {
-        final String bearerToken = mapToAuthorization(request);
-        return bearerToken.substring(BEARER_TOKEN_BEGIN_INDEX);
-    }
-
-    private String mapToAuthorization(final HttpServletRequest request) {
         return request.getHeader(AUTHORIZATION);
     }
 
