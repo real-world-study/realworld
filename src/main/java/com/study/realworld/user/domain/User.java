@@ -36,8 +36,7 @@ public class User {
     protected User() {
     }
 
-    private User(Long id, Username username, Email email, Password password, String bio,
-        String image) {
+    private User(Long id, Username username, Email email, Password password, String bio, String image) {
         this.id = id;
         this.username = username;
         this.email = email;
