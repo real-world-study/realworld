@@ -13,8 +13,7 @@ public class UserUpdateModel {
     private final String bio;
     private final String image;
 
-    public UserUpdateModel(Username username, Email email, Password password, String bio,
-        String image) {
+    public UserUpdateModel(Username username, Email email, Password password, String bio, String image) {
         this.username = username;
         this.email = email;
         this.password = password;
