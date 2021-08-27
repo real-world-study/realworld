@@ -376,22 +376,20 @@ class UserServiceTest {
         class PasswordTest {
 
             @Test
-            @DisplayName("현재 user와 동일한 password가 들이어오면 변경되지 않아야 한다.")
+            @DisplayName("현재 user와 동일한 password가 들어오면 변경되지 않아야 한다.")
             void updateFailByEqualWithNowPasswordTest() {
 
                 // setup & given
                 Password password = new Password("password");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     password, null, null);
-                when(passwordEncoder.matches("password", "encoded_password"))
-                    .thenReturn(true);
+                when(passwordEncoder.encode("password")).thenReturn("encoded_password");
 
                 // when
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getPassword().getPassword())
-                    .isEqualTo(originUser.getPassword().getPassword());
+                assertThat(result.getPassword().getPassword()).isEqualTo(originUser.getPassword().getPassword());
             }
 
             @Test
@@ -402,7 +400,6 @@ class UserServiceTest {
                 Password password = new Password("passwordChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     password, null, null);
-                when(passwordEncoder.matches("passwordChange", "encoded_password")).thenReturn(false);
                 when(passwordEncoder.encode("passwordChange")).thenReturn("encoded_Change");
 
                 // when

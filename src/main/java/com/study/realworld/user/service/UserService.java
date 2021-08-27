@@ -51,33 +51,24 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
 
         updateUser.getUsername()
-            .filter(username -> !user.getUsername().equals(username))
             .ifPresent(
                 username -> {
                     checkDuplicatedByUsername(username);
                     user.changeUsername(username);
                 });
         updateUser.getEmail()
-            .filter(email -> !user.getEmail().equals(email))
             .ifPresent(
                 email -> {
                     checkDuplicatedByEmail(email);
                     user.changeEmail(email);
                 });
         updateUser.getPassword()
-            .filter(
-                password -> !passwordEncoder
-                    .matches(password.getPassword(), user.getPassword().getPassword()))
             .ifPresent(
                 password -> {
                     user.changePassword(Password.encode(password, passwordEncoder));
                 });
-        updateUser.getBio()
-            .filter(bio -> !user.getBio().equals(bio))
-            .ifPresent(user::changeBio);
-        updateUser.getImage()
-            .filter(image -> !user.getImage().equals(image))
-            .ifPresent(user::changeImage);
+        updateUser.getBio().ifPresent(user::changeBio);
+        updateUser.getImage().ifPresent(user::changeImage);
 
         return user;
     }
