@@ -37,33 +37,26 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<UserResponse> join(@RequestBody UserJoinRequest request) {
         User user = userService.join(request.toUser());
-        return ResponseEntity.ok()
-            .body(fromUserAndToken(user, jwtService.createToken(user)));
+        return ResponseEntity.ok().body(fromUserAndToken(user, jwtService.createToken(user)));
     }
 
     @PostMapping("/users/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
-        User user = userService
-            .login(new Email(request.getEmail()), new Password(request.getPassword()));
-        return ResponseEntity.ok()
-            .body(fromUserAndToken(user, jwtService.createToken(user)));
+        User user = userService.login(new Email(request.getEmail()), new Password(request.getPassword()));
+        return ResponseEntity.ok().body(fromUserAndToken(user, jwtService.createToken(user)));
     }
 
     @GetMapping("/user")
     public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal Long loginId) {
-        User user = userService
-            .findById(loginId).orElseThrow(RuntimeException::new);   // 임시
-        return ResponseEntity.ok()
-            .body(fromUserAndToken(user, getTokenByContextHolder()));
+        User user = userService.findById(loginId).orElseThrow(RuntimeException::new);   // 임시
+        return ResponseEntity.ok().body(fromUserAndToken(user, getTokenByContextHolder()));
     }
 
     @PutMapping("/user")
     public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest request,
         @AuthenticationPrincipal Long loginId) {
-        User user = userService
-            .update(request.toUserUpdateModel(), loginId);
-        return ResponseEntity.ok()
-            .body(fromUserAndToken(user, getTokenByContextHolder()));
+        User user = userService.update(request.toUserUpdateModel(), loginId);
+        return ResponseEntity.ok().body(fromUserAndToken(user, getTokenByContextHolder()));
     }
 
     private String getTokenByContextHolder() {
