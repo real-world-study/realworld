@@ -63,10 +63,7 @@ public class UserService {
                     user.changeEmail(email);
                 });
         updateUser.getPassword()
-            .ifPresent(
-                password -> {
-                    user.changePassword(Password.encode(password, passwordEncoder));
-                });
+            .ifPresent(password -> user.changePassword(Password.encode(password, passwordEncoder)));
         updateUser.getBio().ifPresent(user::changeBio);
         updateUser.getImage().ifPresent(user::changeImage);
 
@@ -74,15 +71,13 @@ public class UserService {
     }
 
     private void checkDuplicatedByUsername(@Valid Username username) {
-        findByUsername(username)
-            .ifPresent(param -> {
+        findByUsername(username).ifPresent(param -> {
                 throw new RuntimeException("already user username");
             });
     }
 
     private void checkDuplicatedByEmail(@Valid Email email) {
-        findByEmail(email)
-            .ifPresent(param -> {
+        findByEmail(email).ifPresent(param -> {
                 throw new RuntimeException("already user email");
             });
     }
