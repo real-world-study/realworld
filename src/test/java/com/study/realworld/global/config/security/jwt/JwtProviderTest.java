@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.TEST_TOKEN;
+import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.testToken;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
@@ -53,7 +53,7 @@ class JwtProviderTest {
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
         doReturn(userDetails).when(jwtUserDetailsService).loadUserByUsername(any());
 
-        final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
+        final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         final Authentication authenticate = jwtProvider.authenticate(jwtAuthentication);
 
         assertAll(
@@ -66,7 +66,7 @@ class JwtProviderTest {
     @DisplayName("JwtAuthenticationProvider 인스턴스 supports() 테스트")
     @Test
     void supports_test() {
-        final JwtAuthentication jwtAuthentication = JwtAuthentication.initAuthentication(TEST_TOKEN);
+        final JwtAuthentication jwtAuthentication = JwtAuthentication.initAuthentication(testToken());
         final TestingAuthenticationToken testingAuthenticationToken = new TestingAuthenticationToken(USERNAME, PASSWORD);
 
         assertAll(
@@ -79,10 +79,10 @@ class JwtProviderTest {
     @Test
     void validate_test() {
         doReturn(false).when(tokenProvider).validateToken(any());
-        doReturn(true).when(tokenProvider).validateToken(TEST_TOKEN);
+        doReturn(true).when(tokenProvider).validateToken(testToken());
 
         assertAll(
-                () -> assertThat(jwtProvider.validateToken(TEST_TOKEN)).isTrue(),
+                () -> assertThat(jwtProvider.validateToken(testToken())).isTrue(),
                 () -> assertThat(jwtProvider.validateToken("failToken")).isFalse()
         );
     }
@@ -93,7 +93,7 @@ class JwtProviderTest {
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
         doReturn(null).when(jwtUserDetailsService).loadUserByUsername(any());
 
-        final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
+        final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         assertThatThrownBy(() -> jwtProvider.authenticate(jwtProvider.authenticate(jwtAuthentication)))
                 .isInstanceOf(InternalAuthenticationServiceException.class)
                 .hasMessage("UserDetailsService returned null, which is an interface contract violation");

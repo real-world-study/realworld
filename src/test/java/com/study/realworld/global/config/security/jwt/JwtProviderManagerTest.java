@@ -13,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.TEST_TOKEN;
+import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.testToken;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
@@ -28,10 +28,8 @@ import static org.mockito.Mockito.doReturn;
 @ExtendWith(MockitoExtension.class)
 class JwtProviderManagerTest {
 
-    @Mock
-    private JwtProvider jwtProvider;
-    @InjectMocks
-    private JwtProviderManager jwtProviderManager;
+    @Mock private JwtProvider jwtProvider;
+    @InjectMocks private JwtProviderManager jwtProviderManager;
 
     @DisplayName("JwtAuthenticationProviderManager 인스턴스 생성자 테스트")
     @Test
@@ -77,7 +75,7 @@ class JwtProviderManagerTest {
         doReturn(true).when(jwtProvider).supports(any());
         doReturn(true).when(jwtProvider).validateToken(any());
 
-        final JwtAuthentication jwtAuthentication = initAuthentication(TEST_TOKEN);
+        final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         final Authentication authentication = jwtProviderManager.authenticate(jwtAuthentication);
         assertAll(
                 () -> assertThat(authentication).isNotNull(),

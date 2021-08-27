@@ -3,11 +3,17 @@ package com.study.realworld.domain.auth.infrastructure;
 import com.study.realworld.domain.auth.dto.ResponseToken;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.global.config.security.jwt.JwtAuthentication;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.security.Key;
 import java.util.Collections;
+import java.util.Date;
 
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
@@ -18,7 +24,6 @@ public class TokenProviderTest {
 
     // spring-boot-security-jwt-tutorial-jiwoon-spring-boot-security-jwt-tutorial
     public static final String TEST_KEY = "c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK";
-    public static final String TEST_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqYWtlQGpha2UuamFrZSIsImV4cCI6MTYzMDA2NTgxM30.vptw2W1PQcKGeKuWRUmU5qLx6D_pLoMcrt9l3Xib9JPt8zLZRg3BAFjAe4qMziQFOJwj5g8TbStCfxUjlPRKkg";
 
     @DisplayName("TokenProvider 인스턴스 생성자 테스트")
     @Test
@@ -50,7 +55,7 @@ public class TokenProviderTest {
         final TokenProvider tokenProvider = new TokenProvider(TEST_KEY);
 
         assertAll(
-                () -> assertThat(tokenProvider.validateToken(TEST_TOKEN)).isTrue(),
+                () -> assertThat(tokenProvider.validateToken(testToken())).isTrue(),
                 () -> assertThat(tokenProvider.validateToken("failToken")).isFalse()
         );
     }
@@ -59,11 +64,18 @@ public class TokenProviderTest {
     @Test
     void mapToUser_test() {
         final TokenProvider tokenProvider = new TokenProvider(TEST_KEY);
-        assertThat(tokenProvider.mapToUsername(TEST_TOKEN)).isEqualTo("jake@jake.jake");
+        assertThat(tokenProvider.mapToUsername(testToken())).isEqualTo(EMAIL);
     }
 
-    public static TokenProvider tokenProvider() {
-        return new TokenProvider(TEST_KEY);
+    public static final String testToken() {
+        final byte[] keyBytes = Decoders.BASE64.decode(TEST_KEY);
+        final Key key = Keys.hmacShaKeyFor(keyBytes);
+        final long now = (new Date()).getTime();
+        return Jwts.builder()
+                .setSubject(EMAIL)
+                .setExpiration(new Date(now + 300_000))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
     }
 
 }

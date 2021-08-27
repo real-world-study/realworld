@@ -32,7 +32,7 @@ public final class UserResponse {
     UserResponse() {
     }
 
-    private UserResponse(final User user, ResponseToken responseToken) {
+    private UserResponse(final User user, final ResponseToken responseToken) {
         this.email = user.email();
         this.username = user.username();
         this.responseToken = responseToken;

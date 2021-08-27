@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import java.security.Key;
 import java.util.Date;
 
@@ -28,6 +29,7 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    @Valid
     public ResponseToken createToken(final Authentication authentication) {
         final long now = (new Date()).getTime();
         final AccessToken accessToken = accessToken(authentication, now);

@@ -42,8 +42,4 @@ public class UserResponseTest {
         );
     }
 
-    public static final UserResponse userJoinResponse(final User user, final ResponseToken responseToken) {
-        return UserResponse.fromUserWithToken(user, responseToken);
-    }
-
 }
