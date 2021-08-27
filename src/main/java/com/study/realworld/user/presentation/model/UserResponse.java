@@ -1,5 +1,6 @@
 package com.study.realworld.user.presentation.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.core.domain.user.entity.User;
@@ -33,6 +34,7 @@ public class UserResponse {
 
     private final String image;
 
+    @JsonProperty("token")
     private final String accessToken;
 
     public static UserResponse createResponse(User user, String accessToken) {
