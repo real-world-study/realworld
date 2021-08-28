@@ -1,6 +1,7 @@
 package com.study.realworld.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collection;
@@ -15,50 +16,31 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class EmailTest {
 
-    private Validator validator;
-
-    @BeforeEach
-    void beforeEach() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
-    }
-
     @Test
     void emailTest() {
         Email email = new Email();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {" ", "test1test.com", "test1@@test.com", "test@test..com"})
+    @ValueSource(strings = {"test1test.com", "test1@@test.com", "test@test..com"})
     @DisplayName("이메일 양식이 지켜지지 않은 Email는 validate된다.")
     void validEmailTest(String input) {
 
-        // given
-        Email email = new Email(input);
-
-        // when
-        Collection<ConstraintViolation<Email>> constraintViolations
-            = validator.validate(email);
-
-        // then
-        assertEquals(1, constraintViolations.size());
-        assertEquals("Invalid email address", constraintViolations.iterator().next().getMessage());
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> new Email(input))
+            .withMessageMatching("address must be provided by limited pattern like 'xxx@xxx.xxx'.");
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "   "})
     @DisplayName("공백인 Email은 validate된다.")
-    void blankEmailTest() {
+    void blankEmailTest(String input) {
 
-        // given
-        Email email = new Email("");
-
-        // when
-        Collection<ConstraintViolation<Email>> constraintViolations
-            = validator.validate(email);
-
-        // then
-        assertEquals(1, constraintViolations.size());
-        assertEquals("address must be provided.",
-            constraintViolations.iterator().next().getMessage());
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> new Email(input))
+            .withMessageMatching("address must be provided.");
     }
 
     @Test
@@ -66,16 +48,13 @@ class EmailTest {
     void nullEmailTest() {
 
         // given
-        Email email = new Email(null);
+        String input = null;
 
-        // when
-        Collection<ConstraintViolation<Email>> constraintViolations
-            = validator.validate(email);
-
-        // then
-        assertEquals(1, constraintViolations.size());
-        assertEquals("address must be provided.",
-            constraintViolations.iterator().next().getMessage());
+        // when & given
+        // when & then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> new Email(input))
+            .withMessageMatching("address must be provided.");
     }
 
     @Test

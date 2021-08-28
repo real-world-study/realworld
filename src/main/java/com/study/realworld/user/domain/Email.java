@@ -1,15 +1,16 @@
 package com.study.realworld.user.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.regex.Pattern.matches;
+
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotEmpty;
+import org.apache.commons.lang3.StringUtils;
 
 @Embeddable
 public class Email {
 
-    @NotEmpty(message = "address must be provided.")
-    @javax.validation.constraints.Email(message = "Invalid email address")
     @Column(name = "email", length = 50, unique = true, nullable = false)
     private String address;
 
@@ -17,7 +18,18 @@ public class Email {
     }
 
     public Email(String address) {
+        checkEmail(address);
+
         this.address = address;
+    }
+
+    private static void checkEmail(String address) {
+        checkArgument(StringUtils.isNotBlank(address), "address must be provided.");
+        checkArgument(checkEmailPattern(address), "address must be provided by limited pattern like 'xxx@xxx.xxx'.");
+    }
+
+    private static boolean checkEmailPattern(String address) {
+        return matches("[\\w~\\-.+]+@[\\w~\\-]+(\\.[\\w~\\-]+)+", address);
     }
 
     @Override
