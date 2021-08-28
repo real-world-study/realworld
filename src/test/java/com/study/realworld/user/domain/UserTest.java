@@ -60,7 +60,7 @@ class UserTest {
         User input = User.Builder()
             .id(1L)
             .username(new Username("username"))
-            .email(new Email("email"))
+            .email(new Email("test@test.com"))
             .password(new Password("password"))
             .bio("bio")
             .image("image")
