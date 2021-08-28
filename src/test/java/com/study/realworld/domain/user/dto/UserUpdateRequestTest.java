@@ -13,7 +13,7 @@ import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserUpdateRequestTest {
+public class UserUpdateRequestTest {
 
     @DisplayName("UserUpdateRequest 기본 생성자 테스트")
     @Test
