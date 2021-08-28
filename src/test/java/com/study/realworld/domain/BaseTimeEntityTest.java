@@ -8,19 +8,18 @@ import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class BaseTimeEntityTest {
 
     @DisplayName("BaseTimeEntity 인스턴스 생성 테스트")
     @Test
     void constructor_test() {
-        final LocalDateTime now = now();
-        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity();
+        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity(){};
 
         assertAll(
                 () -> assertThat(baseTimeEntity).isNotNull(),
-                () -> assertThat(baseTimeEntity).isExactlyInstanceOf(BaseTimeEntity.class)
+                () -> assertThat(baseTimeEntity).isInstanceOf(BaseTimeEntity.class)
         );
     }
 
@@ -28,7 +27,7 @@ class BaseTimeEntityTest {
     @Test
     void getter_test() {
         final LocalDateTime now = now();
-        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity();
+        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity(){};
         final LocalDateTime deletedAt = now().plusMinutes(1);
 
         ReflectionTestUtils.setField(baseTimeEntity, "createdAt", now);
@@ -46,7 +45,7 @@ class BaseTimeEntityTest {
     @Test
     void deletedAt_test() {
         final LocalDateTime now = now();
-        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity();
+        final BaseTimeEntity baseTimeEntity = new BaseTimeEntity(){};
         final LocalDateTime deletedAt = now().plusMinutes(1);
 
         ReflectionTestUtils.setField(baseTimeEntity, "createdAt", now);

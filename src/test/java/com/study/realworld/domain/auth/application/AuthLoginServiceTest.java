@@ -1,0 +1,83 @@
+package com.study.realworld.domain.auth.application;
+
+import com.study.realworld.domain.user.domain.*;
+import com.study.realworld.domain.user.exception.PasswordMissMatchException;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+
+@ExtendWith(MockitoExtension.class)
+class AuthLoginServiceTest {
+
+    @Mock private UserRepository userRepository;
+    @Mock private PasswordEncoder passwordEncoder;
+    @InjectMocks private AuthLoginService authLoginService;
+
+    @DisplayName("AuthLoginService 인스턴스 생성자 테스트")
+    @Test
+    void constructor_test() {
+        final AuthLoginService authLoginService = new AuthLoginService(userRepository, passwordEncoder);
+
+        assertAll(
+                () -> assertThat(authLoginService).isNotNull(),
+                () -> assertThat(authLoginService).isExactlyInstanceOf(AuthLoginService.class)
+        );
+    }
+
+    @DisplayName("AuthLoginService 인스턴스 login 테스트")
+    @Test
+    void login_test() {
+        final Email email = new Email(EMAIL);
+        final String rawPasswordString = "encode not yet";
+        final Password rawPassword = new Password(rawPasswordString);
+        final User joinedUser = UserTest.userBuilder(email, new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(joinedUser));
+        given(passwordEncoder.matches(rawPasswordString, PASSWORD)).willReturn(true);
+
+        final User user = authLoginService.login(email, rawPassword);
+
+        then(userRepository).should(times(1)).findByEmail(any());
+        assertAll(
+                () -> assertThat(user.username()).isEqualTo(joinedUser.username()),
+                () -> assertThat(user.bio()).isEqualTo(joinedUser.bio()),
+                () -> assertThat(user.image()).isEqualTo(joinedUser.image()),
+                () -> assertThat(user.email()).isEqualTo(joinedUser.email())
+        );
+    }
+
+    @DisplayName("AuthLoginService 인스턴스 login 실패 테스트")
+    @Test
+    void login_fail_test() {
+        final Email email = new Email(EMAIL);
+        final String rawPasswordString = "encode not yet";
+        final Password rawPassword = new Password(rawPasswordString);
+        final User joinedUser = UserTest.userBuilder(email, new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(joinedUser));
+        given(passwordEncoder.matches(rawPasswordString, PASSWORD)).willReturn(false);
+
+        assertThatThrownBy(() -> authLoginService.login(email, rawPassword))
+                .isInstanceOf(PasswordMissMatchException.class)
+                .hasMessage("password is not match");
+        then(userRepository).should(times(1)).findByEmail(any());
+    }
+
+}

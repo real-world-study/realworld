@@ -1,36 +1,50 @@
 package com.study.realworld.domain.user.domain;
 
 import com.study.realworld.domain.BaseTimeEntity;
+import com.study.realworld.domain.user.exception.PasswordMissMatchException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
 @Entity
 public class User extends BaseTimeEntity {
 
+    public static final String DEFAULT_AUTHORITY = "USER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "user_email", length = 50, nullable = false, unique = true)
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "email", column =
+    @Column(name = "email", length = 50, nullable = false, unique = true))
+    private Email email;
 
-    @Column(name = "user_username", length = 20, nullable = false)
-    private String username;
+    @Embedded
+    @AttributeOverride(name = "name", column =
+    @Column(name = "username", length = 20, nullable = false))
+    private Name username;
 
-    @Column(name = "uesr_password", nullable = false)
-    private String password;
+    @Embedded
+    @AttributeOverride(name = "password", column =
+    @Column(name = "password", nullable = false))
+    private Password password;
 
-    @Column(name = "user_bio")
-    private String bio;
+    @Embedded
+    @AttributeOverride(name = "bio", column =
+    @Column(name = "bio"))
+    private Bio bio;
 
-    @Column(name = "user_image")
-    private String image;
+    @Embedded
+    @AttributeOverride(name = "path", column =
+    @Column(name = "image"))
+    private Image image;
 
     protected User() {
     }
 
-    private User(final UserBuilder userBuilder) {
+    protected User(final UserBuilder userBuilder) {
         this.email = userBuilder.email;
         this.username = userBuilder.username;
         this.password = userBuilder.password;
@@ -38,19 +52,19 @@ public class User extends BaseTimeEntity {
         this.image = userBuilder.image;
     }
 
-    public String email() {
+    public Email email() {
         return email;
     }
 
-    public String username() {
+    public Name username() {
         return username;
     }
 
-    public String bio() {
+    public Bio bio() {
         return bio;
     }
 
-    public String image() {
+    public Image image() {
         return image;
     }
 
@@ -58,41 +72,52 @@ public class User extends BaseTimeEntity {
         return new UserBuilder();
     }
 
-    public boolean checkPassword(final String otherPassword) {
-        return password.equals(otherPassword);
+    public void login(final Password rawPassword, final PasswordEncoder passwordEncoder) {
+        if(!password.matches(rawPassword, passwordEncoder)){
+            throw new PasswordMissMatchException();
+        }
+    }
+
+    public User encode(final PasswordEncoder passwordEncoder) {
+        this.password = Password.encode(password, passwordEncoder);
+        return this;
+    }
+
+    public Password password() {
+        return password;
     }
 
     public static class UserBuilder {
-        private String email;
-        private String username;
-        private String password;
-        private String bio;
-        private String image;
-
+        private Email email;
+        private Name username;
+        private Password password;
+        private Bio bio;
+        private Image image;
+      
         private UserBuilder() {
         }
 
-        public UserBuilder email(final String email) {
+        public UserBuilder email(final Email email) {
             this.email = email;
             return this;
         }
 
-        public UserBuilder username(final String username) {
+        public UserBuilder username(final Name username) {
             this.username = username;
             return this;
         }
 
-        public UserBuilder password(final String password) {
+        public UserBuilder password(final Password password) {
             this.password = password;
             return this;
         }
 
-        public UserBuilder bio(final String bio) {
+        public UserBuilder bio(final Bio bio) {
             this.bio = bio;
             return this;
         }
 
-        public UserBuilder image(final String image) {
+        public UserBuilder image(final Image image) {
             this.image = image;
             return this;
         }

@@ -8,7 +8,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
 
-import static com.study.realworld.domain.user.domain.UserTest.*;
+import static com.study.realworld.domain.user.domain.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -21,7 +26,7 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 save() 테스트")
     @Test
     void save_test() {
-        final User expected = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
+        final User expected = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final User actual = userRepository.save(expected);
 
         assertThat(actual).isEqualTo(expected);
@@ -30,9 +35,20 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 findById() 테스트")
     @Test
     void findById_test() {
-        final User user = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final User expected = testEntityManager.persist(user);
         final User actual = userRepository.findById(1L).get();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("UserRepository 인스턴스 findByEmail() 테스트")
+    @Test
+    void findByEmail_test() {
+        final Email email = new Email(EMAIL);
+        final User user = userBuilder(email, new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final User expected = testEntityManager.persist(user);
+        final User actual = userRepository.findByEmail(email).get();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -40,7 +56,7 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 findAll() 테스트")
     @Test
     void findAll_test() {
-        final User user = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final User expected = testEntityManager.persist(user);
         final List<User> users = (List<User>) userRepository.findAll();
 
@@ -53,22 +69,11 @@ class UserRepositoryTest {
     @DisplayName("UserRepository 인스턴스 delete() 테스트")
     @Test
     void delete_test() {
-        final User user = userBuilder(EMAIL, USERNAME, PASSWORD, BIO, IMAGE);
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         testEntityManager.persist(user);
         userRepository.delete(user);
 
         assertThat(userRepository.count()).isEqualTo(0);
-    }
-
-    private static final User userBuilder(final String email, final String username,
-                                          final String password, final String bio, final String image) {
-        return User.Builder()
-                .email(email)
-                .username(username)
-                .password(password)
-                .bio(bio)
-                .image(image)
-                .build();
     }
 
 }
