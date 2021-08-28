@@ -68,15 +68,16 @@ public class UserTest {
     void change_test() {
         final Email updateEmail = new Email("updateEmail");
         final Bio updateBio = new Bio("updateBio");
-        final Email updateImage = new Email("updateImage");
+        final Image updateImage = new Image("updateImage");
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
 
-        assertAll(
-                () -> assertThat(user.changeEmail(updateEmail).email()).isEqualTo(updateEmail),
-                () -> assertThat(user.changeBio(updateBio).email()).isEqualTo(updateBio),
-                () -> assertThat(user.changeImage(updateImage).email()).isEqualTo(updateImage)
-        );
+        user.changeEmail(updateEmail).changeBio(updateBio).changeImage(updateImage);
 
+        assertAll(
+                () -> assertThat(user.email()).isEqualTo(updateEmail),
+                () -> assertThat(user.bio()).isEqualTo(updateBio),
+                () -> assertThat(user.image()).isEqualTo(updateImage)
+        );
     }
 
     public static final User userBuilder(final Email email, final Name username,

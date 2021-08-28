@@ -15,11 +15,11 @@ public class UserUpdateService {
         this.userRepository = userRepository;
     }
 
-//    // 중간 모델 도입할지 의문
-//    public User update(final User user) { // ??
-//        final User findUser = findUserByEmail(user);
-////        findUser.changeEmail(user.email());
-//    }
+    // 중간 모델 도입할지 의문
+    public User update(final User user) { // ??
+        final User findUser = findUserByEmail(user);
+        return findUser; // 다른 테스트 먼저
+    }
 
     private User findUserByEmail(final User user) {
         return userRepository.findByEmail(user.email())

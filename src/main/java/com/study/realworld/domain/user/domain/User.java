@@ -52,6 +52,17 @@ public class User extends BaseTimeEntity {
         this.image = userBuilder.image;
     }
 
+    public void login(final Password rawPassword, final PasswordEncoder passwordEncoder) {
+        if(!password.matches(rawPassword, passwordEncoder)){
+            throw new PasswordMissMatchException();
+        }
+    }
+
+    public User encode(final PasswordEncoder passwordEncoder) {
+        this.password = Password.encode(password, passwordEncoder);
+        return this;
+    }
+
     public Email email() {
         return email;
     }
@@ -68,23 +79,27 @@ public class User extends BaseTimeEntity {
         return image;
     }
 
-    public static UserBuilder Builder() {
-        return new UserBuilder();
+    public Password password() {
+        return password;
     }
 
-    public void login(final Password rawPassword, final PasswordEncoder passwordEncoder) {
-        if(!password.matches(rawPassword, passwordEncoder)){
-            throw new PasswordMissMatchException();
-        }
-    }
-
-    public User encode(final PasswordEncoder passwordEncoder) {
-        this.password = Password.encode(password, passwordEncoder);
+    public User changeEmail(final Email email) {
+        this.email = email;
         return this;
     }
 
-    public Password password() {
-        return password;
+    public User changeBio(final Bio bio) {
+        this.bio = bio;
+        return this;
+    }
+
+    public User changeImage(final Image iamge) {
+        this.image = iamge;
+        return this;
+    }
+
+    public static UserBuilder Builder() {
+        return new UserBuilder();
     }
 
     public static class UserBuilder {

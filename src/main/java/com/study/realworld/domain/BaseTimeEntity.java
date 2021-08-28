@@ -1,5 +1,7 @@
 package com.study.realworld.domain;
 
+import com.study.realworld.domain.user.domain.Email;
+import com.study.realworld.domain.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
