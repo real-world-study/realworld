@@ -53,9 +53,9 @@ public class UserUpdateRequest {
 
     public UserUpdateModel toUserUpdateModel() {
         return new UserUpdateModel(
-            Optional.ofNullable(getUsername()).map(Username::new).orElse(null),
-            Optional.ofNullable(getEmail()).map(Email::new).orElse(null),
-            Optional.ofNullable(getPassword()).map(Password::new).orElse(null),
+            new Username(getUsername()),
+            new Email(getEmail()),
+            new Password(getPassword()),
             getBio(),
             getImage()
         );
