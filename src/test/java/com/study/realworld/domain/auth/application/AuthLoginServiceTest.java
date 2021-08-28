@@ -1,6 +1,7 @@
 package com.study.realworld.domain.auth.application;
 
 import com.study.realworld.domain.user.domain.*;
+import com.study.realworld.domain.user.exception.EmailNotFoundException;
 import com.study.realworld.domain.user.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -77,6 +79,20 @@ class AuthLoginServiceTest {
         assertThatThrownBy(() -> authLoginService.login(email, rawPassword))
                 .isInstanceOf(PasswordMissMatchException.class)
                 .hasMessage("패스워드가 일치하지 않습니다.");
+        then(userRepository).should(times(1)).findByEmail(any());
+    }
+
+    @DisplayName("AuthLoginService 인스턴스 findByEmail() 실패 테스트")
+    @Test
+    void findByEmail_fail_test() {
+        final Email email = new Email(EMAIL);
+        final String rawPasswordString = "encode not yet";
+        final Password rawPassword = new Password(rawPasswordString);
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(null));
+
+        assertThatThrownBy(() -> authLoginService.login(email, rawPassword))
+                .isInstanceOf(EmailNotFoundException.class)
+                .hasMessage(String.format("이메일 : [ %s ] 를 찾을 수 없습니다.", EMAIL));
         then(userRepository).should(times(1)).findByEmail(any());
     }
 

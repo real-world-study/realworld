@@ -58,7 +58,9 @@ class JwtProviderManagerTest {
     @DisplayName("JwtAuthenticationProviderManager 인스턴스 support() 테스트")
     @Test
     void authenticate_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
         final JwtAuthentication returnedAuthentication = ofUser(user);
         doReturn(returnedAuthentication).when(jwtProvider).authenticate(any());
         doReturn(true).when(jwtProvider).supports(any());
@@ -67,8 +69,8 @@ class JwtProviderManagerTest {
         final Authentication authentication = jwtProviderManager.authenticate(jwtAuthentication);
         assertAll(
                 () -> assertThat(authentication).isNotNull(),
-                () -> assertThat(authentication.getPrincipal()).isEqualTo(EMAIL),
-                () -> assertThat(authentication.getCredentials()).isEqualTo(PASSWORD)
+                () -> assertThat(authentication.getPrincipal()).isEqualTo(email),
+                () -> assertThat(authentication.getCredentials()).isEqualTo(password)
         );
     }
 

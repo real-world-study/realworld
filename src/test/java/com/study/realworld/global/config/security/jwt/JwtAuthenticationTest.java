@@ -64,12 +64,14 @@ class JwtAuthenticationTest {
     @DisplayName("JwtAuthentication 인스턴스 getter 기능 테스트")
     @Test
     void getter_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
         final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUser(user);
 
         assertAll(
-                () -> assertThat(jwtAuthentication.getPrincipal()).isEqualTo(EMAIL),
-                () -> assertThat(jwtAuthentication.getCredentials()).isEqualTo(PASSWORD)
+                () -> assertThat(jwtAuthentication.getPrincipal()).isEqualTo(email),
+                () -> assertThat(jwtAuthentication.getCredentials()).isEqualTo(password)
         );
     }
 

@@ -54,7 +54,9 @@ class JwtFilterTest {
         final FilterChain chain = mock(FilterChain.class);
         request.addHeader("Authorization", testToken());
 
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
         final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUser(user);
         doReturn(jwtAuthentication).when(jwtProviderManager).authenticate(any());
 
@@ -62,8 +64,8 @@ class JwtFilterTest {
         final Authentication authentication = getContext().getAuthentication();
         assertAll(
                 () -> assertThat(authentication).isNotNull(),
-                () -> assertThat(authentication.getPrincipal()).isEqualTo(EMAIL),
-                () -> assertThat(authentication.getCredentials()).isEqualTo(PASSWORD)
+                () -> assertThat(authentication.getPrincipal()).isEqualTo(email),
+                () -> assertThat(authentication.getCredentials()).isEqualTo(password)
         );
     }
 

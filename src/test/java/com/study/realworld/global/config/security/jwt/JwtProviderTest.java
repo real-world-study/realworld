@@ -52,7 +52,9 @@ class JwtProviderTest {
     @DisplayName("JwtAuthenticationProvider 인스턴스 authenticate() 테스트")
     @Test
     void authenticate_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
         doReturn(user).when(userFindService).findUserByEmail(any());
 
@@ -61,8 +63,8 @@ class JwtProviderTest {
 
         assertAll(
                 () -> assertThat(authenticate).isNotNull(),
-                () -> assertThat(authenticate.getPrincipal()).isEqualTo(EMAIL),
-                () -> assertThat(authenticate.getCredentials()).isEqualTo(PASSWORD)
+                () -> assertThat(authenticate.getPrincipal()).isEqualTo(email),
+                () -> assertThat(authenticate.getCredentials()).isEqualTo(password)
         );
     }
 

@@ -3,6 +3,7 @@ package com.study.realworld.domain.user.application;
 import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserUpdateRequest;
 import com.study.realworld.domain.user.exception.AlreadyExistEmailException;
+import com.study.realworld.domain.user.exception.EmailNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,6 +88,21 @@ class UserUpdateServiceTest {
         assertThatThrownBy(() -> userUpdateService.update(userUpdateRequest.toEntity(), email))
                 .isInstanceOf(AlreadyExistEmailException.class)
                 .hasMessage(String.format("이메일 : [ %s ] 가 이미 존재합니다.", email.email()));
+    }
+
+    @DisplayName("UserUpdateService 인스턴스 findByEmail() 실패 테스트")
+    @Test
+    void fail_findByEmail_test() {
+        final Email email = new Email(EMAIL);
+        final Email updateEmail = new Email("updateEmail");
+        final Bio updateBio = new Bio("updateBio");
+        final Image updateImage = new Image("updateImage");
+        doReturn(Optional.ofNullable(null)).when(userRepository).findByEmail(any());
+
+        final UserUpdateRequest userUpdateRequest = new UserUpdateRequest(updateEmail, updateBio, updateImage);
+        assertThatThrownBy(() -> userUpdateService.update(userUpdateRequest.toEntity(), email))
+                .isInstanceOf(EmailNotFoundException.class)
+                .hasMessage(String.format("이메일 : [ %s ] 를 찾을 수 없습니다.", email.email()));
     }
 
 }
