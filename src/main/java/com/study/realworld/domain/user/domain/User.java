@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
+import static java.util.Objects.isNull;
+
 @Entity
 public class User extends BaseTimeEntity {
 
@@ -84,18 +86,27 @@ public class User extends BaseTimeEntity {
     }
 
     public User changeEmail(final Email email) {
+        validateArgumentNull(email);
         this.email = email;
         return this;
     }
 
     public User changeBio(final Bio bio) {
+        validateArgumentNull(email);
         this.bio = bio;
         return this;
     }
 
-    public User changeImage(final Image iamge) {
-        this.image = iamge;
+    public User changeImage(final Image image) {
+        validateArgumentNull(email);
+        this.image = image;
         return this;
+    }
+
+    private void validateArgumentNull(final Object argument) {
+        if(isNull(argument)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public static UserBuilder Builder() {
