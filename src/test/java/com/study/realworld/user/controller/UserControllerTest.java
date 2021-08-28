@@ -26,6 +26,7 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
+import java.security.Principal;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,8 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -191,14 +194,16 @@ class UserControllerTest {
             .email(new Email("test@test.com"))
             .password(new Password("password"))
             .build();
-        when(userService.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(1L)).thenReturn(Optional.ofNullable(user));
         SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
 
         // given
         final String URL = "/api/user";
 
         // when
+        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(1L, "1q2w3e4r");
         ResultActions resultActions = mockMvc.perform(get(URL)
+            .principal(authenticationToken)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
