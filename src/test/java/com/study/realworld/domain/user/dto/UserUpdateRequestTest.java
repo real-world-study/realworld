@@ -3,6 +3,7 @@ package com.study.realworld.domain.user.dto;
 import com.study.realworld.domain.user.domain.Bio;
 import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.Image;
+import com.study.realworld.domain.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,23 @@ class UserUpdateRequestTest {
         assertAll(
                 () -> assertThat(userUpdateRequest).isNotNull(),
                 () -> assertThat(userUpdateRequest).isExactlyInstanceOf(UserUpdateRequest.class)
+        );
+    }
+
+    @DisplayName("UserUpdateRequest 인스턴스 toEntity() 테스트")
+    @Test
+    void toEntity_test() {
+        final Email email = new Email(EMAIL);
+        final Bio bio = new Bio(BIO);
+        final Image image = new Image(IMAGE);
+        final UserUpdateRequest userUpdateRequest = new UserUpdateRequest(email, bio, image);
+
+        final User user = userUpdateRequest.toEntity();
+
+        assertAll(
+                () -> assertThat(user.email()).isEqualTo(email),
+                () -> assertThat(user.bio()).isEqualTo(bio),
+                () -> assertThat(user.image()).isEqualTo(image)
         );
     }
 
