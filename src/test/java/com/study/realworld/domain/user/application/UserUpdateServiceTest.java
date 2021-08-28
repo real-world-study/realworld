@@ -2,6 +2,7 @@ package com.study.realworld.domain.user.application;
 
 import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserUpdateRequest;
+import com.study.realworld.domain.user.exception.AlreadyExistEmailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,7 +85,8 @@ class UserUpdateServiceTest {
 
         final UserUpdateRequest userUpdateRequest = new UserUpdateRequest(email, updateBio, updateImage);
         assertThatThrownBy(() -> userUpdateService.update(userUpdateRequest.toEntity(), email))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(AlreadyExistEmailException.class)
+                .hasMessage(String.format("이메일 : [ %s ] 가 이미 존재합니다.", email.email()));
     }
 
 }

@@ -76,7 +76,7 @@ class AuthLoginServiceTest {
 
         assertThatThrownBy(() -> authLoginService.login(email, rawPassword))
                 .isInstanceOf(PasswordMissMatchException.class)
-                .hasMessage("password is not match");
+                .hasMessage("패스워드가 일치하지 않습니다.");
         then(userRepository).should(times(1)).findByEmail(any());
     }
 

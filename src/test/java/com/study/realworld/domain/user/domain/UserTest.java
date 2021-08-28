@@ -60,7 +60,7 @@ public class UserTest {
 
         assertThatThrownBy(() -> user.login(invalidPassword, PASSWORD_ENCODER))
                 .isInstanceOf(PasswordMissMatchException.class)
-                .hasMessage("password is not match");
+                .hasMessage("패스워드가 일치하지 않습니다.");
     }
 
     @DisplayName("User 인스턴스 change() 테스트")
