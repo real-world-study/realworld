@@ -63,6 +63,22 @@ public class UserTest {
                 .hasMessage("password is not match");
     }
 
+    @DisplayName("User 인스턴스 change() 테스트")
+    @Test
+    void change_test() {
+        final Email updateEmail = new Email("updateEmail");
+        final Bio updateBio = new Bio("updateBio");
+        final Email updateImage = new Email("updateImage");
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
+
+        assertAll(
+                () -> assertThat(user.changeEmail(updateEmail).email()).isEqualTo(updateEmail),
+                () -> assertThat(user.changeBio(updateBio).email()).isEqualTo(updateBio),
+                () -> assertThat(user.changeImage(updateImage).email()).isEqualTo(updateImage)
+        );
+
+    }
+
     public static final User userBuilder(final Email email, final Name username,
                                          final Password password, final Bio bio, final Image image) {
         return User.Builder()

@@ -1,5 +1,6 @@
 package com.study.realworld.domain.user.application;
 
+import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,17 @@ public class UserUpdateService {
 
     public UserUpdateService(final UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+//    // 중간 모델 도입할지 의문
+//    public User update(final User user) { // ??
+//        final User findUser = findUserByEmail(user);
+////        findUser.changeEmail(user.email());
+//    }
+
+    private User findUserByEmail(final User user) {
+        return userRepository.findByEmail(user.email())
+                .orElseThrow(IllegalArgumentException::new);
     }
 
 }
