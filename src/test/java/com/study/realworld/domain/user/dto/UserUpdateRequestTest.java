@@ -55,4 +55,8 @@ class UserUpdateRequestTest {
         );
     }
 
+    public static final UserUpdateRequest userUpdateRequest(final Email email, final Bio bio, final Image image) {
+        return new UserUpdateRequest(email, bio, image);
+    }
+
 }
