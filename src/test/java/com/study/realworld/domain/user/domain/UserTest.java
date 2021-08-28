@@ -80,6 +80,17 @@ public class UserTest {
         );
     }
 
+    @DisplayName("User 인스턴스 change() 시에 Null 들어갈 경우 실패 테스트")
+    @Test
+    void argumentNull_test() {
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE)).encode(PASSWORD_ENCODER);
+        assertAll(
+                () -> assertThatThrownBy(() -> user.changeEmail(null)).isInstanceOf(IllegalArgumentException.class),
+                () -> assertThatThrownBy(() -> user.changeBio(null)).isInstanceOf(IllegalArgumentException.class),
+                () -> assertThatThrownBy(() -> user.changeImage(null)).isInstanceOf(IllegalArgumentException.class)
+        );
+    }
+
     public static final User userBuilder(final Email email, final Name username,
                                          final Password password, final Bio bio, final Image image) {
         return User.Builder()

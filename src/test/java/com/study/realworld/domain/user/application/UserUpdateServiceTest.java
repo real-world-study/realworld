@@ -18,6 +18,7 @@ import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -52,8 +53,9 @@ class UserUpdateServiceTest {
 
         final Name username = new Name(USERNAME);
         final Password password = new Password(PASSWORD);
-        final User user = userBuilder(new Email(EMAIL), username, password, new Bio(BIO), new Image(IMAGE));
+        final User user = userBuilder(email, username, password, new Bio(BIO), new Image(IMAGE));
         doReturn(Optional.ofNullable(user)).when(userRepository).findByEmail(any());
+        doReturn(false).when(userRepository).existsByEmail(any());
 
         final UserUpdateRequest userUpdateRequest = new UserUpdateRequest(updateEmail, updateBio, updateImage);
         final User updatedUser = userUpdateService.update(userUpdateRequest.toEntity(), email);
@@ -65,6 +67,24 @@ class UserUpdateServiceTest {
                 () -> assertThat(updatedUser.bio()).isEqualTo(updateBio),
                 () -> assertThat(updatedUser.image()).isEqualTo(updateImage)
         );
+    }
+
+    @DisplayName("UserUpdateService 인스턴스 update() 실패 테스트")
+    @Test
+    void fail_update_test() {
+        final Email email = new Email(EMAIL);
+        final Bio updateBio = new Bio("updateBio");
+        final Image updateImage = new Image("updateImage");
+
+        final Name username = new Name(USERNAME);
+        final Password password = new Password(PASSWORD);
+        final User user = userBuilder(email, username, password, new Bio(BIO), new Image(IMAGE));
+        doReturn(Optional.ofNullable(user)).when(userRepository).findByEmail(any());
+        doReturn(true).when(userRepository).existsByEmail(any());
+
+        final UserUpdateRequest userUpdateRequest = new UserUpdateRequest(email, updateBio, updateImage);
+        assertThatThrownBy(() -> userUpdateService.update(userUpdateRequest.toEntity(), email))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
 }

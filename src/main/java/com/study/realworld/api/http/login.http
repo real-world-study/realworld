@@ -21,20 +21,19 @@ Content-Type: application/json
   }
 }
 
-### 여기 아직
 > {%
-client.global.set("Authorization", response.body.toString());
-client.log(client.global.get("Authorization"));
+ client.global.set("Authorization", response.body.user.token.accessToken);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
 %}
 
 ### UPDATE
-PATCH localhost:8080/api/users
+PUT localhost:8080/api/users
 Content-Type: application/json
 Authorization: {{Authorization}}
 
 {
   "user":{
-    "email": "jake@jake.jake",
+    "email": "jake@jake2.jake",
     "bio": "I like to skateboard",
     "image": "https://i.stack.imgur.com/xHWG8.jpg"
   }

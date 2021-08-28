@@ -38,13 +38,4 @@ public final class UserJoinRequest {
                 .build();
     }
 
-    @Override
-    public final String toString() {
-        return "UserJoinRequest{" +
-                "username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
-
 }

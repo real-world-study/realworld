@@ -92,13 +92,13 @@ public class User extends BaseTimeEntity {
     }
 
     public User changeBio(final Bio bio) {
-        validateArgumentNull(email);
+        validateArgumentNull(bio);
         this.bio = bio;
         return this;
     }
 
     public User changeImage(final Image image) {
-        validateArgumentNull(email);
+        validateArgumentNull(image);
         this.image = image;
         return this;
     }

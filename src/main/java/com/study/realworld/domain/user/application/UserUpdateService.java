@@ -25,8 +25,8 @@ public class UserUpdateService {
                 .changeImage(updateRequestUser.image());
     }
 
-    private void validateDuplicatedEmail(final Email email) {
-        if (userRepository.existsByEmail(email)) {
+    private void validateDuplicatedEmail(final Email changeEmail) {
+        if (userRepository.existsByEmail(changeEmail)) {
             throw new IllegalArgumentException();
         }
     }
