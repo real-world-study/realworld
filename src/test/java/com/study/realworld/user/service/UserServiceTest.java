@@ -75,7 +75,7 @@ class UserServiceTest {
         when(passwordEncoder.encode(password.getPassword())).thenReturn("encoded_password");
         User input = User.Builder()
             .username(new Username("username"))
-            .email(new Email("email"))
+            .email(new Email("test@test.com"))
             .password(password)
             .bio("bio")
             .image("image")
@@ -97,7 +97,7 @@ class UserServiceTest {
         // then
         assertThat(user.getId()).isEqualTo(1L);
         assertThat(user.getUsername()).isEqualTo(new Username("username"));
-        assertThat(user.getEmail()).isEqualTo(new Email("email"));
+        assertThat(user.getEmail()).isEqualTo(new Email("test@test.com"));
         assertThat(user.getPassword().getPassword())
             .isEqualTo("encoded_password");
         assertThat(user.getBio()).isEqualTo("bio");
@@ -207,7 +207,7 @@ class UserServiceTest {
         Long userId = 2L;
         UserUpdateModel userUpdateModel = new UserUpdateModel(
             new Username("username"),
-            new Email("email"),
+            new Email("test@test.com"),
             new Password("password"),
             "bio",
             "image"

@@ -194,7 +194,7 @@ class UserControllerTest {
             .email(new Email("test@test.com"))
             .password(new Password("password"))
             .build();
-        when(userService.findById(1L)).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(any())).thenReturn(Optional.ofNullable(user));
         SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
 
         // given
