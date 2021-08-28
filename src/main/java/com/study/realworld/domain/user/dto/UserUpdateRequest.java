@@ -20,7 +20,7 @@ public final class UserUpdateRequest {
     UserUpdateRequest() {
     }
 
-    UserUpdateRequest(final Email email, final Bio bio, final Image image) {
+    public UserUpdateRequest(final Email email, final Bio bio, final Image image) {
         this.email = email;
         this.bio = bio;
         this.image = image;
