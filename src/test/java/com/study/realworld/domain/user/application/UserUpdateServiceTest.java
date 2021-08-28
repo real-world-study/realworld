@@ -45,6 +45,7 @@ class UserUpdateServiceTest {
     @DisplayName("UserUpdateService 인스턴스 update() 테스트")
     @Test
     void update_test() {
+        final Email email = new Email(EMAIL);
         final Email updateEmail = new Email("updateEmail@email.net");
         final Bio updateBio = new Bio("updateBio");
         final Image updateImage = new Image("updateImage");
@@ -55,7 +56,7 @@ class UserUpdateServiceTest {
         doReturn(Optional.ofNullable(user)).when(userRepository).findByEmail(any());
 
         final UserUpdateRequest userUpdateRequest = new UserUpdateRequest(updateEmail, updateBio, updateImage);
-        final User updatedUser = userUpdateService.update(userUpdateRequest.toEntity());
+        final User updatedUser = userUpdateService.update(userUpdateRequest.toEntity(), email);
 
         assertAll(
                 () -> assertThat(updatedUser.email()).isEqualTo(updateEmail),
