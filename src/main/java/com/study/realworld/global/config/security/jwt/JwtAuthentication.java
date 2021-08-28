@@ -1,5 +1,7 @@
 package com.study.realworld.global.config.security.jwt;
 
+import com.study.realworld.domain.user.domain.Email;
+import com.study.realworld.domain.user.domain.Password;
 import com.study.realworld.domain.user.domain.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,18 +17,18 @@ public class JwtAuthentication extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
-    private Object principal;
-    private Object credentials;
+    private Email principal;
+    private Password credentials;
 
     public static JwtAuthentication initAuthentication(final String jwt) {
         return new JwtAuthentication(jwt);
     }
 
     public static JwtAuthentication ofUser(final User user) {
-        final String username = user.email().email();
-        final String password = user.password().password();
+        final Email principal = user.email();
+        final Password credentials = user.password();
         final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(DEFAULT_AUTHORITY);
-        return new JwtAuthentication(username, password, Collections.singleton(authority));
+        return new JwtAuthentication(principal, credentials, Collections.singleton(authority));
     }
 
     private JwtAuthentication(final String details) {
@@ -34,7 +36,7 @@ public class JwtAuthentication extends AbstractAuthenticationToken {
         super.setDetails(details);
     }
 
-    public JwtAuthentication(final Object principal, final Object credentials,
+    public JwtAuthentication(final Email principal, final Password credentials,
                              final Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;

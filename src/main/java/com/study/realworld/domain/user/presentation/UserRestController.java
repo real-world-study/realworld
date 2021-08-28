@@ -44,8 +44,8 @@ public class UserRestController {
 
     @PutMapping("/api/users")
     public ResponseEntity<UserResponse> update(@Valid @RequestBody final UserUpdateRequest userUpdateRequest,
-                                               @AuthenticationPrincipal final String email) {
-        final User user = userUpdateService.update(userUpdateRequest.toEntity(), new Email(email));
+                                               @AuthenticationPrincipal final Email principal) {
+        final User user = userUpdateService.update(userUpdateRequest.toEntity(), principal);
         final ResponseToken responseToken = tokenProvider.createToken(user);
         final UserResponse userResponse = UserResponse.fromUserWithToken(user, responseToken);
         return ResponseEntity.ok().body(userResponse);

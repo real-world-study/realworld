@@ -6,6 +6,7 @@ import com.study.realworld.domain.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 public class UserUpdateService {
 
@@ -15,18 +16,17 @@ public class UserUpdateService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public User update(final User updateRequestUser, final Email userEmail) {
-        final User user = findUserByEmail(userEmail);
-        final Email changeEmail = updateRequestUser.email();
-        validateDuplicatedEmail(changeEmail);
-        return user.changeEmail(changeEmail)
+    public User update(final User updateRequestUser, final Email principal) {
+        final User user = findUserByEmail(principal);
+        final Email email = updateRequestUser.email();
+        validateDuplicatedEmail(email);
+        return user.changeEmail(email)
                 .changeBio(updateRequestUser.bio())
                 .changeImage(updateRequestUser.image());
     }
 
-    private void validateDuplicatedEmail(final Email changeEmail) {
-        if (userRepository.existsByEmail(changeEmail)) {
+    private void validateDuplicatedEmail(final Email email) {
+        if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException();
         }
     }
