@@ -1,4 +1,4 @@
-# Login
+### JOIN
 POST localhost:8080/api/users
 Content-Type: application/json
 
@@ -10,5 +10,34 @@ Content-Type: application/json
   }
 }
 
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user":{
+    "email": "jake@jake.jake",
+    "password": "jakejake"
+  }
+}
+
+### 여기 아직
+> {%
+client.global.set("Authorization", response.body.toString());
+client.log(client.global.get("Authorization"));
+%}
+
+### UPDATE
+PATCH localhost:8080/api/users
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "user":{
+    "email": "jake@jake.jake",
+    "bio": "I like to skateboard",
+    "image": "https://i.stack.imgur.com/xHWG8.jpg"
+  }
+}
 
 
