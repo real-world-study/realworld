@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.realworld.domain.user.domain.Bio;
 import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.Image;
+import com.study.realworld.domain.user.domain.User;
 
-public class UserUpdateRequest {
+public final class UserUpdateRequest {
 
     @JsonProperty("email")
     private Email email;
@@ -23,6 +24,14 @@ public class UserUpdateRequest {
         this.email = email;
         this.bio = bio;
         this.image = image;
+    }
+
+    public final User toEntity() {
+        return User.Builder()
+                .email(email)
+                .bio(bio)
+                .image(image)
+                .build();
     }
 
 }
