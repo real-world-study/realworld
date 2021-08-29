@@ -10,5 +10,6 @@ class AuthServiceTest {
     public static final String EMAIL = "povia@tistory.com";
     public static final String PASSWORD = "testPassword";
 
-    private AuthService authService;
+    //    private AuthService authService = new AuthService();
+
 }
