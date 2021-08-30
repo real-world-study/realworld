@@ -4,28 +4,30 @@ import com.study.realworld.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ExtendWith(MockitoExtension.class)
 class JwtProviderTest {
 
     private static final Long ID = 1L;
     private static final String EMAIL = "email";
+    private static final String TOKEN = "token";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String BIO = "bio";
     private static final String IMAGE = "image";
 
+    private static final String secret = "the-key-size-must-be-greater-then-or-equal-to-the-has-output-size-which-is-512-bits-for-the-HS512-algorithm-security-so-called-JWT-JWA-specification";
+    private static final int accessTime = 60 * 1000;
+
     private JwtProvider jwtProvider;
 
     @BeforeEach
     void beforeEach() {
-        jwtProvider = new JwtProvider();
+        jwtProvider = new JwtProvider(secret, accessTime);
     }
 
     @Test

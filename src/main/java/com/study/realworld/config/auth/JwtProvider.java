@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -17,22 +18,29 @@ import java.util.Map;
 @Component
 public class JwtProvider {
 
-    private static final String SECRET_KEY = "real-world-with-hoony-lab";
-    private static final int ACCESS_TIME = 30;
+    private String secret;
+    private int accessTime;
+
+    public JwtProvider(@Value("${jwt.secret}") String secret,
+                       @Value("${jwt.access-time}") int accessTime) {
+        this.secret = secret;
+        this.accessTime = accessTime;
+    }
 
     public String generateJwtToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setHeader(createHeader())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * ACCESS_TIME))
-                .signWith(SignatureAlgorithm.HS512, createKey())
+                .setExpiration(new Date(System.currentTimeMillis() + accessTime))
+                .signWith(createKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public Claims getClaimsFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+        return Jwts.parserBuilder()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -59,7 +67,7 @@ public class JwtProvider {
     }
 
     private Key createKey() {
-        byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+        byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(secret);
         return new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS512.getJcaName());
     }
 
