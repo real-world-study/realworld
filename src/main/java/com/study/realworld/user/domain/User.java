@@ -36,8 +36,7 @@ public class User {
     protected User() {
     }
 
-    private User(Long id, Username username, Email email, Password password, String bio,
-        String image) {
+    private User(Long id, Username username, Email email, Password password, String bio, String image) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -68,6 +67,26 @@ public class User {
 
     public String getImage() {
         return image;
+    }
+
+    public void changeUsername(Username username) {
+        this.username = username;
+    }
+
+    public void changeEmail(Email email) {
+        this.email = email;
+    }
+
+    public void changePassword(Password password, PasswordEncoder passwordEncoder) {
+        this.password = Password.encode(password, passwordEncoder);
+    }
+
+    public void changeBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void changeImage(String image) {
+        this.image = image;
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {

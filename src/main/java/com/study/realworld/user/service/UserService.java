@@ -5,6 +5,7 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,8 @@ public class UserService {
 
     @Transactional
     public User join(@Valid User user) {
-        checkDuplicatedByUsernameOrEmail(user.getUsername(), user.getEmail());
+        checkDuplicatedByUsername(user.getUsername());
+        checkDuplicatedByEmail(user.getEmail());
 
         user.encodePassword(passwordEncoder);
         return userRepository.save(user);
@@ -39,15 +41,34 @@ public class UserService {
         return user;
     }
 
-    private void checkDuplicatedByUsernameOrEmail(Username username, Email email) {
-        findByUsername(username)
-            .ifPresent(param -> {
-                throw new RuntimeException("already user username");
-            });
-        findByEmail(email)
-            .ifPresent(param -> {
-                throw new RuntimeException("already user email");
-            });
+    @Transactional(readOnly = true)
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Transactional
+    public User update(UserUpdateModel updateUser, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+
+        updateUser.getUsername().ifPresent(username -> checkDuplicatedUsernameAndChangeUsername(user, username));
+        updateUser.getEmail().ifPresent(email -> checkDuplicatedEmailAndChangeEmail(user, email));
+        updateUser.getPassword().ifPresent(password -> user.changePassword(password, passwordEncoder));
+        updateUser.getBio().ifPresent(user::changeBio);
+        updateUser.getImage().ifPresent(user::changeImage);
+
+        return user;
+    }
+
+    private void checkDuplicatedByUsername(Username username) {
+        findByUsername(username).ifPresent(param -> {
+            throw new RuntimeException("already user username");
+        });
+    }
+
+    private void checkDuplicatedByEmail(Email email) {
+        findByEmail(email).ifPresent(param -> {
+            throw new RuntimeException("already user email");
+        });
     }
 
     private Optional<User> findByUsername(Username username) {
@@ -56,6 +77,16 @@ public class UserService {
 
     private Optional<User> findByEmail(Email email) {
         return userRepository.findByEmail(email);
+    }
+
+    private void checkDuplicatedEmailAndChangeEmail(User user, Email email) {
+        checkDuplicatedByEmail(email);
+        user.changeEmail(email);
+    }
+
+    private void checkDuplicatedUsernameAndChangeUsername(User user, Username username) {
+        checkDuplicatedByUsername(username);
+        user.changeUsername(username);
     }
 
 }

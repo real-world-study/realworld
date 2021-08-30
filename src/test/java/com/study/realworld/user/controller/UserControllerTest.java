@@ -3,6 +3,7 @@ package com.study.realworld.user.controller;
 import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentRequest;
 import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -10,18 +11,23 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.study.realworld.security.JwtAuthentication;
 import com.study.realworld.security.JwtService;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
+import java.security.Principal;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +38,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -52,6 +61,7 @@ class UserControllerTest {
 
     @BeforeEach
     void beforeEach(RestDocumentationContextProvider restDocumentationContextProvider) {
+        SecurityContextHolder.clearContext();
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
             .apply(documentationConfiguration(restDocumentationContextProvider))
             .alwaysExpect(status().isOk())
@@ -91,8 +101,8 @@ class UserControllerTest {
 
             .andExpect(jsonPath("$.user.username", is("username")))
             .andExpect(jsonPath("$.user.email", is("test@test.com")))
-            .andExpect(jsonPath("$.user.bio", is("null")))
-            .andExpect(jsonPath("$.user.image", is("null")))
+            .andExpect(jsonPath("$.user.bio", is(nullValue())))
+            .andExpect(jsonPath("$.user.image", is(nullValue())))
             .andExpect(jsonPath("$.user.token", is("token")))
             .andDo(document("user-join",
                 getDocumentRequest(),
@@ -100,14 +110,20 @@ class UserControllerTest {
                 requestFields(
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
-                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드")
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("패스워드"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 ),
                 responseFields(
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
                     fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 )
             ))
         ;
@@ -146,8 +162,8 @@ class UserControllerTest {
 
             .andExpect(jsonPath("$.user.username", is("username")))
             .andExpect(jsonPath("$.user.email", is("test@test.com")))
-            .andExpect(jsonPath("$.user.bio", is("null")))
-            .andExpect(jsonPath("$.user.image", is("null")))
+            .andExpect(jsonPath("$.user.bio", is(nullValue())))
+            .andExpect(jsonPath("$.user.image", is(nullValue())))
             .andExpect(jsonPath("$.user.token", is("token")))
             .andDo(document("user-login",
                 getDocumentRequest(),
@@ -160,8 +176,123 @@ class UserControllerTest {
                     fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
                     fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
                     fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
                     fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
+                )
+            ))
+        ;
+    }
+
+    @Test
+    void getCurrentUserTest() throws Exception {
+
+        // setup
+        User user = User.Builder()
+            .username(new Username("username"))
+            .email(new Email("test@test.com"))
+            .password(new Password("password"))
+            .build();
+        when(userService.findById(any())).thenReturn(Optional.ofNullable(user));
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
+
+        // given
+        final String URL = "/api/user";
+
+        // when
+        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(1L, "1q2w3e4r");
+        ResultActions resultActions = mockMvc.perform(get(URL)
+            .principal(authenticationToken)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.user.username", is("username")))
+            .andExpect(jsonPath("$.user.email", is("test@test.com")))
+            .andExpect(jsonPath("$.user.bio", is(nullValue())))
+            .andExpect(jsonPath("$.user.image", is(nullValue())))
+            .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-get-current",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
+                )
+            ))
+        ;
+    }
+
+    @Test
+    void updateTest() throws Exception {
+
+        // setup
+        User user = User.Builder()
+            .username(new Username("usernameChange"))
+            .email(new Email("change@change.com"))
+            .password(new Password("passwordChange"))
+            .bio("bioChange")
+            .image("imageChange")
+            .build();
+
+        when(userService.update(any(), any())).thenReturn(user);
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
+
+        // given
+        final String URL = "/api/user";
+        final String content = "{\"user\":{\"username\":\"" + "usernameChange"
+            + "\",\"email\":\"" + "change@change.com"
+            + "\",\"password\":\"" + "passwordChange"
+            + "\",\"bio\":\"" + "bioChange"
+            + "\",\"image\":\"" + "imageChange"
+            + "\"}}";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(put(URL)
+            .content(content)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.user.username", is("usernameChange")))
+            .andExpect(jsonPath("$.user.email", is("change@change.com")))
+            .andExpect(jsonPath("$.user.bio", is("bioChange")))
+            .andExpect(jsonPath("$.user.image", is("imageChange")))
+            .andExpect(jsonPath("$.user.token", is("token")))
+            .andDo(document("user-update",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("변경유저이름"),
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("변경이메일"),
+                    fieldWithPath("user.password").type(JsonFieldType.STRING).description("변경패스워드"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("변경bio")
+                        .optional(),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("변경이미지")
+                        .optional()
+                ),
+                responseFields(
+                    fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                    fieldWithPath("user.token").type(JsonFieldType.STRING).description("로그인 토큰"),
+                    fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("user.bio").type(JsonFieldType.STRING).description("bio")
+                        .optional(),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지")
+                        .optional()
                 )
             ))
         ;

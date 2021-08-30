@@ -1,17 +1,15 @@
 package com.study.realworld.user.domain;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Embeddable
 public class Password {
 
-    @NotBlank(message = "password must be provided.")
-    @Size(min = 6, max = 20, message = "password length must be between 6 and 20 characters.")
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -19,7 +17,17 @@ public class Password {
     }
 
     public Password(String password) {
+        checkPassword(password);
+
         this.password = password;
+    }
+
+    private static void checkPassword(String password) {
+        checkArgument(StringUtils.isNotBlank(password), "password must be provided.");
+        checkArgument(
+            password.length() >= 6 && password.length() <= 20,
+            "password length must be between 6 and 20 characters."
+        );
     }
 
     public String getPassword() {
@@ -32,7 +40,7 @@ public class Password {
 
     public void matchPassword(Password rawPassword, PasswordEncoder passwordEncoder) {
         if (!passwordEncoder.matches(rawPassword.password, this.password)) {
-            throw new RuntimeException("비밀번호가 다릅니다.");
+            throw new RuntimeException("password is different from old password.");
         }
     }
 

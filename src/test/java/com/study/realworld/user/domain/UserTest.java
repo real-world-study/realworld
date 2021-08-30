@@ -60,7 +60,7 @@ class UserTest {
         User input = User.Builder()
             .id(1L)
             .username(new Username("username"))
-            .email(new Email("email"))
+            .email(new Email("test@test.com"))
             .password(new Password("password"))
             .bio("bio")
             .image("image")
@@ -123,7 +123,7 @@ class UserTest {
         // when & then
         assertThatExceptionOfType(RuntimeException.class)
             .isThrownBy(() -> user.login(password, passwordEncoder))
-            .withMessageMatching("비밀번호가 다릅니다.");
+            .withMessageMatching("password is different from old password.");
     }
 
     @Test
