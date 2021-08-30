@@ -41,7 +41,7 @@ public class UserService {
         User user = UserJoinRequest.toUser(request);
         user.encodePassword(passwordEncoder);
 
-        validateDuplicateUser(user);
+        validateDuplicateUser(user.getEmail());
 
         return userRepository.save(user);
     }
@@ -68,9 +68,9 @@ public class UserService {
         }
     }
 
-    private void validateDuplicateUser(User user) {
-        if(userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new DuplicateKeyException(user.getEmail() + " duplicated email");
+    private void validateDuplicateUser(String email) {
+        if(userRepository.findByEmail(email).isPresent()) {
+            throw new DuplicateKeyException(email + " duplicated email");
         }
     }
 
