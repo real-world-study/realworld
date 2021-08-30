@@ -54,15 +54,15 @@ public class UserService {
         return user;
     }
 
-    private void validateMatchesPassword(User user, String rawPassword) {
-        if(!user.matchesPassword(rawPassword, passwordEncoder)) {
-            throw new NoSuchElementException(rawPassword + " wrong wrong wrong triple wrong" + user.getPassword());
-        }
-    }
-
     private void validateDuplicateUser(String email) {
         if(userRepository.findByEmail(email).isPresent()) {
             throw new DuplicateKeyException(email + " duplicated email");
+        }
+    }
+
+    private void validateMatchesPassword(User user, String rawPassword) {
+        if(!user.matchesPassword(rawPassword, passwordEncoder)) {
+            throw new NoSuchElementException(rawPassword + " wrong wrong wrong triple wrong" + user.getPassword());
         }
     }
 
