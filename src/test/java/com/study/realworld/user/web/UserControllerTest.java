@@ -189,7 +189,7 @@ class UserControllerTest {
         // when
         ResultActions result = mvc.perform(get(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN))
+                .header(HttpHeaders.AUTHORIZATION, "Token " + TOKEN))
                 .andDo(print());
 
         // then

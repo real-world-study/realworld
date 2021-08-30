@@ -28,9 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(header != null) {
+            String tokenPrefix = header.split(" ")[0];
             String accessToken = header.split(" ")[1];
 
-            if(jwtProvider.isValidToken(accessToken)) {
+            if("Token".equals(tokenPrefix) && jwtProvider.isValidToken(accessToken)) {
                 String email = jwtProvider.getSubjectFromToken(accessToken);
                 final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, accessToken, Collections.emptyList());
 

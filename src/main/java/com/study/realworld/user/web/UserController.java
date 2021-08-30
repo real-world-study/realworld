@@ -39,7 +39,7 @@ public class UserController {
         String token = jwtProvider.generateJwtToken(user);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.AUTHORIZATION, "Token " + token)
                 .body(UserResponse.of(user, token));
     }
 

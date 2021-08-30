@@ -50,7 +50,7 @@ class JwtAuthenticationFilterTest {
     @Test
     void doFilterInternal() throws ServletException, IOException {
         // given
-        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer token");
+        when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Token token");
         when(jwtProvider.isValidToken(anyString())).thenReturn(true);
         when(jwtProvider.getSubjectFromToken(anyString())).thenReturn(EMAIL);
 
