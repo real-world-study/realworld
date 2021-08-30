@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -42,7 +43,6 @@ class UserServiceTest {
 
     @Test
     void findAll() {
-
         // given
         final User user = User.builder()
                 .email(EMAIL)
@@ -71,7 +71,6 @@ class UserServiceTest {
 
     @Test
     void findById() {
-
         // given
         final User user = User.builder()
                 .email(EMAIL)
@@ -100,7 +99,6 @@ class UserServiceTest {
 
     @Test
     void findByEmail() {
-
         // given
         final User user = User.builder()
                 .email(EMAIL)
@@ -130,7 +128,6 @@ class UserServiceTest {
 
     @Test
     void save() {
-
         // given
         final UserJoinRequest request = UserJoinRequest.builder()
                 .email(EMAIL)
@@ -162,7 +159,6 @@ class UserServiceTest {
 
     @Test
     void login() {
-
         // given
         final UserLoginRequest request = UserLoginRequest.builder()
                 .email(EMAIL)
@@ -204,10 +200,55 @@ class UserServiceTest {
         );
     }
 
-    @Disabled
     @Test
-    void login_exception_not_matchesPassword() {
-        // TODO
+    void save_validateDuplicateUser_exception() {
+        // given
+        final UserJoinRequest request = UserJoinRequest.builder()
+                .email(EMAIL)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+
+        final User user = User.builder()
+                .email(EMAIL)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .bio(BIO)
+                .image(IMAGE)
+                .build();
+
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.ofNullable(user));
+
+        // when
+
+        // then
+        assertThrows(DuplicateKeyException.class, () -> userService.save(request));
+    }
+
+    @Test
+    void login_validateMatchesPassword_exception() {
+        // given
+        final UserLoginRequest request = UserLoginRequest.builder()
+                .email(EMAIL)
+                .password(PASSWORD)
+                .build();
+
+        final User user = User.builder()
+                .email(EMAIL)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .bio(BIO)
+                .image(IMAGE)
+                .build();
+
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.ofNullable(user));
+
+        // when
+
+        // then
+        assertThrows(NoSuchElementException.class, () -> userService.login(request));
     }
 
 }
