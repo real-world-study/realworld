@@ -45,15 +45,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
-
-    @Transactional
-    public User deleteById(Long id) {
-        User user = this.findById(id);
-
-        userRepository.delete(user);
-        return user;
-    }
-
+    
     public User login(UserLoginRequest request) {
         User user = this.findByEmail(request.getEmail());
 
