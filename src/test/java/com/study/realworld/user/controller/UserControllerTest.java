@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.study.realworld.security.JwtAuthentication;
 import com.study.realworld.security.JwtService;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
@@ -241,7 +242,7 @@ class UserControllerTest {
             .username(new Username("usernameChange"))
             .email(new Email("change@change.com"))
             .password(new Password("passwordChange"))
-            .bio("bioChange")
+            .bio(new Bio("bioChange"))
             .image(new Image("imageChange"))
             .build();
 

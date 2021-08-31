@@ -17,6 +17,10 @@ public class Bio {
         this.bio = bio;
     }
 
+    public String value() {
+        return bio;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

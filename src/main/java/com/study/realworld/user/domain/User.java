@@ -29,7 +29,7 @@ public class User {
     private Password password;
 
     @Column(name = "bio")
-    private String bio;
+    private Bio bio;
 
     @Column(name = "image")
     private Image image;
@@ -37,7 +37,7 @@ public class User {
     protected User() {
     }
 
-    private User(Long id, Username username, Email email, Password password, String bio, Image image) {
+    private User(Long id, Username username, Email email, Password password, Bio bio, Image image) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -62,8 +62,8 @@ public class User {
         return password;
     }
 
-    public String bio() {
-        return bio;
+    public Optional<Bio> bio() {
+        return Optional.ofNullable(bio);
     }
 
     public Optional<Image> image() {
@@ -82,7 +82,7 @@ public class User {
         this.password = Password.encode(password, passwordEncoder);
     }
 
-    public void changeBio(String bio) {
+    public void changeBio(Bio bio) {
         this.bio = bio;
     }
 
@@ -129,7 +129,7 @@ public class User {
         private Username username;
         private Email email;
         private Password password;
-        private String bio;
+        private Bio bio;
         private Image image;
 
         private Builder() {
@@ -164,7 +164,7 @@ public class User {
             return this;
         }
 
-        public Builder bio(String bio) {
+        public Builder bio(Bio bio) {
             this.bio = bio;
             return this;
         }

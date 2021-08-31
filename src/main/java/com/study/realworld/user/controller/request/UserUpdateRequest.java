@@ -3,6 +3,7 @@ package com.study.realworld.user.controller.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
@@ -56,7 +57,7 @@ public class UserUpdateRequest {
             new Username(getUsername()),
             new Email(getEmail()),
             new Password(getPassword()),
-            getBio(),
+            new Bio(getBio()),
             new Image(getImage())
         );
     }

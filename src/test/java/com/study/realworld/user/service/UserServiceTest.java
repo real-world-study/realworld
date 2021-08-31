@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
@@ -78,7 +79,7 @@ class UserServiceTest {
             .username(new Username("username"))
             .email(new Email("test@test.com"))
             .password(password)
-            .bio("bio")
+            .bio(new Bio("bio"))
             .image(new Image("image"))
             .build();
         when(userRepository.save(any())).thenReturn(
@@ -87,7 +88,7 @@ class UserServiceTest {
                 .username(input.username())
                 .email(input.email())
                 .password(new Password("encoded_password"))
-                .bio(input.bio())
+                .bio(input.bio().orElse(null))
                 .image(input.image().orElse(null))
                 .build()
         );
@@ -101,7 +102,7 @@ class UserServiceTest {
         assertThat(user.email()).isEqualTo(new Email("test@test.com"));
         assertThat(user.password().password())
             .isEqualTo("encoded_password");
-        assertThat(user.bio()).isEqualTo("bio");
+        assertThat(user.bio().get()).isEqualTo(new Bio("bio"));
         assertThat(user.image().get()).isEqualTo(new Image("image"));
     }
 
@@ -210,7 +211,7 @@ class UserServiceTest {
             new Username("username"),
             new Email("test@test.com"),
             new Password("password"),
-            "bio",
+            new Bio("bio"),
             new Image("image")
         );
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
@@ -234,14 +235,14 @@ class UserServiceTest {
                 .username(new Username("username"))
                 .email(new Email("test@test.com"))
                 .password(new Password("encoded_password"))
-                .bio("bio")
+                .bio(new Bio("bio"))
                 .image(new Image("image"))
                 .build();
             originUser = User.Builder()
                 .username(new Username("username"))
                 .email(new Email("test@test.com"))
                 .password(new Password("encoded_password"))
-                .bio("bio")
+                .bio(new Bio("bio"))
                 .image(new Image("image"))
                 .build();
             when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(user));
@@ -429,7 +430,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowBioTest() {
 
                 // given
-                String bio = "bio";
+                Bio bio = new Bio("bio");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, bio, null);
 
@@ -445,7 +446,7 @@ class UserServiceTest {
             void updateSuccessByBioTest() {
 
                 // given
-                String bio = "bioChange";
+                Bio bio = new Bio("bioChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, bio, null);
 
@@ -458,8 +459,8 @@ class UserServiceTest {
                 assertThat(result.password().password())
                     .isEqualTo(originUser.password().password());
 
-                assertThat(result.bio()).isEqualTo(bio);
-                assertThat(result.bio()).isNotEqualTo(originUser.bio());
+                assertThat(result.bio().get()).isEqualTo(bio);
+                assertThat(result.bio().get()).isNotEqualTo(originUser.bio());
 
                 assertThat(result.image()).isEqualTo(originUser.image());
             }
@@ -504,7 +505,7 @@ class UserServiceTest {
                 assertThat(result.bio()).isEqualTo(originUser.bio());
 
                 assertThat(result.image().get()).isEqualTo(image);
-                assertThat(result.image()).isNotEqualTo(originUser.image());
+                assertThat(result.image().get()).isNotEqualTo(originUser.image());
             }
 
         }

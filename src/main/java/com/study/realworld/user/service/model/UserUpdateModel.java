@@ -1,5 +1,6 @@
 package com.study.realworld.user.service.model;
 
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
@@ -11,10 +12,10 @@ public class UserUpdateModel {
     private final Username username;
     private final Email email;
     private final Password password;
-    private final String bio;
+    private final Bio bio;
     private final Image image;
 
-    public UserUpdateModel(Username username, Email email, Password password, String bio, Image image) {
+    public UserUpdateModel(Username username, Email email, Password password, Bio bio, Image image) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -34,7 +35,7 @@ public class UserUpdateModel {
         return Optional.ofNullable(password);
     }
 
-    public Optional<String> getBio() {
+    public Optional<Bio> getBio() {
         return Optional.ofNullable(bio);
     }
 

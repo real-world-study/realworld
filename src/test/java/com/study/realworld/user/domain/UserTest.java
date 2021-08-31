@@ -31,7 +31,7 @@ class UserTest {
         Username username = new Username("username");
         Email email = new Email("email@email.com");
         Password password = new Password("password");
-        String bio = "bio";
+        Bio bio = new Bio("bio");
         Image image = new Image("image.jpg");
 
         // when
@@ -49,7 +49,7 @@ class UserTest {
         assertThat(user.username()).isEqualTo(username);
         assertThat(user.email()).isEqualTo(email);
         assertThat(user.password()).isEqualTo(password);
-        assertThat(user.bio()).isEqualTo(bio);
+        assertThat(user.bio().get()).isEqualTo(bio);
         assertThat(user.image().get()).isEqualTo(image);
     }
 
@@ -62,7 +62,7 @@ class UserTest {
             .username(new Username("username"))
             .email(new Email("test@test.com"))
             .password(new Password("password"))
-            .bio("bio")
+            .bio(new Bio("bio"))
             .image(new Image("image"))
             .build();
 
