@@ -30,7 +30,7 @@ public class Password {
         );
     }
 
-    public String getPassword() {
+    public String password() {
         return password;
     }
 

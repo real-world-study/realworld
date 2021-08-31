@@ -82,7 +82,7 @@ class PasswordTest {
         Password result = encode(password, passwordEncoder);
 
         // then
-        assertThat(result.getPassword()).isEqualTo("encoded_password");
+        assertThat(result.password()).isEqualTo("encoded_password");
     }
 
     @Test

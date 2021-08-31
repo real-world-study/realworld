@@ -84,14 +84,14 @@ class UserTest {
 
         // setup & given
         User user = User.Builder().password(new Password("password")).build();
-        when(passwordEncoder.encode(user.getPassword().getPassword()))
+        when(passwordEncoder.encode(user.getPassword().password()))
             .thenReturn("encoded_password");
 
         // when
         user.encodePassword(passwordEncoder);
 
         // then
-        assertThat(user.getPassword().getPassword()).isEqualTo("encoded_password");
+        assertThat(user.getPassword().password()).isEqualTo("encoded_password");
     }
 
     @Test
