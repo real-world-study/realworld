@@ -4,6 +4,7 @@ import static com.study.realworld.user.controller.response.UserResponse.fromUser
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class UserResponseTest {
             .username(new Username("username"))
             .email(new Email("test@test.com"))
             .bio("bio")
-            .image("image")
+            .image(new Image("image"))
             .build();
         String token = "token";
 

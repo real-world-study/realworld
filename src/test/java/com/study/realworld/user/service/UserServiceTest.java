@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
@@ -78,16 +79,16 @@ class UserServiceTest {
             .email(new Email("test@test.com"))
             .password(password)
             .bio("bio")
-            .image("image")
+            .image(new Image("image"))
             .build();
         when(userRepository.save(any())).thenReturn(
             User.Builder()
                 .id(1L)
-                .username(input.usesrname())
+                .username(input.username())
                 .email(input.email())
                 .password(new Password("encoded_password"))
                 .bio(input.bio())
-                .image(input.image())
+                .image(input.image().orElse(null))
                 .build()
         );
 
@@ -96,12 +97,12 @@ class UserServiceTest {
 
         // then
         assertThat(user.id()).isEqualTo(1L);
-        assertThat(user.usesrname()).isEqualTo(new Username("username"));
+        assertThat(user.username()).isEqualTo(new Username("username"));
         assertThat(user.email()).isEqualTo(new Email("test@test.com"));
         assertThat(user.password().password())
             .isEqualTo("encoded_password");
         assertThat(user.bio()).isEqualTo("bio");
-        assertThat(user.image()).isEqualTo("image");
+        assertThat(user.image().get()).isEqualTo(new Image("image"));
     }
 
     @Test
@@ -210,7 +211,7 @@ class UserServiceTest {
             new Email("test@test.com"),
             new Password("password"),
             "bio",
-            "image"
+            new Image("image")
         );
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -234,14 +235,14 @@ class UserServiceTest {
                 .email(new Email("test@test.com"))
                 .password(new Password("encoded_password"))
                 .bio("bio")
-                .image("image")
+                .image(new Image("image"))
                 .build();
             originUser = User.Builder()
                 .username(new Username("username"))
                 .email(new Email("test@test.com"))
                 .password(new Password("encoded_password"))
                 .bio("bio")
-                .image("image")
+                .image(new Image("image"))
                 .build();
             when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(user));
         }
@@ -263,7 +264,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.username()).isEqualTo(originUser.username());
             }
 
             @Test
@@ -297,8 +298,8 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.usesrname()).isEqualTo(username);
-                assertThat(result.usesrname()).isNotEqualTo(originUser.usesrname());
+                assertThat(result.username()).isEqualTo(username);
+                assertThat(result.username()).isNotEqualTo(originUser.username());
 
                 assertThat(result.email()).isEqualTo(originUser.email());
                 assertThat(result.password().password())
@@ -359,7 +360,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.username()).isEqualTo(originUser.username());
 
                 assertThat(result.email()).isEqualTo(email);
                 assertThat(result.email()).isNotEqualTo(originUser.email());
@@ -406,7 +407,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.username()).isEqualTo(originUser.username());
                 assertThat(result.email()).isEqualTo(originUser.email());
 
                 assertThat(result.password().password())
@@ -452,7 +453,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.username()).isEqualTo(originUser.username());
                 assertThat(result.email()).isEqualTo(originUser.email());
                 assertThat(result.password().password())
                     .isEqualTo(originUser.password().password());
@@ -473,7 +474,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowImageTest() {
 
                 // given
-                String image = "image";
+                Image image = new Image("image");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, null, image);
 
@@ -489,7 +490,7 @@ class UserServiceTest {
             void updateSuccessByImageTest() {
 
                 // given
-                String image = "imageChange";
+                Image image = new Image("imageChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, null, image);
 
@@ -497,13 +498,12 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.username()).isEqualTo(originUser.username());
                 assertThat(result.email()).isEqualTo(originUser.email());
-                assertThat(result.password().password())
-                    .isEqualTo(originUser.password().password());
+                assertThat(result.password().password()).isEqualTo(originUser.password().password());
                 assertThat(result.bio()).isEqualTo(originUser.bio());
 
-                assertThat(result.image()).isEqualTo(image);
+                assertThat(result.image().get()).isEqualTo(image);
                 assertThat(result.image()).isNotEqualTo(originUser.image());
             }
 

@@ -17,6 +17,10 @@ public class Image {
         this.url = url;
     }
 
+    public String value() {
+        return url;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

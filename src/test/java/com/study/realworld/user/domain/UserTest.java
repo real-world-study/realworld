@@ -32,7 +32,7 @@ class UserTest {
         Email email = new Email("email@email.com");
         Password password = new Password("password");
         String bio = "bio";
-        String image = "image.jpg";
+        Image image = new Image("image.jpg");
 
         // when
         User user = User.Builder()
@@ -46,11 +46,11 @@ class UserTest {
 
         // then
         assertThat(user.id()).isEqualTo(id);
-        assertThat(user.usesrname()).isEqualTo(username);
+        assertThat(user.username()).isEqualTo(username);
         assertThat(user.email()).isEqualTo(email);
         assertThat(user.password()).isEqualTo(password);
         assertThat(user.bio()).isEqualTo(bio);
-        assertThat(user.image()).isEqualTo(image);
+        assertThat(user.image().get()).isEqualTo(image);
     }
 
     @Test
@@ -63,7 +63,7 @@ class UserTest {
             .email(new Email("test@test.com"))
             .password(new Password("password"))
             .bio("bio")
-            .image("image")
+            .image(new Image("image"))
             .build();
 
         // when
@@ -71,7 +71,7 @@ class UserTest {
 
         // then
         assertThat(user.id()).isEqualTo(input.id());
-        assertThat(user.usesrname()).isEqualTo(input.usesrname());
+        assertThat(user.username()).isEqualTo(input.username());
         assertThat(user.email()).isEqualTo(input.email());
         assertThat(user.password()).isEqualTo(input.password());
         assertThat(user.bio()).isEqualTo(input.bio());

@@ -22,11 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.study.realworld.security.JwtAuthentication;
 import com.study.realworld.security.JwtService;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
-import java.security.Principal;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -242,7 +242,7 @@ class UserControllerTest {
             .email(new Email("change@change.com"))
             .password(new Password("passwordChange"))
             .bio("bioChange")
-            .image("imageChange")
+            .image(new Image("imageChange"))
             .build();
 
         when(userService.update(any(), any())).thenReturn(user);

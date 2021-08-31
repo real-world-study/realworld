@@ -1,6 +1,7 @@
 package com.study.realworld.user.domain;
 
 import java.util.Objects;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -31,12 +32,12 @@ public class User {
     private String bio;
 
     @Column(name = "image")
-    private String image;
+    private Image image;
 
     protected User() {
     }
 
-    private User(Long id, Username username, Email email, Password password, String bio, String image) {
+    private User(Long id, Username username, Email email, Password password, String bio, Image image) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -49,7 +50,7 @@ public class User {
         return id;
     }
 
-    public Username usesrname() {
+    public Username username() {
         return username;
     }
 
@@ -65,8 +66,8 @@ public class User {
         return bio;
     }
 
-    public String image() {
-        return image;
+    public Optional<Image> image() {
+        return Optional.ofNullable(image);
     }
 
     public void changeUsername(Username username) {
@@ -85,7 +86,7 @@ public class User {
         this.bio = bio;
     }
 
-    public void changeImage(String image) {
+    public void changeImage(Image image) {
         this.image = image;
     }
 
@@ -129,18 +130,18 @@ public class User {
         private Email email;
         private Password password;
         private String bio;
-        private String image;
+        private Image image;
 
         private Builder() {
         }
 
         private Builder(User user) {
-            id = user.id();
-            username = user.usesrname();
-            email = user.email();
-            password = user.password();
-            bio = user.bio();
-            image = user.image();
+            id = user.id;
+            username = user.username;
+            email = user.email;
+            password = user.password;
+            bio = user.bio;
+            image = user.image;
         }
 
         public Builder id(Long id) {
@@ -168,7 +169,7 @@ public class User {
             return this;
         }
 
-        public Builder image(String image) {
+        public Builder image(Image image) {
             this.image = image;
             return this;
         }

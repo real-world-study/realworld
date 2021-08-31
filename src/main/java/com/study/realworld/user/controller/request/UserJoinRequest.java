@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
@@ -56,7 +57,7 @@ public class UserJoinRequest {
             .email(new Email(getEmail()))
             .password(new Password(getPassword()))
             .bio(getBio())
-            .image(getImage())
+            .image(new Image(getImage()))
             .build();
     }
 
