@@ -7,13 +7,10 @@ import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
-import javax.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
-@Validated
 @Service
 public class UserService {
 
@@ -26,7 +23,7 @@ public class UserService {
     }
 
     @Transactional
-    public User join(@Valid User user) {
+    public User join(User user) {
         checkDuplicatedByUsername(user.usesrname());
         checkDuplicatedByEmail(user.email());
 
@@ -35,7 +32,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User login(@Valid Email email, @Valid Password password) {
+    public User login(Email email, Password password) {
         User user = findByEmail(email).orElseThrow(RuntimeException::new);
         user.login(password, passwordEncoder);
         return user;
