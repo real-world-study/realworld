@@ -48,7 +48,7 @@ public class JjwtService implements JwtService {
         return Jwts.builder()
             .signWith(key, SignatureAlgorithm.HS512)
             .setHeaderParam(JWT_HEADER_PARAM_TYPE, headerType)
-            .setSubject(user.getId().toString())
+            .setSubject(user.id().toString())
             .setIssuer(issuer)
             .setExpiration(new Date((new Date()).getTime() + accessTime))
             .setIssuedAt(new Date())

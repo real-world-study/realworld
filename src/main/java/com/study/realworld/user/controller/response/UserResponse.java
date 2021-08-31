@@ -59,10 +59,10 @@ public class UserResponse {
 
     public static UserResponse fromUserAndToken(User user, String accessToken) {
         return new UserResponse(
-            valueOf(user.getUsername()),
-            valueOf(user.getEmail()),
-            user.getBio(),
-            user.getImage(),
+            valueOf(user.usesrname()),
+            valueOf(user.email()),
+            user.bio(),
+            user.image(),
             valueOf(accessToken)
         );
     }

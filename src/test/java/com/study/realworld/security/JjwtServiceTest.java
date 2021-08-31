@@ -49,7 +49,7 @@ class JjwtServiceTest {
     void createTokenTest() {
 
         // setup && given
-        when(user.getId()).thenReturn(1L);
+        when(user.id()).thenReturn(1L);
 
         // when
         String result = jwtTokenProvider.createToken(user);

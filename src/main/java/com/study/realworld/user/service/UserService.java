@@ -27,8 +27,8 @@ public class UserService {
 
     @Transactional
     public User join(@Valid User user) {
-        checkDuplicatedByUsername(user.getUsername());
-        checkDuplicatedByEmail(user.getEmail());
+        checkDuplicatedByUsername(user.usesrname());
+        checkDuplicatedByEmail(user.email());
 
         user.encodePassword(passwordEncoder);
         return userRepository.save(user);

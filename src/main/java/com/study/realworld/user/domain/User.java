@@ -45,27 +45,27 @@ public class User {
         this.image = image;
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 
-    public Username getUsername() {
+    public Username usesrname() {
         return username;
     }
 
-    public Email getEmail() {
+    public Email email() {
         return email;
     }
 
-    public Password getPassword() {
+    public Password password() {
         return password;
     }
 
-    public String getBio() {
+    public String bio() {
         return bio;
     }
 
-    public String getImage() {
+    public String image() {
         return image;
     }
 
@@ -135,12 +135,12 @@ public class User {
         }
 
         private Builder(User user) {
-            id = user.getId();
-            username = user.getUsername();
-            email = user.getEmail();
-            password = user.getPassword();
-            bio = user.getBio();
-            image = user.getImage();
+            id = user.id();
+            username = user.usesrname();
+            email = user.email();
+            password = user.password();
+            bio = user.bio();
+            image = user.image();
         }
 
         public Builder id(Long id) {

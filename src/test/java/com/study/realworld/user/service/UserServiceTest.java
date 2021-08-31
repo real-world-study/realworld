@@ -83,11 +83,11 @@ class UserServiceTest {
         when(userRepository.save(any())).thenReturn(
             User.Builder()
                 .id(1L)
-                .username(input.getUsername())
-                .email(input.getEmail())
+                .username(input.usesrname())
+                .email(input.email())
                 .password(new Password("encoded_password"))
-                .bio(input.getBio())
-                .image(input.getImage())
+                .bio(input.bio())
+                .image(input.image())
                 .build()
         );
 
@@ -95,13 +95,13 @@ class UserServiceTest {
         User user = userService.join(input);
 
         // then
-        assertThat(user.getId()).isEqualTo(1L);
-        assertThat(user.getUsername()).isEqualTo(new Username("username"));
-        assertThat(user.getEmail()).isEqualTo(new Email("test@test.com"));
-        assertThat(user.getPassword().password())
+        assertThat(user.id()).isEqualTo(1L);
+        assertThat(user.usesrname()).isEqualTo(new Username("username"));
+        assertThat(user.email()).isEqualTo(new Email("test@test.com"));
+        assertThat(user.password().password())
             .isEqualTo("encoded_password");
-        assertThat(user.getBio()).isEqualTo("bio");
-        assertThat(user.getImage()).isEqualTo("image");
+        assertThat(user.bio()).isEqualTo("bio");
+        assertThat(user.image()).isEqualTo("image");
     }
 
     @Test
@@ -150,8 +150,8 @@ class UserServiceTest {
 
         // then
         assertThat(user).isNotNull();
-        assertThat(user.getEmail().toString()).isEqualTo("test@test.com");
-        assertThat(user.getPassword().password()).isEqualTo("encoded_password");
+        assertThat(user.email().toString()).isEqualTo("test@test.com");
+        assertThat(user.password().password()).isEqualTo("encoded_password");
     }
 
     @Test
@@ -168,7 +168,7 @@ class UserServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.get().getEmail()).isEqualTo(user.getEmail());
+        assertThat(result.get().email()).isEqualTo(user.email());
     }
 
     @Test
@@ -263,7 +263,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
+                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
             }
 
             @Test
@@ -297,14 +297,14 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getUsername()).isEqualTo(username);
-                assertThat(result.getUsername()).isNotEqualTo(originUser.getUsername());
+                assertThat(result.usesrname()).isEqualTo(username);
+                assertThat(result.usesrname()).isNotEqualTo(originUser.usesrname());
 
-                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
-                assertThat(result.getPassword().password())
-                    .isEqualTo(originUser.getPassword().password());
-                assertThat(result.getBio()).isEqualTo(originUser.getBio());
-                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+                assertThat(result.email()).isEqualTo(originUser.email());
+                assertThat(result.password().password())
+                    .isEqualTo(originUser.password().password());
+                assertThat(result.bio()).isEqualTo(originUser.bio());
+                assertThat(result.image()).isEqualTo(originUser.image());
             }
         }
 
@@ -325,7 +325,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
+                assertThat(result.email()).isEqualTo(originUser.email());
             }
 
             @Test
@@ -359,15 +359,15 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
+                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
 
-                assertThat(result.getEmail()).isEqualTo(email);
-                assertThat(result.getEmail()).isNotEqualTo(originUser.getEmail());
+                assertThat(result.email()).isEqualTo(email);
+                assertThat(result.email()).isNotEqualTo(originUser.email());
 
-                assertThat(result.getPassword().password())
-                    .isEqualTo(originUser.getPassword().password());
-                assertThat(result.getBio()).isEqualTo(originUser.getBio());
-                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+                assertThat(result.password().password())
+                    .isEqualTo(originUser.password().password());
+                assertThat(result.bio()).isEqualTo(originUser.bio());
+                assertThat(result.image()).isEqualTo(originUser.image());
             }
         }
 
@@ -389,7 +389,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getPassword().password()).isEqualTo(originUser.getPassword().password());
+                assertThat(result.password().password()).isEqualTo(originUser.password().password());
             }
 
             @Test
@@ -406,16 +406,16 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
-                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
+                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.email()).isEqualTo(originUser.email());
 
-                assertThat(result.getPassword().password())
+                assertThat(result.password().password())
                     .isEqualTo("encoded_Change");
-                assertThat(result.getPassword().password())
-                    .isNotEqualTo(originUser.getPassword().password());
+                assertThat(result.password().password())
+                    .isNotEqualTo(originUser.password().password());
 
-                assertThat(result.getBio()).isEqualTo(originUser.getBio());
-                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+                assertThat(result.bio()).isEqualTo(originUser.bio());
+                assertThat(result.image()).isEqualTo(originUser.image());
             }
         }
 
@@ -436,7 +436,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getBio()).isEqualTo(originUser.getBio());
+                assertThat(result.bio()).isEqualTo(originUser.bio());
             }
 
             @Test
@@ -452,15 +452,15 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
-                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
-                assertThat(result.getPassword().password())
-                    .isEqualTo(originUser.getPassword().password());
+                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.email()).isEqualTo(originUser.email());
+                assertThat(result.password().password())
+                    .isEqualTo(originUser.password().password());
 
-                assertThat(result.getBio()).isEqualTo(bio);
-                assertThat(result.getBio()).isNotEqualTo(originUser.getBio());
+                assertThat(result.bio()).isEqualTo(bio);
+                assertThat(result.bio()).isNotEqualTo(originUser.bio());
 
-                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+                assertThat(result.image()).isEqualTo(originUser.image());
             }
         }
 
@@ -481,7 +481,7 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getImage()).isEqualTo(originUser.getImage());
+                assertThat(result.image()).isEqualTo(originUser.image());
             }
 
             @Test
@@ -497,14 +497,14 @@ class UserServiceTest {
                 User result = userService.update(userUpdateModel, userId);
 
                 // then
-                assertThat(result.getUsername()).isEqualTo(originUser.getUsername());
-                assertThat(result.getEmail()).isEqualTo(originUser.getEmail());
-                assertThat(result.getPassword().password())
-                    .isEqualTo(originUser.getPassword().password());
-                assertThat(result.getBio()).isEqualTo(originUser.getBio());
+                assertThat(result.usesrname()).isEqualTo(originUser.usesrname());
+                assertThat(result.email()).isEqualTo(originUser.email());
+                assertThat(result.password().password())
+                    .isEqualTo(originUser.password().password());
+                assertThat(result.bio()).isEqualTo(originUser.bio());
 
-                assertThat(result.getImage()).isEqualTo(image);
-                assertThat(result.getImage()).isNotEqualTo(originUser.getImage());
+                assertThat(result.image()).isEqualTo(image);
+                assertThat(result.image()).isNotEqualTo(originUser.image());
             }
 
         }

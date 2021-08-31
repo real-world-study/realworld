@@ -45,12 +45,12 @@ class UserTest {
             .build();
 
         // then
-        assertThat(user.getId()).isEqualTo(id);
-        assertThat(user.getUsername()).isEqualTo(username);
-        assertThat(user.getEmail()).isEqualTo(email);
-        assertThat(user.getPassword()).isEqualTo(password);
-        assertThat(user.getBio()).isEqualTo(bio);
-        assertThat(user.getImage()).isEqualTo(image);
+        assertThat(user.id()).isEqualTo(id);
+        assertThat(user.usesrname()).isEqualTo(username);
+        assertThat(user.email()).isEqualTo(email);
+        assertThat(user.password()).isEqualTo(password);
+        assertThat(user.bio()).isEqualTo(bio);
+        assertThat(user.image()).isEqualTo(image);
     }
 
     @Test
@@ -70,12 +70,12 @@ class UserTest {
         User user = User.Builder(input).build();
 
         // then
-        assertThat(user.getId()).isEqualTo(input.getId());
-        assertThat(user.getUsername()).isEqualTo(input.getUsername());
-        assertThat(user.getEmail()).isEqualTo(input.getEmail());
-        assertThat(user.getPassword()).isEqualTo(input.getPassword());
-        assertThat(user.getBio()).isEqualTo(input.getBio());
-        assertThat(user.getImage()).isEqualTo(input.getImage());
+        assertThat(user.id()).isEqualTo(input.id());
+        assertThat(user.usesrname()).isEqualTo(input.usesrname());
+        assertThat(user.email()).isEqualTo(input.email());
+        assertThat(user.password()).isEqualTo(input.password());
+        assertThat(user.bio()).isEqualTo(input.bio());
+        assertThat(user.image()).isEqualTo(input.image());
     }
 
     @Test
@@ -84,14 +84,14 @@ class UserTest {
 
         // setup & given
         User user = User.Builder().password(new Password("password")).build();
-        when(passwordEncoder.encode(user.getPassword().password()))
+        when(passwordEncoder.encode(user.password().password()))
             .thenReturn("encoded_password");
 
         // when
         user.encodePassword(passwordEncoder);
 
         // then
-        assertThat(user.getPassword().password()).isEqualTo("encoded_password");
+        assertThat(user.password().password()).isEqualTo("encoded_password");
     }
 
     @Test

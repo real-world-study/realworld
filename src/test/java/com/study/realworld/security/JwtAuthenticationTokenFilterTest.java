@@ -120,7 +120,7 @@ class JwtAuthenticationTokenFilterTest {
 
         // then
         assertThat(authentication).isNotNull();
-        assertThat(authentication.getPrincipal()).isEqualTo(user.getId());
+        assertThat(authentication.getPrincipal()).isEqualTo(user.id());
         assertThat(authentication.getCredentials()).isEqualTo("token");
     }
 
