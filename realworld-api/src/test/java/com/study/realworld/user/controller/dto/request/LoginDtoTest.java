@@ -12,9 +12,7 @@ class LoginDtoTest {
 
     @DisplayName("create")
     @Test
-    void create() {
-
-    }
+    void create() {}
 
     @DisplayName("toEntity")
     @Test

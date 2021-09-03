@@ -20,14 +20,18 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.user.controller.dto.request.JoinDto;
 import com.study.realworld.user.controller.dto.request.LoginDto;
 import com.study.realworld.user.controller.dto.request.UpdateDto;
+import com.study.realworld.user.controller.dto.response.UserInfo;
 import com.study.realworld.user.entity.User;
 import com.study.realworld.user.service.UserService;
 
@@ -47,6 +51,15 @@ class UserControllerTest {
 
     private ObjectMapper objectMapper;
 
+    private User getUser(String email) {
+        return User.builder()
+                   .email(email)
+                   .username("DolphaGo")
+                   .bio("hello")
+                   .image("/test/image.jpg")
+                   .build();
+    }
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
@@ -60,16 +73,13 @@ class UserControllerTest {
         @DisplayName("SignIn Request")
         @Test
         void login() throws Exception {
+            LoginDto loginDto = LoginDto.create("dolphago@test.net", "1q2w3e4r");
 
-            User user = User.builder()
-                            .email("dolphago@test.net")
-                            .username("DolphaGo")
-                            .bio("hello")
-                            .build();
+            User user = getUser(loginDto.getEmail());
+            String accessToken = "accessToken";
+            UserInfo userInfo = UserInfo.create(user, accessToken);
 
-            when(userService.login(any(User.class))).thenReturn(user);
-
-            LoginDto loginDto = LoginDto.create("dolphago@test.net", "12345678");
+            when(userService.login(any(LoginDto.class))).thenReturn(userInfo);
 
             mockMvc.perform(
                            post("/api/users/login")
@@ -79,7 +89,9 @@ class UserControllerTest {
                    .andExpect(content().contentType(APPLICATION_JSON))
                    .andExpect(jsonPath("$.user.email", is(user.getEmail())))
                    .andExpect(jsonPath("$.user.username", is(user.getUsername())))
-                   .andExpect(jsonPath("$.user.bio", is(user.getBio())));
+                   .andExpect(jsonPath("$.user.bio", is(user.getBio())))
+                   .andExpect(jsonPath("$.user.image", is(user.getImage())))
+                   .andExpect(jsonPath("$.user.token", is(accessToken)));
         }
 
         @ParameterizedTest
@@ -106,15 +118,13 @@ class UserControllerTest {
         @DisplayName("SignUp Request")
         @Test
         void join() throws Exception {
-
             final JoinDto joinDto = JoinDto.create("dolphago@test.net", "DolphaGo", "1q2w3e4r");
 
-            User user = User.builder()
-                            .email("dolphago@test.net")
-                            .username("DolphaGo")
-                            .build();
+            User user = getUser(joinDto.getEmail());
+            String accessToken = "accessToken";
+            UserInfo userInfo = UserInfo.create(user, accessToken);
 
-            when(userService.join(any(User.class))).thenReturn(user);
+            when(userService.join(any(JoinDto.class))).thenReturn(userInfo);
 
             mockMvc.perform(
                            post("/api/users")
@@ -123,7 +133,8 @@ class UserControllerTest {
                    .andExpect(status().isOk())
                    .andExpect(content().contentType(APPLICATION_JSON))
                    .andExpect(jsonPath("$.user.email", is("dolphago@test.net")))
-                   .andExpect(jsonPath("$.user.username", is("DolphaGo")));
+                   .andExpect(jsonPath("$.user.username", is("DolphaGo")))
+                   .andExpect(jsonPath("$.user.token", is("accessToken")));
         }
 
         @ParameterizedTest
@@ -151,26 +162,21 @@ class UserControllerTest {
         @DisplayName("update Request")
         @Test
         void update() throws Exception {
+            final UpdateDto updateDto = UpdateDto.create("asdklfals@test.net", "update-bio", "/path/image.png");
+            final User updatedUser = getUser("dolphago@test.net");
+            updatedUser.update(updateDto.getEmail(), updateDto.getBio(), updateDto.getImage());
+            UserInfo userInfo = UserInfo.create(updatedUser, "token");
 
-            final UpdateDto updateDto = UpdateDto.create("dolphago@test.net", "update-bio", "/path/image.png");
+            when(userService.update(any(), any())).thenReturn(userInfo);
 
-            User user = User.builder()
-                            .email("dolphago@test.net")
-                            .username("DolphaGo")
-                            .bio(updateDto.getBio())
-                            .image(updateDto.getImage())
-                            .build();
+            final ResultActions perform = mockMvc.perform(
+                    put("/api/user")
+                            .content(objectMapper.writeValueAsString(updateDto))
+                            .contentType(APPLICATION_JSON));
 
-            when(userService.update(any(User.class))).thenReturn(user);
-
-            mockMvc.perform(
-                           put("/api/user")
-                                   .content(objectMapper.writeValueAsString(updateDto))
-                                   .contentType(APPLICATION_JSON))
-                   .andExpect(status().isOk())
-                   .andExpect(content().contentType(APPLICATION_JSON))
-                   .andExpect(jsonPath("$.user.email", is("dolphago@test.net")))
+            perform.andExpect(status().isOk())
                    .andExpect(jsonPath("$.user.username", is("DolphaGo")))
+                   .andExpect(jsonPath("$.user.email", is(updateDto.getEmail())))
                    .andExpect(jsonPath("$.user.bio", is(updateDto.getBio())))
                    .andExpect(jsonPath("$.user.image", is(updateDto.getImage())));
         }
@@ -184,8 +190,10 @@ class UserControllerTest {
         })
         void invalid_argument(String email, String bio, String image) throws Exception {
             final UpdateDto updateDto = UpdateDto.create(email, bio, image);
+            AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("dolphago@test.net", "1q2w3e4r");
             mockMvc.perform(
                            put("/api/user")
+                                   .principal(authenticationToken)
                                    .content(objectMapper.writeValueAsString(updateDto))
                                    .contentType(APPLICATION_JSON))
                    .andExpect(status().isBadRequest());

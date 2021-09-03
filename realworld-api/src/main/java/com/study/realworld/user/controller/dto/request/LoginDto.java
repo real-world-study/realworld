@@ -39,4 +39,5 @@ public class LoginDto {
     public static LoginDto create(String email, String password){
         return new LoginDto(email, password);
     }
+
 }

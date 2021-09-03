@@ -34,13 +34,12 @@ class JoinDtoTest {
     @Test
     void toEntity() {
         final JoinDto joinDto = JoinDto.create("DolphaGo@test.net", "DolphaGo", "12345");
-        String encodedPassword = "1q2w3e4r";
-        final User user = joinDto.toEntity(encodedPassword);
+        final User user = joinDto.toEntity();
 
         assertAll(
-                () -> assertThat(user.getEmail()).isEqualTo("DolphaGo@test.net"),
-                () -> assertThat(user.getUsername()).isEqualTo("DolphaGo"),
-                () -> assertThat(user.getPassword()).isEqualTo(encodedPassword)
+                () -> assertThat(user.getEmail()).isEqualTo(joinDto.getEmail()),
+                () -> assertThat(user.getUsername()).isEqualTo(joinDto.getUsername()),
+                () -> assertThat(user.getPassword()).isEqualTo(joinDto.getPassword())
         );
     }
 }

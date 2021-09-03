@@ -1,0 +1,11 @@
+# join
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "test@test.net",
+    "password": "1q2w3e4r",
+    "username": "DolphaGo"
+  }
+}
