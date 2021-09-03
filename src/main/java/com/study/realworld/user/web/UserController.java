@@ -28,9 +28,10 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<UserResponse> joinUser(@RequestBody UserJoinRequest request) {
         User user = userService.save(request);
+        String token = jwtProvider.generateJwtToken(user);
 
         return ResponseEntity.ok()
-                .body(UserResponse.of(user, "token"));
+                .body(UserResponse.of(user, token));
     }
 
     @PostMapping("/users/login")
