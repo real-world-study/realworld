@@ -38,25 +38,20 @@ public class JwtProvider {
     }
 
     public Claims getClaimsFromToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+             return Jwts.parserBuilder()
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(secret))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException | NullPointerException e) {
+            throw new JwtException("Invalid token");
+        }
     }
 
     public String getSubjectFromToken(String token) {
         return this.getClaimsFromToken(token)
                 .getSubject();
-    }
-
-    public boolean isValidToken(String token) {
-        try {
-            Claims claims = this.getClaimsFromToken(token);
-            return true;
-        } catch (JwtException | NullPointerException e) {
-            return false;
-        }
     }
 
     private Map<String, Object> createHeader() {

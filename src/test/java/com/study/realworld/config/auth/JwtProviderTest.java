@@ -44,13 +44,11 @@ class JwtProviderTest {
         // when
         String token = jwtProvider.generateJwtToken(user);
         String subject = jwtProvider.getSubjectFromToken(token);
-        boolean isValidToken = jwtProvider.isValidToken(token);
 
         // then
         assertAll(
                 () -> assertThat(token).isNotNull(),
-                () -> assertThat(subject).isEqualTo(EMAIL),
-                () -> assertThat(isValidToken).isTrue()
+                () -> assertThat(subject).isEqualTo(EMAIL)
         );
     }
 
