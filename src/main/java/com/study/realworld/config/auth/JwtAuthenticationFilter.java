@@ -20,11 +20,13 @@ import java.util.Collections;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private static final String DOFILTERMESSAGE = "{} {} : {}";
+
     private final JwtProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("{} {} : {}", request.getMethod(), request.getRequestURI(), request.getHeader(HttpHeaders.AUTHORIZATION));
+        log.info(DOFILTERMESSAGE, request.getMethod(), request.getRequestURI(), request.getHeader(HttpHeaders.AUTHORIZATION));
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(header != null) {
