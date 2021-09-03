@@ -3,6 +3,7 @@ package com.study.realworld.configuration;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.SpringApplication;
@@ -31,14 +32,18 @@ public class YamlEnvironmentPostProcessor implements EnvironmentPostProcessor {
                 resourceList.addAll(List.of(resourcePatternResolver.getResources(propertyUri)));
             }
 
-            resourceList.stream().map(this::loadYaml).forEach(them -> {
-                if (them != null) {
-                    them.stream().forEach(it -> environment.getPropertySources().addLast(it));
-                }
-            });
+            resourceList.stream().map(this::loadYaml).forEach(addPropertySoruce(environment));
         } catch (Exception e) {
             throw new BeanCreationException(e.getMessage(), e);
         }
+    }
+
+    private Consumer<List<PropertySource<?>>> addPropertySoruce(final ConfigurableEnvironment environment) {
+        return them -> {
+            if (them != null) {
+                them.stream().forEach(it -> environment.getPropertySources().addLast(it));
+            }
+        };
     }
 
     private List<PropertySource<?>> loadYaml(Resource resource) {

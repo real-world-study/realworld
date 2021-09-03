@@ -136,8 +136,7 @@ class UserServiceTest {
         void duplicated_email() {
             JoinDto dto = JoinDto.create("dolphago@test.net", "DolphaGo", "1q2w3e4r");
             when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(User.builder().build()));
-            assertThatExceptionOfType(CustomException.class)
-                    .isThrownBy(() -> userService.join(dto));
+            assertThatExceptionOfType(CustomException.class).isThrownBy(() -> userService.join(dto));
         }
     }
 
