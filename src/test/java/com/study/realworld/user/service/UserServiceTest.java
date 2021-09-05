@@ -217,11 +217,9 @@ class UserServiceTest {
                 .image(IMAGE)
                 .build();
 
+        // when
         when(userRepository.findByEmail(anyString()))
                 .thenReturn(Optional.ofNullable(user));
-
-        // when
-
         // then
         assertThrows(DuplicateKeyException.class, () -> userService.save(request));
     }
