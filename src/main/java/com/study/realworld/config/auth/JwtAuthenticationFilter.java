@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,15 +28,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info(DOFILTERMESSAGE, request.getMethod(), request.getRequestURI(), request.getHeader(HttpHeaders.AUTHORIZATION));
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String tokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(header != null) {
-            String tokenPrefix = header.split(" ")[0];
-            String accessToken = header.split(" ")[1];
+        if(tokenHeader != null && tokenHeader.split(" ").length == 2) {
+            String tokenPrefix = tokenHeader.split(" ")[0];
+            String accessToken = tokenHeader.split(" ")[1];
 
             if("Token".equals(tokenPrefix)) {
                 String email = jwtProvider.getSubjectFromToken(accessToken);
-                final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, accessToken, Collections.emptyList());
+                final Authentication authentication = new UsernamePasswordAuthenticationToken(email, accessToken, Collections.emptyList());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
