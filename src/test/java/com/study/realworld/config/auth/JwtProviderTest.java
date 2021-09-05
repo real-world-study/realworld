@@ -1,6 +1,7 @@
 package com.study.realworld.config.auth;
 
 import com.study.realworld.user.domain.User;
+import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class JwtProviderTest {
@@ -15,6 +17,7 @@ class JwtProviderTest {
     private static final Long ID = 1L;
     private static final String EMAIL = "email";
     private static final String TOKEN = "token";
+    private static final String WRONG_TOKEN = "wrong-token";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String BIO = "bio";
@@ -50,6 +53,16 @@ class JwtProviderTest {
                 () -> assertThat(token).isNotNull(),
                 () -> assertThat(subject).isEqualTo(EMAIL)
         );
+    }
+
+    @Test
+    void getClaimsFromToken_exception() {
+        // given
+
+        // when
+
+        // then
+        assertThrows(JwtException.class, () -> jwtProvider.getClaimsFromToken(WRONG_TOKEN));
     }
 
 }

@@ -4,15 +4,17 @@ import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.dto.UserJoinRequest;
 import com.study.realworld.user.dto.UserLoginRequest;
+import com.study.realworld.user.dto.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -36,7 +38,7 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException(email + " not found"));
     }
 
-    @Transactional(propagation = Propagation.NEVER)
+    @Transactional
     public User save(UserJoinRequest request) {
         User user = UserJoinRequest.toUser(request);
         user.encodePassword(passwordEncoder);
@@ -45,13 +47,24 @@ public class UserService {
 
         return userRepository.save(user);
     }
-    
+
     public User login(UserLoginRequest request) {
         User user = this.findByEmail(request.getEmail());
 
         validateMatchesPassword(user, request.getPassword());
 
         return user;
+    }
+
+    @Transactional
+    public User update(UserUpdateRequest request, String principal) {
+        validateExistUser(request.getEmail());
+
+        User requestUser = UserUpdateRequest.toUser(request);
+        if(nonNull(requestUser.getPassword())) requestUser.encodePassword(passwordEncoder);
+
+        User user = this.findByEmail(principal);
+        return user.updateUser(requestUser);
     }
 
     private void validateDuplicateUser(String email) {
@@ -63,6 +76,12 @@ public class UserService {
     private void validateMatchesPassword(User user, String rawPassword) {
         if(!user.matchesPassword(rawPassword, passwordEncoder)) {
             throw new NoSuchElementException(rawPassword + " wrong wrong wrong triple wrong" + user.getPassword());
+        }
+    }
+
+    private void validateExistUser(String email) {
+        if(userRepository.existsByEmail(email)) {
+            throw new DuplicateKeyException(email);
         }
     }
 

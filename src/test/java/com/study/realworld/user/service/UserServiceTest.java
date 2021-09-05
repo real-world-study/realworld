@@ -4,7 +4,7 @@ import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.dto.UserJoinRequest;
 import com.study.realworld.user.dto.UserLoginRequest;
-import org.junit.jupiter.api.Disabled;
+import com.study.realworld.user.dto.UserUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,13 +52,13 @@ class UserServiceTest {
                 .image(IMAGE)
                 .build();
 
+        // when
         when(userRepository.findAll())
                 .thenReturn(List.of(user));
 
-        // when
+        // then
         User result = userService.findAll().get(0);
 
-        // then
         verify(userRepository).findAll();
         assertAll(
                 () -> assertEquals(user.getEmail(), result.getEmail()),
@@ -80,13 +80,13 @@ class UserServiceTest {
                 .image(IMAGE)
                 .build();
 
+        // when
         when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(user));
 
-        // when
+        // then
         User result = userService.findById(ID);
 
-        // then
         verify(userRepository).findById(ID);
         assertAll(
                 () -> assertEquals(user.getEmail(), result.getEmail()),
@@ -108,13 +108,13 @@ class UserServiceTest {
                 .image(IMAGE)
                 .build();
 
+        // when
         when(userRepository.findByEmail(anyString()))
                 .thenReturn(Optional.ofNullable(user));
 
-        // when
+        // then
         User result = userService.findByEmail(user.getEmail());
 
-        // then
         verify(userRepository).findByEmail(user.getEmail());
         assertAll(
                 () -> assertEquals(user.getId(), result.getId()),
@@ -143,60 +143,17 @@ class UserServiceTest {
                 .image(IMAGE)
                 .build();
 
+        // when
         when(userRepository.save(any()))
                 .thenReturn(user);
 
-        // when
+        // then
         User result = userService.save(request);
 
-        // then
         verify(userRepository).save(user);
         assertAll(
                 () -> assertEquals(request.getEmail(), result.getEmail()),
                 () -> assertEquals(request.getUsername(), result.getUsername())
-        );
-    }
-
-    @Test
-    void login() {
-        // given
-        final UserLoginRequest request = UserLoginRequest.builder()
-                .email(EMAIL)
-                .password(PASSWORD)
-                .build();
-
-        final User user = User.builder()
-                .email(EMAIL)
-                .username(USERNAME)
-                .password(PASSWORD)
-                .bio(BIO)
-                .image(IMAGE)
-                .build();
-
-        when(userRepository.findByEmail(anyString()))
-                .thenReturn(Optional.ofNullable(user));
-
-        /**
-         * This exception may occur if matchers are combined with raw values:
-         *     //incorrect:
-         *     someMethod(anyObject(), "raw String");
-         * When using matchers, all arguments have to be provided by matchers.
-         * For example:
-         *     //correct:
-         *     someMethod(anyObject(), eq("String by matcher"));
-         *
-         * For more info see javadoc for Matchers class.
-         */
-        when(passwordEncoder.matches(any(), any()))
-                .thenReturn(true);
-
-        // when
-        User result = userService.login(request);
-
-        // then
-        assertAll(
-                () -> assertEquals(request.getEmail(), result.getEmail()),
-                () -> assertTrue(result.matchesPassword(request.getPassword(), passwordEncoder))
         );
     }
 
@@ -220,8 +177,40 @@ class UserServiceTest {
         // when
         when(userRepository.findByEmail(anyString()))
                 .thenReturn(Optional.ofNullable(user));
+
         // then
         assertThrows(DuplicateKeyException.class, () -> userService.save(request));
+    }
+
+    @Test
+    void login() {
+        // given
+        final UserLoginRequest request = UserLoginRequest.builder()
+                .email(EMAIL)
+                .password(PASSWORD)
+                .build();
+
+        final User user = User.builder()
+                .email(EMAIL)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .bio(BIO)
+                .image(IMAGE)
+                .build();
+
+        // when
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.ofNullable(user));
+        when(passwordEncoder.matches(any(), any()))
+                .thenReturn(true);
+
+        // then
+        User result = userService.login(request);
+
+        assertAll(
+                () -> assertEquals(request.getEmail(), result.getEmail()),
+                () -> assertTrue(result.matchesPassword(request.getPassword(), passwordEncoder))
+        );
     }
 
     @Test
@@ -240,13 +229,63 @@ class UserServiceTest {
                 .image(IMAGE)
                 .build();
 
+        // when
         when(userRepository.findByEmail(anyString()))
                 .thenReturn(Optional.ofNullable(user));
 
-        // when
-
         // then
         assertThrows(NoSuchElementException.class, () -> userService.login(request));
+    }
+
+    @Test
+    void update() {
+        // given
+        UserUpdateRequest request = UserUpdateRequest.builder()
+                .email(EMAIL+EMAIL)
+                .password(PASSWORD+PASSWORD)
+                .bio(BIO+BIO)
+                .build();
+
+        User user = User.builder()
+                .email(EMAIL)
+                .username(USERNAME)
+                .password(PASSWORD)
+                .bio(BIO)
+                .image(IMAGE)
+                .build();
+
+        // when
+        when(userRepository.existsByEmail(anyString()))
+                .thenReturn(false);
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.ofNullable(user));
+
+        // then
+        User result = userService.update(request, EMAIL);
+
+        assertAll(
+                () -> assertEquals(request.getEmail(), result.getEmail()),
+                () -> assertEquals(user.getUsername(), result.getUsername()),
+                () -> assertEquals(request.getBio(), result.getBio()),
+                () -> assertEquals(user.getImage(), result.getImage())
+        );
+    }
+
+    @Test
+    void update_validateExistUser_exception() {
+        // given
+        UserUpdateRequest request = UserUpdateRequest.builder()
+                .email(EMAIL+EMAIL)
+                .password(PASSWORD+PASSWORD)
+                .bio(BIO+BIO)
+                .build();
+
+        // when
+        when(userRepository.existsByEmail(anyString()))
+                .thenReturn(true);
+
+        // then
+        assertThrows(DuplicateKeyException.class, () -> userService.update(request, EMAIL));
     }
 
 }

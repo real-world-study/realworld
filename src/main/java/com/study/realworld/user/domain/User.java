@@ -44,14 +44,13 @@ public class User extends BaseTimeEntity {
         this.image = image;
     }
 
-    public static User of(User user) {
-        return User.builder()
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .bio(user.getBio())
-                .image(user.getImage())
-                .build();
+    public User updateUser(User user) {
+        if(Objects.nonNull(user.getEmail())) this.email = user.getEmail();
+        if(Objects.nonNull(user.getUsername())) this.username = user.getUsername();
+        if(Objects.nonNull(user.getPassword())) this.password = user.getPassword();
+        if(Objects.nonNull(user.getBio())) this.bio = user.getBio();
+        if(Objects.nonNull(user.getImage())) this.image = user.getImage();
+        return this;
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
