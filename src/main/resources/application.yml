@@ -24,3 +24,7 @@ spring:
 
 server:
   port: 8080
+
+jwt:
+  secret: 29effa2dab94e8f33f431d7694e2d47d4eb3999e653fdb9c8c811c0fbab245d1d5c8fba1d405758836b4193a44ecb9308543238bbadfa575cd5e3ee798d2d42e
+  access-time: 1800000
