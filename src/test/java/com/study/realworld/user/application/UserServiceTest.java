@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -102,7 +101,7 @@ class UserServiceTest {
 
         Optional<User> loginUser = userRepository.findById(userId);
 
-        assertThat(loginUser.get().getEmail()).isEqualTo(email);
+        assertEquals(loginUser.get().getEmail(), userService.getLoginUser(userId).getEmail());
     }
 
     @Test
