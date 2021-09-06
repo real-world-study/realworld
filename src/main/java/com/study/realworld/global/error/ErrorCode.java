@@ -9,6 +9,10 @@ public enum ErrorCode {
 
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "user is not found"),
 
+    INVALID_USERNAME_NULL(HttpStatus.BAD_REQUEST, "username must be provided."),
+    INVALID_USERNAME_LENGTH(HttpStatus.BAD_REQUEST, "username length must be less then 20 characters."),
+    INVALID_USERNAME_PATTERN(HttpStatus.BAD_REQUEST, "usernmae must be provided by limited pattern."),
+
     PASSWORD_DISMATCH(HttpStatus.FORBIDDEN, "password is dismatch.")
     ;
 

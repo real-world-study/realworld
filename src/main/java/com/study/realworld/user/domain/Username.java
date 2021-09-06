@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.regex.Pattern.matches;
 
+import com.study.realworld.global.error.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -24,9 +25,9 @@ public class Username {
     }
 
     private static void checkUsername(String name) {
-        checkArgument(StringUtils.isNotBlank(name), "username must be provided.");
-        checkArgument(name.length() <= 20, "username length must be less then 20 characters.");
-        checkArgument(checkUsernamePattern(name), "usernmae must be provided by limited pattern.");
+        checkArgument(StringUtils.isNotBlank(name), ErrorCode.INVALID_USERNAME_NULL.getMessage());
+        checkArgument(name.length() <= 20, ErrorCode.INVALID_USERNAME_LENGTH.getMessage());
+        checkArgument(checkUsernamePattern(name), ErrorCode.INVALID_USERNAME_PATTERN.getMessage());
     }
 
     private static boolean checkUsernamePattern(String name) {

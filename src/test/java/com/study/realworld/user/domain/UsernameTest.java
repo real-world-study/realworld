@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.study.realworld.global.error.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +26,7 @@ class UsernameTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Username(input))
-            .withMessageMatching("username must be provided.");
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_NULL.getMessage());
     }
 
     @ParameterizedTest
@@ -36,7 +37,7 @@ class UsernameTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Username(input))
-            .withMessageMatching("username must be provided.");
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_NULL.getMessage());
     }
 
     @Test
@@ -49,7 +50,7 @@ class UsernameTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Username(input))
-            .withMessageMatching("username length must be less then 20 characters.");
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_LENGTH.getMessage());
     }
 
     @Test
@@ -74,7 +75,7 @@ class UsernameTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Username(input))
-            .withMessageMatching("usernmae must be provided by limited pattern.");
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_PATTERN.getMessage());
     }
 
     @Test
