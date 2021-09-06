@@ -22,7 +22,7 @@ class UserResponseTest {
 
         // given
         User user = User.Builder()
-            .username(new Username("username"))
+            .username(Username.of("username"))
             .email(new Email("test@test.com"))
             .bio(new Bio("bio"))
             .image(new Image("image"))

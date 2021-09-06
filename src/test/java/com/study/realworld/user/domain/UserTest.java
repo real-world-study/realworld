@@ -30,7 +30,7 @@ class UserTest {
 
         // given
         Long id = 1L;
-        Username username = new Username("username");
+        Username username = Username.of("username");
         Email email = new Email("email@email.com");
         Password password = Password.of("password");
         Bio bio = new Bio("bio");
@@ -61,7 +61,7 @@ class UserTest {
         // given
         User input = User.Builder()
             .id(1L)
-            .username(new Username("username"))
+            .username(Username.of("username"))
             .email(new Email("test@test.com"))
             .password(Password.of("password"))
             .bio(new Bio("bio"))

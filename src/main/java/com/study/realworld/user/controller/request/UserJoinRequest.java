@@ -54,7 +54,7 @@ public class UserJoinRequest {
 
     public User toUser() {
         return User.Builder()
-            .username(new Username(getUsername()))
+            .username(Username.of(getUsername()))
             .email(new Email(getEmail()))
             .password(Password.of(getPassword()))
             .bio(new Bio(getBio()))

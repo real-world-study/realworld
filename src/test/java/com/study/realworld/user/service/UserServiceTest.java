@@ -80,7 +80,7 @@ class UserServiceTest {
         Password password = Password.of("password");
         when(passwordEncoder.encode(password.password())).thenReturn("encoded_password");
         User input = User.Builder()
-            .username(new Username("username"))
+            .username(Username.of("username"))
             .email(new Email("test@test.com"))
             .password(password)
             .bio(new Bio("bio"))
@@ -102,7 +102,7 @@ class UserServiceTest {
 
         // then
         assertThat(user.id()).isEqualTo(1L);
-        assertThat(user.username()).isEqualTo(new Username("username"));
+        assertThat(user.username()).isEqualTo(Username.of("username"));
         assertThat(user.email()).isEqualTo(new Email("test@test.com"));
         assertThat(user.password().password())
             .isEqualTo("encoded_password");
@@ -213,7 +213,7 @@ class UserServiceTest {
         // setup & given
         Long userId = 2L;
         UserUpdateModel userUpdateModel = new UserUpdateModel(
-            new Username("username"),
+            Username.of("username"),
             new Email("test@test.com"),
             Password.of("password"),
             new Bio("bio"),
@@ -238,14 +238,14 @@ class UserServiceTest {
         @BeforeEach
         void beforeEach() {
             user = User.Builder()
-                .username(new Username("username"))
+                .username(Username.of("username"))
                 .email(new Email("test@test.com"))
                 .password(Password.of("encoded_password"))
                 .bio(new Bio("bio"))
                 .image(new Image("image"))
                 .build();
             originUser = User.Builder()
-                .username(new Username("username"))
+                .username(Username.of("username"))
                 .email(new Email("test@test.com"))
                 .password(Password.of("encoded_password"))
                 .bio(new Bio("bio"))
@@ -263,7 +263,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowUsernameTest() {
 
                 // given
-                Username username = new Username("username");
+                Username username = Username.of("username");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
                     null, null, null);
 
@@ -279,7 +279,7 @@ class UserServiceTest {
             void updateFailByDuplicatedUsernameTest() {
 
                 // setup & given
-                Username username = new Username("usernameChange");
+                Username username = Username.of("usernameChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
                     null, null, null);
                 when(userRepository.findByUsername(username))
@@ -296,7 +296,7 @@ class UserServiceTest {
             void updateSuccessByUsernameTest() {
 
                 // setup & given
-                Username username = new Username("usernameChange");
+                Username username = Username.of("usernameChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
                     null, null, null);
                 when(userRepository.findByUsername(username))

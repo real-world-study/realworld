@@ -25,7 +25,7 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
+            .isThrownBy(() -> Username.of(input))
             .withMessageMatching(ErrorCode.INVALID_USERNAME_NULL.getMessage());
     }
 
@@ -36,7 +36,7 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
+            .isThrownBy(() -> Username.of(input))
             .withMessageMatching(ErrorCode.INVALID_USERNAME_NULL.getMessage());
     }
 
@@ -49,7 +49,7 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
+            .isThrownBy(() -> Username.of(input))
             .withMessageMatching(ErrorCode.INVALID_USERNAME_LENGTH.getMessage());
     }
 
@@ -61,7 +61,7 @@ class UsernameTest {
         String input = "123가믜힣abcABC";
 
         // when
-        Username username = new Username(input);
+        Username username = Username.of(input);
 
         // then
         assertThat(username.toString()).isEqualTo(input);
@@ -74,7 +74,7 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
+            .isThrownBy(() -> Username.of(input))
             .withMessageMatching(ErrorCode.INVALID_USERNAME_PATTERN.getMessage());
     }
 
@@ -83,8 +83,8 @@ class UsernameTest {
     void usernameEqualsHashCodeTest() {
 
         // given
-        Username username = new Username("username");
-        Username copyUsername = new Username("username");
+        Username username = Username.of("username");
+        Username copyUsername = Username.of("username");
 
         // when & then
         assertThat(username)
@@ -100,7 +100,7 @@ class UsernameTest {
         String input = "username";
 
         // when
-        Username username = new Username(input);
+        Username username = Username.of(input);
 
         // then
         assertThat(username.toString()).isEqualTo(input);

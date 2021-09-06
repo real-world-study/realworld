@@ -18,10 +18,13 @@ public class Username {
     protected Username() {
     }
 
-    public Username(String name) {
-        checkUsername(name);
-
+    private Username(String name) {
         this.name = name;
+    }
+
+    public static Username of(String name) {
+        checkUsername(name);
+        return new Username(name);
     }
 
     private static void checkUsername(String name) {
