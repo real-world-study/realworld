@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
 
-    EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "Duplicated email exists."),
-    USERNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "Duplicated username exists."),
+    EMAIL_DUPLICATION(HttpStatus.CONFLICT, "Duplicated email exists."),
+    USERNAME_DUPLICATION(HttpStatus.CONFLICT, "Duplicated username exists."),
 
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "user is not found"),
 
