@@ -35,7 +35,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User login(Email email, Password password) {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOTFOUND));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         user.login(password, passwordEncoder);
         return user;
     }
@@ -43,7 +43,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOTFOUND));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional

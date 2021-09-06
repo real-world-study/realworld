@@ -122,7 +122,7 @@ class UserServiceTest {
         // when && then
         assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> userService.login(email, password))
-            .withMessageMatching(ErrorCode.USER_NOTFOUND.getMessage());
+            .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
     }
 
     // TODO
@@ -203,7 +203,7 @@ class UserServiceTest {
         // when & then
         assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> userService.findById(userId))
-            .withMessageMatching(ErrorCode.USER_NOTFOUND.getMessage());
+            .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
     }
 
     @Test
@@ -224,7 +224,7 @@ class UserServiceTest {
         // when & then
         assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> userService.update(userUpdateModel, userId))
-            .withMessageMatching(ErrorCode.USER_NOTFOUND.getMessage());
+            .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
     }
 
     @Nested
