@@ -5,6 +5,8 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.exception.DuplicateEmailException;
+import com.study.realworld.user.exception.DuplicateUsernameException;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,13 +60,13 @@ public class UserService {
 
     private void checkDuplicatedByUsername(Username username) {
         findByUsername(username).ifPresent(param -> {
-            throw new RuntimeException("already user username");
+            throw new DuplicateUsernameException();
         });
     }
 
     private void checkDuplicatedByEmail(Email email) {
         findByEmail(email).ifPresent(param -> {
-            throw new RuntimeException("already user email");
+            throw new DuplicateEmailException();
         });
     }
 

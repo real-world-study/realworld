@@ -14,6 +14,8 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.exception.DuplicateEmailException;
+import com.study.realworld.user.exception.DuplicateUsernameException;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,8 +50,9 @@ class UserServiceTest {
             .thenReturn(Optional.of(user));
 
         // when & then
-        assertThatExceptionOfType(Exception.class)
-            .isThrownBy(() -> userService.join(user));
+        assertThatExceptionOfType(DuplicateUsernameException.class)
+            .isThrownBy(() -> userService.join(user))
+            .withMessageMatching("Duplicated username exists.");
     }
 
     @Test
@@ -62,8 +65,9 @@ class UserServiceTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
 
         // when & then
-        assertThatExceptionOfType(Exception.class)
-            .isThrownBy(() -> userService.join(user));
+        assertThatExceptionOfType(DuplicateEmailException.class)
+            .isThrownBy(() -> userService.join(user))
+            .withMessageMatching("Duplicated email exists.");
     }
 
     @Test
