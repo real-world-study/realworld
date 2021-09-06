@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.global.error.ErrorCode;
+import com.study.realworld.global.error.exception.BusinessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -121,9 +123,9 @@ class UserTest {
         Password password = new Password("password");
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> user.login(password, passwordEncoder))
-            .withMessageMatching("password is different from old password.");
+            .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
     @Test

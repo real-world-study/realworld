@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.global.error.ErrorCode;
+import com.study.realworld.global.error.exception.BusinessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,9 +114,9 @@ class PasswordTest {
         String input = "password";
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> password.matchPassword(new Password("password"), passwordEncoder))
-            .withMessageMatching("password is different from old password.");
+            .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
 }

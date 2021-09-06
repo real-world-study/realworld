@@ -7,7 +7,9 @@ public enum ErrorCode {
     EMAIL_DUPLICATION(HttpStatus.BAD_REQUEST, "Duplicated email exists."),
     USERNAME_DUPLICATION(HttpStatus.BAD_REQUEST, "Duplicated username exists."),
 
-    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "user is not found")
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "user is not found"),
+
+    PASSWORD_DISMATCH(HttpStatus.FORBIDDEN, "password is dismatch.")
     ;
 
     private final HttpStatus httpStatus;
