@@ -13,7 +13,6 @@ $ ./gradlew build bootRun
 ```
 
 
-
 ## 프로젝트 진행 사항
 
 - 언어 : JAVA 11
