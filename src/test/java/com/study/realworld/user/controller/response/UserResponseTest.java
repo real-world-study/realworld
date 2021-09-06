@@ -23,7 +23,7 @@ class UserResponseTest {
         // given
         User user = User.Builder()
             .username(Username.of("username"))
-            .email(new Email("test@test.com"))
+            .email(Email.of("test@test.com"))
             .bio(new Bio("bio"))
             .image(new Image("image"))
             .build();

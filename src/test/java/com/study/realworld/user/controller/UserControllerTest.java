@@ -74,7 +74,7 @@ class UserControllerTest {
         // setup
         User user = User.Builder()
             .username(Username.of("username"))
-            .email(new Email("test@test.com"))
+            .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .build();
 
@@ -136,7 +136,7 @@ class UserControllerTest {
         // setup
         User user = User.Builder()
             .username(Username.of("username"))
-            .email(new Email("test@test.com"))
+            .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .build();
 
@@ -191,7 +191,7 @@ class UserControllerTest {
         // setup
         User user = User.Builder()
             .username(Username.of("username"))
-            .email(new Email("test@test.com"))
+            .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .build();
         when(userService.findById(any())).thenReturn(user);
@@ -239,7 +239,7 @@ class UserControllerTest {
         // setup
         User user = User.Builder()
             .username(Username.of("usernameChange"))
-            .email(new Email("change@change.com"))
+            .email(Email.of("change@change.com"))
             .password(Password.of("passwordChange"))
             .bio(new Bio("bioChange"))
             .image(new Image("imageChange"))

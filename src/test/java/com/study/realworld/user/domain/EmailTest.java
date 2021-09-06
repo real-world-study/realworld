@@ -23,7 +23,7 @@ class EmailTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Email(input))
+            .isThrownBy(() -> Email.of(input))
             .withMessageMatching(ErrorCode.INVALID_EMAIL_PATTERN.getMessage());
     }
 
@@ -34,7 +34,7 @@ class EmailTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Email(input))
+            .isThrownBy(() -> Email.of(input))
             .withMessageMatching(ErrorCode.INVALID_EMAIL_NULL.getMessage());
     }
 
@@ -48,7 +48,7 @@ class EmailTest {
         // when & given
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Email(input))
+            .isThrownBy(() -> Email.of(input))
             .withMessageMatching(ErrorCode.INVALID_EMAIL_NULL.getMessage());
     }
 
@@ -57,8 +57,8 @@ class EmailTest {
     void emailEqualsHashCodeTest() {
 
         // given
-        Email email = new Email("test@test.com");
-        Email copyEmail = new Email("test@test.com");
+        Email email = Email.of("test@test.com");
+        Email copyEmail = Email.of("test@test.com");
 
         // when & then
         assertThat(email)
@@ -74,7 +74,7 @@ class EmailTest {
         String input = "test@test.com";
 
         // when
-        Email email = new Email(input);
+        Email email = Email.of(input);
 
         // then
         assertThat(email.toString()).isEqualTo(input);

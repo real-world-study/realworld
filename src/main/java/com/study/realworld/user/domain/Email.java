@@ -18,10 +18,13 @@ public class Email {
     protected Email() {
     }
 
-    public Email(String address) {
-        checkEmail(address);
-
+    private Email(String address) {
         this.address = address;
+    }
+
+    public static Email of(String address) {
+        checkEmail(address);
+        return new Email(address);
     }
 
     private static void checkEmail(String address) {

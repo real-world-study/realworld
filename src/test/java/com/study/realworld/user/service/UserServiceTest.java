@@ -81,7 +81,7 @@ class UserServiceTest {
         when(passwordEncoder.encode(password.password())).thenReturn("encoded_password");
         User input = User.Builder()
             .username(Username.of("username"))
-            .email(new Email("test@test.com"))
+            .email(Email.of("test@test.com"))
             .password(password)
             .bio(new Bio("bio"))
             .image(new Image("image"))
@@ -103,7 +103,7 @@ class UserServiceTest {
         // then
         assertThat(user.id()).isEqualTo(1L);
         assertThat(user.username()).isEqualTo(Username.of("username"));
-        assertThat(user.email()).isEqualTo(new Email("test@test.com"));
+        assertThat(user.email()).isEqualTo(Email.of("test@test.com"));
         assertThat(user.password().password())
             .isEqualTo("encoded_password");
         assertThat(user.bio().get()).isEqualTo(new Bio("bio"));
@@ -115,7 +115,7 @@ class UserServiceTest {
     void loginFailByEmailTest() {
 
         // setup & given
-        Email email = new Email("test@test.com");
+        Email email = Email.of("test@test.com");
         Password password = Password.of("password");
         when(userRepository.findByEmail(email)).thenReturn(empty());
 
@@ -131,7 +131,7 @@ class UserServiceTest {
     void loginFailByPasswordTest() {
 
         // setup & given
-        Email email = new Email("test@test.com");
+        Email email = Email.of("test@test.com");
         Password password = Password.of("password");
         User user = User.Builder().password(Password.of("encoded_password")).build();
         when(userRepository.findByEmail(email)).thenReturn(ofNullable(user));
@@ -147,7 +147,7 @@ class UserServiceTest {
     void loginSuccessTest() {
 
         // setup & given
-        Email email = new Email("test@test.com");
+        Email email = Email.of("test@test.com");
         Password password = Password.of("password");
         User input = User.Builder().email(email).password(Password.of("encoded_password")).build();
         when(userRepository.findByEmail(email)).thenReturn(ofNullable(input));
@@ -167,7 +167,7 @@ class UserServiceTest {
     void findByIdSuccessTest() {
 
         // setup & given
-        User user = User.Builder().email(new Email("test@test.com")).build();
+        User user = User.Builder().email(Email.of("test@test.com")).build();
         Long userId = 2L;
         when(userRepository.findById(userId)).thenReturn(ofNullable(user));
 
@@ -214,7 +214,7 @@ class UserServiceTest {
         Long userId = 2L;
         UserUpdateModel userUpdateModel = new UserUpdateModel(
             Username.of("username"),
-            new Email("test@test.com"),
+            Email.of("test@test.com"),
             Password.of("password"),
             new Bio("bio"),
             new Image("image")
@@ -239,14 +239,14 @@ class UserServiceTest {
         void beforeEach() {
             user = User.Builder()
                 .username(Username.of("username"))
-                .email(new Email("test@test.com"))
+                .email(Email.of("test@test.com"))
                 .password(Password.of("encoded_password"))
                 .bio(new Bio("bio"))
                 .image(new Image("image"))
                 .build();
             originUser = User.Builder()
                 .username(Username.of("username"))
-                .email(new Email("test@test.com"))
+                .email(Email.of("test@test.com"))
                 .password(Password.of("encoded_password"))
                 .bio(new Bio("bio"))
                 .image(new Image("image"))
@@ -326,7 +326,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowEmailTest() {
 
                 // given
-                Email email = new Email("test@test.com");
+                Email email = Email.of("test@test.com");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, email,
                     null, null, null);
 
@@ -342,7 +342,7 @@ class UserServiceTest {
             void updateFailByDuplicatedEmailTest() {
 
                 // setup & given
-                Email email = new Email("change@change.com");
+                Email email = Email.of("change@change.com");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, email,
                     null, null, null);
                 when(userRepository.findByEmail(email))
@@ -359,7 +359,7 @@ class UserServiceTest {
             void updateSuccessByEmailTest() {
 
                 // setup & given
-                Email email = new Email("change@change.com");
+                Email email = Email.of("change@change.com");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, email,
                     null, null, null);
                 when(userRepository.findByEmail(email))

@@ -31,7 +31,7 @@ class UserTest {
         // given
         Long id = 1L;
         Username username = Username.of("username");
-        Email email = new Email("email@email.com");
+        Email email = Email.of("email@email.com");
         Password password = Password.of("password");
         Bio bio = new Bio("bio");
         Image image = new Image("image.jpg");
@@ -62,7 +62,7 @@ class UserTest {
         User input = User.Builder()
             .id(1L)
             .username(Username.of("username"))
-            .email(new Email("test@test.com"))
+            .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .bio(new Bio("bio"))
             .image(new Image("image"))
@@ -133,8 +133,8 @@ class UserTest {
     void userEqualsHashCodeTest() {
 
         // given
-        User user = User.Builder().email(new Email("test@test.com")).build();
-        User copyUser = User.Builder().email(new Email("test@test.com")).build();
+        User user = User.Builder().email(Email.of("test@test.com")).build();
+        User copyUser = User.Builder().email(Email.of("test@test.com")).build();
 
         // when & then
         assertThat(user)
