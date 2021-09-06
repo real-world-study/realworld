@@ -8,7 +8,6 @@ import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.model.UserUpdateModel;
-import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User login(Email email, Password password) {
-        User user = findByEmail(email)
+        User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOTFOUND));
         user.login(password, passwordEncoder);
         return user;
@@ -61,23 +60,15 @@ public class UserService {
     }
 
     private void checkDuplicatedByUsername(Username username) {
-        findByUsername(username).ifPresent(param -> {
+        userRepository.findByUsername(username).ifPresent(param -> {
             throw new BusinessException(ErrorCode.USERNAME_DUPLICATION);
         });
     }
 
     private void checkDuplicatedByEmail(Email email) {
-        findByEmail(email).ifPresent(param -> {
+        userRepository.findByEmail(email).ifPresent(param -> {
             throw new BusinessException(ErrorCode.EMAIL_DUPLICATION);
         });
-    }
-
-    private Optional<User> findByUsername(Username username) {
-        return userRepository.findByUsername(username);
-    }
-
-    private Optional<User> findByEmail(Email email) {
-        return userRepository.findByEmail(email);
     }
 
     private void checkDuplicatedEmailAndChangeEmail(User user, Email email) {
