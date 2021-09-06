@@ -1,6 +1,7 @@
 package com.study.realworld.user.presentation;
 
 import com.study.realworld.core.domain.user.entity.User;
+import com.study.realworld.core.jwt.TokenProvider;
 import com.study.realworld.user.application.UserService;
 import com.study.realworld.user.presentation.model.UserLoginRequest;
 import com.study.realworld.user.presentation.model.UserRegisterRequest;
@@ -25,16 +26,17 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+    private final TokenProvider tokenProvider;
 
     @PostMapping(value = "/users")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody UserRegisterRequest request) {
         User user = userService.register(request.toModel());
-        return ResponseEntity.ok().body(UserResponse.createResponse(user));
+        return ResponseEntity.ok().body(UserResponse.createResponse(user, tokenProvider.createToken(user)));
     }
 
     @PostMapping(value = "/users/login")
     public ResponseEntity<UserResponse> login(@Valid @RequestBody UserLoginRequest request) {
         User user = userService.login(request.toModel());
-        return ResponseEntity.ok().body(UserResponse.createResponse(user));
+        return ResponseEntity.ok().body(UserResponse.createResponse(user, tokenProvider.createToken(user)));
     }
 }
