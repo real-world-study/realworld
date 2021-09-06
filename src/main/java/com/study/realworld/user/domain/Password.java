@@ -2,8 +2,8 @@ package com.study.realworld.user.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.study.realworld.global.error.ErrorCode;
-import com.study.realworld.global.error.exception.BusinessException;
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import org.apache.commons.lang3.StringUtils;

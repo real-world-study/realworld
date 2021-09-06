@@ -1,7 +1,7 @@
 package com.study.realworld.user.service;
 
-import com.study.realworld.global.error.ErrorCode;
-import com.study.realworld.global.error.exception.BusinessException;
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;

@@ -1,6 +1,4 @@
-package com.study.realworld.global.error.exception;
-
-import com.study.realworld.global.error.ErrorCode;
+package com.study.realworld.global.exception;
 
 public class BusinessException extends RuntimeException {
 

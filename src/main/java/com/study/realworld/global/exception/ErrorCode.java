@@ -1,4 +1,4 @@
-package com.study.realworld.global.error;
+package com.study.realworld.global.exception;
 
 import org.springframework.http.HttpStatus;
 
