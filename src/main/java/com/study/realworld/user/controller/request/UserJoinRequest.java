@@ -32,33 +32,13 @@ public class UserJoinRequest {
     protected UserJoinRequest() {
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
     public User toUser() {
         return User.Builder()
-            .username(Username.of(getUsername()))
-            .email(Email.of(getEmail()))
-            .password(Password.of(getPassword()))
-            .bio(new Bio(getBio()))
-            .image(new Image(getImage()))
+            .username(Username.of(username))
+            .email(Email.of(email))
+            .password(Password.of(password))
+            .bio(new Bio(bio))
+            .image(new Image(image))
             .build();
     }
 

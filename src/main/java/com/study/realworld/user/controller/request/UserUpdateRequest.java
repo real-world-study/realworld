@@ -32,33 +32,13 @@ public class UserUpdateRequest {
     protected UserUpdateRequest() {
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
     public UserUpdateModel toUserUpdateModel() {
         return new UserUpdateModel(
-            Username.of(getUsername()),
-            Email.of(getEmail()),
-            Password.of(getPassword()),
-            new Bio(getBio()),
-            new Image(getImage())
+            Username.of(username),
+            Email.of(email),
+            Password.of(password),
+            new Bio(bio),
+            new Image(image)
         );
     }
 

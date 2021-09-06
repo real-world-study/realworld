@@ -7,8 +7,6 @@ import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.request.UserLoginRequest;
 import com.study.realworld.user.controller.request.UserUpdateRequest;
 import com.study.realworld.user.controller.response.UserResponse;
-import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,7 @@ public class UserController {
 
     @PostMapping("/users/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
-        User user = userService.login(Email.of(request.getEmail()), Password.of(request.getPassword()));
+        User user = userService.login(request.toEmail(), request.toPassword());
         return ResponseEntity.ok().body(fromUserAndToken(user, jwtService.createToken(user)));
     }
 
