@@ -7,6 +7,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.global.error.ErrorCode;
+import com.study.realworld.global.error.exception.BusinessException;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
@@ -14,9 +16,6 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
-import com.study.realworld.user.exception.DuplicateEmailException;
-import com.study.realworld.user.exception.DuplicateUsernameException;
-import com.study.realworld.user.exception.UserNotFoundException;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,9 +50,9 @@ class UserServiceTest {
             .thenReturn(Optional.of(user));
 
         // when & then
-        assertThatExceptionOfType(DuplicateUsernameException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> userService.join(user))
-            .withMessageMatching("Duplicated username exists.");
+            .withMessageMatching(ErrorCode.USERNAME_DUPLICATION.getMessage());
     }
 
     @Test
@@ -66,9 +65,9 @@ class UserServiceTest {
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
 
         // when & then
-        assertThatExceptionOfType(DuplicateEmailException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> userService.join(user))
-            .withMessageMatching("Duplicated email exists.");
+            .withMessageMatching(ErrorCode.EMAIL_DUPLICATION.getMessage());
     }
 
     @Test
@@ -121,10 +120,12 @@ class UserServiceTest {
         when(userRepository.findByEmail(email)).thenReturn(empty());
 
         // when && then
-        assertThatExceptionOfType(Exception.class)
-            .isThrownBy(() -> userService.login(email, password));
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> userService.login(email, password))
+            .withMessageMatching(ErrorCode.USER_NOTFOUND.getMessage());
     }
 
+    // TODO
     @Test
     @DisplayName("로그인 요청한 이메일에 매칭되지 않는 패스워드이면 Exception을 반환해야 한다.")
     void loginFailByPasswordTest() {
@@ -192,7 +193,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("없는 유저의 id를 가지고 유저를 조회할 때 Exceptioni이 반환되어야 한다.")
+    @DisplayName("없는 유저의 id를 가지고 유저를 조회할 때 Exception이 반환되어야 한다.")
     void findByNoUserIdFailTest() {
 
         // setup & given
@@ -200,9 +201,9 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(empty());
 
         // when & then
-        assertThatExceptionOfType(UserNotFoundException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> userService.findById(userId))
-            .withMessageMatching("user is not found.");
+            .withMessageMatching(ErrorCode.USER_NOTFOUND.getMessage());
     }
 
     @Test
@@ -218,11 +219,12 @@ class UserServiceTest {
             new Bio("bio"),
             new Image("image")
         );
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
-            .isThrownBy(() -> userService.update(userUpdateModel, userId));
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> userService.update(userUpdateModel, userId))
+            .withMessageMatching(ErrorCode.USER_NOTFOUND.getMessage());
     }
 
     @Nested
@@ -284,8 +286,9 @@ class UserServiceTest {
                     .thenReturn(Optional.ofNullable(User.Builder().build()));
 
                 // when & then
-                assertThatExceptionOfType(RuntimeException.class)
-                    .isThrownBy(() -> userService.update(userUpdateModel, userId));
+                assertThatExceptionOfType(BusinessException.class)
+                    .isThrownBy(() -> userService.update(userUpdateModel, userId))
+                    .withMessageMatching(ErrorCode.USERNAME_DUPLICATION.getMessage());
             }
 
             @Test
@@ -346,8 +349,9 @@ class UserServiceTest {
                     .thenReturn(Optional.ofNullable(User.Builder().build()));
 
                 // when & then
-                assertThatExceptionOfType(RuntimeException.class)
-                    .isThrownBy(() -> userService.update(userUpdateModel, userId));
+                assertThatExceptionOfType(BusinessException.class)
+                    .isThrownBy(() -> userService.update(userUpdateModel, userId))
+                    .withMessageMatching(ErrorCode.EMAIL_DUPLICATION.getMessage());
             }
 
             @Test

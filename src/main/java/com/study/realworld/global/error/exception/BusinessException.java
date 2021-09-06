@@ -1,9 +1,19 @@
 package com.study.realworld.global.error.exception;
 
+import com.study.realworld.global.error.ErrorCode;
+
 public class BusinessException extends RuntimeException {
 
-    public BusinessException(String message) {
+    private ErrorCode errorCode;
+
+    public BusinessException(String message, ErrorCode errorCode) {
         super(message);
+        this.errorCode = errorCode;
+    }
+
+    public BusinessException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
 }

@@ -1,13 +1,12 @@
 package com.study.realworld.user.service;
 
+import com.study.realworld.global.error.ErrorCode;
+import com.study.realworld.global.error.exception.BusinessException;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
-import com.study.realworld.user.exception.DuplicateEmailException;
-import com.study.realworld.user.exception.DuplicateUsernameException;
-import com.study.realworld.user.exception.UserNotFoundException;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +35,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User login(Email email, Password password) {
-        User user = findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = findByEmail(email)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOTFOUND));
         user.login(password, passwordEncoder);
         return user;
     }
@@ -44,12 +44,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(UserNotFoundException::new);
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOTFOUND));
     }
 
     @Transactional
     public User update(UserUpdateModel updateUser, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = findById(userId);
 
         updateUser.getUsername().ifPresent(username -> checkDuplicatedUsernameAndChangeUsername(user, username));
         updateUser.getEmail().ifPresent(email -> checkDuplicatedEmailAndChangeEmail(user, email));
@@ -62,13 +62,13 @@ public class UserService {
 
     private void checkDuplicatedByUsername(Username username) {
         findByUsername(username).ifPresent(param -> {
-            throw new DuplicateUsernameException();
+            throw new BusinessException(ErrorCode.USERNAME_DUPLICATION);
         });
     }
 
     private void checkDuplicatedByEmail(Email email) {
         findByEmail(email).ifPresent(param -> {
-            throw new DuplicateEmailException();
+            throw new BusinessException(ErrorCode.EMAIL_DUPLICATION);
         });
     }
 
