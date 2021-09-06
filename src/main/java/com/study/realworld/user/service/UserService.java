@@ -36,7 +36,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User login(Email email, Password password) {
-        User user = findByEmail(email).orElseThrow(RuntimeException::new);
+        User user = findByEmail(email).orElseThrow(UserNotFoundException::new);
         user.login(password, passwordEncoder);
         return user;
     }
