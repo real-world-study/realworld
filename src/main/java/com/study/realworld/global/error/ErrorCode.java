@@ -13,6 +13,9 @@ public enum ErrorCode {
     INVALID_USERNAME_LENGTH(HttpStatus.BAD_REQUEST, "username length must be less then 20 characters."),
     INVALID_USERNAME_PATTERN(HttpStatus.BAD_REQUEST, "usernmae must be provided by limited pattern."),
 
+    INVALID_EMAIL_NULL(HttpStatus.BAD_REQUEST, "address must be provided."),
+    INVALID_EMAIL_PATTERN(HttpStatus.BAD_REQUEST, "address must be provided by limited pattern like 'xxx@xxx.xxx'."),
+
     PASSWORD_DISMATCH(HttpStatus.FORBIDDEN, "password is dismatch.")
     ;
 

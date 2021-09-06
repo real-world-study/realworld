@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.study.realworld.global.error.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,7 @@ class EmailTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Email(input))
-            .withMessageMatching("address must be provided by limited pattern like 'xxx@xxx.xxx'.");
+            .withMessageMatching(ErrorCode.INVALID_EMAIL_PATTERN.getMessage());
     }
 
     @ParameterizedTest
@@ -34,7 +35,7 @@ class EmailTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Email(input))
-            .withMessageMatching("address must be provided.");
+            .withMessageMatching(ErrorCode.INVALID_EMAIL_NULL.getMessage());
     }
 
     @Test
@@ -48,7 +49,7 @@ class EmailTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Email(input))
-            .withMessageMatching("address must be provided.");
+            .withMessageMatching(ErrorCode.INVALID_EMAIL_NULL.getMessage());
     }
 
     @Test
