@@ -36,7 +36,7 @@ class PasswordTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Password("12345678901234567890123"))
-            .withMessageMatching("password length must be between 6 and 20 characters.");
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_LENGTH.getMessage());
     }
 
     @Test
@@ -46,7 +46,7 @@ class PasswordTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Password("12345"))
-            .withMessageMatching("password length must be between 6 and 20 characters.");
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_LENGTH.getMessage());
     }
 
     @Test
@@ -56,7 +56,7 @@ class PasswordTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Password(null))
-            .withMessageMatching("password must be provided.");
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_NULL.getMessage());
     }
 
     @ParameterizedTest
@@ -67,7 +67,7 @@ class PasswordTest {
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> new Password(input))
-            .withMessageMatching("password must be provided.");
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_NULL.getMessage());
     }
 
     @Test

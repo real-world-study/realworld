@@ -25,10 +25,10 @@ public class Password {
     }
 
     private static void checkPassword(String password) {
-        checkArgument(StringUtils.isNotBlank(password), "password must be provided.");
+        checkArgument(StringUtils.isNotBlank(password), ErrorCode.INVALID_PASSWORD_NULL.getMessage());
         checkArgument(
             password.length() >= 6 && password.length() <= 20,
-            "password length must be between 6 and 20 characters."
+            ErrorCode.INVALID_PASSWORD_LENGTH.getMessage()
         );
     }
 

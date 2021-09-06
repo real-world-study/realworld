@@ -16,6 +16,9 @@ public enum ErrorCode {
     INVALID_EMAIL_NULL(HttpStatus.BAD_REQUEST, "address must be provided."),
     INVALID_EMAIL_PATTERN(HttpStatus.BAD_REQUEST, "address must be provided by limited pattern like 'xxx@xxx.xxx'."),
 
+    INVALID_PASSWORD_NULL(HttpStatus.BAD_REQUEST, "password must be provided."),
+    INVALID_PASSWORD_LENGTH(HttpStatus.BAD_REQUEST, "password length must be between 6 and 20 characters."),
+
     PASSWORD_DISMATCH(HttpStatus.FORBIDDEN, "password is dismatch.")
     ;
 
