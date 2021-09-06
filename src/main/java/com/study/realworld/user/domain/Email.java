@@ -25,8 +25,8 @@ public class Email {
     }
 
     private static void checkEmail(String address) {
-        checkArgument(StringUtils.isNotBlank(address), ErrorCode.INVALID_EMAIL_NULL.getMessage());
-        checkArgument(checkEmailPattern(address), ErrorCode.INVALID_EMAIL_PATTERN.getMessage());
+        checkArgument(StringUtils.isNotBlank(address), ErrorCode.INVALID_EMAIL_NULL);
+        checkArgument(checkEmailPattern(address), ErrorCode.INVALID_EMAIL_PATTERN);
     }
 
     private static boolean checkEmailPattern(String address) {

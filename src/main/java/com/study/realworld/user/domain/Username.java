@@ -25,9 +25,9 @@ public class Username {
     }
 
     private static void checkUsername(String name) {
-        checkArgument(StringUtils.isNotBlank(name), ErrorCode.INVALID_USERNAME_NULL.getMessage());
-        checkArgument(name.length() <= 20, ErrorCode.INVALID_USERNAME_LENGTH.getMessage());
-        checkArgument(checkUsernamePattern(name), ErrorCode.INVALID_USERNAME_PATTERN.getMessage());
+        checkArgument(StringUtils.isNotBlank(name), ErrorCode.INVALID_USERNAME_NULL);
+        checkArgument(name.length() <= 20, ErrorCode.INVALID_USERNAME_LENGTH);
+        checkArgument(checkUsernamePattern(name), ErrorCode.INVALID_USERNAME_PATTERN);
     }
 
     private static boolean checkUsernamePattern(String name) {

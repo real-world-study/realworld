@@ -25,11 +25,8 @@ public class Password {
     }
 
     private static void checkPassword(String password) {
-        checkArgument(StringUtils.isNotBlank(password), ErrorCode.INVALID_PASSWORD_NULL.getMessage());
-        checkArgument(
-            password.length() >= 6 && password.length() <= 20,
-            ErrorCode.INVALID_PASSWORD_LENGTH.getMessage()
-        );
+        checkArgument(StringUtils.isNotBlank(password), ErrorCode.INVALID_PASSWORD_NULL);
+        checkArgument(password.length() >= 6 && password.length() <= 20, ErrorCode.INVALID_PASSWORD_LENGTH);
     }
 
     public String password() {
