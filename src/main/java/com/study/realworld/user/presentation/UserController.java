@@ -2,7 +2,7 @@ package com.study.realworld.user.presentation;
 
 import com.study.realworld.core.domain.user.entity.User;
 import com.study.realworld.core.jwt.TokenProvider;
-import com.study.realworld.core.util.SecurityUtil;
+import com.study.realworld.core.util.SecurityUtils;
 import com.study.realworld.user.application.UserService;
 import com.study.realworld.user.presentation.model.UserLoginRequest;
 import com.study.realworld.user.presentation.model.UserRegisterRequest;
@@ -46,6 +46,6 @@ public class UserController {
     @GetMapping(value = "/user")
     public ResponseEntity<UserResponse> getLoginUser(@AuthenticationPrincipal Long userId) {
         User user = userService.getLoginUser(userId);
-        return ResponseEntity.ok().body(UserResponse.createResponse(user, SecurityUtil.getAccessToken()));
+        return ResponseEntity.ok().body(UserResponse.createResponse(user, SecurityUtils.getAccessToken()));
     }
 }

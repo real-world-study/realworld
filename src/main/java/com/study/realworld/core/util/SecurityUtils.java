@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
  * @author JeongJoon Seo
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SecurityUtil {
+public class SecurityUtils {
 
     public static String getAccessToken() {
         return SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();

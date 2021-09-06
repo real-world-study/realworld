@@ -12,14 +12,14 @@ import static org.mockito.Mockito.mockStatic;
  * @author JeongJoon Seo
  */
 @ExtendWith(MockitoExtension.class)
-class SecurityUtilTest {
+class SecurityUtilsTest {
 
     @Test
     void getAccessTokenTest() {
         final String accessToken = "accessToken";
-        try (MockedStatic<SecurityUtil> securityUtilMockedStatic = mockStatic(SecurityUtil.class)) {
-            securityUtilMockedStatic.when(SecurityUtil::getAccessToken).thenReturn(accessToken);
-            assertThat(SecurityUtil.getAccessToken()).isEqualTo(accessToken);
+        try (MockedStatic<SecurityUtils> securityUtilMockedStatic = mockStatic(SecurityUtils.class)) {
+            securityUtilMockedStatic.when(SecurityUtils::getAccessToken).thenReturn(accessToken);
+            assertThat(SecurityUtils.getAccessToken()).isEqualTo(accessToken);
         }
     }
 }
