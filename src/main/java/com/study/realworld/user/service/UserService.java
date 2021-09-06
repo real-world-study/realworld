@@ -49,7 +49,7 @@ public class UserService {
 
     @Transactional
     public User update(UserUpdateModel updateUser, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         updateUser.getUsername().ifPresent(username -> checkDuplicatedUsernameAndChangeUsername(user, username));
         updateUser.getEmail().ifPresent(email -> checkDuplicatedEmailAndChangeEmail(user, email));
