@@ -16,6 +16,7 @@ import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.exception.DuplicateEmailException;
 import com.study.realworld.user.exception.DuplicateUsernameException;
+import com.study.realworld.user.exception.UserNotFoundException;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -170,11 +171,11 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(ofNullable(user));
 
         // when
-        Optional<User> result = userService.findById(userId);
+        User result = userService.findById(userId);
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.get().email()).isEqualTo(user.email());
+        assertThat(result.email()).isEqualTo(user.email());
     }
 
     @Test
@@ -191,18 +192,17 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("없는 유저의 id를 가지고 유저를 조회할 때 Optional.empty()가 반환되어야 한다.")
+    @DisplayName("없는 유저의 id를 가지고 유저를 조회할 때 Exceptioni이 반환되어야 한다.")
     void findByNoUserIdFailTest() {
 
         // setup & given
         Long userId = 2L;
         when(userRepository.findById(userId)).thenReturn(empty());
 
-        // when
-        Optional<User> result = userService.findById(userId);
-
-        // then
-        assertThat(result).isEqualTo(empty());
+        // when & then
+        assertThatExceptionOfType(UserNotFoundException.class)
+            .isThrownBy(() -> userService.findById(userId))
+            .withMessageMatching("user is not found.");
     }
 
     @Test

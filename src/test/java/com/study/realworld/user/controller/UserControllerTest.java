@@ -28,7 +28,6 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -195,7 +194,7 @@ class UserControllerTest {
             .email(new Email("test@test.com"))
             .password(new Password("password"))
             .build();
-        when(userService.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(any())).thenReturn(user);
         SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
 
         // given

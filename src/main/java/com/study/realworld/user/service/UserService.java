@@ -7,6 +7,7 @@ import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.exception.DuplicateEmailException;
 import com.study.realworld.user.exception.DuplicateUsernameException;
+import com.study.realworld.user.exception.UserNotFoundException;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,8 +42,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findById(Long userId) {
-        return userRepository.findById(userId);
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional

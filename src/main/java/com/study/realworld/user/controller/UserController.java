@@ -48,7 +48,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal Long loginId) {
-        User user = userService.findById(loginId).orElseThrow(RuntimeException::new);   // 임시
+        User user = userService.findById(loginId);
         return ResponseEntity.ok().body(fromUserAndToken(user, getTokenByContextHolder()));
     }
 
