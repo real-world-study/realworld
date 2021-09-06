@@ -56,7 +56,7 @@ public class UserUpdateRequest {
         return new UserUpdateModel(
             new Username(getUsername()),
             new Email(getEmail()),
-            new Password(getPassword()),
+            Password.of(getPassword()),
             new Bio(getBio()),
             new Image(getImage())
         );

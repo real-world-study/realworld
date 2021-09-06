@@ -77,7 +77,7 @@ class UserServiceTest {
         // setup & given
         when(userRepository.findByUsername(any())).thenReturn(empty());
         when(userRepository.findByEmail(any())).thenReturn(empty());
-        Password password = new Password("password");
+        Password password = Password.of("password");
         when(passwordEncoder.encode(password.password())).thenReturn("encoded_password");
         User input = User.Builder()
             .username(new Username("username"))
@@ -91,7 +91,7 @@ class UserServiceTest {
                 .id(1L)
                 .username(input.username())
                 .email(input.email())
-                .password(new Password("encoded_password"))
+                .password(Password.of("encoded_password"))
                 .bio(input.bio().orElse(null))
                 .image(input.image().orElse(null))
                 .build()
@@ -116,7 +116,7 @@ class UserServiceTest {
 
         // setup & given
         Email email = new Email("test@test.com");
-        Password password = new Password("password");
+        Password password = Password.of("password");
         when(userRepository.findByEmail(email)).thenReturn(empty());
 
         // when && then
@@ -132,8 +132,8 @@ class UserServiceTest {
 
         // setup & given
         Email email = new Email("test@test.com");
-        Password password = new Password("password");
-        User user = User.Builder().password(new Password("encoded_password")).build();
+        Password password = Password.of("password");
+        User user = User.Builder().password(Password.of("encoded_password")).build();
         when(userRepository.findByEmail(email)).thenReturn(ofNullable(user));
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
 
@@ -148,8 +148,8 @@ class UserServiceTest {
 
         // setup & given
         Email email = new Email("test@test.com");
-        Password password = new Password("password");
-        User input = User.Builder().email(email).password(new Password("encoded_password")).build();
+        Password password = Password.of("password");
+        User input = User.Builder().email(email).password(Password.of("encoded_password")).build();
         when(userRepository.findByEmail(email)).thenReturn(ofNullable(input));
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
 
@@ -215,7 +215,7 @@ class UserServiceTest {
         UserUpdateModel userUpdateModel = new UserUpdateModel(
             new Username("username"),
             new Email("test@test.com"),
-            new Password("password"),
+            Password.of("password"),
             new Bio("bio"),
             new Image("image")
         );
@@ -240,14 +240,14 @@ class UserServiceTest {
             user = User.Builder()
                 .username(new Username("username"))
                 .email(new Email("test@test.com"))
-                .password(new Password("encoded_password"))
+                .password(Password.of("encoded_password"))
                 .bio(new Bio("bio"))
                 .image(new Image("image"))
                 .build();
             originUser = User.Builder()
                 .username(new Username("username"))
                 .email(new Email("test@test.com"))
-                .password(new Password("encoded_password"))
+                .password(Password.of("encoded_password"))
                 .bio(new Bio("bio"))
                 .image(new Image("image"))
                 .build();
@@ -390,7 +390,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowPasswordTest() {
 
                 // setup & given
-                Password password = new Password("password");
+                Password password = Password.of("password");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     password, null, null);
                 when(passwordEncoder.encode("password")).thenReturn("encoded_password");
@@ -407,7 +407,7 @@ class UserServiceTest {
             void updateSuccessByPasswordTest() {
 
                 // setup & given
-                Password password = new Password("passwordChange");
+                Password password = Password.of("passwordChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     password, null, null);
                 when(passwordEncoder.encode("passwordChange")).thenReturn("encoded_Change");

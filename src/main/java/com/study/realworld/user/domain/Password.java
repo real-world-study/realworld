@@ -18,10 +18,13 @@ public class Password {
     protected Password() {
     }
 
-    public Password(String password) {
-        checkPassword(password);
-
+    private Password(String password) {
         this.password = password;
+    }
+
+    public static Password of(String password) {
+        checkPassword(password);
+        return new Password(password);
     }
 
     private static void checkPassword(String password) {
@@ -29,12 +32,12 @@ public class Password {
         checkArgument(password.length() >= 6 && password.length() <= 20, ErrorCode.INVALID_PASSWORD_LENGTH);
     }
 
-    public String password() {
-        return password;
-    }
-
     public static Password encode(Password password, PasswordEncoder passwordEncoder) {
         return new Password(passwordEncoder.encode(password.password));
+    }
+
+    public String password() {
+        return password;
     }
 
     public void matchPassword(Password rawPassword, PasswordEncoder passwordEncoder) {

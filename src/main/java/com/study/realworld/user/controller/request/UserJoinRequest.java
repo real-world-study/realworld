@@ -56,7 +56,7 @@ public class UserJoinRequest {
         return User.Builder()
             .username(new Username(getUsername()))
             .email(new Email(getEmail()))
-            .password(new Password(getPassword()))
+            .password(Password.of(getPassword()))
             .bio(new Bio(getBio()))
             .image(new Image(getImage()))
             .build();

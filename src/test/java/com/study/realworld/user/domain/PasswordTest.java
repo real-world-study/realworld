@@ -35,7 +35,7 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password("12345678901234567890123"))
+            .isThrownBy(() -> Password.of("12345678901234567890123"))
             .withMessageMatching(ErrorCode.INVALID_PASSWORD_LENGTH.getMessage());
     }
 
@@ -45,7 +45,7 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password("12345"))
+            .isThrownBy(() -> Password.of("12345"))
             .withMessageMatching(ErrorCode.INVALID_PASSWORD_LENGTH.getMessage());
     }
 
@@ -55,7 +55,7 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password(null))
+            .isThrownBy(() -> Password.of(null))
             .withMessageMatching(ErrorCode.INVALID_PASSWORD_NULL.getMessage());
     }
 
@@ -66,7 +66,7 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password(input))
+            .isThrownBy(() -> Password.of(input))
             .withMessageMatching(ErrorCode.INVALID_PASSWORD_NULL.getMessage());
     }
 
@@ -78,7 +78,7 @@ class PasswordTest {
         when(passwordEncoder.encode(any())).thenReturn("encoded_password");
 
         // given
-        Password password = new Password("password");
+        Password password = Password.of("password");
 
         // when
         Password result = encode(password, passwordEncoder);
@@ -95,11 +95,11 @@ class PasswordTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
 
         // given
-        Password password = new Password("encoded_password");
+        Password password = Password.of("encoded_password");
         String input = "password";
 
         // when & then
-        assertDoesNotThrow(() -> password.matchPassword(new Password("password"), passwordEncoder));
+        assertDoesNotThrow(() -> password.matchPassword(Password.of("password"), passwordEncoder));
     }
 
     @Test
@@ -110,12 +110,12 @@ class PasswordTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
 
         // given
-        Password password = new Password("encoded_password");
+        Password password = Password.of("encoded_password");
         String input = "password";
 
         // when & then
         assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> password.matchPassword(new Password("password"), passwordEncoder))
+            .isThrownBy(() -> password.matchPassword(Password.of("password"), passwordEncoder))
             .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 

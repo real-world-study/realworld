@@ -75,7 +75,7 @@ class UserControllerTest {
         User user = User.Builder()
             .username(new Username("username"))
             .email(new Email("test@test.com"))
-            .password(new Password("password"))
+            .password(Password.of("password"))
             .build();
 
         when(userService.join(any())).thenReturn(user);
@@ -137,7 +137,7 @@ class UserControllerTest {
         User user = User.Builder()
             .username(new Username("username"))
             .email(new Email("test@test.com"))
-            .password(new Password("password"))
+            .password(Password.of("password"))
             .build();
 
         when(userService.login(any(), any())).thenReturn(user);
@@ -192,7 +192,7 @@ class UserControllerTest {
         User user = User.Builder()
             .username(new Username("username"))
             .email(new Email("test@test.com"))
-            .password(new Password("password"))
+            .password(Password.of("password"))
             .build();
         when(userService.findById(any())).thenReturn(user);
         SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
@@ -240,7 +240,7 @@ class UserControllerTest {
         User user = User.Builder()
             .username(new Username("usernameChange"))
             .email(new Email("change@change.com"))
-            .password(new Password("passwordChange"))
+            .password(Password.of("passwordChange"))
             .bio(new Bio("bioChange"))
             .image(new Image("imageChange"))
             .build();

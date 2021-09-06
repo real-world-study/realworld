@@ -42,7 +42,7 @@ public class UserController {
 
     @PostMapping("/users/login")
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
-        User user = userService.login(new Email(request.getEmail()), new Password(request.getPassword()));
+        User user = userService.login(new Email(request.getEmail()), Password.of(request.getPassword()));
         return ResponseEntity.ok().body(fromUserAndToken(user, jwtService.createToken(user)));
     }
 

@@ -32,7 +32,7 @@ class UserTest {
         Long id = 1L;
         Username username = new Username("username");
         Email email = new Email("email@email.com");
-        Password password = new Password("password");
+        Password password = Password.of("password");
         Bio bio = new Bio("bio");
         Image image = new Image("image.jpg");
 
@@ -63,7 +63,7 @@ class UserTest {
             .id(1L)
             .username(new Username("username"))
             .email(new Email("test@test.com"))
-            .password(new Password("password"))
+            .password(Password.of("password"))
             .bio(new Bio("bio"))
             .image(new Image("image"))
             .build();
@@ -85,7 +85,7 @@ class UserTest {
     void userEncodePasswordTest() {
 
         // setup & given
-        User user = User.Builder().password(new Password("password")).build();
+        User user = User.Builder().password(Password.of("password")).build();
         when(passwordEncoder.encode(user.password().password()))
             .thenReturn("encoded_password");
 
@@ -104,8 +104,8 @@ class UserTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
 
         // given
-        User user = User.Builder().password(new Password("encoded_password")).build();
-        Password password = new Password("password");
+        User user = User.Builder().password(Password.of("encoded_password")).build();
+        Password password = Password.of("password");
 
         // when & then
         assertDoesNotThrow(() -> user.login(password, passwordEncoder));
@@ -119,8 +119,8 @@ class UserTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
 
         // given
-        User user = User.Builder().password(new Password("encoded_password")).build();
-        Password password = new Password("password");
+        User user = User.Builder().password(Password.of("encoded_password")).build();
+        Password password = Password.of("password");
 
         // when & then
         assertThatExceptionOfType(BusinessException.class)
