@@ -9,6 +9,7 @@ import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.model.UserUpdateModel;
+import java.util.Optional;
 
 @JsonTypeName(value = "user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -34,9 +35,9 @@ public class UserUpdateRequest {
 
     public UserUpdateModel toUserUpdateModel() {
         return new UserUpdateModel(
-            Username.of(username),
-            Email.of(email),
-            Password.of(password),
+            Optional.ofNullable(username).map(Username::of).orElse(null),
+            Optional.ofNullable(email).map(Email::of).orElse(null),
+            Optional.ofNullable(password).map(Password::of).orElse(null),
             new Bio(bio),
             new Image(image)
         );

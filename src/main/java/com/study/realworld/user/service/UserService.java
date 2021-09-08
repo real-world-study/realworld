@@ -50,8 +50,12 @@ public class UserService {
     public User update(UserUpdateModel updateUser, Long userId) {
         User user = findById(userId);
 
-        updateUser.getUsername().ifPresent(username -> checkDuplicatedUsernameAndChangeUsername(user, username));
-        updateUser.getEmail().ifPresent(email -> checkDuplicatedEmailAndChangeEmail(user, email));
+        updateUser.getUsername()
+            .filter(username -> !user.username().equals(username))
+            .ifPresent(username -> checkDuplicatedUsernameAndChangeUsername(user, username));
+        updateUser.getEmail()
+            .filter(email -> !user.email().equals(email))
+            .ifPresent(email -> checkDuplicatedEmailAndChangeEmail(user, email));
         updateUser.getPassword().ifPresent(password -> user.changePassword(password, passwordEncoder));
         updateUser.getBio().ifPresent(user::changeBio);
         updateUser.getImage().ifPresent(user::changeImage);
