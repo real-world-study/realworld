@@ -1,6 +1,7 @@
 package com.study.realworld.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -53,6 +54,14 @@ class JwtExceptionFilterTest {
 
         // then
         assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("Exception이 발생되지 않을 때 response에 작업되는 것이 없어야 한다.")
+    void successFilterTest(){
+
+        // when & then
+        assertDoesNotThrow(() -> filter.doFilterInternal(request, response, filterChain));
     }
 
 }
