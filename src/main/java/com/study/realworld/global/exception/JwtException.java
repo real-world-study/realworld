@@ -11,10 +11,6 @@ public class JwtException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
-
     public HttpStatus getHttpStatus() {
         return errorCode.getHttpStatus();
     }
