@@ -40,7 +40,6 @@ class JwtExceptionFilterTest {
     void catchJwtExceptionTest() throws ServletException, IOException {
 
         // setup & given
-
         doThrow(new JwtException(ErrorCode.INVALID_UNSUPPORTED_JWT)).when(filterChain).doFilter(request, response);
         String expected = "{\"errors\":{\"body\":[\"this jwt wat not supported.\"]}}";
 
