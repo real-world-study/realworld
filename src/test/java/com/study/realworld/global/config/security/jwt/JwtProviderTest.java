@@ -14,6 +14,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.testToken;
 import static com.study.realworld.domain.user.domain.BioTest.BIO;
@@ -52,9 +53,11 @@ class JwtProviderTest {
     @DisplayName("JwtAuthenticationProvider 인스턴스 authenticate() 테스트")
     @Test
     void authenticate_test() {
+        final Long principal = 1L;
         final Email email = new Email(EMAIL);
         final Password password = new Password(PASSWORD);
         final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
+        ReflectionTestUtils.setField(user, "id", 1L);
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
         doReturn(user).when(userFindService).findUserByEmail(any());
 
@@ -63,7 +66,7 @@ class JwtProviderTest {
 
         assertAll(
                 () -> assertThat(authenticate).isNotNull(),
-                () -> assertThat(authenticate.getPrincipal()).isEqualTo(email),
+                () -> assertThat(authenticate.getPrincipal()).isEqualTo(principal),
                 () -> assertThat(authenticate.getCredentials()).isEqualTo(password)
         );
     }

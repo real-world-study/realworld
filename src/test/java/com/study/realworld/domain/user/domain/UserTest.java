@@ -3,6 +3,7 @@ package com.study.realworld.domain.user.domain;
 import com.study.realworld.domain.user.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
@@ -41,9 +42,12 @@ public class UserTest {
     @DisplayName("User 인스턴스 getter() 테스트")
     @Test
     void getter_test() {
+        final Long id = 1L;
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        ReflectionTestUtils.setField(user, "id", id);
 
         assertAll(
+                () -> assertThat(user.id()).isEqualTo(id),
                 () -> assertThat(user.email().email()).isEqualTo(EMAIL),
                 () -> assertThat(user.username().name()).isEqualTo(USERNAME),
                 () -> assertThat(user.password().password()).isEqualTo(PASSWORD),

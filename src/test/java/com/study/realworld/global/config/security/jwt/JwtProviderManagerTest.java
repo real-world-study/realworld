@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.testToken;
 import static com.study.realworld.domain.user.domain.BioTest.BIO;
@@ -58,9 +59,10 @@ class JwtProviderManagerTest {
     @DisplayName("JwtAuthenticationProviderManager 인스턴스 support() 테스트")
     @Test
     void authenticate_test() {
-        final Email email = new Email(EMAIL);
+        final Long principal = 1L;
         final Password password = new Password(PASSWORD);
-        final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
+        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
+        ReflectionTestUtils.setField(user, "id", principal);
         final JwtAuthentication returnedAuthentication = ofUser(user);
         doReturn(returnedAuthentication).when(jwtProvider).authenticate(any());
         doReturn(true).when(jwtProvider).supports(any());
@@ -69,7 +71,7 @@ class JwtProviderManagerTest {
         final Authentication authentication = jwtProviderManager.authenticate(jwtAuthentication);
         assertAll(
                 () -> assertThat(authentication).isNotNull(),
-                () -> assertThat(authentication.getPrincipal()).isEqualTo(email),
+                () -> assertThat(authentication.getPrincipal()).isEqualTo(principal),
                 () -> assertThat(authentication.getCredentials()).isEqualTo(password)
         );
     }

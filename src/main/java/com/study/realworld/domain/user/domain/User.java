@@ -65,6 +65,10 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
+    public Long id() {
+        return id;
+    }
+
     public Email email() {
         return email;
     }

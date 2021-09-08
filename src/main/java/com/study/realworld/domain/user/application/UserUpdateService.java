@@ -4,7 +4,7 @@ import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.domain.UserRepository;
 import com.study.realworld.domain.user.exception.AlreadyExistEmailException;
-import com.study.realworld.domain.user.exception.EmailNotFoundException;
+import com.study.realworld.domain.user.exception.IdentityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,7 @@ public class UserUpdateService {
         this.userRepository = userRepository;
     }
 
-    public User update(final User updateRequestUser, final Email principal) {
+    public User update(final User updateRequestUser, final Long principal) {
         final User user = findUserByEmail(principal);
         final Email email = updateRequestUser.email();
         validateDuplicatedEmail(email);
@@ -27,15 +27,15 @@ public class UserUpdateService {
                 .changeImage(updateRequestUser.image());
     }
 
+    private User findUserByEmail(final Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IdentityNotFoundException(id));
+    }
+
     private void validateDuplicatedEmail(final Email email) {
         if (userRepository.existsByEmail(email)) {
             throw new AlreadyExistEmailException(email.email());
         }
-    }
-
-    private User findUserByEmail(final Email email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EmailNotFoundException(email.email()));
     }
 
 }
