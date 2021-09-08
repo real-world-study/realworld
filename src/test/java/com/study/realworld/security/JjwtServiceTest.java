@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.global.exception.ErrorCode;
+import com.study.realworld.global.exception.JwtException;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -101,9 +101,9 @@ class JjwtServiceTest {
             .compact();
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
+        assertThatExceptionOfType(JwtException.class)
             .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
-            .withMessageMatching("만료된 JWT 서명입니다.");
+            .withMessageMatching(ErrorCode.INVALID_EXPIRED_JWT.getMessage());
     }
 
     @Test
@@ -114,9 +114,9 @@ class JjwtServiceTest {
         String accessToken = "te.st.";
 
         // when & then
-        assertThatExceptionOfType(MalformedJwtException.class)
+        assertThatExceptionOfType(JwtException.class)
             .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
-            .withMessageMatching("잘못된 JWT 서명입니다.");
+            .withMessageMatching(ErrorCode.INVALID_MALFORMED_JWT.getMessage());
     }
 
     @Test
@@ -130,9 +130,9 @@ class JjwtServiceTest {
             .compact();
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
+        assertThatExceptionOfType(JwtException.class)
             .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
-            .withMessageMatching("만료된 JWT 서명입니다.");
+            .withMessageMatching(ErrorCode.INVALID_EXPIRED_JWT.getMessage());
     }
 
     @Test
@@ -147,9 +147,9 @@ class JjwtServiceTest {
             .compact();
 
         // when & then
-        assertThatExceptionOfType(UnsupportedJwtException.class)
+        assertThatExceptionOfType(JwtException.class)
             .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
-            .withMessageMatching("지원되지 않는 JWT 서명입니다.");
+            .withMessageMatching(ErrorCode.INVALID_UNSUPPORTED_JWT.getMessage());
     }
 
     @Test
@@ -160,9 +160,9 @@ class JjwtServiceTest {
         String accessToken = "";
 
         // when & then
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(JwtException.class)
             .isThrownBy(() -> jwtTokenProvider.getUser(accessToken))
-            .withMessageMatching("JWT 토큰이 잘못되었습니다.");
+            .withMessageMatching(ErrorCode.INVALID_ILLEGAL_ARGUMENT_JWT.getMessage());
     }
 
 }

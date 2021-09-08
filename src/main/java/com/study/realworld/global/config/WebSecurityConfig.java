@@ -2,7 +2,9 @@ package com.study.realworld.global.config;
 
 import static org.springframework.http.HttpMethod.POST;
 
+import com.study.realworld.security.JwtAuthenticationEntiyPoint;
 import com.study.realworld.security.JwtAuthenticationTokenFilter;
+import com.study.realworld.security.JwtExceptionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,9 +19,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
+    private final JwtAuthenticationEntiyPoint jwtAuthenticationEntiyPoint;
 
-    public WebSecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter) {
+    public WebSecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
+        JwtExceptionFilter jwtExceptionFilter,
+        JwtAuthenticationEntiyPoint jwtAuthenticationEntiyPoint) {
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
+        this.jwtExceptionFilter = jwtExceptionFilter;
+        this.jwtAuthenticationEntiyPoint = jwtAuthenticationEntiyPoint;
     }
 
     @Bean
@@ -43,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .disable();
         http
             .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntiyPoint)
             .and()
 
             .sessionManagement()
@@ -57,8 +66,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
             .disable();
         http
-            .addFilterBefore(jwtAuthenticationTokenFilter,
-                UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtExceptionFilter, JwtAuthenticationTokenFilter.class)
+        ;
     }
 
 }
