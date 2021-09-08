@@ -28,8 +28,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         } catch (JwtException exception) {
             log.debug("Wrong jwt request exception occurred : {}", exception.getMessage());
             sendErrorMessage(response, exception);
-        } catch (RuntimeException exception) {
-            log.error("Unexpected runtime exception occurred: {}", exception.getMessage(), exception);
         }
     }
 
