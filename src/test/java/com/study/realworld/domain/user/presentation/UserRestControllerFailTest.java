@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
 import com.study.realworld.domain.user.application.UserJoinService;
 import com.study.realworld.domain.user.application.UserUpdateService;
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Name;
-import com.study.realworld.domain.user.domain.Password;
+import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
+import com.study.realworld.domain.user.dto.UserUpdateRequest;
+import com.study.realworld.domain.user.error.UserErrorCode;
 import com.study.realworld.domain.user.error.exception.DuplicatedEmailException;
+import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,23 +25,29 @@ import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.dto.UserJoinRequestTest.userJoinRequest;
+import static com.study.realworld.domain.user.dto.UserUpdateRequestTest.userUpdateRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class UserRestControllerFailTest {
+class UserRestControllerFailTest {
 
-    @Mock
-    private UserJoinService userJoinService;
-    @Mock
-    private UserUpdateService userUpdateService;
-    @Mock
-    private TokenProvider tokenProvider;
-    @InjectMocks
-    private UserRestController userRestController;
+    private static final String ERROR_JSON_FORMAT =
+            "{\n" + "  \"errors\": {\n" +
+            "    \"body\": [\n" +
+            "      \"%s\"\n" +
+            "    ]\n" +
+            "  }\n" +
+            "}";
+
+    @Mock private UserJoinService userJoinService;
+    @Mock private UserUpdateService userUpdateService;
+    @Mock private TokenProvider tokenProvider;
+    @InjectMocks private UserRestController userRestController;
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
@@ -56,7 +63,7 @@ public class UserRestControllerFailTest {
     @DisplayName("UserRestController 의 join() 호출시 이메일 중복으로 인한 실패 테스트")
     @Test
     void join_fail_test() throws Exception {
-        final String duplicatedEmailJson = duplicatedEmailJson();
+        final String duplicatedEmailJson = errorMessageJson(UserErrorCode.EMAIL_DUPLICATION.message());
         final UserJoinRequest userJoinRequest = userJoinRequest(new Name(USERNAME), new Email(EMAIL), new Password(PASSWORD));
         final String userJoinRequestString = objectMapper.writeValueAsString(userJoinRequest);
 
@@ -71,13 +78,25 @@ public class UserRestControllerFailTest {
     }
 
 
-    private static String duplicatedEmailJson() {
-        return "{\n" + "  \"errors\": {\n" +
-                "    \"body\": [\n" +
-                "      \"Email is Duplication\"\n" +
-                "    ]\n" +
-                "  }\n" +
-                "}";
+    @DisplayName("UserRestController 인스턴스의 update() 단위 테스트")
+    @Test
+    void update_test() throws Exception {
+        final String notFoundIdentityJson = errorMessageJson(UserErrorCode.IDENTITY_NOT_FOUND.message());
+        final UserUpdateRequest userUpdateRequest = userUpdateRequest(new Email("changeEmail"), new Bio("ChangeBio"), new Image("changeImage"));
+        final String userUpdateRequestString = objectMapper.writeValueAsString(userUpdateRequest);
+
+        given(userUpdateService.update(any(), any())).willThrow(new IdentityNotFoundException(1L));
+
+        mockMvc.perform(put("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userUpdateRequestString))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().json(notFoundIdentityJson))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    private static String errorMessageJson(final String body) {
+        return String.format(ERROR_JSON_FORMAT, body);
     }
 
 }
