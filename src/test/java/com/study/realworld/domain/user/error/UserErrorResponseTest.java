@@ -3,6 +3,8 @@ package com.study.realworld.domain.user.error;
 import com.study.realworld.global.config.error.testUtils.TestErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,6 +39,18 @@ class UserErrorResponseTest {
     void construct_fail_test() {
         assertThatThrownBy(() -> new UserErrorResponse(null))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("UserErrorResponse 인스턴스 toEntityResponse() 테스트")
+    @Test
+    void toEntityResponse_test() {
+        final UserErrorResponse userErrorResponse = new UserErrorResponse(TestErrorCode.TEST);
+        final ResponseEntity<UserErrorResponse> responseEntity = userErrorResponse.toResponseEntity();
+
+        assertAll(
+                () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST),
+                () -> assertThat(responseEntity.getBody()).isEqualTo(userErrorResponse)
+        );
     }
 
 }
