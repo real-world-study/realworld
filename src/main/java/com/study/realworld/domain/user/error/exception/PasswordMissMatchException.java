@@ -1,4 +1,4 @@
-package com.study.realworld.domain.user.exception;
+package com.study.realworld.domain.user.error.exception;
 
 public final class PasswordMissMatchException extends RuntimeException {
 

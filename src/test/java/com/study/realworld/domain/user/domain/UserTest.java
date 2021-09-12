@@ -1,6 +1,6 @@
 package com.study.realworld.domain.user.domain;
 
-import com.study.realworld.domain.user.exception.PasswordMissMatchException;
+import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;

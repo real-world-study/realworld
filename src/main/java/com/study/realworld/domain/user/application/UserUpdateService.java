@@ -3,8 +3,8 @@ package com.study.realworld.domain.user.application;
 import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.domain.UserRepository;
-import com.study.realworld.domain.user.exception.AlreadyExistEmailException;
-import com.study.realworld.domain.user.exception.IdentityNotFoundException;
+import com.study.realworld.domain.user.error.exception.AlreadyExistEmailException;
+import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

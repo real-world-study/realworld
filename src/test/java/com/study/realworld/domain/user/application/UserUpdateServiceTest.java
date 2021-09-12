@@ -2,8 +2,8 @@ package com.study.realworld.domain.user.application;
 
 import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.domain.user.dto.UserUpdateRequest;
-import com.study.realworld.domain.user.exception.AlreadyExistEmailException;
-import com.study.realworld.domain.user.exception.IdentityNotFoundException;
+import com.study.realworld.domain.user.error.exception.AlreadyExistEmailException;
+import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -3,7 +3,7 @@ package com.study.realworld.domain.user.application;
 import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.domain.UserRepository;
-import com.study.realworld.domain.user.exception.EmailNotFoundException;
+import com.study.realworld.domain.user.error.exception.EmailNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
