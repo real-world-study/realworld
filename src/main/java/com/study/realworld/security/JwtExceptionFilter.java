@@ -15,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtExceptionFilter.class);
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String CONTENT_TYPE = "application/json";
 

@@ -23,9 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JjwtService implements JwtService {
 
-    private static final Logger log = LoggerFactory.getLogger(JjwtService.class);
-
-    private final static String JWT_HEADER_PARAM_TYPE = "typ";
+    private static final String JWT_HEADER_PARAM_TYPE = "typ";
 
     private final Key key;
 
