@@ -25,6 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public WebSecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
         JwtExceptionFilter jwtExceptionFilter,
         JwtAuthenticationEntiyPoint jwtAuthenticationEntiyPoint) {
+
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
         this.jwtExceptionFilter = jwtExceptionFilter;
         this.jwtAuthenticationEntiyPoint = jwtAuthenticationEntiyPoint;
