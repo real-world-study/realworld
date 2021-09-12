@@ -11,19 +11,20 @@ public enum UserErrorCode implements ErrorCode {
     EMAIL_DUPLICATION(DuplicatedEmailException.class, HttpStatus.BAD_REQUEST, "Email is Duplication"),
     ;
 
-    private final Class exception;
+    private final Class exceptionClass;
     private final HttpStatus httpStatus;
     private final String message;
 
-    UserErrorCode(final Class<?> exception, final HttpStatus httpStatus, final String message) {
-        this.exception = exception;
+    UserErrorCode(final Class<?> exceptionClass, final HttpStatus httpStatus, final String message) {
+        this.exceptionClass = exceptionClass;
         this.httpStatus = httpStatus;
         this.message = message;
     }
 
-    public static UserErrorCode values(final Exception e) {
+    public static UserErrorCode values(final Exception exception) {
+        final Class<? extends Exception> exceptionClass = exception.getClass();
         return Arrays.stream(values())
-                .filter(userErrorCode ->  userErrorCode.exception.equals(e.getClass()))
+                .filter(userErrorCode ->  userErrorCode.exceptionClass.equals(exceptionClass))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }

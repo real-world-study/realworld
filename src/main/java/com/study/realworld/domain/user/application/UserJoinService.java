@@ -22,13 +22,12 @@ public class UserJoinService {
     @Transactional
     public User join(final User requestUser) {
         final User user = requestUser.encode(passwordEncoder);
-        validateDuplicateEmail(user);
+        validateDuplicatedEmail(user.email());
         return userRepository.save(user);
     }
 
-    private void validateDuplicateEmail(final User user) {
-        final Email email = user.email();
-        if(userRepository.existsByEmail(email)) {
+    private void validateDuplicatedEmail(final Email email) {
+        if (userRepository.existsByEmail(email)) {
             throw new DuplicatedEmailException(email.email());
         }
     }
