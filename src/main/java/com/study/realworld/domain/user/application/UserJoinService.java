@@ -1,7 +1,9 @@
 package com.study.realworld.domain.user.application;
 
+import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.domain.UserRepository;
+import com.study.realworld.domain.user.error.exception.DuplicatedEmailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +20,17 @@ public class UserJoinService {
     }
 
     @Transactional
-    public User join(final User user) {
-        final User encodedUser = user.encode(passwordEncoder);
-        return userRepository.save(encodedUser);
+    public User join(final User requestUser) {
+        final User user = requestUser.encode(passwordEncoder);
+        validateDuplicateEmail(user);
+        return userRepository.save(user);
+    }
+
+    private void validateDuplicateEmail(final User user) {
+        final Email email = user.email();
+        if(userRepository.existsByEmail(email)) {
+            throw new DuplicatedEmailException(email.email());
+        }
     }
 
 }
