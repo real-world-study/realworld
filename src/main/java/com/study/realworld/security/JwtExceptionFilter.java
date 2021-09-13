@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,8 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private static final String CONTENT_TYPE = "application/json";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -32,7 +31,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     }
 
     private void sendErrorMessage(HttpServletResponse response, JwtException e) throws IOException {
-        response.setContentType(CONTENT_TYPE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(e.getHttpStatusValue());
 
         response.getWriter().write(ErrorResponse.toJson(e));
