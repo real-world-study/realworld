@@ -29,7 +29,7 @@ class JwtAuthenticationEntiyPointTest {
     private AuthenticationException authException;
 
     @InjectMocks
-    private JwtAuthenticationEntiyPoint jwtAuthenticationEntiyPoint;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntiyPoint;
 
     @Test
     @DisplayName("jwtAuthenticationEntiyPoint에서 인증에러가 나면 response에 erroremssage를 포함해서 반환해야 한다.")

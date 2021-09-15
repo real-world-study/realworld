@@ -2,7 +2,7 @@ package com.study.realworld.global.config;
 
 import static org.springframework.http.HttpMethod.POST;
 
-import com.study.realworld.security.JwtAuthenticationEntiyPoint;
+import com.study.realworld.security.JwtAuthenticationEntryPoint;
 import com.study.realworld.security.JwtAuthenticationTokenFilter;
 import com.study.realworld.security.JwtExceptionFilter;
 import org.springframework.context.annotation.Bean;
@@ -20,15 +20,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
-    private final JwtAuthenticationEntiyPoint jwtAuthenticationEntiyPoint;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     public WebSecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
         JwtExceptionFilter jwtExceptionFilter,
-        JwtAuthenticationEntiyPoint jwtAuthenticationEntiyPoint) {
+        JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
 
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
         this.jwtExceptionFilter = jwtExceptionFilter;
-        this.jwtAuthenticationEntiyPoint = jwtAuthenticationEntiyPoint;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     @Bean
@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .disable();
         http
             .exceptionHandling()
-            .authenticationEntryPoint(jwtAuthenticationEntiyPoint)
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and()
 
             .sessionManagement()
