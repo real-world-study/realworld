@@ -21,13 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.study.realworld.security.JwtAuthentication;
 import com.study.realworld.security.JwtService;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
-import java.security.Principal;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,9 +73,9 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(new Username("username"))
-            .email(new Email("test@test.com"))
-            .password(new Password("password"))
+            .username(Username.of("username"))
+            .email(Email.of("test@test.com"))
+            .password(Password.of("password"))
             .build();
 
         when(userService.join(any())).thenReturn(user);
@@ -135,9 +135,9 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(new Username("username"))
-            .email(new Email("test@test.com"))
-            .password(new Password("password"))
+            .username(Username.of("username"))
+            .email(Email.of("test@test.com"))
+            .password(Password.of("password"))
             .build();
 
         when(userService.login(any(), any())).thenReturn(user);
@@ -190,11 +190,11 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(new Username("username"))
-            .email(new Email("test@test.com"))
-            .password(new Password("password"))
+            .username(Username.of("username"))
+            .email(Email.of("test@test.com"))
+            .password(Password.of("password"))
             .build();
-        when(userService.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(userService.findById(any())).thenReturn(user);
         SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(1L, "token"));
 
         // given
@@ -238,11 +238,11 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(new Username("usernameChange"))
-            .email(new Email("change@change.com"))
-            .password(new Password("passwordChange"))
-            .bio("bioChange")
-            .image("imageChange")
+            .username(Username.of("usernameChange"))
+            .email(Email.of("change@change.com"))
+            .password(Password.of("passwordChange"))
+            .bio(new Bio("bioChange"))
+            .image(new Image("imageChange"))
             .build();
 
         when(userService.update(any(), any())).thenReturn(user);

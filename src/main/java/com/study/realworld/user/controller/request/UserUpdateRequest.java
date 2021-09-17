@@ -3,7 +3,9 @@ package com.study.realworld.user.controller.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.model.UserUpdateModel;
@@ -31,33 +33,13 @@ public class UserUpdateRequest {
     protected UserUpdateRequest() {
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
     public UserUpdateModel toUserUpdateModel() {
         return new UserUpdateModel(
-            new Username(getUsername()),
-            new Email(getEmail()),
-            new Password(getPassword()),
-            getBio(),
-            getImage()
+            Optional.ofNullable(username).map(Username::of).orElse(null),
+            Optional.ofNullable(email).map(Email::of).orElse(null),
+            Optional.ofNullable(password).map(Password::of).orElse(null),
+            new Bio(bio),
+            new Image(image)
         );
     }
 

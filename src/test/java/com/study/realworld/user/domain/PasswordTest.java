@@ -4,15 +4,11 @@ import static com.study.realworld.user.domain.Password.encode;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.Collection;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,8 +35,8 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password("12345678901234567890123"))
-            .withMessageMatching("password length must be between 6 and 20 characters.");
+            .isThrownBy(() -> Password.of("12345678901234567890123"))
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_LENGTH.getMessage());
     }
 
     @Test
@@ -49,8 +45,8 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password("12345"))
-            .withMessageMatching("password length must be between 6 and 20 characters.");
+            .isThrownBy(() -> Password.of("12345"))
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_LENGTH.getMessage());
     }
 
     @Test
@@ -59,8 +55,8 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password(null))
-            .withMessageMatching("password must be provided.");
+            .isThrownBy(() -> Password.of(null))
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_NULL.getMessage());
     }
 
     @ParameterizedTest
@@ -70,8 +66,8 @@ class PasswordTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Password(input))
-            .withMessageMatching("password must be provided.");
+            .isThrownBy(() -> Password.of(input))
+            .withMessageMatching(ErrorCode.INVALID_PASSWORD_NULL.getMessage());
     }
 
     @Test
@@ -82,13 +78,13 @@ class PasswordTest {
         when(passwordEncoder.encode(any())).thenReturn("encoded_password");
 
         // given
-        Password password = new Password("password");
+        Password password = Password.of("password");
 
         // when
         Password result = encode(password, passwordEncoder);
 
         // then
-        assertThat(result.getPassword()).isEqualTo("encoded_password");
+        assertThat(result.password()).isEqualTo("encoded_password");
     }
 
     @Test
@@ -99,11 +95,11 @@ class PasswordTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
 
         // given
-        Password password = new Password("encoded_password");
+        Password password = Password.of("encoded_password");
         String input = "password";
 
         // when & then
-        assertDoesNotThrow(() -> password.matchPassword(new Password("password"), passwordEncoder));
+        assertDoesNotThrow(() -> password.matchPassword(Password.of("password"), passwordEncoder));
     }
 
     @Test
@@ -114,13 +110,13 @@ class PasswordTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
 
         // given
-        Password password = new Password("encoded_password");
+        Password password = Password.of("encoded_password");
         String input = "password";
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
-            .isThrownBy(() -> password.matchPassword(new Password("password"), passwordEncoder))
-            .withMessageMatching("password is different from old password.");
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> password.matchPassword(Password.of("password"), passwordEncoder))
+            .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
 }

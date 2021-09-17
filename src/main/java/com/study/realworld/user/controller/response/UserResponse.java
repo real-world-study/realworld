@@ -5,6 +5,8 @@ import static java.lang.String.valueOf;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.user.domain.Bio;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.User;
 
 @JsonTypeName("user")
@@ -59,10 +61,10 @@ public class UserResponse {
 
     public static UserResponse fromUserAndToken(User user, String accessToken) {
         return new UserResponse(
-            valueOf(user.getUsername()),
-            valueOf(user.getEmail()),
-            user.getBio(),
-            user.getImage(),
+            valueOf(user.username()),
+            valueOf(user.email()),
+            user.bio().map(Bio::value).orElse(null),
+            user.image().map(Image::value).orElse(null),
             valueOf(accessToken)
         );
     }

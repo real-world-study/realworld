@@ -1,6 +1,7 @@
 package com.study.realworld.user.domain;
 
 import java.util.Objects;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -28,15 +29,15 @@ public class User {
     private Password password;
 
     @Column(name = "bio")
-    private String bio;
+    private Bio bio;
 
     @Column(name = "image")
-    private String image;
+    private Image image;
 
     protected User() {
     }
 
-    private User(Long id, Username username, Email email, Password password, String bio, String image) {
+    private User(Long id, Username username, Email email, Password password, Bio bio, Image image) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -45,28 +46,28 @@ public class User {
         this.image = image;
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 
-    public Username getUsername() {
+    public Username username() {
         return username;
     }
 
-    public Email getEmail() {
+    public Email email() {
         return email;
     }
 
-    public Password getPassword() {
+    public Password password() {
         return password;
     }
 
-    public String getBio() {
-        return bio;
+    public Optional<Bio> bio() {
+        return Optional.ofNullable(bio);
     }
 
-    public String getImage() {
-        return image;
+    public Optional<Image> image() {
+        return Optional.ofNullable(image);
     }
 
     public void changeUsername(Username username) {
@@ -81,11 +82,11 @@ public class User {
         this.password = Password.encode(password, passwordEncoder);
     }
 
-    public void changeBio(String bio) {
+    public void changeBio(Bio bio) {
         this.bio = bio;
     }
 
-    public void changeImage(String image) {
+    public void changeImage(Image image) {
         this.image = image;
     }
 
@@ -128,19 +129,19 @@ public class User {
         private Username username;
         private Email email;
         private Password password;
-        private String bio;
-        private String image;
+        private Bio bio;
+        private Image image;
 
         private Builder() {
         }
 
         private Builder(User user) {
-            id = user.getId();
-            username = user.getUsername();
-            email = user.getEmail();
-            password = user.getPassword();
-            bio = user.getBio();
-            image = user.getImage();
+            id = user.id;
+            username = user.username;
+            email = user.email;
+            password = user.password;
+            bio = user.bio;
+            image = user.image;
         }
 
         public Builder id(Long id) {
@@ -163,12 +164,12 @@ public class User {
             return this;
         }
 
-        public Builder bio(String bio) {
+        public Builder bio(Bio bio) {
             this.bio = bio;
             return this;
         }
 
-        public Builder image(String image) {
+        public Builder image(Image image) {
             this.image = image;
             return this;
         }

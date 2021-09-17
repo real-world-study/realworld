@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,11 +30,11 @@ class UserTest {
 
         // given
         Long id = 1L;
-        Username username = new Username("username");
-        Email email = new Email("email@email.com");
-        Password password = new Password("password");
-        String bio = "bio";
-        String image = "image.jpg";
+        Username username = Username.of("username");
+        Email email = Email.of("email@email.com");
+        Password password = Password.of("password");
+        Bio bio = new Bio("bio");
+        Image image = new Image("image.jpg");
 
         // when
         User user = User.Builder()
@@ -45,12 +47,12 @@ class UserTest {
             .build();
 
         // then
-        assertThat(user.getId()).isEqualTo(id);
-        assertThat(user.getUsername()).isEqualTo(username);
-        assertThat(user.getEmail()).isEqualTo(email);
-        assertThat(user.getPassword()).isEqualTo(password);
-        assertThat(user.getBio()).isEqualTo(bio);
-        assertThat(user.getImage()).isEqualTo(image);
+        assertThat(user.id()).isEqualTo(id);
+        assertThat(user.username()).isEqualTo(username);
+        assertThat(user.email()).isEqualTo(email);
+        assertThat(user.password()).isEqualTo(password);
+        assertThat(user.bio().get()).isEqualTo(bio);
+        assertThat(user.image().get()).isEqualTo(image);
     }
 
     @Test
@@ -59,23 +61,23 @@ class UserTest {
         // given
         User input = User.Builder()
             .id(1L)
-            .username(new Username("username"))
-            .email(new Email("test@test.com"))
-            .password(new Password("password"))
-            .bio("bio")
-            .image("image")
+            .username(Username.of("username"))
+            .email(Email.of("test@test.com"))
+            .password(Password.of("password"))
+            .bio(new Bio("bio"))
+            .image(new Image("image"))
             .build();
 
         // when
         User user = User.Builder(input).build();
 
         // then
-        assertThat(user.getId()).isEqualTo(input.getId());
-        assertThat(user.getUsername()).isEqualTo(input.getUsername());
-        assertThat(user.getEmail()).isEqualTo(input.getEmail());
-        assertThat(user.getPassword()).isEqualTo(input.getPassword());
-        assertThat(user.getBio()).isEqualTo(input.getBio());
-        assertThat(user.getImage()).isEqualTo(input.getImage());
+        assertThat(user.id()).isEqualTo(input.id());
+        assertThat(user.username()).isEqualTo(input.username());
+        assertThat(user.email()).isEqualTo(input.email());
+        assertThat(user.password()).isEqualTo(input.password());
+        assertThat(user.bio()).isEqualTo(input.bio());
+        assertThat(user.image()).isEqualTo(input.image());
     }
 
     @Test
@@ -83,15 +85,15 @@ class UserTest {
     void userEncodePasswordTest() {
 
         // setup & given
-        User user = User.Builder().password(new Password("password")).build();
-        when(passwordEncoder.encode(user.getPassword().getPassword()))
+        User user = User.Builder().password(Password.of("password")).build();
+        when(passwordEncoder.encode(user.password().password()))
             .thenReturn("encoded_password");
 
         // when
         user.encodePassword(passwordEncoder);
 
         // then
-        assertThat(user.getPassword().getPassword()).isEqualTo("encoded_password");
+        assertThat(user.password().password()).isEqualTo("encoded_password");
     }
 
     @Test
@@ -102,8 +104,8 @@ class UserTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(true);
 
         // given
-        User user = User.Builder().password(new Password("encoded_password")).build();
-        Password password = new Password("password");
+        User user = User.Builder().password(Password.of("encoded_password")).build();
+        Password password = Password.of("password");
 
         // when & then
         assertDoesNotThrow(() -> user.login(password, passwordEncoder));
@@ -117,13 +119,13 @@ class UserTest {
         when(passwordEncoder.matches("password", "encoded_password")).thenReturn(false);
 
         // given
-        User user = User.Builder().password(new Password("encoded_password")).build();
-        Password password = new Password("password");
+        User user = User.Builder().password(Password.of("encoded_password")).build();
+        Password password = Password.of("password");
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> user.login(password, passwordEncoder))
-            .withMessageMatching("password is different from old password.");
+            .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
     @Test
@@ -131,8 +133,8 @@ class UserTest {
     void userEqualsHashCodeTest() {
 
         // given
-        User user = User.Builder().email(new Email("test@test.com")).build();
-        User copyUser = User.Builder().email(new Email("test@test.com")).build();
+        User user = User.Builder().email(Email.of("test@test.com")).build();
+        User copyUser = User.Builder().email(Email.of("test@test.com")).build();
 
         // when & then
         assertThat(user)

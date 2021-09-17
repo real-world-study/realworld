@@ -1,19 +1,17 @@
 package com.study.realworld.user.service;
 
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.model.UserUpdateModel;
-import java.util.Optional;
-import javax.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
-@Validated
 @Service
 public class UserService {
 
@@ -26,32 +24,38 @@ public class UserService {
     }
 
     @Transactional
-    public User join(@Valid User user) {
-        checkDuplicatedByUsername(user.getUsername());
-        checkDuplicatedByEmail(user.getEmail());
+    public User join(User user) {
+        checkDuplicatedByUsername(user.username());
+        checkDuplicatedByEmail(user.email());
 
         user.encodePassword(passwordEncoder);
         return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
-    public User login(@Valid Email email, @Valid Password password) {
-        User user = findByEmail(email).orElseThrow(RuntimeException::new);
+    public User login(Email email, Password password) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         user.login(password, passwordEncoder);
         return user;
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findById(Long userId) {
-        return userRepository.findById(userId);
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional
     public User update(UserUpdateModel updateUser, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        User user = findById(userId);
 
-        updateUser.getUsername().ifPresent(username -> checkDuplicatedUsernameAndChangeUsername(user, username));
-        updateUser.getEmail().ifPresent(email -> checkDuplicatedEmailAndChangeEmail(user, email));
+        updateUser.getUsername()
+            .filter(username -> !user.username().equals(username))
+            .ifPresent(username -> checkDuplicatedUsernameAndChangeUsername(user, username));
+        updateUser.getEmail()
+            .filter(email -> !user.email().equals(email))
+            .ifPresent(email -> checkDuplicatedEmailAndChangeEmail(user, email));
         updateUser.getPassword().ifPresent(password -> user.changePassword(password, passwordEncoder));
         updateUser.getBio().ifPresent(user::changeBio);
         updateUser.getImage().ifPresent(user::changeImage);
@@ -60,23 +64,15 @@ public class UserService {
     }
 
     private void checkDuplicatedByUsername(Username username) {
-        findByUsername(username).ifPresent(param -> {
-            throw new RuntimeException("already user username");
+        userRepository.findByUsername(username).ifPresent(param -> {
+            throw new BusinessException(ErrorCode.USERNAME_DUPLICATION);
         });
     }
 
     private void checkDuplicatedByEmail(Email email) {
-        findByEmail(email).ifPresent(param -> {
-            throw new RuntimeException("already user email");
+        userRepository.findByEmail(email).ifPresent(param -> {
+            throw new BusinessException(ErrorCode.EMAIL_DUPLICATION);
         });
-    }
-
-    private Optional<User> findByUsername(Username username) {
-        return userRepository.findByUsername(username);
-    }
-
-    private Optional<User> findByEmail(Email email) {
-        return userRepository.findByEmail(email);
     }
 
     private void checkDuplicatedEmailAndChangeEmail(User user, Email email) {

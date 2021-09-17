@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.study.realworld.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,8 +25,8 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
-            .withMessageMatching("username must be provided.");
+            .isThrownBy(() -> Username.of(input))
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_NULL.getMessage());
     }
 
     @ParameterizedTest
@@ -35,8 +36,8 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
-            .withMessageMatching("username must be provided.");
+            .isThrownBy(() -> Username.of(input))
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_NULL.getMessage());
     }
 
     @Test
@@ -48,8 +49,8 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
-            .withMessageMatching("username length must be less then 20 characters.");
+            .isThrownBy(() -> Username.of(input))
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_LENGTH.getMessage());
     }
 
     @Test
@@ -60,7 +61,7 @@ class UsernameTest {
         String input = "123가믜힣abcABC";
 
         // when
-        Username username = new Username(input);
+        Username username = Username.of(input);
 
         // then
         assertThat(username.toString()).isEqualTo(input);
@@ -73,8 +74,8 @@ class UsernameTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Username(input))
-            .withMessageMatching("usernmae must be provided by limited pattern.");
+            .isThrownBy(() -> Username.of(input))
+            .withMessageMatching(ErrorCode.INVALID_USERNAME_PATTERN.getMessage());
     }
 
     @Test
@@ -82,8 +83,8 @@ class UsernameTest {
     void usernameEqualsHashCodeTest() {
 
         // given
-        Username username = new Username("username");
-        Username copyUsername = new Username("username");
+        Username username = Username.of("username");
+        Username copyUsername = Username.of("username");
 
         // when & then
         assertThat(username)
@@ -99,7 +100,7 @@ class UsernameTest {
         String input = "username";
 
         // when
-        Username username = new Username(input);
+        Username username = Username.of(input);
 
         // then
         assertThat(username.toString()).isEqualTo(input);

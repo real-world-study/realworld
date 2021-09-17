@@ -1,5 +1,7 @@
 package com.study.realworld.security;
 
+import com.study.realworld.global.exception.ErrorCode;
+import com.study.realworld.global.exception.JwtException;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -13,13 +15,15 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JjwtService implements JwtService {
 
-    private final static String JWT_HEADER_PARAM_TYPE = "typ";
+    private static final String JWT_HEADER_PARAM_TYPE = "typ";
 
     private final Key key;
 
@@ -48,7 +52,7 @@ public class JjwtService implements JwtService {
         return Jwts.builder()
             .signWith(key, SignatureAlgorithm.HS512)
             .setHeaderParam(JWT_HEADER_PARAM_TYPE, headerType)
-            .setSubject(user.getId().toString())
+            .setSubject(user.id().toString())
             .setIssuer(issuer)
             .setExpiration(new Date((new Date()).getTime() + accessTime))
             .setIssuedAt(new Date())
@@ -62,13 +66,13 @@ public class JjwtService implements JwtService {
             Long userId = Long.parseLong(claims.getSubject());
             return userRepository.findById(userId);
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("만료된 JWT 서명입니다.");
+            throw new JwtException(ErrorCode.INVALID_EXPIRED_JWT);
         } catch (SecurityException | MalformedJwtException e) {
-            throw new MalformedJwtException("잘못된 JWT 서명입니다.");
+            throw new JwtException(ErrorCode.INVALID_MALFORMED_JWT);
         } catch (UnsupportedJwtException e) {
-            throw new UnsupportedJwtException("지원되지 않는 JWT 서명입니다.");
+            throw new JwtException(ErrorCode.INVALID_UNSUPPORTED_JWT);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("JWT 토큰이 잘못되었습니다.");
+            throw new JwtException(ErrorCode.INVALID_ILLEGAL_ARGUMENT_JWT);
         }
     }
 

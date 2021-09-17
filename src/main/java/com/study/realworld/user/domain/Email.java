@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.regex.Pattern.matches;
 
+import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -17,15 +18,18 @@ public class Email {
     protected Email() {
     }
 
-    public Email(String address) {
-        checkEmail(address);
-
+    private Email(String address) {
         this.address = address;
     }
 
+    public static Email of(String address) {
+        checkEmail(address);
+        return new Email(address);
+    }
+
     private static void checkEmail(String address) {
-        checkArgument(StringUtils.isNotBlank(address), "address must be provided.");
-        checkArgument(checkEmailPattern(address), "address must be provided by limited pattern like 'xxx@xxx.xxx'.");
+        checkArgument(StringUtils.isNotBlank(address), ErrorCode.INVALID_EMAIL_NULL);
+        checkArgument(checkEmailPattern(address), ErrorCode.INVALID_EMAIL_PATTERN);
     }
 
     private static boolean checkEmailPattern(String address) {

@@ -3,7 +3,9 @@ package com.study.realworld.user.controller.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
@@ -30,33 +32,13 @@ public class UserJoinRequest {
     protected UserJoinRequest() {
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
     public User toUser() {
         return User.Builder()
-            .username(new Username(getUsername()))
-            .email(new Email(getEmail()))
-            .password(new Password(getPassword()))
-            .bio(getBio())
-            .image(getImage())
+            .username(Username.of(username))
+            .email(Email.of(email))
+            .password(Password.of(password))
+            .bio(new Bio(bio))
+            .image(new Image(image))
             .build();
     }
 

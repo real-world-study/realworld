@@ -3,12 +3,10 @@ package com.study.realworld.user.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.regex.Pattern.matches;
 
+import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 
 @Embeddable
@@ -20,16 +18,19 @@ public class Username {
     protected Username() {
     }
 
-    public Username(String name) {
-        checkUsername(name);
-
+    private Username(String name) {
         this.name = name;
     }
 
+    public static Username of(String name) {
+        checkUsername(name);
+        return new Username(name);
+    }
+
     private static void checkUsername(String name) {
-        checkArgument(StringUtils.isNotBlank(name), "username must be provided.");
-        checkArgument(name.length() <= 20, "username length must be less then 20 characters.");
-        checkArgument(checkUsernamePattern(name), "usernmae must be provided by limited pattern.");
+        checkArgument(StringUtils.isNotBlank(name), ErrorCode.INVALID_USERNAME_NULL);
+        checkArgument(name.length() <= 20, ErrorCode.INVALID_USERNAME_LENGTH);
+        checkArgument(checkUsernamePattern(name), ErrorCode.INVALID_USERNAME_PATTERN);
     }
 
     private static boolean checkUsernamePattern(String name) {
@@ -57,4 +58,5 @@ public class Username {
     public String toString() {
         return name;
     }
+
 }

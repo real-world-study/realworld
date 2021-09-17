@@ -2,13 +2,8 @@ package com.study.realworld.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Collection;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import org.junit.jupiter.api.BeforeEach;
+import com.study.realworld.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,8 +23,8 @@ class EmailTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Email(input))
-            .withMessageMatching("address must be provided by limited pattern like 'xxx@xxx.xxx'.");
+            .isThrownBy(() -> Email.of(input))
+            .withMessageMatching(ErrorCode.INVALID_EMAIL_PATTERN.getMessage());
     }
 
     @ParameterizedTest
@@ -39,8 +34,8 @@ class EmailTest {
 
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Email(input))
-            .withMessageMatching("address must be provided.");
+            .isThrownBy(() -> Email.of(input))
+            .withMessageMatching(ErrorCode.INVALID_EMAIL_NULL.getMessage());
     }
 
     @Test
@@ -53,8 +48,8 @@ class EmailTest {
         // when & given
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> new Email(input))
-            .withMessageMatching("address must be provided.");
+            .isThrownBy(() -> Email.of(input))
+            .withMessageMatching(ErrorCode.INVALID_EMAIL_NULL.getMessage());
     }
 
     @Test
@@ -62,8 +57,8 @@ class EmailTest {
     void emailEqualsHashCodeTest() {
 
         // given
-        Email email = new Email("test@test.com");
-        Email copyEmail = new Email("test@test.com");
+        Email email = Email.of("test@test.com");
+        Email copyEmail = Email.of("test@test.com");
 
         // when & then
         assertThat(email)
@@ -79,7 +74,7 @@ class EmailTest {
         String input = "test@test.com";
 
         // when
-        Email email = new Email(input);
+        Email email = Email.of(input);
 
         // then
         assertThat(email.toString()).isEqualTo(input);
