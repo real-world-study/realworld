@@ -63,7 +63,7 @@ public class TokenProviderTest {
         final TokenProvider tokenProvider = new TokenProvider(TEST_KEY);
         assertThatThrownBy(() -> tokenProvider.mapToUsername("invalidToken"))
                 .isInstanceOf(JwtParseException.class)
-                .hasMessage("jwt parsing failed.");
+                .hasMessage("Jwt parsing failed.");
     }
 
 
