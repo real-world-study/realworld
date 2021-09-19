@@ -2,7 +2,6 @@ package com.study.realworld.global.security.config;
 
 import com.study.realworld.global.jwt.filter.JwtAuthenticationFilter;
 import com.study.realworld.global.jwt.filter.JwtExceptionHandlerFilter;
-import com.study.realworld.global.jwt.error.JwtAccessDeniedHandler;
 import com.study.realworld.global.jwt.error.JwtAuthenticationEntryPoint;
 import com.study.realworld.global.security.filter.SecurityExceptionHandlerFilter;
 import org.springframework.context.annotation.Configuration;
@@ -23,18 +22,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     public SecurityConfiguration(final SecurityExceptionHandlerFilter securityExceptionHandlerFilter,
                                  final JwtExceptionHandlerFilter jwtExceptionHandlerFilter,
-                                final JwtAuthenticationFilter jwtAuthenticationFilter,
-                                 final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                                 final JwtAccessDeniedHandler jwtAccessDeniedHandler) {
+                                 final JwtAuthenticationFilter jwtAuthenticationFilter,
+                                 final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.securityExceptionHandlerFilter = securityExceptionHandlerFilter;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.jwtExceptionHandlerFilter = jwtExceptionHandlerFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
 
     @Override
@@ -58,8 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .disable();
 
         http.exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler);
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtExceptionHandlerFilter, JwtAuthenticationFilter.class);

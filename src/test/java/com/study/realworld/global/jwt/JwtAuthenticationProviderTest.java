@@ -5,6 +5,7 @@ import com.study.realworld.domain.auth.infrastructure.TokenProvider;
 import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.global.jwt.authentication.JwtAuthentication;
 import com.study.realworld.global.jwt.authentication.JwtAuthenticationProvider;
+import com.study.realworld.global.security.error.exception.UserDetailsNullPointerException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,8 +92,8 @@ class JwtAuthenticationProviderTest {
 
         final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(jwtAuthenticationProvider.authenticate(jwtAuthentication)))
-                .isInstanceOf(InternalAuthenticationServiceException.class)
-                .hasMessage("UserDetailsService returned null, which is an interface contract violation");
+                .isInstanceOf(UserDetailsNullPointerException.class)
+                .hasMessage("UserDetails is null");
     }
 
 }
