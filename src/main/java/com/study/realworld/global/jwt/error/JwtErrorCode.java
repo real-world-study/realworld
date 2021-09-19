@@ -5,7 +5,6 @@ import com.study.realworld.global.jwt.error.exception.JwtAuthenticationException
 import com.study.realworld.global.jwt.error.exception.JwtParseException;
 import com.study.realworld.global.jwt.error.exception.JwtProviderNotSupportTypeException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 
 import java.util.Arrays;

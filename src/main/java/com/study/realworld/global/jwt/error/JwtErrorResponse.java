@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.global.error.ErrorCode;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,10 +33,6 @@ public class JwtErrorResponse {
         if (Objects.isNull(errorCode)) {
             throw new IllegalArgumentException();
         }
-    }
-
-    public ResponseEntity<JwtErrorResponse> toResponseEntity() {
-        return ResponseEntity.status(this.httpStatus).body(this);
     }
 
 }
