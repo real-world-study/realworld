@@ -1,6 +1,6 @@
 package com.study.realworld.domain.user.error;
 
-import com.study.realworld.global.config.error.testUtils.TestErrorCode;
+import com.study.realworld.global.error.testUtils.TestErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

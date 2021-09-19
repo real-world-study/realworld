@@ -1,4 +1,4 @@
-package com.study.realworld.domain.user.error;
+package com.study.realworld.global.jwt.error;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @JsonTypeName("errors")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class UserErrorResponse {
+public class JwtErrorResponse {
 
     @JsonIgnore
     private HttpStatus httpStatus;
@@ -21,22 +21,22 @@ public class UserErrorResponse {
     @JsonProperty("body")
     private List<String> body;
 
-    UserErrorResponse() {
+    JwtErrorResponse() {
     }
 
-    public UserErrorResponse(final ErrorCode errorCode) {
+    public JwtErrorResponse(final ErrorCode errorCode) {
         validateNull(errorCode);
         httpStatus = errorCode.httpStatus();
         body = List.of(errorCode.message());
     }
 
     private void validateNull(final ErrorCode errorCode) {
-        if(Objects.isNull(errorCode)) {
+        if (Objects.isNull(errorCode)) {
             throw new IllegalArgumentException();
         }
     }
 
-    public ResponseEntity<UserErrorResponse> toResponseEntity() {
+    public ResponseEntity<JwtErrorResponse> toResponseEntity() {
         return ResponseEntity.status(this.httpStatus).body(this);
     }
 

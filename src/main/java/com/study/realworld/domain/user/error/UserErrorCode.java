@@ -1,7 +1,7 @@
 package com.study.realworld.domain.user.error;
 
 import com.study.realworld.domain.user.error.exception.*;
-import com.study.realworld.global.config.error.ErrorCode;
+import com.study.realworld.global.error.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;

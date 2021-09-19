@@ -1,4 +1,4 @@
-package com.study.realworld.domain.user.error;
+package com.study.realworld.global.security.error;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @JsonTypeName("errors")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class UserErrorResponse {
+public class SecurityErrorResponse {
 
     @JsonIgnore
     private HttpStatus httpStatus;
@@ -21,10 +21,10 @@ public class UserErrorResponse {
     @JsonProperty("body")
     private List<String> body;
 
-    UserErrorResponse() {
+    SecurityErrorResponse() {
     }
 
-    public UserErrorResponse(final ErrorCode errorCode) {
+    public SecurityErrorResponse(final ErrorCode errorCode) {
         validateNull(errorCode);
         httpStatus = errorCode.httpStatus();
         body = List.of(errorCode.message());
@@ -36,7 +36,7 @@ public class UserErrorResponse {
         }
     }
 
-    public ResponseEntity<UserErrorResponse> toResponseEntity() {
+    public ResponseEntity<SecurityErrorResponse> toResponseEntity() {
         return ResponseEntity.status(this.httpStatus).body(this);
     }
 
