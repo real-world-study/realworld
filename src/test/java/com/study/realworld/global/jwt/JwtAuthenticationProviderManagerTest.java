@@ -1,10 +1,10 @@
 package com.study.realworld.global.jwt;
 
+import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.global.jwt.authentication.JwtAuthentication;
 import com.study.realworld.global.jwt.authentication.JwtAuthenticationProvider;
 import com.study.realworld.global.jwt.authentication.JwtAuthenticationProviderManager;
 import com.study.realworld.global.jwt.error.exception.JwtProviderNotSupportTypeException;
-import com.study.realworld.domain.user.domain.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

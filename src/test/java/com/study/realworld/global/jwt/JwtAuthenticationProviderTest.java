@@ -1,7 +1,7 @@
 package com.study.realworld.global.jwt;
 
-import com.study.realworld.domain.user.application.UserFindService;
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
+import com.study.realworld.domain.user.application.UserFindService;
 import com.study.realworld.domain.user.domain.*;
 import com.study.realworld.global.jwt.authentication.JwtAuthentication;
 import com.study.realworld.global.jwt.authentication.JwtAuthenticationProvider;
@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;

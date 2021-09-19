@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class JwtErrorResponseTest {
 
@@ -34,10 +34,9 @@ class JwtErrorResponseTest {
         );
     }
 
-    @DisplayName("JwtErrorResponse 인스턴스 null 주입시 예외처리 테스트")
+    @DisplayName("JwtErrorResponse 인스턴스 생성자 null 예외처리 테스트")
     @Test
     void constructor_null_test() {
-
         assertThatThrownBy(() -> new JwtErrorResponse(null))
                 .isInstanceOf(JwtErrorCodeNullPointerException.class)
                 .hasMessage("JwtErrorCode is null");

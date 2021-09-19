@@ -1,8 +1,8 @@
 package com.study.realworld.global.security.config;
 
+import com.study.realworld.global.jwt.error.JwtAuthenticationEntryPoint;
 import com.study.realworld.global.jwt.filter.JwtAuthenticationFilter;
 import com.study.realworld.global.jwt.filter.JwtExceptionHandlerFilter;
-import com.study.realworld.global.jwt.error.JwtAuthenticationEntryPoint;
 import com.study.realworld.global.security.filter.SecurityExceptionHandlerFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -31,7 +31,7 @@ public class UserErrorResponse {
     }
 
     private void validateNull(final ErrorCode errorCode) {
-        if(Objects.isNull(errorCode)) {
+        if (Objects.isNull(errorCode)) {
             throw new IllegalArgumentException();
         }
     }

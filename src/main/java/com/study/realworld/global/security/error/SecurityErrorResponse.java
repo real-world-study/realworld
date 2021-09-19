@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.global.error.ErrorCode;
+import com.study.realworld.global.security.error.exception.SecurityErrorCodeNullPointerException;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class SecurityErrorResponse {
     }
 
     private void validateNull(final ErrorCode errorCode) {
-        if(Objects.isNull(errorCode)) {
-            throw new IllegalArgumentException();
+        if (Objects.isNull(errorCode)) {
+            throw new SecurityErrorCodeNullPointerException();
         }
     }
 

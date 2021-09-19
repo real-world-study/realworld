@@ -1,7 +1,6 @@
 package com.study.realworld.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.realworld.global.security.error.exception.SecurityBusinessException;
 import com.study.realworld.global.security.error.exception.UserDetailsNullPointerException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,11 +12,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.mock;
