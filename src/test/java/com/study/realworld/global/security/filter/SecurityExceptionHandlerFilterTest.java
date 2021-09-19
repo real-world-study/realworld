@@ -2,6 +2,7 @@ package com.study.realworld.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.global.security.error.exception.SecurityBusinessException;
+import com.study.realworld.global.security.error.exception.UserDetailsNullPointerException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,21 +43,38 @@ class SecurityExceptionHandlerFilterTest {
         );
     }
 
-//    @DisplayName("SecurityExceptionHandlerFilter")
-//    @Test
-//    void constructor_test() throws ServletException, IOException {
-//        final SecurityExceptionHandlerFilter securityExceptionHandlerFilter = new SecurityExceptionHandlerFilter(objectMapper);
-//        final MockHttpServletRequest request = new MockHttpServletRequest();
-//        final MockHttpServletResponse response = new MockHttpServletResponse();
-//        final FilterChain chain = mock(FilterChain.class);
-//
-//        willThrow(new SecurityBusinessException("test")).given(chain).doFilter(request, response);
-//        securityExceptionHandlerFilter.doFilter(request, response, chain);
-//
-//        assertAll(
-//                () -> assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON_VALUE),
-//                () -> assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED)
-//        );
-//    }
+    @DisplayName("SecurityExceptionHandlerFilter 인스턴스 doFilter() 테스트")
+    @Test
+    void doFilter_test() throws ServletException, IOException {
+        final SecurityExceptionHandlerFilter securityExceptionHandlerFilter = new SecurityExceptionHandlerFilter(objectMapper);
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final FilterChain chain = mock(FilterChain.class);
+
+        willThrow(new UserDetailsNullPointerException()).given(chain).doFilter(request, response);
+        securityExceptionHandlerFilter.doFilter(request, response, chain);
+
+        assertAll(
+                () -> assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON_VALUE),
+                () -> assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED)
+        );
+    }
+
+    @DisplayName("SecurityExceptionHandlerFilter 인스턴스 doFilter() 예외처리 테스트")
+    @Test
+    void doFilter_exception_catch_test() throws ServletException, IOException {
+        final SecurityExceptionHandlerFilter securityExceptionHandlerFilter = new SecurityExceptionHandlerFilter(objectMapper);
+        final MockHttpServletRequest request = new MockHttpServletRequest();
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        final FilterChain chain = mock(FilterChain.class);
+
+        willThrow(new UserDetailsNullPointerException()).given(chain).doFilter(request, response);
+        securityExceptionHandlerFilter.doFilter(request, response, chain);
+
+        assertAll(
+                () -> assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON_VALUE),
+                () -> assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED)
+        );
+    }
 
 }
