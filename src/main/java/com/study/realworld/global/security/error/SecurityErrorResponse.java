@@ -36,8 +36,4 @@ public class SecurityErrorResponse {
         }
     }
 
-    public ResponseEntity<SecurityErrorResponse> toResponseEntity() {
-        return ResponseEntity.status(this.httpStatus).body(this);
-    }
-
 }

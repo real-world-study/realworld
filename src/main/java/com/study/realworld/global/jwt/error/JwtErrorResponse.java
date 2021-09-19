@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.global.error.ErrorCode;
+import com.study.realworld.global.jwt.error.exception.JwtErrorCodeNullPointerException;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class JwtErrorResponse {
 
     private void validateNull(final ErrorCode errorCode) {
         if (Objects.isNull(errorCode)) {
-            throw new IllegalArgumentException();
+            throw new JwtErrorCodeNullPointerException();
         }
     }
 

@@ -10,9 +10,9 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Arrays;
 
 public enum JwtErrorCode implements ErrorCode {
+    JWT_AUTHENTICATION(JwtAuthenticationException.class, HttpStatus.UNAUTHORIZED),
     JWT_PROVIDER_NOT_SUPPORT_TYPE(JwtProviderNotSupportTypeException.class, HttpStatus.UNAUTHORIZED),
-    JWT_PARSE(JwtParseException.class, HttpStatus.FORBIDDEN),
-    JWT_AUTHENTICATION(JwtAuthenticationException.class, HttpStatus.UNAUTHORIZED);
+    JWT_PARSE(JwtParseException.class, HttpStatus.FORBIDDEN);
 
     private static final String ERROR_CODE_MESSAGE = "Unauthorized";
 
