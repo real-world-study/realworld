@@ -42,9 +42,4 @@ public class Image {
         return Objects.hash(url);
     }
 
-    @Override
-    public String toString() {
-        return url;
-    }
-
 }

@@ -42,9 +42,4 @@ public class Bio {
         return Objects.hash(bio);
     }
 
-    @Override
-    public String toString() {
-        return bio;
-    }
-
 }

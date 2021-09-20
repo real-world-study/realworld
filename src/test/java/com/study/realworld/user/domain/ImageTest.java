@@ -26,18 +26,4 @@ public class ImageTest {
             .hasSameHashCodeAs(copyImage);
     }
 
-    @Test
-    @DisplayName("toString 테스트")
-    void imageToStringTest() {
-
-        // given
-        String input = "image";
-
-        // when
-        Image image = Image.of(input);
-
-        // then
-        assertThat(image.toString()).isEqualTo("image");
-    }
-
 }

@@ -92,18 +92,4 @@ class UsernameTest {
             .hasSameHashCodeAs(copyUsername);
     }
 
-    @Test
-    @DisplayName("toString 테스트")
-    void usernameToStringTest() {
-
-        // given
-        String input = "username";
-
-        // when
-        Username username = Username.of(input);
-
-        // then
-        assertThat(username.toString()).isEqualTo(input);
-    }
-
 }

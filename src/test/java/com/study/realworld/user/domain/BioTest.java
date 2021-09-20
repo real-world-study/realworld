@@ -26,18 +26,4 @@ public class BioTest {
             .hasSameHashCodeAs(copyBio);
     }
 
-    @Test
-    @DisplayName("toString 테스트")
-    void bioToStringTest() {
-
-        // given
-        String input = "bio";
-
-        // when
-        Bio bio = Bio.of(input);
-
-        // then
-        assertThat(bio.toString()).isEqualTo(input);
-    }
-
 }
