@@ -30,7 +30,7 @@ public class ProfileService {
         User user = findById(loginId);
         User followee = findByUsername(username);
         user.followingUser(followee);
-        return ProfileModel.fromProfileAndFollowing(user.profile(), true);
+        return ProfileModel.fromProfileAndFollowing(user.profile(), user.isFollow(followee));
     }
 
     @Transactional
@@ -38,7 +38,7 @@ public class ProfileService {
         User user = findById(loginId);
         User followee = findByUsername(username);
         user.unfollowingUser(followee);
-        return ProfileModel.fromProfileAndFollowing(user.profile(), false);
+        return ProfileModel.fromProfileAndFollowing(user.profile(), user.isFollow(followee));
     }
 
     @Transactional(readOnly = true)
