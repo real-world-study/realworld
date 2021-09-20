@@ -132,7 +132,6 @@ class UserServiceTest {
             .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
     }
 
-    // TODO
     @Test
     @DisplayName("로그인 요청한 이메일에 매칭되지 않는 패스워드이면 Exception을 반환해야 한다.")
     void loginFailByPasswordTest() {

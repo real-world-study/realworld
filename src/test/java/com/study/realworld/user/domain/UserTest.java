@@ -125,7 +125,6 @@ class UserTest {
         assertThat(user).isNotNull();
     }
 
-    // TODO : Exception 메시지 구체화
     @Test
     @DisplayName("이미 follow된 유저를 follow할 경우 Exception이 발생해야 한다.")
     void followingAlreadyExceptionTest() {
@@ -173,7 +172,6 @@ class UserTest {
         assertThat(user).isNotNull();
     }
 
-    // TODO : Exception 메시지 구체화
     @Test
     @DisplayName("follow 안된 유저를 unfollow할 경우 Exception이 발생해야 한다.")
     void unfollowingNotExceptionTest() {
