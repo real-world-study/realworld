@@ -50,8 +50,8 @@ class UserTest {
         assertThat(user.username()).isEqualTo(username);
         assertThat(user.email()).isEqualTo(email);
         assertThat(user.password()).isEqualTo(password);
-        assertThat(user.bio().get()).isEqualTo(bio);
-        assertThat(user.image().get()).isEqualTo(image);
+        assertThat(user.bio()).isEqualTo(bio);
+        assertThat(user.image()).isEqualTo(image);
     }
 
     @Test

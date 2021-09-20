@@ -1,29 +1,29 @@
 package com.study.realworld.user.controller.response;
 
-import static java.lang.String.valueOf;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.domain.Bio;
+import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.User;
+import com.study.realworld.user.domain.Username;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class UserResponse {
 
     @JsonProperty("username")
-    private String username;
+    private Username username;
 
     @JsonProperty("email")
-    private String email;
+    private Email email;
 
     @JsonProperty("bio")
-    private String bio;
+    private Bio bio;
 
     @JsonProperty("image")
-    private String image;
+    private Image image;
 
     @JsonProperty("token")
     private String token;
@@ -31,7 +31,7 @@ public class UserResponse {
     protected UserResponse() {
     }
 
-    private UserResponse(String username, String email, String bio, String image, String token) {
+    private UserResponse(Username username, Email email, Bio bio, Image image, String token) {
         this.username = username;
         this.email = email;
         this.bio = bio;
@@ -39,19 +39,19 @@ public class UserResponse {
         this.token = token;
     }
 
-    public String getUsername() {
+    public Username getUsername() {
         return username;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public String getBio() {
+    public Bio getBio() {
         return bio;
     }
 
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
@@ -61,11 +61,11 @@ public class UserResponse {
 
     public static UserResponse fromUserAndToken(User user, String accessToken) {
         return new UserResponse(
-            valueOf(user.username()),
-            valueOf(user.email()),
-            user.bio().map(Bio::value).orElse(null),
-            user.image().map(Image::value).orElse(null),
-            valueOf(accessToken)
+            user.username(),
+            user.email(),
+            user.bio(),
+            user.image(),
+            accessToken
         );
     }
 

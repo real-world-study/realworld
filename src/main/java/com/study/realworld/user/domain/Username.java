@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.regex.Pattern.matches;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -35,6 +36,11 @@ public class Username {
 
     private static boolean checkUsernamePattern(String name) {
         return matches("^[0-9a-zA-Z가-힣]*$", name);
+    }
+
+    @JsonValue
+    public String value() {
+        return name;
     }
 
     @Override

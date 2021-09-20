@@ -113,8 +113,8 @@ class UserServiceTest {
         assertThat(user.username()).isEqualTo(username);
         assertThat(user.email()).isEqualTo(email);
         assertThat(user.password().password()).isEqualTo("encoded_password");
-        assertThat(user.bio().get()).isEqualTo(bio);
-        assertThat(user.image().get()).isEqualTo(image);
+        assertThat(user.bio()).isEqualTo(bio);
+        assertThat(user.image()).isEqualTo(image);
     }
 
     @Test
@@ -165,7 +165,7 @@ class UserServiceTest {
 
         // then
         assertThat(user).isNotNull();
-        assertThat(user.email().toString()).isEqualTo("test@test.com");
+        assertThat(user.email()).isEqualTo(Email.of("test@test.com"));
         assertThat(user.password().password()).isEqualTo("encoded_password");
     }
 
@@ -470,8 +470,8 @@ class UserServiceTest {
                 assertThat(result.password().password())
                     .isEqualTo(originUser.password().password());
 
-                assertThat(result.bio().get()).isEqualTo(bio);
-                assertThat(result.bio().get()).isNotEqualTo(originUser.bio());
+                assertThat(result.bio()).isEqualTo(bio);
+                assertThat(result.bio()).isNotEqualTo(originUser.bio());
 
                 assertThat(result.image()).isEqualTo(originUser.image());
             }
@@ -515,8 +515,8 @@ class UserServiceTest {
                 assertThat(result.password().password()).isEqualTo(originUser.password().password());
                 assertThat(result.bio()).isEqualTo(originUser.bio());
 
-                assertThat(result.image().get()).isEqualTo(image);
-                assertThat(result.image().get()).isNotEqualTo(originUser.image());
+                assertThat(result.image()).isEqualTo(image);
+                assertThat(result.image()).isNotEqualTo(originUser.image());
             }
 
         }

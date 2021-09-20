@@ -64,7 +64,7 @@ class UsernameTest {
         Username username = Username.of(input);
 
         // then
-        assertThat(username.toString()).isEqualTo(input);
+        assertThat(username).isEqualTo(Username.of(input));
     }
 
     @ParameterizedTest

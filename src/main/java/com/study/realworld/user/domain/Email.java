@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.regex.Pattern.matches;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -34,6 +35,11 @@ public class Email {
 
     private static boolean checkEmailPattern(String address) {
         return matches("[\\w~\\-.+]+@[\\w~\\-]+(\\.[\\w~\\-]+)+", address);
+    }
+
+    @JsonValue
+    public String value() {
+        return address;
     }
 
     @Override

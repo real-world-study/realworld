@@ -2,7 +2,6 @@ package com.study.realworld.user.domain;
 
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -65,11 +64,11 @@ public class User {
         return password;
     }
 
-    public Optional<Bio> bio() {
+    public Bio bio() {
         return profile.bio();
     }
 
-    public Optional<Image> image() {
+    public Image image() {
         return profile.image();
     }
 

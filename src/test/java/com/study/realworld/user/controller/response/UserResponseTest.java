@@ -36,10 +36,10 @@ class UserResponseTest {
         UserResponse result = fromUserAndToken(user, token);
 
         // then
-        assertThat(result.getUsername()).isEqualTo("username");
-        assertThat(result.getEmail()).isEqualTo("test@test.com");
-        assertThat(result.getBio()).isEqualTo("bio");
-        assertThat(result.getImage()).isEqualTo("image");
+        assertThat(result.getUsername()).isEqualTo(Username.of("username"));
+        assertThat(result.getEmail()).isEqualTo(Email.of("test@test.com"));
+        assertThat(result.getBio()).isEqualTo(Bio.of("bio"));
+        assertThat(result.getImage()).isEqualTo(Image.of("image"));
         assertThat(result.getToken()).isEqualTo("token");
     }
 

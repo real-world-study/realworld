@@ -1,7 +1,6 @@
 package com.study.realworld.user.domain;
 
 import java.util.Objects;
-import java.util.Optional;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
@@ -30,12 +29,12 @@ public class Profile {
         return username;
     }
 
-    public Optional<Bio> bio() {
-        return Optional.ofNullable(bio);
+    public Bio bio() {
+        return bio;
     }
 
-    public Optional<Image> image() {
-        return Optional.ofNullable(image);
+    public Image image() {
+        return image;
     }
 
     public void changeUsername(Username username) {
