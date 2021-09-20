@@ -7,7 +7,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -102,4 +104,95 @@ class ProfileControllerTest {
             ))
         ;
     }
+
+    @Test
+    void followTest() throws Exception {
+
+        // setup
+        String username = "username";
+        Profile profile = Profile.Builder()
+            .username(Username.of(username))
+            .bio(Bio.of("bio"))
+            .image(Image.of("image")).build();
+        ProfileModel profileModel = ProfileModel.fromProfileAndFollowing(profile, true);
+        when(profileService.followUser(any(), any(Username.class))).thenReturn(profileModel);
+
+        // given
+        final String URL = "/api/profiles/{username}/follow";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(post(URL, username)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.profile.username", is("username")))
+            .andExpect(jsonPath("$.profile.bio", is("bio")))
+            .andExpect(jsonPath("$.profile.image", is("image")))
+            .andExpect(jsonPath("$.profile.following", is(true)))
+            .andDo(document("get-profile",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                    parameterWithName("username").description("검색 유저 이름")
+                ),
+                responseFields(
+                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("bio").optional(),
+                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("이미지").optional(),
+                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("팔로우 여부")
+                )
+            ))
+        ;
+    }
+
+    @Test
+    void unfollowTest() throws Exception {
+
+        // setup
+        String username = "username";
+        Profile profile = Profile.Builder()
+            .username(Username.of(username))
+            .bio(Bio.of("bio"))
+            .image(Image.of("image")).build();
+        ProfileModel profileModel = ProfileModel.fromProfileAndFollowing(profile, false);
+        when(profileService.unfollowUser(any(), any(Username.class))).thenReturn(profileModel);
+
+        // given
+        final String URL = "/api/profiles/{username}/follow";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(delete(URL, username)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.profile.username", is("username")))
+            .andExpect(jsonPath("$.profile.bio", is("bio")))
+            .andExpect(jsonPath("$.profile.image", is("image")))
+            .andExpect(jsonPath("$.profile.following", is(false)))
+            .andDo(document("get-profile",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                    parameterWithName("username").description("검색 유저 이름")
+                ),
+                responseFields(
+                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("유저이름"),
+                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("bio").optional(),
+                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("이미지").optional(),
+                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("팔로우 여부")
+                )
+            ))
+        ;
+    }
+
 }
