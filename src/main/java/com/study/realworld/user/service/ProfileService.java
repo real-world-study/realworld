@@ -18,9 +18,11 @@ public class ProfileService {
     }
 
     @Transactional
-    public void followUser(Long loginId, Username username) {
+    public User followUser(Long loginId, Username username) {
         User user = findById(loginId);
         User followee = findByUsername(username);
+        user.followingUser(followee);
+        return followee;
     }
 
     @Transactional(readOnly = true)
