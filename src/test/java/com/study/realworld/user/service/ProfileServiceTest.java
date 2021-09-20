@@ -2,6 +2,8 @@ package com.study.realworld.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
@@ -73,7 +75,7 @@ class ProfileServiceTest {
         @DisplayName("현재 검색하고자하는 username가 존재하지 않는 유저라면 Exception이 발생해야 한다.")
         void followUsernameNotFoundTest() {
 
-            // setup & when
+            // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
             when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
@@ -84,6 +86,25 @@ class ProfileServiceTest {
                 .isThrownBy(() -> profileService.followUser(loginId, followingUsername))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
         }
+
+        @Test
+        @DisplayName("follow한 결과를 반환할 수 있다.")
+        void followSuccessTest() {
+
+            // setup & given
+            Long loginId = 1L;
+            Username followingUsername = Username.of("followuser");
+            when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
+            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.of(followUser));
+
+            // when
+            ProfileModel result = profileService.followUser(loginId, followingUsername);
+
+            // then
+            assertThat(result.getProfile()).isEqualTo(loginUser.profile());
+            assertTrue(result.isFollow());
+        }
+
     }
 
     @Nested
@@ -109,7 +130,7 @@ class ProfileServiceTest {
         @DisplayName("현재 검색하고자하는 username가 존재하지 않는 유저라면 Exception이 발생해야 한다.")
         void followUsernameNotFoundTest() {
 
-            // setup & when
+            // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
             when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
@@ -120,6 +141,26 @@ class ProfileServiceTest {
                 .isThrownBy(() -> profileService.unfollowUser(loginId, followingUsername))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
         }
+
+        @Test
+        @DisplayName("unfollow한 결과를 반환할 수 있다.")
+        void unfollowSuccessTest() {
+
+            // setup & given
+            Long loginId = 1L;
+            Username followingUsername = Username.of("followuser");
+            when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
+            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.of(followUser));
+            loginUser.followingUser(followUser);
+
+            // when
+            ProfileModel result = profileService.unfollowUser(loginId, followingUsername);
+
+            // then
+            assertThat(result.getProfile()).isEqualTo(loginUser.profile());
+            assertFalse(result.isFollow());
+        }
+
     }
 
     @Test
