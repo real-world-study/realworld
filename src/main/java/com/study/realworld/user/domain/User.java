@@ -101,6 +101,10 @@ public class User {
         this.password.matchPassword(rawPassword, passwordEncoder);
     }
 
+    public Profile profile() {
+        return profile;
+    }
+
     public boolean isFollow(User user) {
         return followingUsers.contains(user);
     }
