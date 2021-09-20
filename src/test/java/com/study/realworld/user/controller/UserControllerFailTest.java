@@ -17,6 +17,7 @@ import com.study.realworld.global.exception.GlobalExceptionHandler;
 import com.study.realworld.security.JwtService;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
+import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
@@ -61,7 +62,9 @@ public class UserControllerFailTest {
 
         // setup
         User user = User.Builder()
-            .username(Username.of("username"))
+            .profile(Profile.Builder()
+                .username(Username.of("username"))
+                .build())
             .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .build();

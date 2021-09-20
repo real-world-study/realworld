@@ -17,8 +17,8 @@ public class ImageTest {
     void imageEqualsHashCodeTest() {
 
         // given
-        Image image = new Image("image");
-        Image copyImage = new Image("image");
+        Image image = Image.of("image");
+        Image copyImage = Image.of("image");
 
         // when & then
         assertThat(image)
@@ -34,7 +34,7 @@ public class ImageTest {
         String input = "image";
 
         // when
-        Image image = new Image(input);
+        Image image = Image.of(input);
 
         // then
         assertThat(image.toString()).isEqualTo("image");

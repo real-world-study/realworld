@@ -4,7 +4,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
@@ -45,8 +44,11 @@ class UserServiceTest {
     void existUsernameJoinTest() {
 
         // setup & given
-        User user = User.Builder().build();
-        when(userRepository.findByUsername(any()))
+        Username username = Username.of("username");
+        User user = User.Builder()
+            .profile(username, null, null)
+            .build();
+        when(userRepository.findByUsername(username))
             .thenReturn(Optional.of(user));
 
         // when & then
@@ -60,9 +62,14 @@ class UserServiceTest {
     void existEmailJoinTest() {
 
         // setup & given
-        User user = User.Builder().build();
-        when(userRepository.findByUsername(any())).thenReturn(empty());
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        Username username = Username.of("username");
+        Email email = Email.of("email@email.com");
+        User user = User.Builder()
+            .profile(username, null, null)
+            .email(email)
+            .build();
+        when(userRepository.findByUsername(username)).thenReturn(empty());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         // when & then
         assertThatExceptionOfType(BusinessException.class)
@@ -75,25 +82,26 @@ class UserServiceTest {
     void successJoinTest() {
 
         // setup & given
-        when(userRepository.findByUsername(any())).thenReturn(empty());
-        when(userRepository.findByEmail(any())).thenReturn(empty());
+        Username username = Username.of("username");
+        Email email = Email.of("email@email.com");
         Password password = Password.of("password");
+        Bio bio = Bio.of("bio");
+        Image image= Image.of("image");
+        when(userRepository.findByUsername(username)).thenReturn(empty());
+        when(userRepository.findByEmail(email)).thenReturn(empty());
         when(passwordEncoder.encode(password.password())).thenReturn("encoded_password");
+
         User input = User.Builder()
-            .username(Username.of("username"))
-            .email(Email.of("test@test.com"))
+            .profile(username, bio, image)
+            .email(email)
             .password(password)
-            .bio(new Bio("bio"))
-            .image(new Image("image"))
             .build();
-        when(userRepository.save(any())).thenReturn(
+        when(userRepository.save(input)).thenReturn(
             User.Builder()
                 .id(1L)
-                .username(input.username())
+                .profile(username, bio, image)
                 .email(input.email())
                 .password(Password.of("encoded_password"))
-                .bio(input.bio().orElse(null))
-                .image(input.image().orElse(null))
                 .build()
         );
 
@@ -102,12 +110,11 @@ class UserServiceTest {
 
         // then
         assertThat(user.id()).isEqualTo(1L);
-        assertThat(user.username()).isEqualTo(Username.of("username"));
-        assertThat(user.email()).isEqualTo(Email.of("test@test.com"));
-        assertThat(user.password().password())
-            .isEqualTo("encoded_password");
-        assertThat(user.bio().get()).isEqualTo(new Bio("bio"));
-        assertThat(user.image().get()).isEqualTo(new Image("image"));
+        assertThat(user.username()).isEqualTo(username);
+        assertThat(user.email()).isEqualTo(email);
+        assertThat(user.password().password()).isEqualTo("encoded_password");
+        assertThat(user.bio().get()).isEqualTo(bio);
+        assertThat(user.image().get()).isEqualTo(image);
     }
 
     @Test
@@ -216,8 +223,8 @@ class UserServiceTest {
             Username.of("username"),
             Email.of("test@test.com"),
             Password.of("password"),
-            new Bio("bio"),
-            new Image("image")
+            Bio.of("bio"),
+            Image.of("image")
         );
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
@@ -238,18 +245,14 @@ class UserServiceTest {
         @BeforeEach
         void beforeEach() {
             user = User.Builder()
-                .username(Username.of("username"))
+                .profile(Username.of("username"), Bio.of("bio"), Image.of("image"))
                 .email(Email.of("test@test.com"))
                 .password(Password.of("encoded_password"))
-                .bio(new Bio("bio"))
-                .image(new Image("image"))
                 .build();
             originUser = User.Builder()
-                .username(Username.of("username"))
+                .profile(Username.of("username"), Bio.of("bio"), Image.of("image"))
                 .email(Email.of("test@test.com"))
                 .password(Password.of("encoded_password"))
-                .bio(new Bio("bio"))
-                .image(new Image("image"))
                 .build();
             when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(user));
         }
@@ -438,7 +441,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowBioTest() {
 
                 // given
-                Bio bio = new Bio("bio");
+                Bio bio = Bio.of("bio");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, bio, null);
 
@@ -454,7 +457,7 @@ class UserServiceTest {
             void updateSuccessByBioTest() {
 
                 // given
-                Bio bio = new Bio("bioChange");
+                Bio bio = Bio.of("bioChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, bio, null);
 
@@ -483,7 +486,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowImageTest() {
 
                 // given
-                Image image = new Image("image");
+                Image image = Image.of("image");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, null, image);
 
@@ -499,7 +502,7 @@ class UserServiceTest {
             void updateSuccessByImageTest() {
 
                 // given
-                Image image = new Image("imageChange");
+                Image image = Image.of("imageChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, null, image);
 

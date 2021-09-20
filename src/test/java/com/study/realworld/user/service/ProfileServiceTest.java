@@ -36,13 +36,13 @@ class ProfileServiceTest {
     void beforeEach() {
         loginUser = User.Builder()
             .id(1L)
-            .username(Username.of("username"))
+            .profile(Username.of("username"), null, null)
             .password(Password.of("password"))
             .email(Email.of("email@email.com"))
             .build();
         followUser = User.Builder()
             .id(2L)
-            .username(Username.of("followuser"))
+            .profile(Username.of("followuser"), null, null)
             .password(Password.of("password"))
             .email(Email.of("email2@email2.com"))
             .build();

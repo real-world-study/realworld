@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,19 +25,13 @@ public class User {
     private Long id;
 
     @Embedded
-    private Username username;
+    private Profile profile;
 
     @Embedded
     private Email email;
 
     @Embedded
     private Password password;
-
-    @Column(name = "bio")
-    private Bio bio;
-
-    @Column(name = "image")
-    private Image image;
 
     @JoinTable(name = "follow",
         joinColumns = @JoinColumn(name = "user_id"),
@@ -49,13 +42,11 @@ public class User {
     protected User() {
     }
 
-    private User(Long id, Username username, Email email, Password password, Bio bio, Image image) {
+    private User(Long id, Profile profile, Email email, Password password) {
         this.id = id;
-        this.username = username;
+        this.profile = profile;
         this.email = email;
         this.password = password;
-        this.bio = bio;
-        this.image = image;
     }
 
     public Long id() {
@@ -63,7 +54,7 @@ public class User {
     }
 
     public Username username() {
-        return username;
+        return profile.username();
     }
 
     public Email email() {
@@ -75,15 +66,15 @@ public class User {
     }
 
     public Optional<Bio> bio() {
-        return Optional.ofNullable(bio);
+        return profile.bio();
     }
 
     public Optional<Image> image() {
-        return Optional.ofNullable(image);
+        return profile.image();
     }
 
     public void changeUsername(Username username) {
-        this.username = username;
+        profile.changeUsername(username);
     }
 
     public void changeEmail(Email email) {
@@ -95,11 +86,11 @@ public class User {
     }
 
     public void changeBio(Bio bio) {
-        this.bio = bio;
+        profile.changeBio(bio);
     }
 
     public void changeImage(Image image) {
-        this.image = image;
+        profile.changeImage(image);
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
@@ -142,29 +133,14 @@ public class User {
         return new Builder();
     }
 
-    public static Builder Builder(User user) {
-        return new Builder(user);
-    }
-
     public static class Builder {
 
         private Long id;
-        private Username username;
+        private Profile profile;
         private Email email;
         private Password password;
-        private Bio bio;
-        private Image image;
 
         private Builder() {
-        }
-
-        private Builder(User user) {
-            id = user.id;
-            username = user.username;
-            email = user.email;
-            password = user.password;
-            bio = user.bio;
-            image = user.image;
         }
 
         public Builder id(Long id) {
@@ -172,8 +148,17 @@ public class User {
             return this;
         }
 
-        public Builder username(Username username) {
-            this.username = username;
+        public Builder profile(Profile profile) {
+            this.profile = profile;
+            return this;
+        }
+
+        public Builder profile(Username username, Bio bio, Image image) {
+            this.profile = Profile.Builder()
+                .username(username)
+                .bio(bio)
+                .image(image)
+                .build();
             return this;
         }
 
@@ -187,18 +172,8 @@ public class User {
             return this;
         }
 
-        public Builder bio(Bio bio) {
-            this.bio = bio;
-            return this;
-        }
-
-        public Builder image(Image image) {
-            this.image = image;
-            return this;
-        }
-
         public User build() {
-            return new User(id, username, email, password, bio, image);
+            return new User(id, profile, email, password);
         }
     }
 

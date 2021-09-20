@@ -17,8 +17,8 @@ public class BioTest {
     void bioEqualsHashCodeTest() {
 
         // given
-        Bio bio = new Bio("bio");
-        Bio copyBio = new Bio("bio");
+        Bio bio = Bio.of("bio");
+        Bio copyBio = Bio.of("bio");
 
         // when & then
         assertThat(bio)
@@ -34,7 +34,7 @@ public class BioTest {
         String input = "bio";
 
         // when
-        Bio bio = new Bio(input);
+        Bio bio = Bio.of(input);
 
         // then
         assertThat(bio.toString()).isEqualTo(input);
