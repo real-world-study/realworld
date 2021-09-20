@@ -13,8 +13,12 @@ public class Bio {
     protected Bio() {
     }
 
-    public Bio(String bio) {
+    private Bio(String bio) {
         this.bio = bio;
+    }
+
+    public static Bio of(String bio) {
+        return new Bio(bio);
     }
 
     public String value() {

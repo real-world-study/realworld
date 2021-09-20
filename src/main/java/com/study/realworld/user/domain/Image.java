@@ -13,8 +13,12 @@ public class Image {
     protected Image() {
     }
 
-    public Image(String url) {
+    private Image(String url) {
         this.url = url;
+    }
+
+    public static Image of(String url) {
+        return new Image(url);
     }
 
     public String value() {
