@@ -5,11 +5,13 @@ import com.study.realworld.global.jwt.error.exception.JwtAuthenticationException
 import com.study.realworld.global.jwt.error.exception.JwtParseException;
 import com.study.realworld.global.jwt.error.exception.JwtProviderNotSupportTypeException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 
 import java.util.Arrays;
 
 public enum JwtErrorCode implements ErrorCode {
+    DEFAULT_AUTHENTICATION(InsufficientAuthenticationException.class, HttpStatus.UNAUTHORIZED),
     JWT_AUTHENTICATION(JwtAuthenticationException.class, HttpStatus.UNAUTHORIZED),
     JWT_PROVIDER_NOT_SUPPORT_TYPE(JwtProviderNotSupportTypeException.class, HttpStatus.UNAUTHORIZED),
     JWT_PARSE(JwtParseException.class, HttpStatus.FORBIDDEN);
