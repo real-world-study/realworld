@@ -131,12 +131,12 @@ class UserTest {
 
         // given
         User user = User.Builder()
-//            .username(Username.of("username"))
+            .profile(Username.of("username"), null, null)
             .password(Password.of("password"))
             .email(Email.of("email@email.com"))
             .build();
         User followingUser = User.Builder()
-//            .username(Username.of("followingUser"))
+            .profile(Username.of("followingUser"), null, null)
             .password(Password.of("password"))
             .email(Email.of("email2@email2.com"))
             .build();
