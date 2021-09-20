@@ -101,30 +101,28 @@ class UserTest {
             .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
-    // TODO : 테스트 구체화 필요
-//    @Test
-//    @DisplayName("특정 유저를 follow하여 following set에 저장할 수 있다.")
-//    void followingTest() {
-//
-//        // given
-//        User user = User.Builder()
-//            .profile()
-//            .username(Username.of("username"))
-//            .password(Password.of("password"))
-//            .email(Email.of("email@email.com"))
-//            .build();
-//        User followingUser = User.Builder()
-//            .username(Username.of("followingUser"))
-//            .password(Password.of("password"))
-//            .email(Email.of("email2@email2.com"))
-//            .build();
-//
-//        // when
-//        user.followingUser(followingUser);
-//
-//        // then
-//        assertThat(user).isNotNull();
-//    }
+    @Test
+    @DisplayName("특정 유저를 follow하여 following set에 저장할 수 있다.")
+    void followingTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+
+        // when
+        user.followingUser(followingUser);
+
+        // then
+        assertThat(user).isNotNull();
+    }
 
     // TODO : Exception 메시지 구체화
     @Test
