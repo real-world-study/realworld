@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.asciidoctor.convert" version "1.5.9.2"
     id 'java'
     id 'jacoco'
 }
@@ -21,6 +22,9 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
     compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
@@ -28,6 +32,35 @@ dependencies {
 
 apply from: 'test.gradle'
 
+ext {
+    set('snippetsDir', file("build/generated-snippets")) // 문서 저장위치
+}
+
 test {
+    outputs.dir snippetsDir // 선언한 디렉토리에 생성
     useJUnitPlatform()
+}
+
+asciidoctor {
+    attributes 'snippets': snippetsDir // adoc 파일 생성시 올바르게 include하기 위함
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") { // gradle은 src/docs/asciidoc 에 메인 adoc생성!
+        into 'static/docs' // asciidoctor로 만든 문서는 static/docs 디렉토리로.!
+    }
+}
+
+task copyDocument(type: Copy) { // 생성된 docs 파일을 build시 static 아래에 docs로 복사!
+    dependsOn bootJar
+
+    from file("build/asciidoc/html5/")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument // build시 copy 실행
 }
