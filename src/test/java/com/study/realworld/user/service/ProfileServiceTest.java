@@ -84,4 +84,40 @@ class ProfileServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("Unfollow user method")
+    class unfollowingUser {
+
+        @Test
+        @DisplayName("현재 유저의 id가 존재하지 않는 유저라면 Exception이 발생해야 한다.")
+        void loginUserNotFoundTest() {
+
+            // setup & given
+            Long loginId = 1L;
+            Username followingUsername = Username.of("followuser");
+            when(userRepository.findById(loginId)).thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> profileService.unfollowUser(loginId, followingUsername))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("현재 검색하고자하는 username가 존재하지 않는 유저라면 Exception이 발생해야 한다.")
+        void followUsernameNotFoundTest() {
+
+            // setup & when
+            Long loginId = 1L;
+            Username followingUsername = Username.of("followuser");
+            when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
+            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> profileService.unfollowUser(loginId, followingUsername))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+    }
+
 }

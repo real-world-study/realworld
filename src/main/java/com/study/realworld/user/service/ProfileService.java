@@ -25,6 +25,14 @@ public class ProfileService {
         return followee;
     }
 
+    @Transactional
+    public User unfollowUser(Long loginId, Username username) {
+        User user = findById(loginId);
+        User followee = findByUsername(username);
+        user.unfollowingUser(followee);
+        return followee;
+    }
+
     @Transactional(readOnly = true)
     public User findById(Long userId) {
         return userRepository.findById(userId)
