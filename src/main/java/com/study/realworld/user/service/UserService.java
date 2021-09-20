@@ -46,6 +46,12 @@ public class UserService {
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
+    public User findByUsername(Username username) {
+        return userRepository.findByProfileUsername(username)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    }
+
     @Transactional
     public User update(UserUpdateModel updateUser, Long userId) {
         User user = findById(userId);

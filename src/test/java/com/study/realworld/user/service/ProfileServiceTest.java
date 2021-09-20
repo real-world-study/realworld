@@ -11,10 +11,8 @@ import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
-import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.model.ProfileModel;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ProfileServiceTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @InjectMocks
     private ProfileService profileService;
@@ -63,7 +61,7 @@ class ProfileServiceTest {
             // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
-            when(userRepository.findById(loginId)).thenReturn(Optional.empty());
+            when(userService.findById(loginId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
@@ -78,8 +76,9 @@ class ProfileServiceTest {
             // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
-            when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
-            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.empty());
+            when(userService.findById(loginId)).thenReturn(loginUser);
+            when(userService.findByUsername(followingUsername))
+                .thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
@@ -94,8 +93,8 @@ class ProfileServiceTest {
             // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
-            when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
-            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.of(followUser));
+            when(userService.findById(loginId)).thenReturn(loginUser);
+            when(userService.findByUsername(followingUsername)).thenReturn(followUser);
 
             // when
             ProfileModel result = profileService.followUser(loginId, followingUsername);
@@ -118,7 +117,7 @@ class ProfileServiceTest {
             // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
-            when(userRepository.findById(loginId)).thenReturn(Optional.empty());
+            when(userService.findById(loginId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
@@ -133,8 +132,9 @@ class ProfileServiceTest {
             // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
-            when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
-            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.empty());
+            when(userService.findById(loginId)).thenReturn(loginUser);
+            when(userService.findByUsername(followingUsername))
+                .thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
@@ -149,8 +149,8 @@ class ProfileServiceTest {
             // setup & given
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
-            when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
-            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.of(followUser));
+            when(userService.findById(loginId)).thenReturn(loginUser);
+            when(userService.findByUsername(followingUsername)).thenReturn(followUser);
             loginUser.followingUser(followUser);
 
             // when
@@ -170,8 +170,8 @@ class ProfileServiceTest {
         // setup & given
         Long loginId = 1L;
         Username followingUsername = Username.of("followuser");
-        when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
-        when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.of(followUser));
+        when(userService.findById(loginId)).thenReturn(loginUser);
+        when(userService.findByUsername(followingUsername)).thenReturn(followUser);
         ProfileModel expected = ProfileModel.fromProfileAndFollowing(loginUser.profile(), false);
 
         // when
