@@ -64,7 +64,7 @@ public class UserService {
     }
 
     private void checkDuplicatedByUsername(Username username) {
-        userRepository.findByUsername(username).ifPresent(param -> {
+        userRepository.findByProfileUsername(username).ifPresent(param -> {
             throw new BusinessException(ErrorCode.USERNAME_DUPLICATION);
         });
     }

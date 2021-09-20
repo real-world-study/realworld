@@ -75,7 +75,7 @@ class ProfileServiceTest {
             Long loginId = 1L;
             Username followingUsername = Username.of("followuser");
             when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
-            when(userRepository.findByUsername(followingUsername)).thenReturn(Optional.empty());
+            when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.empty());
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)

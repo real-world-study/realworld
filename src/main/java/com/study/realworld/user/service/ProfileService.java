@@ -33,7 +33,7 @@ public class ProfileService {
 
     @Transactional(readOnly = true)
     public User findByUsername(Username username) {
-        return userRepository.findByUsername(username)
+        return userRepository.findByProfileUsername(username)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 

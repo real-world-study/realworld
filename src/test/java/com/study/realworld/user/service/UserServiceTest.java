@@ -48,7 +48,7 @@ class UserServiceTest {
         User user = User.Builder()
             .profile(username, null, null)
             .build();
-        when(userRepository.findByUsername(username))
+        when(userRepository.findByProfileUsername(username))
             .thenReturn(Optional.of(user));
 
         // when & then
@@ -68,7 +68,7 @@ class UserServiceTest {
             .profile(username, null, null)
             .email(email)
             .build();
-        when(userRepository.findByUsername(username)).thenReturn(empty());
+        when(userRepository.findByProfileUsername(username)).thenReturn(empty());
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         // when & then
@@ -87,7 +87,7 @@ class UserServiceTest {
         Password password = Password.of("password");
         Bio bio = Bio.of("bio");
         Image image= Image.of("image");
-        when(userRepository.findByUsername(username)).thenReturn(empty());
+        when(userRepository.findByProfileUsername(username)).thenReturn(empty());
         when(userRepository.findByEmail(email)).thenReturn(empty());
         when(passwordEncoder.encode(password.password())).thenReturn("encoded_password");
 
@@ -285,7 +285,7 @@ class UserServiceTest {
                 Username username = Username.of("usernameChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
                     null, null, null);
-                when(userRepository.findByUsername(username))
+                when(userRepository.findByProfileUsername(username))
                     .thenReturn(Optional.ofNullable(User.Builder().build()));
 
                 // when & then
@@ -302,7 +302,7 @@ class UserServiceTest {
                 Username username = Username.of("usernameChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
                     null, null, null);
-                when(userRepository.findByUsername(username))
+                when(userRepository.findByProfileUsername(username))
                     .thenReturn(Optional.empty());
 
                 // when
