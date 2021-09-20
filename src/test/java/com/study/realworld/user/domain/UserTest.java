@@ -144,9 +144,9 @@ class UserTest {
         user.followingUser(followingUser);
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> user.followingUser(followingUser))
-            .withMessageMatching("follow user exception");
+            .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
     }
 
     @Test
@@ -191,9 +191,9 @@ class UserTest {
             .build();
 
         // when & then
-        assertThatExceptionOfType(RuntimeException.class)
+        assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> user.unfollowingUser(followingUser))
-            .withMessageMatching("not follow user exception");
+            .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
     }
 
     @Test

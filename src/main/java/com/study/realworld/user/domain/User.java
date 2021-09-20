@@ -1,5 +1,7 @@
 package com.study.realworld.user.domain;
 
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -115,7 +117,7 @@ public class User {
 
     private void checkFollowingUser(User user) {
         if (followingUsers.contains(user)) {
-            throw new RuntimeException("follow user exception");
+            throw new BusinessException(ErrorCode.INVALID_FOLLOW);
         }
     }
 
@@ -126,7 +128,7 @@ public class User {
 
     private void checkUnfollowingUser(User user) {
         if (!followingUsers.contains(user)) {
-            throw new RuntimeException("not follow user exception");
+            throw new BusinessException(ErrorCode.INVALID_UNFOLLOW);
         }
     }
 
