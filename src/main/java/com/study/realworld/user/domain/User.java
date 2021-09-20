@@ -112,6 +112,17 @@ public class User {
         }
     }
 
+    public void unfollowingUser(User user) {
+        checkUnfollowingUser(user);
+        followingUsers.remove(user);
+    }
+
+    private void checkUnfollowingUser(User user) {
+        if (!followingUsers.contains(user)) {
+            throw new RuntimeException("not follow user exception");
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

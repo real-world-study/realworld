@@ -149,6 +149,53 @@ class UserTest {
     }
 
     @Test
+    @DisplayName("특정 유저를 unfollow할 수 있다.")
+    void unfollowingTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+        user.followingUser(followingUser);
+
+        // when
+        user.unfollowingUser(followingUser);
+
+        // then
+        assertThat(user).isNotNull();
+    }
+
+    // TODO : Exception 메시지 구체화
+    @Test
+    @DisplayName("follow 안된 유저를 unfollow할 경우 Exception이 발생해야 한다.")
+    void unfollowingNotExceptionTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+
+        // when & then
+        assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(() -> user.unfollowingUser(followingUser))
+            .withMessageMatching("not follow user exception");
+    }
+
+    @Test
     @DisplayName("equals hashCode 테스트")
     void userEqualsHashCodeTest() {
 
