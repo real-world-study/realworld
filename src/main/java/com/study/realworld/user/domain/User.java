@@ -111,7 +111,14 @@ public class User {
     }
 
     public void followingUser(User user) {
+        checkFollowingUser(user);
         followingUsers.add(user);
+    }
+
+    private void checkFollowingUser(User user) {
+        if (followingUsers.contains(user)) {
+            throw new RuntimeException("follow user exception");
+        }
     }
 
     @Override

@@ -152,6 +152,30 @@ class UserTest {
         assertThat(user).isNotNull();
     }
 
+    // TODO : Exception 메시지 구체화
+    @Test
+    @DisplayName("이미 follow된 유저를 follow할 경우 Exception이 발생해야 한다.")
+    void followingAlreadyExceptionTest() {
+
+        // given
+        User user = User.Builder()
+            .username(Username.of("username"))
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .username(Username.of("followingUser"))
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+        user.followingUser(followingUser);
+
+        // when & then
+        assertThatExceptionOfType(RuntimeException.class)
+            .isThrownBy(() -> user.followingUser(followingUser))
+            .withMessageMatching("follow user exception");
+    }
+
     @Test
     @DisplayName("equals hashCode 테스트")
     void userEqualsHashCodeTest() {
