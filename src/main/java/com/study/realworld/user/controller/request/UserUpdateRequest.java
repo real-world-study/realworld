@@ -38,8 +38,8 @@ public class UserUpdateRequest {
             Optional.ofNullable(username).map(Username::of).orElse(null),
             Optional.ofNullable(email).map(Email::of).orElse(null),
             Optional.ofNullable(password).map(Password::of).orElse(null),
-            new Bio(bio),
-            new Image(image)
+            Bio.of(bio),
+            Image.of(image)
         );
     }
 
