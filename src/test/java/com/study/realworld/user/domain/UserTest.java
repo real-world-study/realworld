@@ -128,6 +128,30 @@ class UserTest {
             .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
+    // TODO : 테스트 구체화 필요
+    @Test
+    @DisplayName("특정 유저를 follow하여 following set에 저장할 수 있다.")
+    void followingTest() {
+
+        // given
+        User user = User.Builder()
+            .username(Username.of("username"))
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .username(Username.of("followingUser"))
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+
+        // when
+        user.followingUser(followingUser);
+
+        // then
+        assertThat(user).isNotNull();
+    }
+
     @Test
     @DisplayName("equals hashCode 테스트")
     void userEqualsHashCodeTest() {

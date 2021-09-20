@@ -1,13 +1,19 @@
 package com.study.realworld.user.domain;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,6 +39,12 @@ public class User {
 
     @Column(name = "image")
     private Image image;
+
+    @JoinTable(name = "follow",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<User> followingUsers = new HashSet<>();
 
     protected User() {
     }
@@ -96,6 +108,10 @@ public class User {
 
     public void login(Password rawPassword, PasswordEncoder passwordEncoder) {
         this.password.matchPassword(rawPassword, passwordEncoder);
+    }
+
+    public void followingUser(User user) {
+        followingUsers.add(user);
     }
 
     @Override
