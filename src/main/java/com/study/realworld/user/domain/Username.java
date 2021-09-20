@@ -35,7 +35,7 @@ public class Username {
     }
 
     private static boolean checkUsernamePattern(String name) {
-        return matches("^[0-9a-zA-Z가-힣]*$", name);
+        return matches("^[0-9a-zA-Z가-힣_]*$", name);
     }
 
     @JsonValue
