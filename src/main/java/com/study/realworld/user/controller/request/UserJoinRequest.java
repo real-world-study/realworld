@@ -7,6 +7,7 @@ import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
+import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 
@@ -34,11 +35,13 @@ public class UserJoinRequest {
 
     public User toUser() {
         return User.Builder()
-            .username(Username.of(username))
+            .Profile(Profile.Builder()
+                .username(Username.of(username))
+                .bio(Bio.of(bio))
+                .image(Image.of(image))
+                .build())
             .email(Email.of(email))
             .password(Password.of(password))
-            .bio(new Bio(bio))
-            .image(new Image(image))
             .build();
     }
 
