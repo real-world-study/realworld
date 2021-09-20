@@ -1,5 +1,6 @@
 package com.study.realworld.user.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
@@ -10,6 +11,7 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.service.model.ProfileModel;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -118,6 +120,25 @@ class ProfileServiceTest {
                 .isThrownBy(() -> profileService.unfollowUser(loginId, followingUsername))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
         }
+    }
+
+    @Test
+    @DisplayName("특정 유저의 profile 정보를 반환할 수 있다.")
+    void findProfileTest() {
+
+        // setup & given
+        Long loginId = 1L;
+        Username followingUsername = Username.of("followuser");
+        when(userRepository.findById(loginId)).thenReturn(Optional.of(loginUser));
+        when(userRepository.findByProfileUsername(followingUsername)).thenReturn(Optional.of(followUser));
+        ProfileModel expected = ProfileModel.fromProfileAndFollowing(loginUser.profile(), false);
+
+        // when
+        ProfileModel result = profileService.findProfile(loginId, followingUsername);
+
+        // then
+        assertThat(result.getProfile()).isEqualTo(expected.getProfile());
+        assertThat(result.isFollow()).isEqualTo(expected.isFollow());
     }
 
 }
