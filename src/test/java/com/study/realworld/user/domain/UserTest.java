@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
@@ -193,6 +194,30 @@ class UserTest {
         assertThatExceptionOfType(RuntimeException.class)
             .isThrownBy(() -> user.unfollowingUser(followingUser))
             .withMessageMatching("not follow user exception");
+    }
+
+    @Test
+    @DisplayName("follow 여부를 확인할 수 있다.")
+    void isFollowTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+        user.followingUser(followingUser);
+
+        // when
+        boolean result = user.isFollow(followingUser);
+
+        // then
+        assertTrue(result);
     }
 
     @Test
