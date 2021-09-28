@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.realworld.core.configuration.SecurityConfig;
 import com.study.realworld.core.domain.user.entity.User;
 import com.study.realworld.core.jwt.JwtAccessDeniedHandler;
+import com.study.realworld.core.jwt.JwtAuthentication;
 import com.study.realworld.core.jwt.JwtAuthenticationEntryPoint;
 import com.study.realworld.core.jwt.TokenProvider;
 import com.study.realworld.user.application.UserService;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,6 +31,7 @@ import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -108,5 +111,24 @@ class UserControllerTest {
 
         // then
         then(userService).should().login(any());
+    }
+
+    @Test
+    @DisplayName("현재 로그인된 유저의 정보 가져오기")
+    void getUserTest() throws Exception {
+        // given
+        final String email = "chance@chance.com";
+        final String password = "chance";
+        final Long userId = 1L;
+        final String accessToken = "accessToken";
+
+        given(userService.getLoginUser(any())).willReturn(User.builder().email(email).password(password).build());
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthentication(userId, accessToken));
+
+        // when
+        mockMvc.perform(get("/api/user").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        // then
+        then(userService).should().getLoginUser(any());
     }
 }

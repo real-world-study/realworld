@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -36,4 +38,11 @@ public class UserService {
 
         return user;
     }
+
+    @Transactional(readOnly = true)
+    public User getLoginUser(Long userId) {
+        return userRepository.findById(userId)
+                             .orElseThrow(() -> new NoSuchElementException("user is not exist")); // TODO: Exception 커스터마이징
+    }
+
 }
