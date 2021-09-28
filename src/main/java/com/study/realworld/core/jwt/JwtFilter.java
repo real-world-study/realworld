@@ -28,10 +28,14 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        final String BLANK = " ";
+        final String TOKEN = "Token";
+        final int VALID_LENGTH = 2;
+
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        String[] headers = header.split(" ");
-        if (headers.length == 2 && headers[0].equals("Token") && StringUtils.hasText(headers[1])) {
+        String[] headers = header.split(BLANK);
+        if (headers.length == VALID_LENGTH && headers[0].equals(TOKEN) && StringUtils.hasText(headers[1])) {
             String accessToken = headers[1];
             Long userId = tokenProvider.getUserId(accessToken);
             JwtAuthentication authentication = new JwtAuthentication(userId, accessToken);
