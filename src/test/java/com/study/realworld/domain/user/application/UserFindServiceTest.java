@@ -1,6 +1,7 @@
 package com.study.realworld.domain.user.application;
 
 import com.study.realworld.domain.user.domain.*;
+import com.study.realworld.domain.user.exception.EmailNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
 import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
 import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -50,6 +52,16 @@ public class UserFindServiceTest {
                 () -> assertThat(findUser.email().email()).isEqualTo(EMAIL),
                 () -> assertThat(findUser.password().password()).isEqualTo(PASSWORD)
         );
+    }
+
+    @DisplayName("JwtUserDetailsService 인스턴스 findByEmail() 실패 테스트")
+    @Test
+    void fail_findByEmail_test() {
+        given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(null));
+
+        assertThatThrownBy(() -> userFindService.findUserByEmail(EMAIL))
+                .isInstanceOf(EmailNotFoundException.class)
+                .hasMessage(String.format("이메일 : [ %s ] 를 찾을 수 없습니다.", EMAIL));
     }
 
 }

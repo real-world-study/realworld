@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -54,7 +55,11 @@ class JwtFilterTest {
         final FilterChain chain = mock(FilterChain.class);
         request.addHeader("Authorization", testToken());
 
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final Long principal = 1L;
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
+        ReflectionTestUtils.setField(user, "id", principal);
         final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUser(user);
         doReturn(jwtAuthentication).when(jwtProviderManager).authenticate(any());
 
@@ -62,8 +67,8 @@ class JwtFilterTest {
         final Authentication authentication = getContext().getAuthentication();
         assertAll(
                 () -> assertThat(authentication).isNotNull(),
-                () -> assertThat(authentication.getPrincipal()).isEqualTo(EMAIL),
-                () -> assertThat(authentication.getCredentials()).isEqualTo(PASSWORD)
+                () -> assertThat(authentication.getPrincipal()).isEqualTo(principal),
+                () -> assertThat(authentication.getCredentials()).isEqualTo(password)
         );
     }
 

@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
+import static java.util.Objects.isNull;
+
 @Entity
 public class User extends BaseTimeEntity {
 
@@ -52,6 +54,21 @@ public class User extends BaseTimeEntity {
         this.image = userBuilder.image;
     }
 
+    public void login(final Password rawPassword, final PasswordEncoder passwordEncoder) {
+        if(!password.matches(rawPassword, passwordEncoder)){
+            throw new PasswordMissMatchException();
+        }
+    }
+
+    public User encode(final PasswordEncoder passwordEncoder) {
+        this.password = Password.encode(password, passwordEncoder);
+        return this;
+    }
+
+    public Long id() {
+        return id;
+    }
+
     public Email email() {
         return email;
     }
@@ -68,23 +85,36 @@ public class User extends BaseTimeEntity {
         return image;
     }
 
-    public static UserBuilder Builder() {
-        return new UserBuilder();
+    public Password password() {
+        return password;
     }
 
-    public void login(final Password rawPassword, final PasswordEncoder passwordEncoder) {
-        if(!password.matches(rawPassword, passwordEncoder)){
-            throw new PasswordMissMatchException();
-        }
-    }
-
-    public User encode(final PasswordEncoder passwordEncoder) {
-        this.password = Password.encode(password, passwordEncoder);
+    public User changeEmail(final Email email) {
+        validateArgumentNull(email);
+        this.email = email;
         return this;
     }
 
-    public Password password() {
-        return password;
+    public User changeBio(final Bio bio) {
+        validateArgumentNull(bio);
+        this.bio = bio;
+        return this;
+    }
+
+    public User changeImage(final Image image) {
+        validateArgumentNull(image);
+        this.image = image;
+        return this;
+    }
+
+    private void validateArgumentNull(final Object argument) {
+        if(isNull(argument)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public static UserBuilder Builder() {
+        return new UserBuilder();
     }
 
     public static class UserBuilder {

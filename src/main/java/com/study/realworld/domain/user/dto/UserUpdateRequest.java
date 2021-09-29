@@ -3,38 +3,38 @@ package com.study.realworld.domain.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.study.realworld.domain.user.domain.Bio;
 import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Name;
-import com.study.realworld.domain.user.domain.Password;
+import com.study.realworld.domain.user.domain.Image;
 import com.study.realworld.domain.user.domain.User;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public final class UserJoinRequest {
-
-    @JsonProperty("username")
-    private Name username;
+public final class UserUpdateRequest {
 
     @JsonProperty("email")
     private Email email;
 
-    @JsonProperty("password")
-    private Password password;
+    @JsonProperty("bio")
+    private Bio bio;
 
-    UserJoinRequest() {
+    @JsonProperty("image")
+    private Image image;
+
+    UserUpdateRequest() {
     }
 
-    UserJoinRequest(final Name username, final Email email, final Password password) {
-        this.username = username;
+    public UserUpdateRequest(final Email email, final Bio bio, final Image image) {
         this.email = email;
-        this.password = password;
+        this.bio = bio;
+        this.image = image;
     }
 
-    public final User toUser() {
+    public final User toEntity() {
         return User.Builder()
                 .email(email)
-                .username(username)
-                .password(password)
+                .bio(bio)
+                .image(image)
                 .build();
     }
 

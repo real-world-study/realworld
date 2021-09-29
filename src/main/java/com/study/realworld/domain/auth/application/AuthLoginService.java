@@ -4,6 +4,7 @@ import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.Password;
 import com.study.realworld.domain.user.domain.User;
 import com.study.realworld.domain.user.domain.UserRepository;
+import com.study.realworld.domain.user.exception.EmailNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ public class AuthLoginService {
 
     private User findByEmail(final Email email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new EmailNotFoundException(email.email()));
     }
 
 }

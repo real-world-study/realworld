@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.Set;
@@ -26,7 +27,7 @@ class JwtAuthenticationTest {
     void constructor_test() {
         final SimpleGrantedAuthority authority = new SimpleGrantedAuthority(DEFAULT_AUTHORITY);
         final Set<SimpleGrantedAuthority> singleton = Collections.singleton(authority);
-        final JwtAuthentication jwtAuthentication = new JwtAuthentication(new Email(EMAIL), new Password(PASSWORD), singleton);
+        final JwtAuthentication jwtAuthentication = new JwtAuthentication(1L, new Password(PASSWORD), singleton);
 
         assertAll(
                 () -> assertThat(jwtAuthentication).isNotNull(),
@@ -64,12 +65,16 @@ class JwtAuthenticationTest {
     @DisplayName("JwtAuthentication 인스턴스 getter 기능 테스트")
     @Test
     void getter_test() {
-        final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final Long principal = 1L;
+        final Email email = new Email(EMAIL);
+        final Password password = new Password(PASSWORD);
+        final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
+        ReflectionTestUtils.setField(user, "id", principal);
         final JwtAuthentication jwtAuthentication = JwtAuthentication.ofUser(user);
 
         assertAll(
-                () -> assertThat(jwtAuthentication.getPrincipal()).isEqualTo(EMAIL),
-                () -> assertThat(jwtAuthentication.getCredentials()).isEqualTo(PASSWORD)
+                () -> assertThat(jwtAuthentication.getPrincipal()).isEqualTo(principal),
+                () -> assertThat(jwtAuthentication.getCredentials()).isEqualTo(password)
         );
     }
 
