@@ -1,14 +1,13 @@
 package com.study.realworld.domain.user.application;
 
 import com.study.realworld.domain.user.domain.*;
-import com.study.realworld.domain.user.exception.EmailNotFoundException;
+import com.study.realworld.domain.user.error.exception.EmailNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 

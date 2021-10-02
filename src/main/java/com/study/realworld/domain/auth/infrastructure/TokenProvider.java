@@ -5,11 +5,13 @@ import com.study.realworld.domain.auth.dto.token.AccessToken;
 import com.study.realworld.domain.auth.dto.token.RefreshToken;
 import com.study.realworld.domain.user.domain.Email;
 import com.study.realworld.domain.user.domain.User;
-import io.jsonwebtoken.*;
+import com.study.realworld.global.jwt.error.exception.JwtParseException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -59,8 +61,12 @@ public class TokenProvider {
     }
 
     private Claims parseClaims(final String accessToken) {
-        final JwtParser jwtParser = jwtParser();
-        return jwtParser.parseClaimsJws(accessToken).getBody();
+        try {
+            final JwtParser jwtParser = jwtParser();
+            return jwtParser.parseClaimsJws(accessToken).getBody();
+        } catch (Exception exception) {
+            throw new JwtParseException();
+        }
     }
 
     private JwtParser jwtParser() {

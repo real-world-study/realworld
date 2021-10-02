@@ -1,8 +1,8 @@
 package com.study.realworld.domain.auth.application;
 
 import com.study.realworld.domain.user.domain.*;
-import com.study.realworld.domain.user.exception.EmailNotFoundException;
-import com.study.realworld.domain.user.exception.PasswordMissMatchException;
+import com.study.realworld.domain.user.error.exception.EmailNotFoundException;
+import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
