@@ -32,7 +32,7 @@ class FollowTest {
         final User user1 = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final User user2 = userBuilder(new Email("Email2@email.com"), new Name("differentUserName"), new Password("Password2"), new Bio("Bio2"), new Image("Image2"));
 
-        final Follow follow = new Follow.Builder()
+        final Follow follow = Follow.Builder()
                 .following(user1)
                 .follower(user2)
                 .build();
@@ -42,6 +42,5 @@ class FollowTest {
                 () -> assertThat(follow).isExactlyInstanceOf(Follow.class)
         );
     }
-
 
 }
