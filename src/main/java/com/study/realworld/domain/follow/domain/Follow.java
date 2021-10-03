@@ -12,13 +12,11 @@ public class Follow {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id")
-    @Column(name = "follow_following", nullable = false, updatable = false)
+    @JoinColumn(name = "following_id", nullable = false, updatable = false)
     private User following;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_id")
-    @Column(name = "follow_follower", nullable = false, updatable = false)
+    @JoinColumn(name = "follower_id", nullable = false, updatable = false)
     private User follower;
 
     protected Follow() {
