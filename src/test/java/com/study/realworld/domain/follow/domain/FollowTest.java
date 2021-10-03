@@ -54,6 +54,24 @@ public class FollowTest {
         );
     }
 
+    @DisplayName("Follow 인스턴스 change 테스트")
+    @Test
+    void change_test() {
+        final User following = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final User follower = userBuilder(new Email("Email2@email.com"), new Name("differentUserName"), new Password("Password2"), new Bio("Bio2"), new Image("Image2"));
+        final User changeFollowing = userBuilder(new Email("change@email.com"), new Name("changeName"), new Password("changePassword"), new Bio("Change"), new Image("/change"));
+        final User changeFollower = userBuilder(new Email("change2@email.com"), new Name("changeName2"), new Password("changePassword2"), new Bio("Change2"), new Image("/change2"));
+
+        final Follow follow = followBuilder(following, follower)
+                .changeFollowing(changeFollowing)
+                .changeFollower(changeFollower);
+
+        assertAll(
+                () -> assertThat(follow.following()).isEqualTo(changeFollowing),
+                () -> assertThat(follow.follower()).isEqualTo(changeFollower)
+        );
+    }
+
     public static final Follow followBuilder(final User following, final User follower) {
         return Follow.Builder()
                 .following(following)
