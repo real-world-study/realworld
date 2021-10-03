@@ -41,4 +41,26 @@ class FollowRepositoryTest {
         );
     }
 
+    @DisplayName("FollowRepository 인스턴스 findById() 테스트")
+    @Test
+    void findById_test() {
+        final User following = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final User follower = userBuilder(new Email("Email2@email.com"), new Name("differentUserName"), new Password("Password2"), new Bio("Bio2"), new Image("Image2"));
+        final Follow follow = followBuilder(following, follower);
+
+        testEntityManager.persist(following);
+        testEntityManager.persist(follower);
+        testEntityManager.persist(follow);
+
+        final Follow findFollow = followRepository.findById(1L).get();
+
+        assertAll(
+                () -> assertThat(findFollow).isNotNull(),
+                () -> assertThat(findFollow).isExactlyInstanceOf(Follow.class),
+                () -> assertThat(findFollow).isEqualTo(follow)
+        );
+    }
+
+
+
 }
