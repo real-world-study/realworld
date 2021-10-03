@@ -1,10 +1,14 @@
 package com.study.realworld.domain.user.domain;
 
 import com.study.realworld.domain.BaseTimeEntity;
+import com.study.realworld.domain.follow.domain.Follow;
 import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 
@@ -43,6 +47,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "image"))
     private Image image;
 
+    @OneToMany(mappedBy = "following")
+    private Set<Follow> followings = new HashSet<>();
+
     protected User() {
     }
 
@@ -63,6 +70,37 @@ public class User extends BaseTimeEntity {
     public User encode(final PasswordEncoder passwordEncoder) {
         this.password = Password.encode(password, passwordEncoder);
         return this;
+    }
+
+    public User changeEmail(final Email email) {
+        validateArgumentNull(email);
+        this.email = email;
+        return this;
+    }
+
+    public User changeBio(final Bio bio) {
+        validateArgumentNull(bio);
+        this.bio = bio;
+        return this;
+    }
+
+    public User changeImage(final Image image) {
+        validateArgumentNull(image);
+        this.image = image;
+        return this;
+    }
+
+    public User addfollowing(final Follow following) {
+        validateArgumentNull(following);
+        followings.add(following);
+        following.changeFollower(this);
+        return this;
+    }
+
+    private void validateArgumentNull(final Object argument) {
+        if(isNull(argument)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Long id() {
@@ -89,28 +127,8 @@ public class User extends BaseTimeEntity {
         return password;
     }
 
-    public User changeEmail(final Email email) {
-        validateArgumentNull(email);
-        this.email = email;
-        return this;
-    }
-
-    public User changeBio(final Bio bio) {
-        validateArgumentNull(bio);
-        this.bio = bio;
-        return this;
-    }
-
-    public User changeImage(final Image image) {
-        validateArgumentNull(image);
-        this.image = image;
-        return this;
-    }
-
-    private void validateArgumentNull(final Object argument) {
-        if(isNull(argument)) {
-            throw new IllegalArgumentException();
-        }
+    public Set<Follow> followings() {
+        return followings;
     }
 
     public static UserBuilder Builder() {

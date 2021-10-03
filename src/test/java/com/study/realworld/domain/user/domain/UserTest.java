@@ -1,10 +1,12 @@
 package com.study.realworld.domain.user.domain;
 
+import com.study.realworld.domain.follow.domain.Follow;
 import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import static com.study.realworld.domain.follow.domain.FollowTest.followBuilder;
 import static com.study.realworld.domain.user.domain.BioTest.BIO;
 import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
 import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
@@ -92,6 +94,21 @@ public class UserTest {
                 () -> assertThatThrownBy(() -> user.changeEmail(null)).isInstanceOf(IllegalArgumentException.class),
                 () -> assertThatThrownBy(() -> user.changeBio(null)).isInstanceOf(IllegalArgumentException.class),
                 () -> assertThatThrownBy(() -> user.changeImage(null)).isInstanceOf(IllegalArgumentException.class)
+        );
+    }
+
+
+    @DisplayName("User 인스턴스 following 테스트")
+    @Test
+    void following_test() {
+        final User following = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final User follower = userBuilder(new Email("Email2@email.com"), new Name("differentUserName"), new Password("Password2"), new Bio("Bio2"), new Image("Image2"));
+        final Follow follow = followBuilder(following, follower);
+        follower.addfollowing(follow);
+
+        assertAll(
+                () -> assertThat(follower.followings().size()).isEqualTo(1),
+                () -> assertThat(follower.followings().contains(follow)).isTrue()
         );
     }
 
