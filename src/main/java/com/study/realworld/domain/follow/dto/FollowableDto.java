@@ -34,4 +34,13 @@ public class FollowableDto {
         this.followable = followable;
     }
 
+    @Override
+    public String toString() {
+        return "FollowableDto{" +
+                "username=" + username +
+                ", bio=" + bio +
+                ", image=" + image +
+                ", followable=" + followable +
+                '}';
+    }
 }
