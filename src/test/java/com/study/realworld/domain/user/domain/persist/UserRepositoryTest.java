@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ class UserRepositoryTest {
     void findById_test() {
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final User expected = testEntityManager.persist(user);
-        final User actual = userRepository.findById(1L).get();
+        final User actual = userRepository.findById(expected.id()).get();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -59,7 +60,7 @@ class UserRepositoryTest {
     void findAll_test() {
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final User expected = testEntityManager.persist(user);
-        final List<User> users = (List<User>) userRepository.findAll();
+        final List<User> users = userRepository.findAll();
 
         assertAll(
                 () -> assertThat(users.size()).isEqualTo(1),

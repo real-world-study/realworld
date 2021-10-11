@@ -32,6 +32,10 @@ public class Follow {
         return this;
     }
 
+    public Long id() {
+        return id;
+    }
+
     public User following() {
         return following;
     }

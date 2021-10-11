@@ -24,6 +24,11 @@ jacocoTestCoverageVerification {
                 minimum = 0.5
             }
 
+            excludes = [
+                // '*.test.*', Q클래스 제거
+                'Q*.class'
+            ]
+
         }
         rule {
             enabled = true;

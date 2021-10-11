@@ -71,9 +71,8 @@ class FollowRepositoryTest {
 
         testEntityManager.persist(following);
         testEntityManager.persist(follower);
-        testEntityManager.persist(follow);
-
-        final Follow findFollow = followRepository.findById(1L).get();
+        final Follow savedFollow = followRepository.save(follow);
+        final Follow findFollow = followRepository.findById(savedFollow.id()).get();
         followRepository.delete(findFollow);
 
         assertThat(followRepository.count()).isEqualTo(0);
