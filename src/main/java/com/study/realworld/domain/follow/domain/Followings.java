@@ -16,10 +16,6 @@ public class Followings {
     public Followings() {
     }
 
-    public Followings(final Set<Follow> followings) {
-        this.followings = followings;
-    }
-
     public void add(final Follow following) {
         validateArgumentNull(following);
         followings.add(following);

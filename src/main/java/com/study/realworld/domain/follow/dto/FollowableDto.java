@@ -27,6 +27,13 @@ public class FollowableDto {
     FollowableDto() {
     }
 
+    public FollowableDto(final User me, final boolean followable) {
+        this.username = me.username();
+        this.bio = me.bio();
+        this.image = me.image();
+        this.followable = followable;
+    }
+
     private FollowableDto(final Name username, final Bio bio, final Image image, final Boolean followable) {
         this.username = username;
         this.bio = bio;
