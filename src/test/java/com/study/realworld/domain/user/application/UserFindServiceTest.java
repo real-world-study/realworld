@@ -1,6 +1,9 @@
 package com.study.realworld.domain.user.application;
 
-import com.study.realworld.domain.user.domain.*;
+import com.study.realworld.domain.follow.domain.FollowRepository;
+import com.study.realworld.domain.user.domain.persist.User;
+import com.study.realworld.domain.user.domain.persist.UserRepository;
+import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.domain.user.error.exception.EmailNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,12 +14,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.study.realworld.domain.user.domain.BioTest.BIO;
-import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
-import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
-import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
-import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
-import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
+import static com.study.realworld.domain.user.domain.vo.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.vo.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.vo.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.vo.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.vo.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.persist.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -27,12 +30,13 @@ import static org.mockito.BDDMockito.given;
 public class UserFindServiceTest {
 
     @Mock private UserRepository userRepository;
+    @Mock private FollowRepository followRepository;
     @InjectMocks private UserFindService userFindService;
 
     @DisplayName("JwtUserDetailsService 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final UserFindService userFindService = new UserFindService(userRepository);
+        final UserFindService userFindService = new UserFindService(userRepository, followRepository);
 
         assertAll(
                 () -> assertThat(userFindService).isNotNull(),

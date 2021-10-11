@@ -1,6 +1,7 @@
-package com.study.realworld.domain.user.domain;
+package com.study.realworld.domain.user.domain.vo;
 
 import com.study.realworld.domain.user.domain.testUtil.TestPasswordEncoder;
+import com.study.realworld.domain.user.domain.vo.Password;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

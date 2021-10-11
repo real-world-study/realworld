@@ -1,7 +1,8 @@
-package com.study.realworld.domain.user.domain;
+package com.study.realworld.domain.user.domain.persist;
 
 import com.study.realworld.domain.BaseTimeEntity;
 import com.study.realworld.domain.follow.domain.Follow;
+import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

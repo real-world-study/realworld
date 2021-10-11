@@ -1,7 +1,7 @@
 package com.study.realworld.global.jwt.authentication;
 
-import com.study.realworld.domain.user.domain.Password;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.vo.Password;
+import com.study.realworld.domain.user.domain.persist.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.Collections;
 
-import static com.study.realworld.domain.user.domain.User.DEFAULT_AUTHORITY;
+import static com.study.realworld.domain.user.domain.persist.User.DEFAULT_AUTHORITY;
 
 public class JwtAuthentication extends AbstractAuthenticationToken {
 

@@ -4,7 +4,7 @@ import com.study.realworld.domain.auth.application.AuthLoginService;
 import com.study.realworld.domain.auth.dto.LoginRequest;
 import com.study.realworld.domain.auth.dto.ResponseToken;
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.dto.UserResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

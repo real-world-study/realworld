@@ -3,10 +3,10 @@ package com.study.realworld.domain.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Name;
-import com.study.realworld.domain.user.domain.Password;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.vo.Email;
+import com.study.realworld.domain.user.domain.vo.Name;
+import com.study.realworld.domain.user.domain.vo.Password;
+import com.study.realworld.domain.user.domain.persist.User;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)

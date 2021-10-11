@@ -1,5 +1,6 @@
-package com.study.realworld.domain.user.domain;
+package com.study.realworld.domain.user.domain.vo;
 
+import com.study.realworld.domain.user.domain.vo.Email;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

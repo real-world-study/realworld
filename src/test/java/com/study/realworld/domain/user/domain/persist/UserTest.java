@@ -1,18 +1,20 @@
-package com.study.realworld.domain.user.domain;
+package com.study.realworld.domain.user.domain.persist;
 
 import com.study.realworld.domain.follow.domain.Follow;
+import com.study.realworld.domain.user.domain.persist.User;
+import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.study.realworld.domain.follow.domain.FollowTest.followBuilder;
-import static com.study.realworld.domain.user.domain.BioTest.BIO;
-import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
-import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
-import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
-import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
-import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD_ENCODER;
+import static com.study.realworld.domain.user.domain.vo.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.vo.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.vo.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.vo.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.vo.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.vo.PasswordTest.PASSWORD_ENCODER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;

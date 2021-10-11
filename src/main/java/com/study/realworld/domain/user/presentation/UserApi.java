@@ -4,7 +4,7 @@ import com.study.realworld.domain.auth.dto.ResponseToken;
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
 import com.study.realworld.domain.user.application.UserJoinService;
 import com.study.realworld.domain.user.application.UserUpdateService;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.dto.UserJoinRequest;
 import com.study.realworld.domain.user.dto.UserResponse;
 import com.study.realworld.domain.user.dto.UserUpdateRequest;

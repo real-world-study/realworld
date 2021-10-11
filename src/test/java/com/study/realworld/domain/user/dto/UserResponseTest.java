@@ -3,16 +3,17 @@ package com.study.realworld.domain.user.dto;
 import com.study.realworld.domain.auth.dto.ResponseToken;
 import com.study.realworld.domain.auth.dto.token.AccessToken;
 import com.study.realworld.domain.auth.dto.token.RefreshToken;
-import com.study.realworld.domain.user.domain.*;
+import com.study.realworld.domain.user.domain.persist.User;
+import com.study.realworld.domain.user.domain.vo.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.study.realworld.domain.user.domain.BioTest.BIO;
-import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
-import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
-import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
-import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
-import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
+import static com.study.realworld.domain.user.domain.vo.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.vo.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.vo.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.vo.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.vo.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.persist.UserTest.userBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

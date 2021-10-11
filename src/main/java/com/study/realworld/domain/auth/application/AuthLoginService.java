@@ -1,9 +1,9 @@
 package com.study.realworld.domain.auth.application;
 
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Password;
-import com.study.realworld.domain.user.domain.User;
-import com.study.realworld.domain.user.domain.UserRepository;
+import com.study.realworld.domain.user.domain.vo.Email;
+import com.study.realworld.domain.user.domain.vo.Password;
+import com.study.realworld.domain.user.domain.persist.User;
+import com.study.realworld.domain.user.domain.persist.UserRepository;
 import com.study.realworld.domain.user.error.exception.EmailNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

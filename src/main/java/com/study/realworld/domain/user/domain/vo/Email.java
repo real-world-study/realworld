@@ -1,4 +1,4 @@
-package com.study.realworld.domain.user.domain;
+package com.study.realworld.domain.user.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

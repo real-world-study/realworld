@@ -1,6 +1,7 @@
 package com.study.realworld.global.jwt;
 
-import com.study.realworld.domain.user.domain.*;
+import com.study.realworld.domain.user.domain.persist.User;
+import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.global.jwt.authentication.JwtAuthentication;
 import com.study.realworld.global.jwt.authentication.JwtAuthenticationProvider;
 import com.study.realworld.global.jwt.authentication.JwtAuthenticationProviderManager;
@@ -16,12 +17,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.study.realworld.domain.auth.infrastructure.TokenProviderTest.testToken;
-import static com.study.realworld.domain.user.domain.BioTest.BIO;
-import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
-import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
-import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
-import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
-import static com.study.realworld.domain.user.domain.UserTest.userBuilder;
+import static com.study.realworld.domain.user.domain.vo.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.vo.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.vo.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.vo.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.vo.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.persist.UserTest.userBuilder;
 import static com.study.realworld.global.jwt.authentication.JwtAuthentication.initAuthentication;
 import static com.study.realworld.global.jwt.authentication.JwtAuthentication.ofUser;
 import static org.assertj.core.api.Assertions.assertThat;

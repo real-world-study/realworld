@@ -1,7 +1,9 @@
 package com.study.realworld.domain.auth.infrastructure;
 
 import com.study.realworld.domain.auth.dto.ResponseToken;
-import com.study.realworld.domain.user.domain.*;
+import com.study.realworld.domain.user.domain.persist.User;
+import com.study.realworld.domain.user.domain.persist.UserTest;
+import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.global.jwt.error.exception.JwtParseException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,11 +15,11 @@ import org.junit.jupiter.api.Test;
 import java.security.Key;
 import java.util.Date;
 
-import static com.study.realworld.domain.user.domain.BioTest.BIO;
-import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
-import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
-import static com.study.realworld.domain.user.domain.NameTest.USERNAME;
-import static com.study.realworld.domain.user.domain.PasswordTest.PASSWORD;
+import static com.study.realworld.domain.user.domain.vo.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.vo.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.vo.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.vo.NameTest.USERNAME;
+import static com.study.realworld.domain.user.domain.vo.PasswordTest.PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;

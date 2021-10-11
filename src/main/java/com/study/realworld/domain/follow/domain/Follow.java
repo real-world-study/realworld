@@ -1,6 +1,6 @@
 package com.study.realworld.domain.follow.domain;
 
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.persist.User;
 
 import javax.persistence.*;
 

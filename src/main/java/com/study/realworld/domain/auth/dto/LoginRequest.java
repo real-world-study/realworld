@@ -3,8 +3,8 @@ package com.study.realworld.domain.auth.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Password;
+import com.study.realworld.domain.user.domain.vo.Email;
+import com.study.realworld.domain.user.domain.vo.Password;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)

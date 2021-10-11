@@ -1,15 +1,15 @@
 package com.study.realworld.domain.user.dto;
 
-import com.study.realworld.domain.user.domain.Bio;
-import com.study.realworld.domain.user.domain.Email;
-import com.study.realworld.domain.user.domain.Image;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.vo.Bio;
+import com.study.realworld.domain.user.domain.vo.Email;
+import com.study.realworld.domain.user.domain.vo.Image;
+import com.study.realworld.domain.user.domain.persist.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.study.realworld.domain.user.domain.BioTest.BIO;
-import static com.study.realworld.domain.user.domain.EmailTest.EMAIL;
-import static com.study.realworld.domain.user.domain.ImageTest.IMAGE;
+import static com.study.realworld.domain.user.domain.vo.BioTest.BIO;
+import static com.study.realworld.domain.user.domain.vo.EmailTest.EMAIL;
+import static com.study.realworld.domain.user.domain.vo.ImageTest.IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 

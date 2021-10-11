@@ -1,5 +1,6 @@
-package com.study.realworld.domain.user.domain;
+package com.study.realworld.domain.user.domain.vo;
 
+import com.study.realworld.domain.user.domain.vo.Bio;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

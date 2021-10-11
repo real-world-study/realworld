@@ -2,7 +2,7 @@ package com.study.realworld.global.jwt.authentication;
 
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
 import com.study.realworld.domain.user.application.UserFindService;
-import com.study.realworld.domain.user.domain.User;
+import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.global.security.error.exception.UserDetailsNullPointerException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

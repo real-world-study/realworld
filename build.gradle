@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id "org.asciidoctor.convert" version "1.5.9.2"
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'java'
     id 'jacoco'
 }
@@ -19,6 +20,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.8'
+
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -31,6 +35,21 @@ dependencies {
 }
 
 apply from: 'test.gradle'
+
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
 
 ext {
     set('snippetsDir', file("build/generated-snippets")) // 문서 저장위치
@@ -64,3 +83,4 @@ task copyDocument(type: Copy) { // 생성된 docs 파일을 build시 static 아�
 build {
     dependsOn copyDocument // build시 copy 실행
 }
+
