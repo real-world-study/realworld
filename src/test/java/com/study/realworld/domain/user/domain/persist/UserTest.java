@@ -1,7 +1,6 @@
 package com.study.realworld.domain.user.domain.persist;
 
 import com.study.realworld.domain.follow.domain.Follow;
-import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
 import org.junit.jupiter.api.DisplayName;
@@ -106,11 +105,11 @@ public class UserTest {
         final User following = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final User follower = userBuilder(new Email("Email2@email.com"), new Name("differentUserName"), new Password("Password2"), new Bio("Bio2"), new Image("Image2"));
         final Follow follow = followBuilder(following, follower);
-        follower.addfollowing(follow);
+        follower.addFollowing(follow);
 
         assertAll(
-                () -> assertThat(follower.followings().size()).isEqualTo(1),
-                () -> assertThat(follower.followings().contains(follow)).isTrue()
+                () -> assertThat(follower.followings().getFollowings().size()).isEqualTo(1),
+                () -> assertThat(follower.followings().getFollowings().contains(follow)).isTrue()
         );
     }
 
