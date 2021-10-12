@@ -29,7 +29,7 @@ public class Followings {
         }
     }
 
-    public Set<Follow> getFollowings() {
+    public Set<Follow> followings() {
         return followings;
     }
 

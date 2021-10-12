@@ -108,8 +108,8 @@ public class UserTest {
         follower.addFollowing(follow);
 
         assertAll(
-                () -> assertThat(follower.followings().getFollowings().size()).isEqualTo(1),
-                () -> assertThat(follower.followings().getFollowings().contains(follow)).isTrue()
+                () -> assertThat(follower.followings().followings().size()).isEqualTo(1),
+                () -> assertThat(follower.followings().followings().contains(follow)).isTrue()
         );
     }
 

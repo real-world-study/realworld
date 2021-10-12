@@ -39,7 +39,7 @@ class FollowingsTest {
         final Follow follow = followBuilder(user1, user2);
         followings.addFollowing(follow);
 
-        assertThat(followings.getFollowings().size()).isEqualTo(1);
+        assertThat(followings.followings().size()).isEqualTo(1);
     }
 
     @DisplayName("Following 인스턴스 add()에 null 입력시 실패 테스트")
@@ -49,6 +49,21 @@ class FollowingsTest {
         assertThatThrownBy(() -> followings.addFollowing(null))
                 .isInstanceOf(FollowNullPointerException.class)
                 .hasMessage("Follow 가 null 입니다.");
+    }
+
+    @DisplayName("Following 인스턴스 getter() 테스트")
+    @Test
+    void followings_test() {
+        final Followings followings = new Followings();
+        final User user1 = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
+        final User user2 = userBuilder(new Email("email1"), new Name("username1"), new Password("password1"), new Bio("bio1"), new Image("image1"));
+        final Follow follow = followBuilder(user1, user2);
+        followings.addFollowing(follow);
+
+        assertAll(
+                () -> assertThat(followings.followings()).isNotNull(),
+                () -> assertThat(followings.followings().size()).isEqualTo(1)
+        );
     }
 
 }
