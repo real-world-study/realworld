@@ -16,21 +16,20 @@ import org.junit.jupiter.api.Test;
 
 class FollowingUsersTest {
 
-    private User user;
     private User followingUser;
 
     @BeforeEach
     void beforeEach() {
-        user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
         followingUser = User.Builder()
             .profile(Username.of("followingUser"), null, null)
             .password(Password.of("password"))
             .email(Email.of("email2@email2.com"))
             .build();
+    }
+
+    @Test
+    void followingUserTest() {
+        FollowingUsers followingUsers = new FollowingUsers();
     }
 
     @Nested
@@ -146,6 +145,21 @@ class FollowingUsersTest {
                 .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
         }
 
+    }
+
+    @Test
+    @DisplayName("equals hashCode 테스트")
+    void followingUserEqualsHashCodeTest() {
+
+        // given
+        Set<User> userSet = new HashSet<>();
+        userSet.add(followingUser);
+        FollowingUsers followingUsers = FollowingUsers.of(userSet);
+
+        // when & then
+        assertThat(followingUsers)
+            .isEqualTo(FollowingUsers.of(userSet))
+            .hasSameHashCodeAs(FollowingUsers.of(userSet));
     }
 
 }
