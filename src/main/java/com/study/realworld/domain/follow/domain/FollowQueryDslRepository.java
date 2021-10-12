@@ -21,22 +21,12 @@ public class FollowQueryDslRepository {
 
     public FollowableDto existMeAndFollowing(final User me, final User following) {
         return query.select(Projections.constructor(FollowableDto.class, user,
-                        ExpressionUtils.isNotNull(
-                                JPAExpressions.selectOne()
-                                        .from(follow)
-                                        .where(follow.following.eq(following), follow.follower.eq(me))
-                                )
-        ))
+                ExpressionUtils.isNotNull(JPAExpressions.selectOne()
+                        .from(follow)
+                        .where(follow.following.eq(following), follow.follower.eq(me)))))
                 .from(user)
                 .where(user.eq(me))
                 .fetchFirst();
-
-//        final Integer count = query.selectOne()
-//                .from(follow)
-//                .where(follow.following.eq(following), follow.follower.eq(me))
-//                .fetchFirst();
-//        boolean followable = !Objects.isNull(count);
-//        return FollowableDto.fromUserAndFollowable(me, followable);
     }
 
 }
