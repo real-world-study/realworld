@@ -1,4 +1,4 @@
-package com.study.realworld.article.domain;
+package com.study.realworld.tag.domain;
 
 import java.util.Objects;
 import javax.persistence.Column;
