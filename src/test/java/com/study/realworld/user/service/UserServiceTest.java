@@ -181,8 +181,7 @@ class UserServiceTest {
         User result = userService.findById(userId);
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.email()).isEqualTo(user.email());
+        assertThat(result).isEqualTo(user);
     }
 
     @Test
@@ -209,6 +208,36 @@ class UserServiceTest {
         // when & then
         assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> userService.findById(userId))
+            .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("username를 가지고 유저를 조회할 때 해당 유저가 존재하면 해당 유저를 반환한다.")
+    void findByUsernameSuccessTest() {
+
+        // setup & given
+        Username username = Username.of("uesrname");
+        User user = User.Builder().email(Email.of("test@test.com")).profile(username, null, null).build();
+        when(userRepository.findByProfileUsername(username)).thenReturn(ofNullable(user));
+
+        // when
+        User result = userService.findByUsername(username);
+
+        // then
+        assertThat(result).isEqualTo(user);
+    }
+
+    @Test
+    @DisplayName("없는 유저의 username를 가지고 유저를 조회할 때 Exception이 반환되어야 한다.")
+    void findByNoUserUsesrnameFailTest() {
+
+        // setup & given
+        Username username = Username.of("username");
+        when(userRepository.findByProfileUsername(username)).thenReturn(empty());
+
+        // when & then
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> userService.findByUsername(username))
             .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
     }
 
