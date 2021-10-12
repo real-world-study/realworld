@@ -35,9 +35,10 @@ public class FollowingUsers {
         return followingUsers.contains(user);
     }
 
-    public void followingUser(User user) {
+    public FollowingUsers followingUser(User user) {
         checkFollowingUser(user);
         followingUsers.add(user);
+        return this;
     }
 
     private void checkFollowingUser(User user) {

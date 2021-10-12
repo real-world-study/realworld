@@ -1,8 +1,12 @@
 package com.study.realworld.user.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +67,46 @@ class FollowingUsersTest {
             // then
             assertFalse(result);
         }
+    }
+
+    @Nested
+    @DisplayName("특정 User를 follow할 수 있다.")
+    class followingUserTest {
+
+        @Test
+        @DisplayName("정상적인 경우 user가 포함된다.")
+        void successTest() {
+
+            // given
+            Set<User> userSet = new HashSet<>();
+            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+
+            Set<User> expectedUserSet = new HashSet<>();
+            expectedUserSet.add(followingUser);
+            FollowingUsers expected = FollowingUsers.of(expectedUserSet);
+
+            // when
+            FollowingUsers result = followingUsers.followingUser(followingUser);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("이미 follow한 유저를 follow할 경우 exception이 발생해야 한다.")
+        void exceptionTest() {
+
+            // given
+            Set<User> userSet = new HashSet<>();
+            userSet.add(followingUser);
+            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> followingUsers.followingUser(followingUser))
+                .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
+        }
+
     }
 
 }
