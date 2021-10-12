@@ -37,6 +37,7 @@ public class FollowingUsers {
 
     public FollowingUsers followingUser(User user) {
         checkFollowingUser(user);
+
         followingUsers.add(user);
         return this;
     }
@@ -47,9 +48,11 @@ public class FollowingUsers {
         }
     }
 
-    public void unfollowingUser(User user) {
+    public FollowingUsers unfollowingUser(User user) {
         checkUnfollowingUser(user);
+
         followingUsers.remove(user);
+        return this;
     }
 
     private void checkUnfollowingUser(User user) {
