@@ -4,20 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.domain.Bio;
-import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
-import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.service.model.ProfileModel;
 
-@JsonTypeName("user")
+@JsonTypeName("profile")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class UserResponse {
+public class ProfileResponse {
 
     @JsonProperty("username")
     private Username username;
-
-    @JsonProperty("email")
-    private Email email;
 
     @JsonProperty("bio")
     private Bio bio;
@@ -25,26 +21,21 @@ public class UserResponse {
     @JsonProperty("image")
     private Image image;
 
-    @JsonProperty("token")
-    private String token;
+    @JsonProperty("following")
+    private boolean following;
 
-    protected UserResponse() {
+    protected ProfileResponse() {
     }
 
-    private UserResponse(Username username, Email email, Bio bio, Image image, String token) {
+    private ProfileResponse(Username username, Bio bio, Image image, boolean following) {
         this.username = username;
-        this.email = email;
         this.bio = bio;
         this.image = image;
-        this.token = token;
+        this.following = following;
     }
 
     public Username getUsername() {
         return username;
-    }
-
-    public Email getEmail() {
-        return email;
     }
 
     public Bio getBio() {
@@ -55,17 +46,16 @@ public class UserResponse {
         return image;
     }
 
-    public String getToken() {
-        return token;
+    public boolean isFollowing() {
+        return following;
     }
 
-    public static UserResponse fromUserAndToken(User user, String accessToken) {
-        return new UserResponse(
-            user.username(),
-            user.email(),
-            user.bio(),
-            user.image(),
-            accessToken
+    public static ProfileResponse ofProfileModel(ProfileModel profileModel) {
+        return new ProfileResponse(
+            profileModel.getProfile().username(),
+            profileModel.getProfile().bio(),
+            profileModel.getProfile().image(),
+            profileModel.isFollow()
         );
     }
 

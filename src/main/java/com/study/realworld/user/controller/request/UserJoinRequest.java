@@ -34,11 +34,9 @@ public class UserJoinRequest {
 
     public User toUser() {
         return User.Builder()
-            .username(Username.of(username))
+            .profile(Username.of(username), Bio.of(bio), Image.of(image))
             .email(Email.of(email))
             .password(Password.of(password))
-            .bio(new Bio(bio))
-            .image(new Image(image))
             .build();
     }
 

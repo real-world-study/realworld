@@ -1,5 +1,6 @@
 package com.study.realworld.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,10 +14,15 @@ public class Image {
     protected Image() {
     }
 
-    public Image(String url) {
+    private Image(String url) {
         this.url = url;
     }
 
+    public static Image of(String url) {
+        return new Image(url);
+    }
+
+    @JsonValue
     public String value() {
         return url;
     }
@@ -36,11 +42,6 @@ public class Image {
     @Override
     public int hashCode() {
         return Objects.hash(url);
-    }
-
-    @Override
-    public String toString() {
-        return url;
     }
 
 }

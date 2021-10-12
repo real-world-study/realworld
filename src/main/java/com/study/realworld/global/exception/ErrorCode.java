@@ -20,6 +20,9 @@ public enum ErrorCode {
     INVALID_PASSWORD_NULL(HttpStatus.BAD_REQUEST, "password must be provided."),
     INVALID_PASSWORD_LENGTH(HttpStatus.BAD_REQUEST, "password length must be between 6 and 20 characters."),
 
+    INVALID_FOLLOW(HttpStatus.BAD_REQUEST, "follow must be provided by unfollowed user"),
+    INVALID_UNFOLLOW(HttpStatus.BAD_REQUEST, "unfollow must be provided by followed user"),
+
     // authentication
     INVALID_EXPIRED_JWT(HttpStatus.BAD_REQUEST, "this jwt has expired."),
     INVALID_MALFORMED_JWT(HttpStatus.BAD_REQUEST, "this jwt was malformed."),

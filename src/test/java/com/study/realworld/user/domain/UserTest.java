@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
@@ -33,17 +34,15 @@ class UserTest {
         Username username = Username.of("username");
         Email email = Email.of("email@email.com");
         Password password = Password.of("password");
-        Bio bio = new Bio("bio");
-        Image image = new Image("image.jpg");
+        Bio bio = Bio.of("bio");
+        Image image = Image.of("image.jpg");
 
         // when
         User user = User.Builder()
             .id(id)
-            .username(username)
+            .profile(username, bio, image)
             .email(email)
             .password(password)
-            .bio(bio)
-            .image(image)
             .build();
 
         // then
@@ -51,33 +50,8 @@ class UserTest {
         assertThat(user.username()).isEqualTo(username);
         assertThat(user.email()).isEqualTo(email);
         assertThat(user.password()).isEqualTo(password);
-        assertThat(user.bio().get()).isEqualTo(bio);
-        assertThat(user.image().get()).isEqualTo(image);
-    }
-
-    @Test
-    void userBuilderParamUserTest() {
-
-        // given
-        User input = User.Builder()
-            .id(1L)
-            .username(Username.of("username"))
-            .email(Email.of("test@test.com"))
-            .password(Password.of("password"))
-            .bio(new Bio("bio"))
-            .image(new Image("image"))
-            .build();
-
-        // when
-        User user = User.Builder(input).build();
-
-        // then
-        assertThat(user.id()).isEqualTo(input.id());
-        assertThat(user.username()).isEqualTo(input.username());
-        assertThat(user.email()).isEqualTo(input.email());
-        assertThat(user.password()).isEqualTo(input.password());
-        assertThat(user.bio()).isEqualTo(input.bio());
-        assertThat(user.image()).isEqualTo(input.image());
+        assertThat(user.bio()).isEqualTo(bio);
+        assertThat(user.image()).isEqualTo(image);
     }
 
     @Test
@@ -126,6 +100,122 @@ class UserTest {
         assertThatExceptionOfType(BusinessException.class)
             .isThrownBy(() -> user.login(password, passwordEncoder))
             .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
+    }
+
+    @Test
+    @DisplayName("특정 유저를 follow하여 following set에 저장할 수 있다.")
+    void followingTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+
+        // when
+        user.followingUser(followingUser);
+
+        // then
+        assertThat(user).isNotNull();
+    }
+
+    @Test
+    @DisplayName("이미 follow된 유저를 follow할 경우 Exception이 발생해야 한다.")
+    void followingAlreadyExceptionTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+        user.followingUser(followingUser);
+
+        // when & then
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> user.followingUser(followingUser))
+            .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
+    }
+
+    @Test
+    @DisplayName("특정 유저를 unfollow할 수 있다.")
+    void unfollowingTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+        user.followingUser(followingUser);
+
+        // when
+        user.unfollowingUser(followingUser);
+
+        // then
+        assertThat(user).isNotNull();
+    }
+
+    @Test
+    @DisplayName("follow 안된 유저를 unfollow할 경우 Exception이 발생해야 한다.")
+    void unfollowingNotExceptionTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+
+        // when & then
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> user.unfollowingUser(followingUser))
+            .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
+    }
+
+    @Test
+    @DisplayName("follow 여부를 확인할 수 있다.")
+    void isFollowTest() {
+
+        // given
+        User user = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email@email.com"))
+            .build();
+        User followingUser = User.Builder()
+            .profile(Username.of("followingUser"), null, null)
+            .password(Password.of("password"))
+            .email(Email.of("email2@email2.com"))
+            .build();
+        user.followingUser(followingUser);
+
+        // when
+        boolean result = user.isFollow(followingUser);
+
+        // then
+        assertTrue(result);
     }
 
     @Test

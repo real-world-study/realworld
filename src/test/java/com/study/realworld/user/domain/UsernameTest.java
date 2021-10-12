@@ -64,7 +64,7 @@ class UsernameTest {
         Username username = Username.of(input);
 
         // then
-        assertThat(username.toString()).isEqualTo(input);
+        assertThat(username).isEqualTo(Username.of(input));
     }
 
     @ParameterizedTest
@@ -90,20 +90,6 @@ class UsernameTest {
         assertThat(username)
             .isEqualTo(copyUsername)
             .hasSameHashCodeAs(copyUsername);
-    }
-
-    @Test
-    @DisplayName("toString 테스트")
-    void usernameToStringTest() {
-
-        // given
-        String input = "username";
-
-        // when
-        Username username = Username.of(input);
-
-        // then
-        assertThat(username.toString()).isEqualTo(input);
     }
 
 }

@@ -25,6 +25,7 @@ import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
+import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
@@ -73,7 +74,9 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(Username.of("username"))
+            .profile(Profile.Builder()
+                .username(Username.of("username"))
+                .build())
             .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .build();
@@ -135,7 +138,9 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(Username.of("username"))
+            .profile(Profile.Builder()
+                .username(Username.of("username"))
+                .build())
             .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .build();
@@ -190,7 +195,9 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(Username.of("username"))
+            .profile(Profile.Builder()
+                .username(Username.of("username"))
+                .build())
             .email(Email.of("test@test.com"))
             .password(Password.of("password"))
             .build();
@@ -238,11 +245,13 @@ class UserControllerTest {
 
         // setup
         User user = User.Builder()
-            .username(Username.of("usernameChange"))
+            .profile(Profile.Builder()
+                .username(Username.of("usernameChange"))
+                .bio(Bio.of("bioChange"))
+                .image(Image.of("imageChange"))
+                .build())
             .email(Email.of("change@change.com"))
             .password(Password.of("passwordChange"))
-            .bio(new Bio("bioChange"))
-            .image(new Image("imageChange"))
             .build();
 
         when(userService.update(any(), any())).thenReturn(user);

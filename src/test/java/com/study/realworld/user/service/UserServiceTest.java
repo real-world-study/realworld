@@ -4,7 +4,6 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
@@ -45,8 +44,11 @@ class UserServiceTest {
     void existUsernameJoinTest() {
 
         // setup & given
-        User user = User.Builder().build();
-        when(userRepository.findByUsername(any()))
+        Username username = Username.of("username");
+        User user = User.Builder()
+            .profile(username, null, null)
+            .build();
+        when(userRepository.findByProfileUsername(username))
             .thenReturn(Optional.of(user));
 
         // when & then
@@ -60,9 +62,14 @@ class UserServiceTest {
     void existEmailJoinTest() {
 
         // setup & given
-        User user = User.Builder().build();
-        when(userRepository.findByUsername(any())).thenReturn(empty());
-        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
+        Username username = Username.of("username");
+        Email email = Email.of("email@email.com");
+        User user = User.Builder()
+            .profile(username, null, null)
+            .email(email)
+            .build();
+        when(userRepository.findByProfileUsername(username)).thenReturn(empty());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         // when & then
         assertThatExceptionOfType(BusinessException.class)
@@ -75,25 +82,26 @@ class UserServiceTest {
     void successJoinTest() {
 
         // setup & given
-        when(userRepository.findByUsername(any())).thenReturn(empty());
-        when(userRepository.findByEmail(any())).thenReturn(empty());
+        Username username = Username.of("username");
+        Email email = Email.of("email@email.com");
         Password password = Password.of("password");
+        Bio bio = Bio.of("bio");
+        Image image= Image.of("image");
+        when(userRepository.findByProfileUsername(username)).thenReturn(empty());
+        when(userRepository.findByEmail(email)).thenReturn(empty());
         when(passwordEncoder.encode(password.password())).thenReturn("encoded_password");
+
         User input = User.Builder()
-            .username(Username.of("username"))
-            .email(Email.of("test@test.com"))
+            .profile(username, bio, image)
+            .email(email)
             .password(password)
-            .bio(new Bio("bio"))
-            .image(new Image("image"))
             .build();
-        when(userRepository.save(any())).thenReturn(
+        when(userRepository.save(input)).thenReturn(
             User.Builder()
                 .id(1L)
-                .username(input.username())
+                .profile(username, bio, image)
                 .email(input.email())
                 .password(Password.of("encoded_password"))
-                .bio(input.bio().orElse(null))
-                .image(input.image().orElse(null))
                 .build()
         );
 
@@ -102,12 +110,11 @@ class UserServiceTest {
 
         // then
         assertThat(user.id()).isEqualTo(1L);
-        assertThat(user.username()).isEqualTo(Username.of("username"));
-        assertThat(user.email()).isEqualTo(Email.of("test@test.com"));
-        assertThat(user.password().password())
-            .isEqualTo("encoded_password");
-        assertThat(user.bio().get()).isEqualTo(new Bio("bio"));
-        assertThat(user.image().get()).isEqualTo(new Image("image"));
+        assertThat(user.username()).isEqualTo(username);
+        assertThat(user.email()).isEqualTo(email);
+        assertThat(user.password().password()).isEqualTo("encoded_password");
+        assertThat(user.bio()).isEqualTo(bio);
+        assertThat(user.image()).isEqualTo(image);
     }
 
     @Test
@@ -125,7 +132,6 @@ class UserServiceTest {
             .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
     }
 
-    // TODO
     @Test
     @DisplayName("로그인 요청한 이메일에 매칭되지 않는 패스워드이면 Exception을 반환해야 한다.")
     void loginFailByPasswordTest() {
@@ -158,7 +164,7 @@ class UserServiceTest {
 
         // then
         assertThat(user).isNotNull();
-        assertThat(user.email().toString()).isEqualTo("test@test.com");
+        assertThat(user.email()).isEqualTo(Email.of("test@test.com"));
         assertThat(user.password().password()).isEqualTo("encoded_password");
     }
 
@@ -175,8 +181,7 @@ class UserServiceTest {
         User result = userService.findById(userId);
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.email()).isEqualTo(user.email());
+        assertThat(result).isEqualTo(user);
     }
 
     @Test
@@ -207,6 +212,36 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("username를 가지고 유저를 조회할 때 해당 유저가 존재하면 해당 유저를 반환한다.")
+    void findByUsernameSuccessTest() {
+
+        // setup & given
+        Username username = Username.of("uesrname");
+        User user = User.Builder().email(Email.of("test@test.com")).profile(username, null, null).build();
+        when(userRepository.findByProfileUsername(username)).thenReturn(ofNullable(user));
+
+        // when
+        User result = userService.findByUsername(username);
+
+        // then
+        assertThat(result).isEqualTo(user);
+    }
+
+    @Test
+    @DisplayName("없는 유저의 username를 가지고 유저를 조회할 때 Exception이 반환되어야 한다.")
+    void findByNoUserUsesrnameFailTest() {
+
+        // setup & given
+        Username username = Username.of("username");
+        when(userRepository.findByProfileUsername(username)).thenReturn(empty());
+
+        // when & then
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> userService.findByUsername(username))
+            .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
     @DisplayName("없는 유저의 id를 가지고 update 요청 시 exception이 발생되어야 한다.")
     void updateFailByNotFoundUserTest() {
 
@@ -216,8 +251,8 @@ class UserServiceTest {
             Username.of("username"),
             Email.of("test@test.com"),
             Password.of("password"),
-            new Bio("bio"),
-            new Image("image")
+            Bio.of("bio"),
+            Image.of("image")
         );
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
@@ -238,18 +273,14 @@ class UserServiceTest {
         @BeforeEach
         void beforeEach() {
             user = User.Builder()
-                .username(Username.of("username"))
+                .profile(Username.of("username"), Bio.of("bio"), Image.of("image"))
                 .email(Email.of("test@test.com"))
                 .password(Password.of("encoded_password"))
-                .bio(new Bio("bio"))
-                .image(new Image("image"))
                 .build();
             originUser = User.Builder()
-                .username(Username.of("username"))
+                .profile(Username.of("username"), Bio.of("bio"), Image.of("image"))
                 .email(Email.of("test@test.com"))
                 .password(Password.of("encoded_password"))
-                .bio(new Bio("bio"))
-                .image(new Image("image"))
                 .build();
             when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(user));
         }
@@ -282,7 +313,7 @@ class UserServiceTest {
                 Username username = Username.of("usernameChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
                     null, null, null);
-                when(userRepository.findByUsername(username))
+                when(userRepository.findByProfileUsername(username))
                     .thenReturn(Optional.ofNullable(User.Builder().build()));
 
                 // when & then
@@ -299,7 +330,7 @@ class UserServiceTest {
                 Username username = Username.of("usernameChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(username, null,
                     null, null, null);
-                when(userRepository.findByUsername(username))
+                when(userRepository.findByProfileUsername(username))
                     .thenReturn(Optional.empty());
 
                 // when
@@ -438,7 +469,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowBioTest() {
 
                 // given
-                Bio bio = new Bio("bio");
+                Bio bio = Bio.of("bio");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, bio, null);
 
@@ -454,7 +485,7 @@ class UserServiceTest {
             void updateSuccessByBioTest() {
 
                 // given
-                Bio bio = new Bio("bioChange");
+                Bio bio = Bio.of("bioChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, bio, null);
 
@@ -467,8 +498,8 @@ class UserServiceTest {
                 assertThat(result.password().password())
                     .isEqualTo(originUser.password().password());
 
-                assertThat(result.bio().get()).isEqualTo(bio);
-                assertThat(result.bio().get()).isNotEqualTo(originUser.bio());
+                assertThat(result.bio()).isEqualTo(bio);
+                assertThat(result.bio()).isNotEqualTo(originUser.bio());
 
                 assertThat(result.image()).isEqualTo(originUser.image());
             }
@@ -483,7 +514,7 @@ class UserServiceTest {
             void updateFailByEqualWithNowImageTest() {
 
                 // given
-                Image image = new Image("image");
+                Image image = Image.of("image");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, null, image);
 
@@ -499,7 +530,7 @@ class UserServiceTest {
             void updateSuccessByImageTest() {
 
                 // given
-                Image image = new Image("imageChange");
+                Image image = Image.of("imageChange");
                 UserUpdateModel userUpdateModel = new UserUpdateModel(null, null,
                     null, null, image);
 
@@ -512,8 +543,8 @@ class UserServiceTest {
                 assertThat(result.password().password()).isEqualTo(originUser.password().password());
                 assertThat(result.bio()).isEqualTo(originUser.bio());
 
-                assertThat(result.image().get()).isEqualTo(image);
-                assertThat(result.image().get()).isNotEqualTo(originUser.image());
+                assertThat(result.image()).isEqualTo(image);
+                assertThat(result.image()).isNotEqualTo(originUser.image());
             }
 
         }

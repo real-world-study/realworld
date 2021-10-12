@@ -2,6 +2,7 @@ package com.study.realworld.user.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import javax.persistence.Column;
@@ -36,6 +37,7 @@ public class Password {
         return new Password(passwordEncoder.encode(password.password));
     }
 
+    @JsonValue
     public String password() {
         return password;
     }

@@ -1,5 +1,6 @@
 package com.study.realworld.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,10 +14,15 @@ public class Bio {
     protected Bio() {
     }
 
-    public Bio(String bio) {
+    private Bio(String bio) {
         this.bio = bio;
     }
 
+    public static Bio of(String bio) {
+        return new Bio(bio);
+    }
+
+    @JsonValue
     public String value() {
         return bio;
     }
@@ -36,11 +42,6 @@ public class Bio {
     @Override
     public int hashCode() {
         return Objects.hash(bio);
-    }
-
-    @Override
-    public String toString() {
-        return bio;
     }
 
 }

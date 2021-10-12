@@ -17,27 +17,13 @@ public class BioTest {
     void bioEqualsHashCodeTest() {
 
         // given
-        Bio bio = new Bio("bio");
-        Bio copyBio = new Bio("bio");
+        Bio bio = Bio.of("bio");
+        Bio copyBio = Bio.of("bio");
 
         // when & then
         assertThat(bio)
             .isEqualTo(copyBio)
             .hasSameHashCodeAs(copyBio);
-    }
-
-    @Test
-    @DisplayName("toString 테스트")
-    void bioToStringTest() {
-
-        // given
-        String input = "bio";
-
-        // when
-        Bio bio = new Bio(input);
-
-        // then
-        assertThat(bio.toString()).isEqualTo(input);
     }
 
 }

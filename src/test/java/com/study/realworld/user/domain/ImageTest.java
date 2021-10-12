@@ -17,27 +17,13 @@ public class ImageTest {
     void imageEqualsHashCodeTest() {
 
         // given
-        Image image = new Image("image");
-        Image copyImage = new Image("image");
+        Image image = Image.of("image");
+        Image copyImage = Image.of("image");
 
         // when & then
         assertThat(image)
             .isEqualTo(copyImage)
             .hasSameHashCodeAs(copyImage);
-    }
-
-    @Test
-    @DisplayName("toString 테스트")
-    void imageToStringTest() {
-
-        // given
-        String input = "image";
-
-        // when
-        Image image = new Image(input);
-
-        // then
-        assertThat(image.toString()).isEqualTo("image");
     }
 
 }
