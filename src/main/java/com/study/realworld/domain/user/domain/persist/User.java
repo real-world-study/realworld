@@ -9,8 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
-import java.util.Set;
-
 import static java.util.Objects.isNull;
 
 @Entity
@@ -92,7 +90,7 @@ public class User extends BaseTimeEntity {
     }
 
     public User addFollowing(final Follow following) {
-        followings.add(following);
+        followings.addFollowing(following);
         following.changeFollower(this);
         return this;
     }

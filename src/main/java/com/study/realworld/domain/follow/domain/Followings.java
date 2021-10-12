@@ -16,7 +16,7 @@ public class Followings {
     public Followings() {
     }
 
-    public void add(final Follow following) {
+    public void addFollowing(final Follow following) {
         validateArgumentNull(following);
         followings.add(following);
     }
