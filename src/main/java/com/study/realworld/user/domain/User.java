@@ -1,19 +1,11 @@
 package com.study.realworld.user.domain;
 
-import com.study.realworld.global.exception.BusinessException;
-import com.study.realworld.global.exception.ErrorCode;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,11 +26,8 @@ public class User {
     @Embedded
     private Password password;
 
-    @JoinTable(name = "follow",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "follower_id"))
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<User> followingUsers = new HashSet<>();
+    @Embedded
+    private FollowingUsers followingUsers = new FollowingUsers();
 
     protected User() {
     }
@@ -107,29 +96,15 @@ public class User {
     }
 
     public boolean isFollow(User user) {
-        return followingUsers.contains(user);
+        return followingUsers.isFollow(user);
     }
 
     public void followingUser(User user) {
-        checkFollowingUser(user);
-        followingUsers.add(user);
-    }
-
-    private void checkFollowingUser(User user) {
-        if (followingUsers.contains(user)) {
-            throw new BusinessException(ErrorCode.INVALID_FOLLOW);
-        }
+        followingUsers.followingUser(user);
     }
 
     public void unfollowingUser(User user) {
-        checkUnfollowingUser(user);
-        followingUsers.remove(user);
-    }
-
-    private void checkUnfollowingUser(User user) {
-        if (!followingUsers.contains(user)) {
-            throw new BusinessException(ErrorCode.INVALID_UNFOLLOW);
-        }
+        followingUsers.unfollowingUser(user);
     }
 
     @Override
