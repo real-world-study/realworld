@@ -1,5 +1,7 @@
 package com.study.realworld.domain.follow.domain;
 
+import com.study.realworld.domain.follow.error.exception.FollowNullPointerException;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
@@ -17,13 +19,13 @@ public class Followings {
     }
 
     public void addFollowing(final Follow following) {
-        validateArgumentNull(following);
+        validateFollowNull(following);
         followings.add(following);
     }
 
-    private void validateArgumentNull(final Follow following) {
+    private void validateFollowNull(final Follow following) {
         if(Objects.isNull(following)) {
-            throw new IllegalArgumentException();
+            throw new FollowNullPointerException();
         }
     }
 
