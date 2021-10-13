@@ -36,6 +36,7 @@ public enum ErrorCode {
     INVALID_SLUG_LENGTH(HttpStatus.BAD_REQUEST, "slug length must by less than 20 characters."),
     INVALID_DESCRIPTION_NULL(HttpStatus.BAD_REQUEST, "description must be provided"),
     INVALID_DESCRIPTION_LENGTH(HttpStatus.BAD_REQUEST, "description length must by less than 255 characters."),
+    INVALID_BODY_NULL(HttpStatus.BAD_REQUEST, "body must be provided"),
 
     ;
 

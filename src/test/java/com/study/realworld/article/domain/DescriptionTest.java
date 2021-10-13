@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 class DescriptionTest {
+
     @Test
     void deescriptionTest() {
         Description description = new Description();
@@ -59,4 +60,5 @@ class DescriptionTest {
             .isEqualTo(Description.of(input))
             .hasSameHashCodeAs(Description.of(input));
     }
+
 }
