@@ -1,8 +1,12 @@
 package com.study.realworld.article.domain;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import org.apache.commons.lang3.StringUtils;
 
 @Embeddable
 public class Slug {
@@ -18,7 +22,14 @@ public class Slug {
     }
 
     public static Slug of(String slug) {
+        checkSlug(slug);
+
         return new Slug(slug);
+    }
+
+    private static void checkSlug(String slug) {
+        checkArgument(StringUtils.isNotBlank(slug), ErrorCode.INVALID_SLUG_NULL);
+        checkArgument(slug.length() <= 50, ErrorCode.INVALID_SLUG_LENGTH);
     }
 
     public static Slug of(Title title) {

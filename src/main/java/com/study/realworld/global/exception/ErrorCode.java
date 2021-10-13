@@ -32,6 +32,8 @@ public enum ErrorCode {
     // article
     INVALID_TITLE_NULL(HttpStatus.BAD_REQUEST, "title must be provided"),
     INVALID_TITLE_LENGTH(HttpStatus.BAD_REQUEST, "title length must by less than 20 characters."),
+    INVALID_SLUG_NULL(HttpStatus.BAD_REQUEST, "slug must be provided"),
+    INVALID_SLUG_LENGTH(HttpStatus.BAD_REQUEST, "slug length must by less than 20 characters."),
 
     ;
 
