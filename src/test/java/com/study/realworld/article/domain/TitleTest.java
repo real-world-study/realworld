@@ -39,11 +39,27 @@ class TitleTest {
     @DisplayName("title이 빈값이 들어올 경우 exception이 발생해야 한다.")
     void titleNullAndEmptyExceptionTest(String input) {
 
-
         // when & then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> Title.of(input))
             .withMessageMatching(ErrorCode.INVALID_TITLE_NULL.getMessage());
+    }
+
+    @Test
+    @DisplayName("title을 가지고 slug된 값을 반환할 수 있다.")
+    void titleToSlugTest() {
+
+        // given
+        String input = "How to train% your   dragon!test";
+        Title title = Title.of(input);
+
+        String expected = "how-to-train-your-dragon-test";
+
+        // when
+        String result = title.titleToSlug();
+
+        // then
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test

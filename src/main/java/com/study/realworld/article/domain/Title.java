@@ -11,6 +11,12 @@ import org.apache.commons.lang3.StringUtils;
 @Embeddable
 public class Title {
 
+    private static final String HYPHEN = "-";
+    private static final String BLANK = " ";
+
+    private static final String NONLATIN_REGEX = "[^\\w-]";
+    private static final String WHITESPACE_REGEX = "\\s+";
+
     @Column(name = "title", length = 50, nullable = false)
     private String title;
 
@@ -30,6 +36,12 @@ public class Title {
     private static void checkTitle(String title) {
         checkArgument(StringUtils.isNotBlank(title), ErrorCode.INVALID_TITLE_NULL);
         checkArgument(title.length() <= 50, ErrorCode.INVALID_TITLE_LENGTH);
+    }
+
+    public String titleToSlug() {
+        return title.toLowerCase()
+            .replaceAll(NONLATIN_REGEX, BLANK)
+            .replaceAll(WHITESPACE_REGEX, HYPHEN);
     }
 
     @Override
