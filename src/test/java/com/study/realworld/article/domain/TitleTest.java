@@ -1,5 +1,6 @@
 package com.study.realworld.article.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.study.realworld.global.exception.ErrorCode;
@@ -43,6 +44,22 @@ class TitleTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> Title.of(input))
             .withMessageMatching(ErrorCode.INVALID_TITLE_NULL.getMessage());
+    }
+
+    @Test
+    @DisplayName("equals hashCode 테스트")
+    void titleEqualsHashCodeTest() {
+
+        // given
+        String input = "title";
+
+        // when
+        Title result = Title.of(input);
+
+        // then
+        assertThat(result)
+            .isEqualTo(Title.of(input))
+            .hasSameHashCodeAs(Title.of(input));
     }
 
 }
