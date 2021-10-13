@@ -27,7 +27,11 @@ public enum ErrorCode {
     INVALID_EXPIRED_JWT(HttpStatus.BAD_REQUEST, "this jwt has expired."),
     INVALID_MALFORMED_JWT(HttpStatus.BAD_REQUEST, "this jwt was malformed."),
     INVALID_UNSUPPORTED_JWT(HttpStatus.BAD_REQUEST, "this jwt wat not supported."),
-    INVALID_ILLEGAL_ARGUMENT_JWT(HttpStatus.BAD_REQUEST, "this jwt was wrong.");
+    INVALID_ILLEGAL_ARGUMENT_JWT(HttpStatus.BAD_REQUEST, "this jwt was wrong."),
+
+    // article
+    INVALID_TITLE_LENGTH(HttpStatus.BAD_REQUEST, "title length must by less than 20 characters."),
+
     ;
 
     private final HttpStatus httpStatus;
