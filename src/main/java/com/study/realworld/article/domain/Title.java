@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.study.realworld.global.exception.ErrorCode;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import org.apache.commons.lang3.StringUtils;
 
 @Embeddable
 public class Title {
@@ -26,6 +27,7 @@ public class Title {
     }
 
     private static void checkTitle(String title) {
+        checkArgument(StringUtils.isNotBlank(title), ErrorCode.INVALID_TITLE_NULL);
         checkArgument(title.length() <= 50, ErrorCode.INVALID_TITLE_LENGTH);
     }
 

@@ -30,6 +30,7 @@ public enum ErrorCode {
     INVALID_ILLEGAL_ARGUMENT_JWT(HttpStatus.BAD_REQUEST, "this jwt was wrong."),
 
     // article
+    INVALID_TITLE_NULL(HttpStatus.BAD_REQUEST, "title must be provided"),
     INVALID_TITLE_LENGTH(HttpStatus.BAD_REQUEST, "title length must by less than 20 characters."),
 
     ;
