@@ -21,6 +21,10 @@ public class Slug {
         return new Slug(slug);
     }
 
+    public static Slug of(Title title) {
+        return of(title.titleToSlug());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
