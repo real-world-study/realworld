@@ -21,7 +21,7 @@ public class Slug {
         this.slug = slug;
     }
 
-    public static Slug of(String slug) {
+    static Slug of(String slug) {
         checkSlug(slug);
 
         return new Slug(slug);
@@ -32,7 +32,7 @@ public class Slug {
         checkArgument(slug.length() <= 50, ErrorCode.INVALID_SLUG_LENGTH);
     }
 
-    public static Slug of(Title title) {
+    public static Slug createSlugByTitle(Title title) {
         return of(title.titleToSlug());
     }
 

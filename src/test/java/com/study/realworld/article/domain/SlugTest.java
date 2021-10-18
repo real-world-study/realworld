@@ -56,7 +56,7 @@ class SlugTest {
         Slug expected = Slug.of("how-to-train-your-dragon-test");
 
         // when
-        Slug result = Slug.of(title);
+        Slug result = Slug.createSlugByTitle(title);
 
         // then
         assertThat(result).isEqualTo(expected);
