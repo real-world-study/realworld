@@ -2,17 +2,15 @@ package com.study.realworld.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
+import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
-import com.study.realworld.user.service.model.ProfileModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -96,12 +94,18 @@ class ProfileServiceTest {
             when(userService.findById(loginId)).thenReturn(loginUser);
             when(userService.findByUsername(followingUsername)).thenReturn(followUser);
 
+            Profile expected = Profile.Builder()
+                .username(followUser.username())
+                .bio(followUser.bio())
+                .image(followUser.image())
+                .following(true)
+                .build();
+
             // when
-            ProfileModel result = profileService.followUser(loginId, followingUsername);
+            Profile result = profileService.followUser(loginId, followingUsername);
 
             // then
-            assertThat(result.getProfile()).isEqualTo(loginUser.profile());
-            assertTrue(result.isFollow());
+            assertThat(result).isEqualTo(expected);
         }
 
     }
@@ -153,12 +157,18 @@ class ProfileServiceTest {
             when(userService.findByUsername(followingUsername)).thenReturn(followUser);
             loginUser.followingUser(followUser);
 
+            Profile expected = Profile.Builder()
+                .username(followUser.username())
+                .bio(followUser.bio())
+                .image(followUser.image())
+                .following(false)
+                .build();
+
             // when
-            ProfileModel result = profileService.unfollowUser(loginId, followingUsername);
+            Profile result = profileService.unfollowUser(loginId, followingUsername);
 
             // then
-            assertThat(result.getProfile()).isEqualTo(loginUser.profile());
-            assertFalse(result.isFollow());
+            assertThat(result).isEqualTo(expected);
         }
 
     }
@@ -172,14 +182,19 @@ class ProfileServiceTest {
         Username followingUsername = Username.of("followuser");
         when(userService.findById(loginId)).thenReturn(loginUser);
         when(userService.findByUsername(followingUsername)).thenReturn(followUser);
-        ProfileModel expected = ProfileModel.fromProfileAndFollowing(loginUser.profile(), false);
+
+        Profile expected = Profile.Builder()
+            .username(followUser.username())
+            .bio(followUser.bio())
+            .image(followUser.image())
+            .following(false)
+            .build();
 
         // when
-        ProfileModel result = profileService.findProfile(loginId, followingUsername);
+        Profile result = profileService.findProfile(loginId, followingUsername);
 
         // then
-        assertThat(result.getProfile()).isEqualTo(expected.getProfile());
-        assertThat(result.isFollow()).isEqualTo(expected.isFollow());
+        assertThat(result).isEqualTo(expected);
     }
 
 }

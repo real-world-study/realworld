@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Image;
+import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.Username;
-import com.study.realworld.user.service.model.ProfileModel;
 
 @JsonTypeName("profile")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -50,12 +50,12 @@ public class ProfileResponse {
         return following;
     }
 
-    public static ProfileResponse ofProfileModel(ProfileModel profileModel) {
+    public static ProfileResponse ofProfile(Profile profile) {
         return new ProfileResponse(
-            profileModel.getProfile().username(),
-            profileModel.getProfile().bio(),
-            profileModel.getProfile().image(),
-            profileModel.isFollow()
+            profile.username(),
+            profile.bio(),
+            profile.image(),
+            profile.isFollow()
         );
     }
 

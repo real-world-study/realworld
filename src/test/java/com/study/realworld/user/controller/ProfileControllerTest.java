@@ -24,7 +24,6 @@ import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.ProfileService;
-import com.study.realworld.user.service.model.ProfileModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,9 +67,10 @@ class ProfileControllerTest {
         Profile profile = Profile.Builder()
             .username(Username.of(username))
             .bio(Bio.of("bio"))
-            .image(Image.of("image")).build();
-        ProfileModel profileModel = ProfileModel.fromProfileAndFollowing(profile, false);
-        when(profileService.findProfile(any(), any(Username.class))).thenReturn(profileModel);
+            .image(Image.of("image"))
+            .following(false)
+            .build();
+        when(profileService.findProfile(any(), any(Username.class))).thenReturn(profile);
 
         // given
         final String URL = "/api/profiles/{username}";
@@ -113,9 +113,9 @@ class ProfileControllerTest {
         Profile profile = Profile.Builder()
             .username(Username.of(username))
             .bio(Bio.of("bio"))
-            .image(Image.of("image")).build();
-        ProfileModel profileModel = ProfileModel.fromProfileAndFollowing(profile, true);
-        when(profileService.followUser(any(), any(Username.class))).thenReturn(profileModel);
+            .image(Image.of("image"))
+            .following(true).build();
+        when(profileService.followUser(any(), any(Username.class))).thenReturn(profile);
 
         // given
         final String URL = "/api/profiles/{username}/follow";
@@ -158,9 +158,9 @@ class ProfileControllerTest {
         Profile profile = Profile.Builder()
             .username(Username.of(username))
             .bio(Bio.of("bio"))
-            .image(Image.of("image")).build();
-        ProfileModel profileModel = ProfileModel.fromProfileAndFollowing(profile, false);
-        when(profileService.unfollowUser(any(), any(Username.class))).thenReturn(profileModel);
+            .image(Image.of("image"))
+            .following(false).build();
+        when(profileService.unfollowUser(any(), any(Username.class))).thenReturn(profile);
 
         // given
         final String URL = "/api/profiles/{username}/follow";

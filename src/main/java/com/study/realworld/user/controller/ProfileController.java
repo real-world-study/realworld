@@ -1,9 +1,9 @@
 package com.study.realworld.user.controller;
 
 import com.study.realworld.user.controller.response.ProfileResponse;
+import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.ProfileService;
-import com.study.realworld.user.service.model.ProfileModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,20 +25,20 @@ public class ProfileController {
 
     @GetMapping("/profiles/{username}")
     public ResponseEntity<ProfileResponse> getProfile(@PathVariable String username, @AuthenticationPrincipal Long loginId) {
-        ProfileModel profileModel = profileService.findProfile(loginId, Username.of(username));
-        return ResponseEntity.ok().body(ProfileResponse.ofProfileModel(profileModel));
+        Profile profile = profileService.findProfile(loginId, Username.of(username));
+        return ResponseEntity.ok().body(ProfileResponse.ofProfile(profile));
     }
 
     @PostMapping("/profiles/{username}/follow")
     public ResponseEntity<ProfileResponse> follow(@PathVariable String username, @AuthenticationPrincipal Long loginId) {
-        ProfileModel profileModel = profileService.followUser(loginId, Username.of(username));
-        return ResponseEntity.ok().body(ProfileResponse.ofProfileModel(profileModel));
+        Profile profile = profileService.followUser(loginId, Username.of(username));
+        return ResponseEntity.ok().body(ProfileResponse.ofProfile(profile));
     }
 
     @DeleteMapping("/profiles/{username}/follow")
     public ResponseEntity<ProfileResponse> unfollow(@PathVariable String username, @AuthenticationPrincipal Long loginId) {
-        ProfileModel profileModel = profileService.unfollowUser(loginId, Username.of(username));
-        return ResponseEntity.ok().body(ProfileResponse.ofProfileModel(profileModel));
+        Profile profile = profileService.unfollowUser(loginId, Username.of(username));
+        return ResponseEntity.ok().body(ProfileResponse.ofProfile(profile));
     }
 
 }

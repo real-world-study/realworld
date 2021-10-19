@@ -95,6 +95,10 @@ public class User {
         return profile;
     }
 
+    public Profile profileByFollowee(User followee) {
+        return followee.profile.profileByFollowing(isFollow(followee));
+    }
+
     public boolean isFollow(User user) {
         return followingUsers.isFollow(user);
     }
