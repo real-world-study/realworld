@@ -99,7 +99,7 @@ public class User {
         return followee.profile.profileByFollowing(isFollow(followee));
     }
 
-    public boolean isFollow(User user) {
+    private boolean isFollow(User user) {
         return followingUsers.isFollow(user);
     }
 
