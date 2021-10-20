@@ -6,7 +6,7 @@ import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.service.ArticleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/articles")
+    @PostMapping("/articles")
     public ResponseEntity<ArticleResponse> createArticle(@RequestBody ArticleCreateRequest request,
         @AuthenticationPrincipal Long loginId) {
         Article article = articleService.createArticle(loginId, request.toArticleContent());
