@@ -29,6 +29,8 @@ import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,7 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -82,6 +85,10 @@ class ArticleControllerTest {
             .build();
         Article article = Article.from(articleContent, author);
 
+        LocalDateTime now = LocalDateTime.now();
+        ReflectionTestUtils.setField(article, "createdAt", now);
+        ReflectionTestUtils.setField(article, "updatedAt", now);
+
         when(articleService.createArticle(any(), any())).thenReturn(article);
 
         // given
@@ -94,7 +101,6 @@ class ArticleControllerTest {
             + "    \"tagList\": [\"tag1\", \"tag2\"]\n"
             + "  }\n"
             + "}";
-
 
         // when
         ResultActions resultActions = mockMvc.perform(post(URL)
@@ -113,6 +119,10 @@ class ArticleControllerTest {
             .andExpect(jsonPath("$.article.body", is(article.body().body())))
             .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0).name())))
             .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1).name())))
+            .andExpect(jsonPath("$.article.createdAt",
+                is(article.updatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")))))
+            .andExpect(jsonPath("$.article.updatedAt",
+                is(article.updatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")))))
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
             .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
@@ -131,14 +141,24 @@ class ArticleControllerTest {
                 responseFields(
                     fieldWithPath("article.slug").type(JsonFieldType.STRING).description("created article's slug"),
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("created article's title"),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("created article's description"),
+                    fieldWithPath("article.description").type(JsonFieldType.STRING)
+                        .description("created article's description"),
                     fieldWithPath("article.body").type(JsonFieldType.STRING).description("created article's body"),
-                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("created article's tag's list"),
+                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY)
+                        .description("created article's tag's list"),
+                    fieldWithPath("article.createdAt").type(JsonFieldType.STRING)
+                        .description("created article's create time"),
+                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING)
+                        .description("created article's update time"),
 
-                    fieldWithPath("article.author.username").type(JsonFieldType.STRING).description("author's username"),
-                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
-                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image").optional(),
-                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN).description("author's following")
+                    fieldWithPath("article.author.username").type(JsonFieldType.STRING)
+                        .description("author's username"),
+                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio")
+                        .optional(),
+                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image")
+                        .optional(),
+                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
+                        .description("author's following")
                 )
             ))
         ;
