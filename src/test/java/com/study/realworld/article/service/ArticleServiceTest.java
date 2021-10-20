@@ -64,12 +64,14 @@ class ArticleServiceTest {
         // setup & given
         Long userId = 1L;
         when(userService.findById(userId)).thenReturn(user);
+        Article expected = Article.from(articleContent, user);
+        when(articleRepository.save(expected)).thenReturn(expected);
 
         // when
         Article result = articleService.createArticle(userId, articleContent);
 
         // then
-        assertThat(result).isEqualTo(Article.from(articleContent, user));
+        assertThat(result).isEqualTo(expected);
     }
 
 }

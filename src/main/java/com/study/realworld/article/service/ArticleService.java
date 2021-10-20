@@ -20,7 +20,8 @@ public class ArticleService {
 
     public Article createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
-        return Article.from(articleContent, author);
+        Article article = Article.from(articleContent, author);
+        return articleRepository.save(article);
     }
 
 }
