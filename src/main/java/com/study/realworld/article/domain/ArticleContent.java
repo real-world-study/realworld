@@ -58,6 +58,11 @@ public class ArticleContent {
         return tags;
     }
 
+    public ArticleContent refreshTags(List<Tag> tags) {
+        this.tags = tags;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
