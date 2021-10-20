@@ -2,6 +2,7 @@ package com.study.realworld.article.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -28,6 +29,11 @@ public class Body {
 
     public static void checkBody(String body) {
         checkArgument(Objects.nonNull(body), ErrorCode.INVALID_BODY_NULL);
+    }
+
+    @JsonValue
+    public String body() {
+        return body;
     }
 
     @Override

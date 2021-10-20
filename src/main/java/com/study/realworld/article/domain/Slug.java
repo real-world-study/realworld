@@ -2,6 +2,7 @@ package com.study.realworld.article.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -34,6 +35,11 @@ public class Slug {
 
     public static Slug createSlugByTitle(Title title) {
         return of(title.titleToSlug());
+    }
+
+    @JsonValue
+    public String slug() {
+        return slug;
     }
 
     @Override

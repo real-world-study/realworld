@@ -2,6 +2,7 @@ package com.study.realworld.article.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.study.realworld.global.exception.ErrorCode;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -42,6 +43,11 @@ public class Title {
         return title.toLowerCase()
             .replaceAll(NONLATIN_REGEX, BLANK)
             .replaceAll(WHITESPACE_REGEX, HYPHEN);
+    }
+
+    @JsonValue
+    public String title() {
+        return title;
     }
 
     @Override

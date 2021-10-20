@@ -1,5 +1,6 @@
 package com.study.realworld.tag.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ public class Tag {
         return new Tag(name);
     }
 
+    @JsonValue
     public String name() {
         return name;
     }
