@@ -3,12 +3,13 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -194,28 +195,60 @@ class UserTest {
             .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
     }
 
-    @Test
-    @DisplayName("follow 여부를 확인할 수 있다.")
-    void isFollowTest() {
+    @Nested
+    @DisplayName("followee를 받아 profile 을 반환활 수 있다.")
+    class profileByFolloweeTest {
 
-        // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
-        user.followingUser(followingUser);
+        private User user;
+        private User followingUser;
 
-        // when
-        boolean result = user.isFollow(followingUser);
+        @BeforeEach
+        void beforeEach() {
+            user = User.Builder()
+                .profile(Username.of("username"), null, null)
+                .password(Password.of("password"))
+                .email(Email.of("email@email.com"))
+                .build();
+            followingUser = User.Builder()
+                .profile(Username.of("followingUser"), null, null)
+                .password(Password.of("password"))
+                .email(Email.of("email2@email2.com"))
+                .build();
+        }
 
-        // then
-        assertTrue(result);
+        @Test
+        @DisplayName("follow한 사람일 경우")
+        void isFollowing() {
+
+            // given
+            user.followingUser(followingUser);
+
+            Profile expected = Profile.Builder()
+                .username(Username.of("followingUser"))
+                .following(true).build();
+
+            // when
+            Profile result = user.profileByFollowee(followingUser);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("follow 안 한 사람일 경우")
+        void isNotFollowing() {
+
+            // given
+            Profile expected = Profile.Builder()
+                .username(Username.of("followingUser"))
+                .following(false).build();
+
+            // when
+            Profile result = user.profileByFollowee(followingUser);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
     }
 
     @Test
