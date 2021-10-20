@@ -14,7 +14,7 @@ import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.Username;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @JsonTypeName(value = "article")
@@ -37,12 +37,12 @@ public class ArticleResponse {
     private List<Tag> tags;
 
     @JsonProperty("createdAt")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private OffsetDateTime createdAt;
 
     @JsonProperty("updatedAt")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private LocalDateTime updatedAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    private OffsetDateTime updatedAt;
 
     @JsonProperty("author")
     private AuthorProfile authorProfile;
@@ -51,7 +51,7 @@ public class ArticleResponse {
     }
 
     public ArticleResponse(Slug slug, Title title, Description description, Body body,
-        List<Tag> tags, LocalDateTime createdAt, LocalDateTime updatedAt,
+        List<Tag> tags, OffsetDateTime createdAt, OffsetDateTime updatedAt,
         AuthorProfile authorProfile) {
         this.slug = slug;
         this.title = title;

@@ -1,6 +1,6 @@
 package com.study.realworld.global.domain;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -14,28 +14,28 @@ public abstract class BaseTimeEntity {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private OffsetDateTime deletedAt;
 
-    public LocalDateTime createdAt() {
+    public OffsetDateTime createdAt() {
         return createdAt;
     }
 
-    public LocalDateTime updatedAt() {
+    public OffsetDateTime updatedAt() {
         return updatedAt;
     }
 
-    public LocalDateTime deletedAt() {
+    public OffsetDateTime deletedAt() {
         return deletedAt;
     }
 
-    public void saveDeletedTime(LocalDateTime deletedAt) {
+    public void saveDeletedTime(OffsetDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

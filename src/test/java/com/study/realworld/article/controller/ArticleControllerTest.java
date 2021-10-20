@@ -2,6 +2,8 @@ package com.study.realworld.article.controller;
 
 import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentRequest;
 import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentResponse;
+import static java.time.ZoneOffset.UTC;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,8 +31,7 @@ import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,7 +86,7 @@ class ArticleControllerTest {
             .build();
         Article article = Article.from(articleContent, author);
 
-        LocalDateTime now = LocalDateTime.now();
+        OffsetDateTime now = OffsetDateTime.now();
         ReflectionTestUtils.setField(article, "createdAt", now);
         ReflectionTestUtils.setField(article, "updatedAt", now);
 
@@ -120,9 +121,9 @@ class ArticleControllerTest {
             .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0).name())))
             .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1).name())))
             .andExpect(jsonPath("$.article.createdAt",
-                is(article.updatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")))))
+                is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.updatedAt",
-                is(article.updatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")))))
+                is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
             .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
