@@ -7,6 +7,7 @@ import com.study.realworld.tag.service.TagService;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ArticleService {
@@ -21,6 +22,7 @@ public class ArticleService {
         this.tagService = tagService;
     }
 
+    @Transactional
     public Article createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
         articleContent.refreshTags(tagService.refreshTagByExistedTag(articleContent.tags()));
