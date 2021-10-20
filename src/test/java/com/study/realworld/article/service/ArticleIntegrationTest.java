@@ -5,14 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.ArticleContent;
-import com.study.realworld.article.domain.ArticleRepository;
 import com.study.realworld.article.domain.Body;
 import com.study.realworld.article.domain.Description;
 import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.tag.domain.TagRepository;
-import com.study.realworld.tag.service.TagService;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -36,12 +34,6 @@ public class ArticleIntegrationTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private ArticleRepository articleRepository;
 
     @Autowired
     private TagRepository tagRepository;

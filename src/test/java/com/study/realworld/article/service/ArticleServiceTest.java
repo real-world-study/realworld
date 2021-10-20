@@ -11,6 +11,7 @@ import com.study.realworld.article.domain.Description;
 import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.tag.domain.Tag;
+import com.study.realworld.tag.service.TagService;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -33,6 +34,9 @@ class ArticleServiceTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private TagService tagService;
 
     @InjectMocks
     private ArticleService articleService;
@@ -64,6 +68,8 @@ class ArticleServiceTest {
         // setup & given
         Long userId = 1L;
         when(userService.findById(userId)).thenReturn(user);
+        when(tagService.refreshTagByExistedTag(articleContent.tags()))
+            .thenReturn(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")));
         Article expected = Article.from(articleContent, user);
         when(articleRepository.save(expected)).thenReturn(expected);
 

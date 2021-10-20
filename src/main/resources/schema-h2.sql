@@ -1,4 +1,6 @@
-CREATE TABLE user
+
+
+CREATE TABLE IF NOT EXISTS user
 (
     id              bigint          NOT NULL AUTO_INCREMENT,
     email           varchar(50)     NOT NULL,
@@ -14,7 +16,7 @@ CREATE TABLE user
     CONSTRAINT unique_username UNIQUE (username)
 );
 
-CREATE TABLE follow
+CREATE TABLE IF NOT EXISTS follow
 (
     user_id         bigint          NOT NULL,
     follower_id     bigint          NOT NULL,
@@ -23,7 +25,7 @@ CREATE TABLE follow
     CONSTRAINT fk_follow_to_follower_id FOREIGN KEY (follower_id) REFERENCES user (id) ON DELETE CASCADE
 );
 
-CREATE TABLE article
+CREATE TABLE IF NOT EXISTS article
 (
     id              bigint          NOT NULL AUTO_INCREMENT,
     user_id         bigint          NOT NULL,
@@ -39,7 +41,7 @@ CREATE TABLE article
     CONSTRAINT unique_user_id_slug UNIQUE (user_id, slug)
 );
 
-CREATE TABLE comment
+CREATE TABLE IF NOT EXISTS comment
 (
     id              bigint          NOT NULL AUTO_INCREMENT,
     user_id         bigint          NOT NULL,
@@ -53,7 +55,7 @@ CREATE TABLE comment
     CONSTRAINT fk_comment_to_article_id FOREIGN KEY (article_id) REFERENCES article (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE favorite
+CREATE TABLE IF NOT EXISTS favorite
 (
     user_id         bigint          NOT NULL,
     article_id     bigint          NOT NULL,
@@ -62,14 +64,14 @@ CREATE TABLE favorite
     CONSTRAINT fk_favorite_to_article_id FOREIGN KEY (article_id) REFERENCES article (id) ON DELETE CASCADE
 );
 
-CREATE TABLE tag
+CREATE TABLE IF NOT EXISTS tag
 (
     id              bigint          NOT NULL AUTO_INCREMENT,
     name            varchar(20)     NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE article_tag
+CREATE TABLE IF NOT EXISTS article_tag
 (
     article_id      bigint          NOT NULL,
     tag_id          bigint          NOT NULL,

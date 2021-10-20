@@ -25,8 +25,8 @@ public class ArticleService {
     @Transactional
     public Article createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
-        articleContent.refreshTags(tagService.refreshTagByExistedTag(articleContent.tags()));
 
+        articleContent.refreshTags(tagService.refreshTagByExistedTag(articleContent.tags()));
         Article article = Article.from(articleContent, author);
         return articleRepository.save(article);
     }
