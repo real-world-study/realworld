@@ -1,5 +1,6 @@
 package com.study.realworld.article.domain;
 
+import com.study.realworld.global.domain.BaseTimeEntity;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.User;
 import java.util.List;
@@ -13,10 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "article")
-public class Article {
+@Where(clause = "deleted_at is null")
+public class Article extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
