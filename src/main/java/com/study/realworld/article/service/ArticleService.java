@@ -25,6 +25,12 @@ public class ArticleService {
         this.tagService = tagService;
     }
 
+    @Transactional(readOnly = true)
+    public Article findBySlug(Slug slug) {
+        return articleRepository.findByArticleContentSlugTitleSlug(slug)
+            .orElseThrow(() -> new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
+    }
+
     @Transactional
     public Article createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
@@ -44,7 +50,7 @@ public class ArticleService {
 
     private Article findByAuthorAndSlug(User author, Slug slug) {
         return articleRepository.findByAuthorAndArticleContentSlugTitleSlug(author, slug)
-            .orElseThrow(() -> new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
+            .orElseThrow(() -> new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_AUTHOR_AND_SLUG));
     }
 
 }

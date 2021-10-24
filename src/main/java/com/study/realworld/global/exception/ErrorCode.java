@@ -38,6 +38,7 @@ public enum ErrorCode {
     INVALID_DESCRIPTION_LENGTH(HttpStatus.BAD_REQUEST, "description length must by less than 255 characters."),
     INVALID_BODY_NULL(HttpStatus.BAD_REQUEST, "body must be provided"),
 
+    ARTICLE_NOT_FOUND_BY_AUTHOR_AND_SLUG(HttpStatus.BAD_REQUEST, "article is not found by author and slug"),
     ARTICLE_NOT_FOUND_BY_SLUG(HttpStatus.BAD_REQUEST, "article is not found by slug"),
     ;
 

@@ -68,6 +68,43 @@ class ArticleServiceTest {
             .build();
     }
 
+    @Nested
+    @DisplayName("findBySlug Article 단일 조회 테스트")
+    class findBySlugTest {
+
+        @Test
+        @DisplayName("slug를 가지고 article을 조회할 수 있다.")
+        void findBySlugSuccessTest() {
+
+            // given
+            Article expected = Article.from(articleContent, user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(expected.slug()))
+                .thenReturn(Optional.of(expected));
+
+            // when
+            Article result = articleService.findBySlug(expected.slug());
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("없는 article을 조회하려고할 때 exception이 발생해야 한다.")
+        void findBySlugExceptionTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(article.slug()))
+                .thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.findBySlug(article.slug()))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+    }
+
     @Test
     @DisplayName("user id를 가지고 article을 생성할 수 있다.")
     void createArticleTest() {
@@ -88,7 +125,7 @@ class ArticleServiceTest {
     }
 
     @Nested
-    @DisplayName("deleteARticleBySlug Article 삭제 테스트")
+    @DisplayName("deleteArticleBySlug Article 삭제 테스트")
     class deleteArticleBySlug {
 
         @Test
@@ -121,7 +158,7 @@ class ArticleServiceTest {
             // when & then
             assertThatExceptionOfType(BusinessException.class)
                 .isThrownBy(() -> articleService.deleteArticleByAuthorAndSlug(userId, slug))
-                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_AUTHOR_AND_SLUG.getMessage());
         }
 
         @Test
