@@ -1,5 +1,6 @@
 package com.study.realworld.user.domain;
 
+import com.study.realworld.global.domain.BaseTimeEntity;
 import java.util.Objects;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -7,11 +8,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.Where;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "user")
-public class User {
+@Where(clause = "deleted_at is null")
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,7 +98,11 @@ public class User {
         return profile;
     }
 
-    public boolean isFollow(User user) {
+    public Profile profileByFollowee(User followee) {
+        return followee.profile.profileByFollowing(isFollow(followee));
+    }
+
+    private boolean isFollow(User user) {
         return followingUsers.isFollow(user);
     }
 

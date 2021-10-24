@@ -7,6 +7,7 @@ import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.tag.domain.TagRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +34,21 @@ class TagServiceTest {
 
         // when
         List<Tag> result = tagService.findAll();
+
+        // then
+        assertThat(result).isEqualTo(tags);
+    }
+
+    @Test
+    @DisplayName("이미 존재하는 tag를 가지고 refresh할 수 있다.")
+    void refreshTagByExistedTagTest() {
+
+        // given
+        List<Tag> tags = Arrays.asList(Tag.of("tag1"), Tag.of("tag2"), Tag.of("tag3"));
+        when(tagRepository.findByName("tag1")).thenReturn(Optional.of(Tag.of("tag1")));
+
+        // when
+        List<Tag> result = tagService.refreshTagByExistedTag(tags);
 
         // then
         assertThat(result).isEqualTo(tags);

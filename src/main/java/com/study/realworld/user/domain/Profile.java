@@ -3,6 +3,7 @@ package com.study.realworld.user.domain;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.Transient;
 
 @Embeddable
 public class Profile {
@@ -16,13 +17,17 @@ public class Profile {
     @Embedded
     private Image image;
 
+    @Transient
+    private boolean following;
+
     protected Profile() {
     }
 
-    private Profile(Username username, Bio bio, Image image) {
+    private Profile(Username username, Bio bio, Image image, boolean following) {
         this.username = username;
         this.bio = bio;
         this.image = image;
+        this.following = following;
     }
 
     public Username username() {
@@ -37,6 +42,10 @@ public class Profile {
         return image;
     }
 
+    public boolean isFollow() {
+        return following;
+    }
+
     public void changeUsername(Username username) {
         this.username = username;
     }
@@ -47,6 +56,11 @@ public class Profile {
 
     public void changeImage(Image image) {
         this.image = image;
+    }
+
+    public Profile profileByFollowing(boolean following) {
+        this.following = following;
+        return this;
     }
 
     @Override
@@ -76,6 +90,7 @@ public class Profile {
         private Username username;
         private Bio bio;
         private Image image;
+        private boolean following;
 
         private Builder() {
         }
@@ -95,8 +110,13 @@ public class Profile {
             return this;
         }
 
+        public Builder following(boolean following) {
+            this.following = following;
+            return this;
+        }
+
         public Profile build() {
-            return new Profile(username, bio, image);
+            return new Profile(username, bio, image, following);
         }
     }
 
