@@ -103,7 +103,7 @@ class ArticleServiceTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> articleService.deleteArticleBySlug(userId, slug))
+                .isThrownBy(() -> articleService.deleteArticleByAuthorAndSlug(userId, slug))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
         }
 
@@ -120,7 +120,7 @@ class ArticleServiceTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> articleService.deleteArticleBySlug(userId, slug))
+                .isThrownBy(() -> articleService.deleteArticleByAuthorAndSlug(userId, slug))
                 .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
         }
 
@@ -136,7 +136,7 @@ class ArticleServiceTest {
             when(articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, slug))
                 .thenReturn(Optional.of(article));
             OffsetDateTime start = OffsetDateTime.now();
-            articleService.deleteArticleBySlug(userId, slug);
+            articleService.deleteArticleByAuthorAndSlug(userId, slug);
             OffsetDateTime end = OffsetDateTime.now();
 
             // when

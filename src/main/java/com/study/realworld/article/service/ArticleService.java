@@ -35,7 +35,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteArticleBySlug(Long userId, Slug slug) {
+    public void deleteArticleByAuthorAndSlug(Long userId, Slug slug) {
         User author = userService.findById(userId);
         Article article = findByAuthorAndSlug(author, slug);
 
