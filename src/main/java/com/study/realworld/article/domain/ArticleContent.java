@@ -59,6 +59,18 @@ public class ArticleContent {
         return tags;
     }
 
+    public void changeTitle(Title title) {
+        slugTitle.changeTitle(title);
+    }
+
+    public void changeDescription(Description description) {
+        this.description = description;
+    }
+
+    public void changeBody(Body body) {
+        this.body = body;
+    }
+
     public ArticleContent refreshTags(List<Tag> tags) {
         this.tags = tags;
         return this;
