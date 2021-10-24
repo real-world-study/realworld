@@ -70,6 +70,18 @@ public class Article extends BaseTimeEntity {
         return author;
     }
 
+    public void changeTitle(Title title) {
+        articleContent.changeTitle(title);
+    }
+
+    public void changeDescription(Description description) {
+        articleContent.changeDescription(description);
+    }
+
+    public void changeBody(Body body) {
+        articleContent.changeBody(body);
+    }
+
     public void deleteArticle() {
         saveDeletedTime(OffsetDateTime.now());
     }

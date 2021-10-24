@@ -1,6 +1,7 @@
 package com.study.realworld.article.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.Bio;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 class ArticleTest {
 
     private User author;
+    private ArticleContent articleContent;
 
     @BeforeEach
     void beforeEach() {
@@ -25,6 +27,12 @@ class ArticleTest {
             .email(Email.of("email@email.com"))
             .password(Password.of("password"))
             .profile(Username.of("username"), Bio.of("bio"), Image.of("image"))
+            .build();
+        articleContent = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("title")))
+            .description(Description.of("description"))
+            .body(Body.of("body"))
+            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
             .build();
     }
 
@@ -34,15 +42,58 @@ class ArticleTest {
     }
 
     @Test
+    @DisplayName("title을 변경할 수 있다.")
+    void changeTitleTest() {
+
+        // given
+        Title changeTitle = Title.of("title title");
+        Article article = Article.from(articleContent, author);
+
+        // when
+        article.changeTitle(changeTitle);
+
+        // then
+        assertAll(
+            () -> assertThat(article.title()).isEqualTo(changeTitle),
+            () -> assertThat(article.slug()).isEqualTo(Slug.of(changeTitle.titleToSlug()))
+        );
+    }
+
+    @Test
+    @DisplayName("description을 변경할 수 있다.")
+    void changeDescriptionTest() {
+
+        // given
+        Description changeDescription = Description.of("new description");
+        Article article = Article.from(articleContent, author);
+
+        // when
+        article.changeDescription(changeDescription);
+
+        // then
+        assertThat(article.description()).isEqualTo(changeDescription);
+    }
+
+    @Test
+    @DisplayName("body를 변경할 수 있다.")
+    void changeBodyTest() {
+
+        // given
+        Body changeBody = Body.of("new body");
+        Article article = Article.from(articleContent, author);
+
+        // when
+        article.changeBody(changeBody);
+
+        // then
+        assertThat(article.body()).isEqualTo(changeBody);
+    }
+
+    @Test
     @DisplayName("Article을 삭제할 때 삭제 시간을 저장할 수 있다.")
     void deleteArticleTest() {
 
         // given
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title")))
-            .description(Description.of("description"))
-            .body(Body.of("body"))
-            .build();
         Article article = Article.from(articleContent, author);
         OffsetDateTime startTime = OffsetDateTime.now();
         article.deleteArticle();
@@ -58,14 +109,6 @@ class ArticleTest {
     @Test
     @DisplayName("equals hashCode 테스트")
     void articleEqualsHashCodeTest() {
-
-        // given
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title")))
-            .description(Description.of("description"))
-            .body(Body.of("body"))
-            .tags(Arrays.asList(Tag.of("tag")))
-            .build();
 
         // when
         Article result = Article.from(articleContent, author);
