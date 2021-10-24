@@ -4,6 +4,7 @@ import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.ArticleRepository;
 import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.service.model.ArticleUpdateModel;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.tag.service.TagService;
@@ -38,6 +39,18 @@ public class ArticleService {
         articleContent.refreshTags(tagService.refreshTagByExistedTag(articleContent.tags()));
         Article article = Article.from(articleContent, author);
         return articleRepository.save(article);
+    }
+
+    @Transactional
+    public Article updateArticle(Long userId, Slug slug, ArticleUpdateModel updateArticle) {
+        User author = userService.findById(userId);
+        Article article = findByAuthorAndSlug(author, slug);
+
+        updateArticle.getTitle().ifPresent(article::changeTitle);
+        updateArticle.getDescription().ifPresent(article::changeDescription);
+        updateArticle.getBody().ifPresent(article::changeBody);
+
+        return article;
     }
 
     @Transactional
