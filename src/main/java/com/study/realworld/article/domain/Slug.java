@@ -22,7 +22,7 @@ public class Slug {
         this.slug = slug;
     }
 
-    static Slug of(String slug) {
+    public static Slug of(String slug) {
         checkSlug(slug);
 
         return new Slug(slug);

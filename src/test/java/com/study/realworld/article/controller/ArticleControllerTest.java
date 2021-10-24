@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -161,6 +162,29 @@ class ArticleControllerTest {
                     fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
                         .description("author's following")
                 )
+            ))
+        ;
+    }
+
+    @Test
+    void deleteArticleTest() throws Exception {
+
+        // given
+        String slug = "title-title-title";
+        final String URL = "/api/articles/{slug}";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(delete(URL, slug)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+
+            .andDo(document("article-delete",
+                getDocumentRequest(),
+                getDocumentResponse()
             ))
         ;
     }

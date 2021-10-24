@@ -3,9 +3,12 @@ package com.study.realworld.article.controller;
 import com.study.realworld.article.controller.request.ArticleCreateRequest;
 import com.study.realworld.article.controller.response.ArticleResponse;
 import com.study.realworld.article.domain.Article;
+import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.service.ArticleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +29,11 @@ public class ArticleController {
         @AuthenticationPrincipal Long loginId) {
         Article article = articleService.createArticle(loginId, request.toArticleContent());
         return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
+    }
+
+    @DeleteMapping("/articles/{slug}")
+    public void deleteArticle(@PathVariable String slug, @AuthenticationPrincipal Long loginId) {
+        articleService.deleteArticleByAuthorAndSlug(loginId, Slug.of(slug));
     }
 
 }
