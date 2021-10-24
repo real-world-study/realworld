@@ -13,6 +13,23 @@ class SlugTitleTest {
     }
 
     @Test
+    @DisplayName("SlugTitle을 받아 변경할 수 있다.")
+    void changeTitleTest() {
+
+        // given
+        SlugTitle slugTitle = SlugTitle.of(Title.of("title title title"));
+        Title title = Title.of("title title");
+
+        SlugTitle expected = SlugTitle.of(title);
+
+        // when
+        slugTitle.changeTitle(title);
+
+        // then
+        assertThat(slugTitle).isEqualTo(expected);
+    }
+
+    @Test
     @DisplayName("equals hashCode 테스트")
     void slugTitleEqualsHashCodeTest() {
 
