@@ -9,6 +9,7 @@ import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,28 @@ class ArticleTest {
     @Test
     void articleTest() {
         Article article = new Article();
+    }
+
+    @Test
+    @DisplayName("Article을 삭제할 때 삭제 시간을 저장할 수 있다.")
+    void deleteArticleTest() {
+
+        // given
+        ArticleContent articleContent = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("title")))
+            .description(Description.of("description"))
+            .body(Body.of("body"))
+            .build();
+        Article article = Article.from(articleContent, author);
+        OffsetDateTime startTime = OffsetDateTime.now();
+        article.deleteArticle();
+        OffsetDateTime endTime = OffsetDateTime.now();
+
+        // when
+        OffsetDateTime result = article.deletedAt();
+
+        // then
+        assertThat(result).isAfter(startTime).isBefore(endTime);
     }
 
     @Test

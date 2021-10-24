@@ -3,6 +3,7 @@ package com.study.realworld.article.domain;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.User;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Embedded;
@@ -66,6 +67,10 @@ public class Article extends BaseTimeEntity {
 
     public User author() {
         return author;
+    }
+
+    public void deleteArticle() {
+        saveDeletedTime(OffsetDateTime.now());
     }
 
     @Override
