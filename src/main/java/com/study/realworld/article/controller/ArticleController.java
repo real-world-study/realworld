@@ -42,7 +42,8 @@ public class ArticleController {
 
     @PutMapping("/articles/{slug}")
     public ResponseEntity<ArticleResponse> updateArticle(@PathVariable String slug,
-        @RequestBody ArticleUpdateRequest request, @AuthenticationPrincipal Long loginId) {
+        @RequestBody ArticleUpdateRequest request,
+        @AuthenticationPrincipal Long loginId) {
         Article article = articleService.updateArticle(loginId, Slug.of(slug), request.toArticleUpdateModel());
         return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
     }
