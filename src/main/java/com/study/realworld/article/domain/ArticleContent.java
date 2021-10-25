@@ -26,7 +26,7 @@ public class ArticleContent {
     @JoinTable(name = "article_tag",
         joinColumns = @JoinColumn(name = "article_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Tag> tags;
 
     public ArticleContent() {
