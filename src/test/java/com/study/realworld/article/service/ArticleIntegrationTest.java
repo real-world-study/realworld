@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.ArticleContent;
+import com.study.realworld.article.domain.ArticleRepository;
 import com.study.realworld.article.domain.Body;
 import com.study.realworld.article.domain.Description;
 import com.study.realworld.article.domain.SlugTitle;
@@ -17,6 +18,7 @@ import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
 import java.util.Arrays;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,9 +41,13 @@ public class ArticleIntegrationTest {
     private TagRepository tagRepository;
 
     @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
     private EntityManager entityManager;
 
     private User user;
+    private ArticleContent articleContent;
 
     @BeforeEach
     void beforeEachTest() {
@@ -49,6 +55,12 @@ public class ArticleIntegrationTest {
             .profile(Username.of("username"), null, null)
             .email(Email.of("email@email.com"))
             .password(Password.of("password"))
+            .build();
+        articleContent = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("title")))
+            .description(Description.of("description"))
+            .body(Body.of("body"))
+            .tags(Arrays.asList(Tag.of("tag")))
             .build();
     }
 
@@ -60,12 +72,6 @@ public class ArticleIntegrationTest {
         Tag existTag = Tag.of("tag");
         Tag expected = tagRepository.save(existTag);
         User author = userService.join(user);
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title")))
-            .description(Description.of("description"))
-            .body(Body.of("body"))
-            .tags(Arrays.asList(Tag.of("tag")))
-            .build();
         entityManager.clear();
 
         // when
@@ -77,4 +83,24 @@ public class ArticleIntegrationTest {
             () -> assertThat(tagRepository.findAll().size()).isEqualTo(1)
         );
     }
+
+    @Test
+    @DisplayName("author와 slug로 찾은 Article을 soft delete 할 수 있다.")
+    void deleteArticleBySlugSuccessTest() {
+
+        // given
+        userService.join(user);
+        Article article = Article.from(articleContent, user);
+        articleRepository.save(article);
+        entityManager.clear();
+
+        articleService.deleteArticleByAuthorAndSlug(user.id(), article.slug());
+
+        // when
+        Optional<Article> result = articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, article.slug());
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
 }

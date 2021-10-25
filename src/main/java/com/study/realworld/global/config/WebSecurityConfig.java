@@ -1,5 +1,6 @@
 package com.study.realworld.global.config;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 import com.study.realworld.security.JwtAuthenticationEntryPoint;
@@ -61,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             .authorizeRequests()
             .antMatchers(POST, "/api/users", "/api/users/login").permitAll()
+            .antMatchers(GET, "/api/articles/{slug}").permitAll()
             .anyRequest().authenticated()
             .and()
 

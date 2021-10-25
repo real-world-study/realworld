@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -25,7 +26,7 @@ public class ArticleContent {
     @JoinTable(name = "article_tag",
         joinColumns = @JoinColumn(name = "article_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Tag> tags;
 
     public ArticleContent() {
@@ -56,6 +57,18 @@ public class ArticleContent {
 
     public List<Tag> tags() {
         return tags;
+    }
+
+    public void changeTitle(Title title) {
+        slugTitle.changeTitle(title);
+    }
+
+    public void changeDescription(Description description) {
+        this.description = description;
+    }
+
+    public void changeBody(Body body) {
+        this.body = body;
     }
 
     public ArticleContent refreshTags(List<Tag> tags) {

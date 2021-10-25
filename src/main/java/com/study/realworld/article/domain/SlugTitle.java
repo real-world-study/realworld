@@ -33,6 +33,12 @@ public class SlugTitle {
         return title;
     }
 
+    public void changeTitle(Title title) {
+        SlugTitle changeSlugTitle = SlugTitle.of(title);
+        this.title = changeSlugTitle.title;
+        this.slug = changeSlugTitle.slug;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

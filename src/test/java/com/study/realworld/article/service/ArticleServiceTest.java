@@ -1,6 +1,8 @@
 package com.study.realworld.article.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.article.domain.Article;
@@ -8,8 +10,12 @@ import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.ArticleRepository;
 import com.study.realworld.article.domain.Body;
 import com.study.realworld.article.domain.Description;
+import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
+import com.study.realworld.article.service.model.ArticleUpdateModel;
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.tag.service.TagService;
 import com.study.realworld.user.domain.Email;
@@ -17,9 +23,12 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -61,6 +70,43 @@ class ArticleServiceTest {
             .build();
     }
 
+    @Nested
+    @DisplayName("findBySlug Article 단일 조회 테스트")
+    class findBySlugTest {
+
+        @Test
+        @DisplayName("slug를 가지고 article을 조회할 수 있다.")
+        void findBySlugSuccessTest() {
+
+            // given
+            Article expected = Article.from(articleContent, user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(expected.slug()))
+                .thenReturn(Optional.of(expected));
+
+            // when
+            Article result = articleService.findBySlug(expected.slug());
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("없는 article을 조회하려고할 때 exception이 발생해야 한다.")
+        void findBySlugExceptionTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(article.slug()))
+                .thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.findBySlug(article.slug()))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+    }
+
     @Test
     @DisplayName("user id를 가지고 article을 생성할 수 있다.")
     void createArticleTest() {
@@ -78,6 +124,169 @@ class ArticleServiceTest {
 
         // then
         assertThat(result).isEqualTo(expected);
+    }
+
+    @Nested
+    @DisplayName("updateARticle Article 변경 테스트")
+    class updateArticle {
+
+        private ArticleUpdateModel articleUpdateModel;
+
+        @Test
+        @DisplayName("유저가 존재하지 않으면 exception이 발생해야 한다.")
+        void userNotFoundExceptionTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 2L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.updateArticle(userId, slug, articleUpdateModel))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("Article이 존재하지 않으면 exception이 발생해야 한다.")
+        void updateArticleBySlugExceptionTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, slug)).thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.updateArticle(userId, slug, articleUpdateModel))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_AUTHOR_AND_SLUG.getMessage());
+        }
+
+        @Test
+        @DisplayName("title이 변경될 수 있다.")
+        void changeTitleTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, article.slug()))
+                .thenReturn(Optional.of(article));
+            articleUpdateModel = new ArticleUpdateModel(Title.of("title title"), null, null);
+
+            // when
+            articleService.updateArticle(userId, article.slug(), articleUpdateModel);
+
+            // then
+            assertAll(
+                () -> assertThat(article.title()).isEqualTo(Title.of("title title")),
+                () -> assertThat(article.slug()).isEqualTo(Slug.of("title-title"))
+            );
+        }
+
+        @Test
+        @DisplayName("description이 변경될 수 있다.")
+        void changeDescriptionTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, article.slug()))
+                .thenReturn(Optional.of(article));
+            Description changeDescription = Description.of("new descriptioin");
+            articleUpdateModel = new ArticleUpdateModel(null, changeDescription, null);
+
+            // when
+            articleService.updateArticle(userId, article.slug(), articleUpdateModel);
+
+            // then
+            assertThat(article.description()).isEqualTo(changeDescription);
+        }
+
+        @Test
+        @DisplayName("body가 변경될 수 있다.")
+        void changeBodyTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, article.slug()))
+                .thenReturn(Optional.of(article));
+            Body changeBody = Body.of("new body");
+            articleUpdateModel = new ArticleUpdateModel(null, null, changeBody);
+
+            // when
+            articleService.updateArticle(userId, article.slug(), articleUpdateModel);
+
+            // then
+            assertThat(article.body()).isEqualTo(changeBody);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("deleteArticleByAuthorAndSlug Article 삭제 테스트")
+    class deleteArticleByAuthorAndSlug {
+
+        @Test
+        @DisplayName("유저가 존재하지 않으면 exception이 발생해야 한다.")
+        void userNotFoundExceptionTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 2L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.deleteArticleByAuthorAndSlug(userId, slug))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("Article이 존재하지 않으면 exception이 발생해야 한다.")
+        void deleteArticleBySlugExceptionTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, slug)).thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.deleteArticleByAuthorAndSlug(userId, slug))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_AUTHOR_AND_SLUG.getMessage());
+        }
+
+        @Test
+        @DisplayName("Article을 삭제할 수 있다.")
+        void deleteArticleBySlugSuccessTest() {
+
+            // given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByAuthorAndArticleContentSlugTitleSlug(user, slug))
+                .thenReturn(Optional.of(article));
+            OffsetDateTime start = OffsetDateTime.now();
+            articleService.deleteArticleByAuthorAndSlug(userId, slug);
+            OffsetDateTime end = OffsetDateTime.now();
+
+            // when
+            OffsetDateTime result = article.deletedAt();
+
+            // then
+            assertThat(result).isAfter(start).isBefore(end);
+        }
     }
 
 }

@@ -3,10 +3,12 @@ package com.study.realworld.article.domain;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.User;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,7 +31,7 @@ public class Article extends BaseTimeEntity {
     private ArticleContent articleContent;
 
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user_id"))
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
     protected Article() {
@@ -66,6 +68,22 @@ public class Article extends BaseTimeEntity {
 
     public User author() {
         return author;
+    }
+
+    public void changeTitle(Title title) {
+        articleContent.changeTitle(title);
+    }
+
+    public void changeDescription(Description description) {
+        articleContent.changeDescription(description);
+    }
+
+    public void changeBody(Body body) {
+        articleContent.changeBody(body);
+    }
+
+    public void deleteArticle() {
+        saveDeletedTime(OffsetDateTime.now());
     }
 
     @Override

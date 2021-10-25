@@ -6,10 +6,26 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.study.realworld.tag.domain.Tag;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ArticleContentTest {
+
+    private Title title;
+    private SlugTitle slugTitle;
+    private Description description;
+    private Body body;
+    private List<Tag> tags;
+
+    @BeforeEach
+    void beforeEach() {
+        title = Title.of("title");
+        slugTitle = SlugTitle.of(title);
+        description = Description.of("description");
+        body = Body.of("body");
+        tags = Arrays.asList(Tag.of("tag1"), Tag.of("tag2"));
+    }
 
     @Test
     void articleContentTest() {
@@ -17,15 +33,59 @@ class ArticleContentTest {
     }
 
     @Test
-    @DisplayName("builder test")
-    void articleContentBuilderTest() {
+    @DisplayName("title을 변경할 수 있다.")
+    void changeTitleTest() {
 
         // given
-        Title title = Title.of("title");
-        SlugTitle slugTitle = SlugTitle.of(title);
-        Description description = Description.of("description");
-        Body body = Body.of("body");
-        List<Tag> tags = Arrays.asList(Tag.of("tag1"), Tag.of("tag2"));
+        Title changeTitle = Title.of("title title");
+        ArticleContent articleContent = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(title)).build();
+
+        // when
+        articleContent.changeTitle(changeTitle);
+
+        // then
+        assertAll(
+            () -> assertThat(articleContent.title()).isEqualTo(changeTitle),
+            () -> assertThat(articleContent.slug()).isEqualTo(Slug.of(changeTitle.titleToSlug()))
+        );
+    }
+
+    @Test
+    @DisplayName("description을 변경할 수 있다.")
+    void changeDescriptionTest() {
+
+        // given
+        Description changeDescription = Description.of("new description");
+        ArticleContent articleContent = ArticleContent.builder()
+            .description(description).build();
+
+        // when
+        articleContent.changeDescription(changeDescription);
+
+        // then
+        assertThat(articleContent.description()).isEqualTo(changeDescription);
+    }
+
+    @Test
+    @DisplayName("body를 변경할 수 있다.")
+    void changeBodyTest() {
+
+        // given
+        Body changeBody = Body.of("new body");
+        ArticleContent articleContent = ArticleContent.builder()
+            .body(body).build();
+
+        // when
+        articleContent.changeBody(changeBody);
+
+        // then
+        assertThat(articleContent.body()).isEqualTo(changeBody);
+    }
+
+    @Test
+    @DisplayName("builder test")
+    void articleContentBuilderTest() {
 
         // when
         ArticleContent result = ArticleContent.builder()
@@ -48,13 +108,6 @@ class ArticleContentTest {
     @Test
     @DisplayName("equals hashCode 테스트")
     void articleContentEqualsHashCodeTest() {
-
-        // given
-        Title title = Title.of("title");
-        SlugTitle slugTitle = SlugTitle.of(title);
-        Description description = Description.of("description");
-        Body body = Body.of("body");
-        List<Tag> tags = Arrays.asList(Tag.of("tag1"), Tag.of("tag2"));
 
         // when
         ArticleContent result = ArticleContent.builder()

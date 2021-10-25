@@ -134,7 +134,7 @@ class ProfileControllerTest {
             .andExpect(jsonPath("$.profile.bio", is("bio")))
             .andExpect(jsonPath("$.profile.image", is("image")))
             .andExpect(jsonPath("$.profile.following", is(true)))
-            .andDo(document("get-profile",
+            .andDo(document("follow-profile",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
@@ -179,7 +179,7 @@ class ProfileControllerTest {
             .andExpect(jsonPath("$.profile.bio", is("bio")))
             .andExpect(jsonPath("$.profile.image", is("image")))
             .andExpect(jsonPath("$.profile.following", is(false)))
-            .andDo(document("get-profile",
+            .andDo(document("unfollow-profile",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
