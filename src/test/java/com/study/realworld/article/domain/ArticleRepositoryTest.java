@@ -90,8 +90,8 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllTest")
-    void findAllByNameSuccessTest() {
+    @DisplayName("특정 tag와 username을 가진 작성자의 article을 검색할 수 있다.")
+    void findAllByAuthornameTagSuccessTest() {
 
         // given
         int offset = 0;
