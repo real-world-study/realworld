@@ -50,7 +50,7 @@ public class ArticleResponse {
     ArticleResponse() {
     }
 
-    public ArticleResponse(Slug slug, Title title, Description description, Body body,
+    private ArticleResponse(Slug slug, Title title, Description description, Body body,
         List<Tag> tags, OffsetDateTime createdAt, OffsetDateTime updatedAt,
         AuthorProfile authorProfile) {
         this.slug = slug;
