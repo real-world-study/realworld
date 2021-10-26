@@ -35,8 +35,8 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Article> findAllArticles(Pageable pageable, String author, String tag) {
-        return articleRepository.findPageByAuthorAndTag(pageable, author, tag);
+    public Page<Article> findAllArticles(Pageable pageable, String tag, String author) {
+        return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
     }
 
     @Transactional

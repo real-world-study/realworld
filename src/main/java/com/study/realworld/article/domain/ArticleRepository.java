@@ -24,11 +24,11 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             + "join a.author u "
             + "inner join a.articleContent.tags t "
             + "where "
-            + "(:author is null or :author = u.profile.username.name) "
-            + "and "
             + "(:tag is null or :tag = t.name) "
+            + "and "
+            + "(:author is null or :author = u.profile.username.name) "
             + "order by a.createdAt"
     )
-    Page<Article> findPageByAuthorAndTag(Pageable pageable, String author, String tag);
+    Page<Article> findPageByTagAndAuthor(Pageable pageable, String tag, String author);
 
 }

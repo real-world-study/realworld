@@ -99,7 +99,7 @@ class ArticleRepositoryTest {
         PageRequest pageRequest = PageRequest.of(offset, limit);
 
         // when
-        Page<Article> result = articleRepository.findPageByAuthorAndTag(pageRequest, "user1", "tagA");
+        Page<Article> result = articleRepository.findPageByTagAndAuthor(pageRequest, "tagA", "user1");
 
         // then
         assertAll(
