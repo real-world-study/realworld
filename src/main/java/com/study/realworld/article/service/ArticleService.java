@@ -11,7 +11,7 @@ import com.study.realworld.tag.service.TagService;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +35,8 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Article> findAllArticles(PageRequest pageRequest, String author, String tag) {
-        return articleRepository.findPageByAuthorAndTag(pageRequest, author, tag);
+    public Page<Article> findAllArticles(Pageable pageable, String author, String tag) {
+        return articleRepository.findPageByAuthorAndTag(pageable, author, tag);
     }
 
     @Transactional
