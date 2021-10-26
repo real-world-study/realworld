@@ -1,0 +1,8 @@
+### find article
+GET localhost:8080/api/articles/{{slug}}
+Content-Type: application/json
+
+### get articles
+GET localhost:8080/api/articles?offset=0&limit=4&tag=reactjs&author=Jacob
+Content-Type: application/json; charset=utf-8
+Authorization: Token {{Authorization}}

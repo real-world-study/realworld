@@ -1,0 +1,158 @@
+### create article
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon1",
+    "description": "Ever wonder how?1",
+    "body": "You have to believe1",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+> {%
+ client.global.set("slug", response.body.article.slug);
+ client.log("created Authorization : " + client.global.get("Authorization"));
+%}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon2",
+    "description": "Ever wonder how?2",
+    "body": "You have to believe2",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon3",
+    "description": "Ever wonder how?3",
+    "body": "You have to believe3",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon4",
+    "description": "Ever wonder how?4",
+    "body": "You have to believe4",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon5",
+    "description": "Ever wonder how?5",
+    "body": "You have to believe5",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon6",
+    "description": "Ever wonder how?6",
+    "body": "You have to believe6",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon7",
+    "description": "Ever wonder how?7",
+    "body": "You have to believe7",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon8",
+    "description": "Ever wonder how?8",
+    "body": "You have to believe8",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon9",
+    "description": "Ever wonder how?9",
+    "body": "You have to believe9",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon10",
+    "description": "Ever wonder how?10",
+    "body": "You have to believe10",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
+
+### create articles
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: Token {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon11",
+    "description": "Ever wonder how?11",
+    "body": "You have to believe11",
+    "tagList": ["reactjs", "angularjs", "dragons"]
+  }
+}
