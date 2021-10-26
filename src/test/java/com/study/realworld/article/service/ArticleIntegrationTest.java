@@ -25,6 +25,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -101,6 +103,49 @@ public class ArticleIntegrationTest {
 
         // then
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("원하는 tag와 author를 가진 articles page를 반환받을 수 있다.")
+    void findAllArticlesTest() {
+
+        // setup
+        userService.join(user);
+        for (int i=1; i<=10; i++){
+            ArticleContent articleContent = ArticleContent.builder()
+                .slugTitle(SlugTitle.of(Title.of("title" + i)))
+                .description(Description.of("description" + i))
+                .body(Body.of("body" + i))
+                .tags(Arrays.asList(Tag.of("tagA"), Tag.of("tag" + i)))
+                .build();
+            Article article = Article.from(articleContent, user);
+            articleRepository.save(article);
+        }
+        entityManager.flush();
+        entityManager.clear();
+
+        // given
+        int offset = 0; // page number
+        int limit = 4;  // airtlce counts
+        PageRequest pageRequest = PageRequest.of(offset, limit);
+
+        // when
+        Page<Article> result = articleService.findAllArticles(pageRequest, "tagA", "username");
+
+        // then
+        assertAll(
+            () -> assertThat(result.getSize()).isEqualTo(limit),
+            () -> assertThat(result.getNumber()).isEqualTo(offset),
+            () -> assertThat(result.getTotalPages()).isEqualTo(3),
+            () -> {
+                for (Article article : result) {
+                    assertAll(
+                        () -> assertThat(article.author().username()).isEqualTo(Username.of("username")),
+                        () -> assertThat(article.tags()).contains(Tag.of("tagA"))
+                    );
+                }
+            }
+        );
     }
 
 }
