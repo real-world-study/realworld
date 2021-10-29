@@ -57,7 +57,7 @@ public class ArticleService {
         updateArticle.getDescription().ifPresent(article::changeDescription);
         updateArticle.getBody().ifPresent(article::changeBody);
 
-        return article;
+        return article.updateFavoritedByUser(author);
     }
 
     @Transactional
