@@ -73,8 +73,7 @@ public class ArticleService {
         User user = userService.findById(userId);
         Article article = findBySlug(slug);
 
-        article.favoritingByUser(user);
-        return article;
+        return article.favoritingByUser(user);
     }
 
     @Transactional
@@ -82,8 +81,7 @@ public class ArticleService {
         User user = userService.findById(userId);
         Article article = findBySlug(slug);
 
-        article.unfavoritingByUser(user);
-        return article;
+        return article.unfavoritingByUser(user);
     }
 
     private Article findByAuthorAndSlug(User author, Slug slug) {
