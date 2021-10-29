@@ -120,7 +120,7 @@ class ArticleTest {
         article.favoritingByUser(user);
 
         // when
-        boolean result = article.updateFavoritedByUser(user);
+        boolean result = article.isFavorited();
 
         // then
         assertTrue(result);
@@ -139,7 +139,7 @@ class ArticleTest {
         article.unfavoritingByUser(user);
 
         // when
-        boolean result = article.updateFavoritedByUser(user);
+        boolean result = article.isFavorited();
 
         // then
         assertFalse(result);

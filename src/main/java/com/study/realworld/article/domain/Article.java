@@ -93,16 +93,18 @@ public class Article extends BaseTimeEntity {
         articleContent.changeBody(body);
     }
 
-    public boolean updateFavoritedByUser(User user) {
-        return favorited = favoritingUsers.isFavorite(user);
-    }
-
     public void favoritingByUser(User user) {
         favoritingUsers.favoritingByUser(user);
+        updateFavoritedByUser(user);
     }
 
     public void unfavoritingByUser(User user) {
         favoritingUsers.unfavoritingByUser(user);
+        updateFavoritedByUser(user);
+    }
+
+    public boolean updateFavoritedByUser(User user) {
+        return favorited = favoritingUsers.isFavorite(user);
     }
 
     public void deleteArticle() {
