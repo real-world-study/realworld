@@ -2,6 +2,8 @@ package com.study.realworld.article.comment.domain;
 
 import com.study.realworld.article.domain.Article;
 import com.study.realworld.global.domain.BaseTimeEntity;
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.User;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -62,8 +64,16 @@ public class Comment extends BaseTimeEntity {
         return article;
     }
 
-    public void deleteComment() {
+    public void deleteCommentByAuthor(User author) {
+        checkCommentAuthor(author);
+
         saveDeletedTime(OffsetDateTime.now());
+    }
+
+    private void checkCommentAuthor(User author) {
+        if (!Objects.equals(this.author, author)) {
+            throw new BusinessException(ErrorCode.INVALID_COMMENT_AUTHOR_DISMATCH);
+        }
     }
 
     @Override
