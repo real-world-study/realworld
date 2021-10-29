@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -228,6 +229,30 @@ class CommentControllerTest {
                     fieldWithPath("comment.author.following").type(JsonFieldType.BOOLEAN)
                         .description("author's following")
                 )
+            ))
+        ;
+    }
+
+    @Test
+    void deleteCommentTest() throws Exception {
+
+        // given
+        String slug = "title-title-title";
+        Long id = 1L;
+        final String URL = "/api/articles/{slug}/comments/{id}";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(delete(URL, slug, id)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+
+            .andDo(document("comment-delete",
+                getDocumentRequest(),
+                getDocumentResponse()
             ))
         ;
     }

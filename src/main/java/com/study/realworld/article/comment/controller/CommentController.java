@@ -9,6 +9,7 @@ import com.study.realworld.article.domain.Slug;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,12 @@ public class CommentController {
         @AuthenticationPrincipal Long loginId) {
         Comment comment = commentService.createComment(loginId, Slug.of(slug), request.toCommentBody());
         return ResponseEntity.ok().body(CommentResponse.fromComment(comment));
+    }
+
+    @DeleteMapping("/articles/{slug}/comments/{id}")
+    public void deleteComment(@PathVariable String slug, @PathVariable Long id,
+        @AuthenticationPrincipal Long loginId) {
+        commentService.deleteCommentByCommentId(loginId, Slug.of(slug), id);
     }
 
 }
