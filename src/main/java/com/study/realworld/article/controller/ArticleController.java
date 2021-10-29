@@ -66,4 +66,18 @@ public class ArticleController {
         articleService.deleteArticleByAuthorAndSlug(loginId, Slug.of(slug));
     }
 
+    @PostMapping("/articles/{slug}/favorite")
+    public ResponseEntity<ArticleResponse> favoriteArticle(@PathVariable String slug,
+        @AuthenticationPrincipal Long loginId) {
+        Article article = articleService.favoriteArticle(loginId, Slug.of(slug));
+        return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
+    }
+
+    @DeleteMapping("/articles/{slug}/favorite")
+    public ResponseEntity<ArticleResponse> unfavoriteArticle(@PathVariable String slug,
+        @AuthenticationPrincipal Long loginId) {
+        Article article = articleService.unfavoriteArticle(loginId, Slug.of(slug));
+        return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
+    }
+
 }
