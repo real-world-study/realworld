@@ -9,6 +9,7 @@ import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.Body;
 import com.study.realworld.article.domain.Description;
+import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.article.service.ArticleService;
@@ -74,7 +75,7 @@ class CommentServiceTest {
 
         @Test
         @DisplayName("로그인 유저가 없는 유저일 때 exception이 발생해야 한다.")
-        void createCommentExceptionByNotFoundUser() {
+        void createCommentExceptionByNotFoundUserTest() {
 
             // setup & given
             Long userId = 1L;
@@ -84,6 +85,22 @@ class CommentServiceTest {
             assertThatExceptionOfType(BusinessException.class)
                 .isThrownBy(() -> commentService.createComment(userId, null, null))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("게시글이 없는 게시글일 때 exception이 발생해야 한다.")
+        void createCommentExceptionByNotFoundArticleTest() {
+
+            // setup & given
+            Long userId = 1L;
+            Slug slug = Slug.of("title");
+            when(userService.findById(userId)).thenReturn(author);
+            when(articleService.findBySlug(slug)).thenThrow(new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> commentService.createComment(userId, slug, null))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
         }
 
     }

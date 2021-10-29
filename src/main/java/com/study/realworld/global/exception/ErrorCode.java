@@ -42,7 +42,7 @@ public enum ErrorCode {
     ARTICLE_NOT_FOUND_BY_SLUG(HttpStatus.BAD_REQUEST, "article is not found by slug"),
 
     // comment
-    INVALID_COMMENT_BODY_NULL(HttpStatus.BAD_REQUEST, "body must be provided"),w
+    INVALID_COMMENT_BODY_NULL(HttpStatus.BAD_REQUEST, "body must be provided"),
     ;
 
     private final HttpStatus httpStatus;
