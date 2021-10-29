@@ -1,8 +1,10 @@
 package com.study.realworld.article.comment.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.article.comment.domain.Comment;
 import com.study.realworld.article.comment.domain.CommentBody;
 import com.study.realworld.article.comment.domain.CommentRepository;
 import com.study.realworld.article.domain.Article;
@@ -101,6 +103,25 @@ class CommentServiceTest {
             assertThatExceptionOfType(BusinessException.class)
                 .isThrownBy(() -> commentService.createComment(userId, slug, null))
                 .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+        @Test
+        @DisplayName("comment를 생성할 수 있다.")
+        void createCommentSuccessTest() {
+
+            // setup & given
+            Long userId = 1L;
+            Slug slug = Slug.of("title");
+            when(userService.findById(userId)).thenReturn(author);
+            when(articleService.findBySlug(slug)).thenReturn(article);
+            Comment expected = Comment.from(commentBody, author, article);
+            when(commentRepository.save(expected)).thenReturn(expected);
+
+            // when
+            Comment result = commentService.createComment(userId, slug, commentBody);
+
+            // then
+            assertThat(result).isEqualTo(expected);
         }
 
     }
