@@ -15,10 +15,6 @@ public class CommentCreateRequest {
     CommentCreateRequest() {
     }
 
-    private CommentCreateRequest(String body) {
-        this.body = body;
-    }
-
     public CommentBody toCommentBody() {
         return CommentBody.of(body);
     }
