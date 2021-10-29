@@ -45,6 +45,10 @@ public class Comment extends BaseTimeEntity {
         return new Comment(commentBody, author, article);
     }
 
+    public Long id() {
+        return id;
+    }
+
     public CommentBody commentBody() {
         return commentBody;
     }
