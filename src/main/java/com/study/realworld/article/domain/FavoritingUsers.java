@@ -53,6 +53,19 @@ public class FavoritingUsers {
         }
     }
 
+    public FavoritingUsers unfavoritingByUser(User user) {
+        checkUnfavoritingByUser(user);
+
+        favoritingUsers.remove(user);
+        return this;
+    }
+
+    private void checkUnfavoritingByUser(User user) {
+        if (!favoritingUsers.contains(user)) {
+            throw new BusinessException(ErrorCode.INVALID_UNFAVORITE_ARTICLE);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

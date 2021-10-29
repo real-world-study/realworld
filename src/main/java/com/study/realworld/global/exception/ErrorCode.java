@@ -39,6 +39,7 @@ public enum ErrorCode {
     INVALID_BODY_NULL(HttpStatus.BAD_REQUEST, "body must be provided"),
 
     INVALID_FAVORITE_ARTICLE(HttpStatus.BAD_REQUEST, "favorite must be provided by unfavoriting user"),
+    INVALID_UNFAVORITE_ARTICLE(HttpStatus.BAD_REQUEST, "unfavorite must be provided by favoriting user"),
 
     ARTICLE_NOT_FOUND_BY_AUTHOR_AND_SLUG(HttpStatus.BAD_REQUEST, "article is not found by author and slug"),
     ARTICLE_NOT_FOUND_BY_SLUG(HttpStatus.BAD_REQUEST, "article is not found by slug"),

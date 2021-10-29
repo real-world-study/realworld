@@ -130,4 +130,59 @@ class FavoritingUsersTest {
         }
     }
 
+    @Nested
+    @DisplayName("특정 user가 unfavorite할 수 있다.")
+    class unfavoritingByUserTest {
+
+        @Test
+        @DisplayName("favorite 안한 유저가 favorite할 경우 exception이 발생해야 한다.")
+        void unfavoritingExceptionTest() {
+
+            // given
+            Set<User> userSet = new HashSet<>();
+            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> favoritingUsers.unfavoritingByUser(user))
+                .withMessageMatching(ErrorCode.INVALID_UNFAVORITE_ARTICLE.getMessage());
+        }
+
+        @Test
+        @DisplayName("user가 unfavorite할 수 있다.")
+        void unfavoritingByUserSuccessTest() {
+
+            // given
+            Set<User> userSet = new HashSet<>();
+            userSet.add(user);
+            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
+
+            Set<User> expectedUserSet = new HashSet<>();
+            FavoritingUsers expected = FavoritingUsers.of(expectedUserSet);
+
+            // when
+            FavoritingUsers result = favoritingUsers.unfavoritingByUser(user);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    @DisplayName("equals hashCode 테스트")
+    void favoritingUsersEqualsHashCodeTest() {
+
+        // given
+        Set<User> userSet = new HashSet<>();
+        userSet.add(user);
+
+        // when
+        FavoritingUsers result = FavoritingUsers.of(userSet);
+
+        // then
+        assertThat(result)
+            .isEqualTo(FavoritingUsers.of(userSet))
+            .hasSameHashCodeAs(FavoritingUsers.of(userSet));
+    }
+
 }
