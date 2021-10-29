@@ -8,4 +8,5 @@ class CommentsResponseTest {
     void commentsResponseTest() {
         CommentsResponse commentsResponse = new CommentsResponse();
     }
-    }
+
+}
