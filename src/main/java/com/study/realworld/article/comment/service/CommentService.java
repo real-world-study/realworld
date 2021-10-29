@@ -6,6 +6,8 @@ import com.study.realworld.article.comment.domain.CommentRepository;
 import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.service.ArticleService;
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
 import java.util.List;
@@ -39,6 +41,20 @@ public class CommentService {
 
         Comment comment = Comment.from(commentBody, author, article);
         return commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void deleteCommentByCommentId(Long userId, Slug slug, Long commentId) {
+        User author = userService.findById(userId);
+        Article article = articleService.findBySlug(slug);
+
+        Comment comment = findByIdAndArticle(commentId, article);
+        comment.deleteCommentByAuthor(author);
+    }
+
+    private Comment findByIdAndArticle(Long id, Article article) {
+        return commentRepository.findByIdAndArticle(id, article)
+            .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_COMMENT_NOT_FOUND));
     }
 
 }

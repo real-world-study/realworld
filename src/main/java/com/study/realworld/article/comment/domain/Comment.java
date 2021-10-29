@@ -16,8 +16,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import org.hibernate.annotations.Where;
 
 @Entity
+@Where(clause = "deleted_at is null")
 public class Comment extends BaseTimeEntity {
 
     @Id
