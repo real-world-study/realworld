@@ -1,5 +1,6 @@
 package com.study.realworld.article.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -67,6 +68,24 @@ class FavoritingUsersTest {
             assertFalse(result);
         }
 
+    }
+
+    @Test
+    @DisplayName("현재 favoriting 중인 유저의 수를 확인할 수 있다.")
+    void favoritesCountTest() {
+
+        // given
+        Set<User> userSet = new HashSet<>();
+        userSet.add(user);
+        FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
+
+        int expected = userSet.size();
+
+        // when
+        int result = favoritingUsers.favoritesCount();
+
+        // then
+        assertThat(result).isEqualTo(expected);
     }
 
 }

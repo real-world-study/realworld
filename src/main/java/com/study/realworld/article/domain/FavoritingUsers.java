@@ -34,6 +34,10 @@ public class FavoritingUsers {
         return favoritingUsers.contains(user);
     }
 
+    public int favoritesCount() {
+        return favoritingUsers.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
