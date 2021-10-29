@@ -68,6 +68,24 @@ public class ArticleService {
         article.deleteArticle();
     }
 
+    @Transactional
+    public Article favoriteArticle(Long userId, Slug slug) {
+        User user = userService.findById(userId);
+        Article article = findBySlug(slug);
+
+        article.favoritingByUser(user);
+        return article;
+    }
+
+    @Transactional
+    public Article unfavoriteArticle(Long userId, Slug slug) {
+        User user = userService.findById(userId);
+        Article article = findBySlug(slug);
+
+        article.unfavoritingByUser(user);
+        return article;
+    }
+
     private Article findByAuthorAndSlug(User author, Slug slug) {
         return articleRepository.findByAuthorAndArticleContentSlugTitleSlug(author, slug)
             .orElseThrow(() -> new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_AUTHOR_AND_SLUG));
