@@ -15,6 +15,7 @@ import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +47,23 @@ public class CommentTest {
     @Test
     void commentTest() {
         Comment comment = new Comment();
+    }
+
+    @Test
+    @DisplayName("Comment를 삭제할 때 삭제 시간을 저장할 수 있다.")
+    void deleteCommentTest() {
+
+        // given
+        Comment comment = Comment.from(commentBody, author, article);
+        OffsetDateTime startTime = OffsetDateTime.now();
+        comment.deleteComment();
+        OffsetDateTime endTime = OffsetDateTime.now();
+
+        // when
+        OffsetDateTime result = comment.deletedAt();
+
+        // then
+        assertThat(result).isAfter(startTime).isBefore(endTime);
     }
 
     @Test

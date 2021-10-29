@@ -3,6 +3,7 @@ package com.study.realworld.article.comment.domain;
 import com.study.realworld.article.domain.Article;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import com.study.realworld.user.domain.User;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -59,6 +60,10 @@ public class Comment extends BaseTimeEntity {
 
     public Article article() {
         return article;
+    }
+
+    public void deleteComment() {
+        saveDeletedTime(OffsetDateTime.now());
     }
 
     @Override
