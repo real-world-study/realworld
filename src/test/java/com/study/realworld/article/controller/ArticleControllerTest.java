@@ -195,7 +195,7 @@ class ArticleControllerTest {
         // given
         final String URL = "/api/articles";
 
-        Article expectd = articleList.get(0);
+        Article expected = articleList.get(0);
 
         // when
         ResultActions resultActions = mockMvc.perform(get(URL)
@@ -213,17 +213,17 @@ class ArticleControllerTest {
 
             .andExpect(jsonPath("$.articles.size()", is(limit)))
 
-            .andExpect(jsonPath("$.articles.[0].slug", is(expectd.slug().slug())))
-            .andExpect(jsonPath("$.articles.[0].title", is(expectd.title().title())))
-            .andExpect(jsonPath("$.articles.[0].description", is(expectd.description().description())))
-            .andExpect(jsonPath("$.articles.[0].body", is(expectd.body().body())))
-            .andExpect(jsonPath("$.articles.[0].tagList.[0]", is(expectd.tags().get(0).name())))
-            .andExpect(jsonPath("$.articles.[0].tagList.[1]", is(expectd.tags().get(1).name())))
+            .andExpect(jsonPath("$.articles.[0].slug", is(expected.slug().slug())))
+            .andExpect(jsonPath("$.articles.[0].title", is(expected.title().title())))
+            .andExpect(jsonPath("$.articles.[0].description", is(expected.description().description())))
+            .andExpect(jsonPath("$.articles.[0].body", is(expected.body().body())))
+            .andExpect(jsonPath("$.articles.[0].tagList.[0]", is(expected.tags().get(0).name())))
+            .andExpect(jsonPath("$.articles.[0].tagList.[1]", is(expected.tags().get(1).name())))
             .andExpect(jsonPath("$.articles.[0].createdAt",
-                is(expectd.createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+                is(expected.createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.articles.[0].updatedAt",
-                is(expectd.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
-            .andExpect(jsonPath("$.articles.[0].author.username", is(expectd.author().username().value())))
+                is(expected.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.articles.[0].author.username", is(expected.author().username().value())))
             .andExpect(jsonPath("$.articles.[0].author.bio", is(nullValue())))
             .andExpect(jsonPath("$.articles.[0].author.image", is(nullValue())))
             .andExpect(jsonPath("$.articles.[0].author.following", is(false)))

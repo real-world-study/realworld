@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -35,7 +36,9 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -86,6 +89,77 @@ class CommentControllerTest {
             .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
             .build();
         article = Article.from(articleContent, author);
+    }
+
+    @Test
+    void getCommentByArticleSlugTest() throws Exception {
+
+        // setup
+        List<Comment> expected = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            Comment comment = Comment.from(CommentBody.of("His name was my name too." + i), author, article);
+            ReflectionTestUtils.setField(comment, "id", (long) i);
+
+            OffsetDateTime now = OffsetDateTime.now();
+            ReflectionTestUtils.setField(comment, "createdAt", now);
+            ReflectionTestUtils.setField(comment, "updatedAt", now);
+
+            expected.add(comment);
+        }
+
+        when(commentService.getCommentsByArticleSlug(eq(article.slug()))).thenReturn(expected);
+
+        // given
+        final String URL = "/api/articles/{slug}/comments";
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get(URL, article.slug().slug())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.comments.size()", is(expected.size())))
+
+            .andExpect(jsonPath("$.comments.[0].id", is(expected.get(0).id().intValue())))
+            .andExpect(jsonPath("$.comments.[0].createdAt",
+                is(expected.get(0).createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.comments.[0].updatedAt",
+                is(expected.get(0).updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.comments.[0].body", is(expected.get(0).commentBody().body())))
+
+            .andExpect(jsonPath("$.comments.[0].author.username", is(expected.get(0).author().username().value())))
+            .andExpect(jsonPath("$.comments.[0].author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.comments.[0].author.image", is(nullValue())))
+            .andExpect(jsonPath("$.comments.[0].author.following", is(expected.get(0).author().profile().isFollow())))
+
+            .andDo(document("comments-get",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                responseFields(
+                    fieldWithPath("comments").type(JsonFieldType.ARRAY).description("comments list"),
+
+                    fieldWithPath("comments[].id").type(JsonFieldType.NUMBER).description("created comment's id"),
+                    fieldWithPath("comments[].createdAt").type(JsonFieldType.STRING)
+                        .description("created comment's create time"),
+                    fieldWithPath("comments[].updatedAt").type(JsonFieldType.STRING)
+                        .description("created comment's update time"),
+                    fieldWithPath("comments[].body").type(JsonFieldType.STRING).description("created comment's body"),
+
+                    fieldWithPath("comments[].author.username").type(JsonFieldType.STRING)
+                        .description("author's username"),
+                    fieldWithPath("comments[].author.bio").type(JsonFieldType.STRING).description("author's bio")
+                        .optional(),
+                    fieldWithPath("comments[].author.image").type(JsonFieldType.STRING).description("author's image")
+                        .optional(),
+                    fieldWithPath("comments[].author.following").type(JsonFieldType.BOOLEAN)
+                        .description("author's following")
+                )
+            ))
+        ;
     }
 
     @Test
@@ -157,4 +231,5 @@ class CommentControllerTest {
             ))
         ;
     }
+
 }
