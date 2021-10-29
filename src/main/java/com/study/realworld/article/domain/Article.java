@@ -81,6 +81,10 @@ public class Article extends BaseTimeEntity {
         return favorited;
     }
 
+    public int favoritesCount() {
+        return favoritingUsers.favoritesCount();
+    }
+
     public void changeTitle(Title title) {
         articleContent.changeTitle(title);
     }

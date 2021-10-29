@@ -53,14 +53,22 @@ public class ArticleResponse {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
         private OffsetDateTime updatedAt;
 
+        @JsonProperty("favorited")
+        private boolean favorited;
+
+        @JsonProperty("favoritesCount")
+        private int favoritesCount;
+
         @JsonProperty("author")
         private ProfileResponseNested profileResponseNested;
 
         ArticleResponseNested() {
         }
 
-        private ArticleResponseNested(Slug slug, Title title, Description description, Body body, List<Tag> tags,
-            OffsetDateTime createdAt, OffsetDateTime updatedAt, ProfileResponseNested profileResponseNested) {
+        private ArticleResponseNested(Slug slug, Title title, Description description,
+            Body body, List<Tag> tags, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean favorited,
+            int favoritesCount,
+            ProfileResponseNested profileResponseNested) {
             this.slug = slug;
             this.title = title;
             this.description = description;
@@ -68,6 +76,8 @@ public class ArticleResponse {
             this.tags = tags;
             this.createdAt = createdAt;
             this.updatedAt = updatedAt;
+            this.favorited = favorited;
+            this.favoritesCount = favoritesCount;
             this.profileResponseNested = profileResponseNested;
         }
 
@@ -80,6 +90,8 @@ public class ArticleResponse {
                 article.tags(),
                 article.createdAt(),
                 article.updatedAt(),
+                article.isFavorited(),
+                article.favoritesCount(),
                 ProfileResponseNested.ofProfile(article.author().profile())
             );
         }
