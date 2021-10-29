@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
@@ -29,6 +30,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             + "(:author is null or :author = u.profile.username.name) "
             + "order by a.createdAt"
     )
-    Page<Article> findPageByTagAndAuthor(Pageable pageable, String tag, String author);
+    Page<Article> findPageByTagAndAuthor(Pageable pageable, @Param("tag") String tag, @Param("author") String author);
 
 }
