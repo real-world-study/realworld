@@ -18,6 +18,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,13 +39,19 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -70,6 +78,7 @@ class ArticleControllerTest {
         SecurityContextHolder.clearContext();
         mockMvc = MockMvcBuilders.standaloneSetup(articleController)
             .apply(documentationConfiguration(restDocumentationContextProvider))
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
             .alwaysExpect(status().isOk())
             .build();
     }
@@ -132,7 +141,8 @@ class ArticleControllerTest {
                 responseFields(
                     fieldWithPath("article.slug").type(JsonFieldType.STRING).description("article's slug"),
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("article's title"),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("article's description"),
+                    fieldWithPath("article.description").type(JsonFieldType.STRING)
+                        .description("article's description"),
                     fieldWithPath("article.body").type(JsonFieldType.STRING).description("article's body"),
                     fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
                     fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("article's create time"),
@@ -146,6 +156,112 @@ class ArticleControllerTest {
                         .optional(),
                     fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
                         .description("author's following")
+                )
+            ))
+        ;
+    }
+
+    @Test
+    void getArticlesTest() throws Exception {
+
+        // setup
+        User author = User.Builder()
+            .profile(Username.of("username"), null, null)
+            .email(Email.of("email@email.com"))
+            .password(Password.of("password"))
+            .build();
+
+        List<Article> articleList = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            ArticleContent articleContent = ArticleContent.builder()
+                .slugTitle(SlugTitle.of(Title.of("title title title" + i)))
+                .description(Description.of("test article description" + i))
+                .body(Body.of("test article body" + i))
+                .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
+                .build();
+            Article article = Article.from(articleContent, author);
+            OffsetDateTime now = OffsetDateTime.now();
+            ReflectionTestUtils.setField(article, "createdAt", now);
+            ReflectionTestUtils.setField(article, "updatedAt", now);
+
+            articleList.add(article);
+        }
+
+        int offset = 0;
+        int limit = 4;
+        Page<Article> articles = new PageImpl<>(articleList.subList(0, 4), PageRequest.of(0, 4), articleList.size());
+        when(articleService.findAllArticles(any(), eq("tag1"), eq("username"))).thenReturn(articles);
+
+        // given
+        final String URL = "/api/articles";
+
+        Article expectd = articleList.get(0);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get(URL)
+            .param("offset", String.valueOf(offset))
+            .param("limit", String.valueOf(limit))
+            .param("tag", "tag1")
+            .param("author", "username")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.articles.size()", is(limit)))
+
+            .andExpect(jsonPath("$.articles.[0].slug", is(expectd.slug().slug())))
+            .andExpect(jsonPath("$.articles.[0].title", is(expectd.title().title())))
+            .andExpect(jsonPath("$.articles.[0].description", is(expectd.description().description())))
+            .andExpect(jsonPath("$.articles.[0].body", is(expectd.body().body())))
+            .andExpect(jsonPath("$.articles.[0].tagList.[0]", is(expectd.tags().get(0).name())))
+            .andExpect(jsonPath("$.articles.[0].tagList.[1]", is(expectd.tags().get(1).name())))
+            .andExpect(jsonPath("$.articles.[0].createdAt",
+                is(expectd.createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.articles.[0].updatedAt",
+                is(expectd.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.articles.[0].author.username", is(expectd.author().username().value())))
+            .andExpect(jsonPath("$.articles.[0].author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.articles.[0].author.image", is(nullValue())))
+            .andExpect(jsonPath("$.articles.[0].author.following", is(false)))
+
+            .andExpect(jsonPath("$.articlesCount", is(limit)))
+
+            .andDo(document("articles-find",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestParameters(
+                    parameterWithName("offset").description("offset/page number of articles[default=20]").optional(),
+                    parameterWithName("limit").description("limit number of articles[default=0]").optional(),
+                    parameterWithName("tag").description("filter by tag").optional(),
+                    parameterWithName("author").description("filter by author username").optional(),
+                    parameterWithName("favorited").description("filter by favorited user").optional()
+                ),
+                responseFields(
+                    fieldWithPath("articles").type(JsonFieldType.ARRAY).description("articles list"),
+
+                    fieldWithPath("articles[].slug").type(JsonFieldType.STRING).description("article's slug"),
+                    fieldWithPath("articles[].title").type(JsonFieldType.STRING).description("article's title"),
+                    fieldWithPath("articles[].description").type(JsonFieldType.STRING)
+                        .description("article's description"),
+                    fieldWithPath("articles[].body").type(JsonFieldType.STRING).description("article's body"),
+                    fieldWithPath("articles[].tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
+                    fieldWithPath("articles[].createdAt").type(JsonFieldType.STRING)
+                        .description("article's create time"),
+                    fieldWithPath("articles[].updatedAt").type(JsonFieldType.STRING)
+                        .description("article's update time"),
+
+                    fieldWithPath("articles[].author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("articles[].author.bio").type(JsonFieldType.STRING).description("author's bio")
+                        .optional(),
+                    fieldWithPath("articles[].author.image").type(JsonFieldType.STRING).description("author's image")
+                        .optional(),
+                    fieldWithPath("articles[].author.following").type(JsonFieldType.BOOLEAN)
+                        .description("author's following"),
+                    fieldWithPath("articlesCount").type(JsonFieldType.NUMBER).description("article list's size")
                 )
             ))
         ;

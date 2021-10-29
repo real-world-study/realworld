@@ -25,6 +25,7 @@ import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
@@ -288,5 +292,34 @@ class ArticleServiceTest {
             assertThat(result).isAfter(start).isBefore(end);
         }
     }
+
+    @Test
+    @DisplayName("원하는 offset, limit을 가진 Page 리스트를 반환할 수 있다.")
+    void findAllArticlesByOffsetLimitTest() {
+
+        // setup & given
+        int offset = 0;
+        int limit = 4;
+        List<Article> articles = Arrays.asList(Article.from(articleContent, user),
+            Article.from(articleContent, user),
+            Article.from(articleContent, user),
+            Article.from(articleContent, user),
+            Article.from(articleContent, user)
+        );
+        PageRequest pageRequest = PageRequest.of(offset, limit);
+        when(articleRepository.findPageByTagAndAuthor(pageRequest, null, null))
+            .thenReturn(new PageImpl<>(articles.subList(0, 4), pageRequest, articles.size()));
+
+        // when
+        Page<Article> result = articleService.findAllArticles(pageRequest, null, null);
+
+        // then
+        assertAll(
+            () -> assertThat(result.getSize()).isEqualTo(limit),
+            () -> assertThat(result.getNumber()).isEqualTo(offset),
+            () -> assertThat(result.getTotalPages()).isEqualTo(2)
+        );
+    }
+
 
 }

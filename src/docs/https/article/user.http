@@ -1,0 +1,41 @@
+### join
+POST localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "Jacob",
+    "email": "jake@jake.jake",
+    "password": "jakejake"
+  }
+}
+
+### login
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "jake@jake.jake",
+    "password": "jakejake"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("created Authorization: " + client.global.get("Authorization"));
+%}
+
+### update
+PUT localhost:8080/api/user
+Authorization: Token {{Authorization}}
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "jake@jake2.jake",
+    "bio": "I like to skateboard",
+    "image": "https://i.stack.imgur.com/xHWG8.jpg"
+  }
+}
+

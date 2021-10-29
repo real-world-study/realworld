@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import org.hibernate.annotations.BatchSize;
 
 @Embeddable
 public class ArticleContent {
@@ -23,6 +24,7 @@ public class ArticleContent {
     @Embedded
     private Body body;
 
+    @BatchSize(size = 100)
     @JoinTable(name = "article_tag",
         joinColumns = @JoinColumn(name = "article_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id"))

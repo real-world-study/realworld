@@ -10,6 +10,8 @@ import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.tag.service.TagService;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,11 @@ public class ArticleService {
     public Article findBySlug(Slug slug) {
         return articleRepository.findByArticleContentSlugTitleSlug(slug)
             .orElseThrow(() -> new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Article> findAllArticles(Pageable pageable, String tag, String author) {
+        return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
     }
 
     @Transactional
