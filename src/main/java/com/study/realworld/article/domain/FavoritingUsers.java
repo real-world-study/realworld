@@ -1,5 +1,7 @@
 package com.study.realworld.article.domain;
 
+import com.study.realworld.global.exception.BusinessException;
+import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.User;
 import java.util.HashSet;
 import java.util.Objects;
@@ -36,6 +38,19 @@ public class FavoritingUsers {
 
     public int favoritesCount() {
         return favoritingUsers.size();
+    }
+
+    public FavoritingUsers favoritingByUser(User user) {
+        checkFavoritingByUser(user);
+
+        favoritingUsers.add(user);
+        return this;
+    }
+
+    private void checkFavoritingByUser(User user) {
+        if (favoritingUsers.contains(user)) {
+            throw new BusinessException(ErrorCode.INVALID_FAVORITE_ARTICLE);
+        }
     }
 
     @Override
