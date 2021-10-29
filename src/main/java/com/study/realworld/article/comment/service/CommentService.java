@@ -8,6 +8,7 @@ import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,13 @@ public class CommentService {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.articleService = articleService;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Comment> getCommentsByArticleSlug(Slug slug) {
+        Article article = articleService.findBySlug(slug);
+
+        return commentRepository.findAllByArticle(article);
     }
 
     @Transactional

@@ -26,6 +26,7 @@ import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -119,6 +120,45 @@ class CommentServiceTest {
 
             // when
             Comment result = commentService.createComment(userId, slug, commentBody);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("getCommentsByArticleSlug comments 반환 테스트")
+    class getCommentsByArticleSlugTest {
+
+        @Test
+        @DisplayName("게시글이 없는 게시글일 때 exception이 발생해야 한다.")
+        void getCommentsByArticleSlugExceptionByNotFoundArticleTest() {
+
+            // setup & given
+            Slug slug = Slug.of("title");
+            when(articleService.findBySlug(slug)).thenThrow(new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> commentService.getCommentsByArticleSlug(slug))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+        @Test
+        @DisplayName("comments를 반환할 수 있다.")
+        void getCommentsByArticleSlugTest() {
+
+            // given
+            Slug slug = Slug.of("title");
+            when(articleService.findBySlug(slug)).thenReturn(article);
+            List<Comment> expected = Arrays.asList(Comment.from(commentBody, author, article),
+                Comment.from(commentBody, author, article),
+                Comment.from(commentBody, author, article));
+            when(commentRepository.findAllByArticle(article)).thenReturn(expected);
+
+            // when
+            List<Comment> result = commentService.getCommentsByArticleSlug(slug);
 
             // then
             assertThat(result).isEqualTo(expected);
