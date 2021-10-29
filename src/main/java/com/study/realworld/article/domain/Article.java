@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.annotations.Where;
 
 @Entity
@@ -33,6 +34,12 @@ public class Article extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user_id"))
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
+
+    @Embedded
+    private FavoritingUsers favoritingUsers = new FavoritingUsers();
+
+    @Transient
+    private boolean favorited;
 
     protected Article() {
     }
@@ -70,6 +77,10 @@ public class Article extends BaseTimeEntity {
         return author;
     }
 
+    public boolean isFavorited() {
+        return favorited;
+    }
+
     public void changeTitle(Title title) {
         articleContent.changeTitle(title);
     }
@@ -80,6 +91,18 @@ public class Article extends BaseTimeEntity {
 
     public void changeBody(Body body) {
         articleContent.changeBody(body);
+    }
+
+    public boolean updateFavoritedByUser(User user) {
+        return favorited = favoritingUsers.isFavorite(user);
+    }
+
+    public void favoritingByUser(User user) {
+        favoritingUsers.favoritingByUser(user);
+    }
+
+    public void unfavoritingByUser(User user) {
+        favoritingUsers.unfavoritingByUser(user);
     }
 
     public void deleteArticle() {

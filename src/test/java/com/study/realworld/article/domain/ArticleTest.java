@@ -2,6 +2,8 @@ package com.study.realworld.article.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.Bio;
@@ -104,6 +106,43 @@ class ArticleTest {
 
         // then
         assertThat(result).isAfter(startTime).isBefore(endTime);
+    }
+
+    @Test
+    @DisplayName("유저가 글을 좋아요할 수 있다.")
+    void favoritingByUserTest() {
+
+        // given
+        Article article = Article.from(articleContent, author);
+        User user = User.Builder()
+            .email(Email.of("email@email.com"))
+            .build();
+        article.favoritingByUser(user);
+
+        // when
+        boolean result = article.updateFavoritedByUser(user);
+
+        // then
+        assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("유저가 글을 좋아요 취소할 수 있다.")
+    void unfavoritingByUserTest() {
+
+        // given
+        Article article = Article.from(articleContent, author);
+        User user = User.Builder()
+            .email(Email.of("email@email.com"))
+            .build();
+        article.favoritingByUser(user);
+        article.unfavoritingByUser(user);
+
+        // when
+        boolean result = article.updateFavoritedByUser(user);
+
+        // then
+        assertFalse(result);
     }
 
     @Test
