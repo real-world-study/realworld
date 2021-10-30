@@ -29,11 +29,12 @@ import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.Body;
 import com.study.realworld.article.domain.Description;
-import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.tag.domain.Tag;
+import com.study.realworld.testutil.PrincipalArgumentResolver;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -63,7 +64,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
-class ArticleControllerTest {
+class ArticleControllerLoginUserTest {
 
     @Mock
     private ArticleService articleService;
@@ -73,131 +74,138 @@ class ArticleControllerTest {
 
     private MockMvc mockMvc;
 
+    private User user;
+    private ArticleContent articleContent1;
+    private ArticleContent articleContent2;
+
     @BeforeEach
     void beforeEach(RestDocumentationContextProvider restDocumentationContextProvider) {
         SecurityContextHolder.clearContext();
         mockMvc = MockMvcBuilders.standaloneSetup(articleController)
             .apply(documentationConfiguration(restDocumentationContextProvider))
-            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(), new PrincipalArgumentResolver())
             .alwaysExpect(status().isOk())
             .build();
+
+        user = User.Builder()
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .build();
+
+        articleContent1 = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
+            .build();
+
+        articleContent2 = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon 2")))
+            .description(Description.of("So toothless"))
+            .body(Body.of("It a dragon"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
+            .build();
     }
 
-    @Test
-    void getArticleTest() throws Exception {
-
-        // setup
-        User author = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .build();
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title title title")))
-            .description(Description.of("test article description"))
-            .body(Body.of("test article body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
-            .build();
-        Article article = Article.from(articleContent, author);
-
-        OffsetDateTime now = OffsetDateTime.now();
-        ReflectionTestUtils.setField(article, "createdAt", now);
-        ReflectionTestUtils.setField(article, "updatedAt", now);
-
-        when(articleService.findBySlug(Slug.of("title-title-title"))).thenReturn(article);
-
-        // given
-        final String slug = "title-title-title";
-        final String URL = "/api/articles/{slug}";
-
-        // when
-        ResultActions resultActions = mockMvc.perform(get(URL, slug)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print());
-
-        // then
-        resultActions
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
-            .andExpect(jsonPath("$.article.slug", is(article.slug().slug())))
-            .andExpect(jsonPath("$.article.title", is(article.title().title())))
-            .andExpect(jsonPath("$.article.description", is(article.description().description())))
-            .andExpect(jsonPath("$.article.body", is(article.body().body())))
-            .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0).name())))
-            .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1).name())))
-            .andExpect(jsonPath("$.article.createdAt",
-                is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
-            .andExpect(jsonPath("$.article.updatedAt",
-                is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
-            .andExpect(jsonPath("$.article.favorited", is(article.isFavorited())))
-            .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
-
-            .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
-            .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
-            .andExpect(jsonPath("$.article.author.image", is(nullValue())))
-            .andExpect(jsonPath("$.article.author.following", is(false)))
-
-            .andDo(document("article-find",
-                getDocumentRequest(),
-                getDocumentResponse(),
-                responseFields(
-                    fieldWithPath("article.slug").type(JsonFieldType.STRING).description("article's slug"),
-                    fieldWithPath("article.title").type(JsonFieldType.STRING).description("article's title"),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING)
-                        .description("article's description"),
-                    fieldWithPath("article.body").type(JsonFieldType.STRING).description("article's body"),
-                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
-                    fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("article's create time"),
-                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
-                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
-                        .description("login user's favoriting"),
-                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
-                        .description("article's favoriting count"),
-
-                    fieldWithPath("article.author.username").type(JsonFieldType.STRING)
-                        .description("author's username"),
-                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio")
-                        .optional(),
-                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image")
-                        .optional(),
-                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
-                        .description("author's following")
-                )
-            ))
-        ;
-    }
+//    @Test
+//    void getArticleTest() throws Exception {
+//
+//        // setup
+//        Article article = Article.from(articleContent1, author);
+//        OffsetDateTime now = OffsetDateTime.now();
+//        ReflectionTestUtils.setField(article, "createdAt", now);
+//        ReflectionTestUtils.setField(article, "updatedAt", now);
+//
+//
+//        when(articleService.findBySlug(article.slug())).thenReturn(article);
+//
+//        // given
+//        final String slug = article.slug().slug();
+//        final String URL = "/api/articles/{slug}";
+//
+//        // when
+//        ResultActions resultActions = mockMvc.perform(get(URL, slug)
+//            .contentType(MediaType.APPLICATION_JSON))
+//            .andDo(print());
+//
+//        // then
+//        resultActions
+//            .andExpect(status().isOk())
+//            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//
+//            .andExpect(jsonPath("$.article.slug", is(article.slug().slug())))
+//            .andExpect(jsonPath("$.article.title", is(article.title().title())))
+//            .andExpect(jsonPath("$.article.description", is(article.description().description())))
+//            .andExpect(jsonPath("$.article.body", is(article.body().body())))
+//            .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0).name())))
+//            .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1).name())))
+//            .andExpect(jsonPath("$.article.createdAt",
+//                is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+//            .andExpect(jsonPath("$.article.updatedAt",
+//                is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+//            .andExpect(jsonPath("$.article.favorited", is(article.isFavorited())))
+//            .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
+//
+//            .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
+//            .andExpect(jsonPath("$.article.author.bio", is(article.author().bio().value())))
+//            .andExpect(jsonPath("$.article.author.image", is(nullValue())))
+//            .andExpect(jsonPath("$.article.author.following", is(false)))
+//
+//            .andDo(document("article-find",
+//                getDocumentRequest(),
+//                getDocumentResponse(),
+//                responseFields(
+//                    fieldWithPath("article.slug").type(JsonFieldType.STRING).description("article's slug"),
+//                    fieldWithPath("article.title").type(JsonFieldType.STRING).description("article's title"),
+//                    fieldWithPath("article.description").type(JsonFieldType.STRING)
+//                        .description("article's description"),
+//                    fieldWithPath("article.body").type(JsonFieldType.STRING).description("article's body"),
+//                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
+//                    fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("article's create time"),
+//                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
+//                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
+//                        .description("login user's favoriting"),
+//                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
+//                        .description("article's favoriting count"),
+//
+//                    fieldWithPath("article.author.username").type(JsonFieldType.STRING)
+//                        .description("author's username"),
+//                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio")
+//                        .optional(),
+//                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image")
+//                        .optional(),
+//                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
+//                        .description("author's following")
+//                )
+//            ))
+//        ;
+//    }
 
     @Test
     void getArticlesTest() throws Exception {
 
         // setup
-        User author = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .build();
-
         List<Article> articleList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            ArticleContent articleContent = ArticleContent.builder()
-                .slugTitle(SlugTitle.of(Title.of("title title title" + i)))
-                .description(Description.of("test article description" + i))
-                .body(Body.of("test article body" + i))
-                .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
-                .build();
-            Article article = Article.from(articleContent, author);
-            OffsetDateTime now = OffsetDateTime.now();
-            ReflectionTestUtils.setField(article, "createdAt", now);
-            ReflectionTestUtils.setField(article, "updatedAt", now);
+        Article article1 = Article.from(articleContent1, user);
+        OffsetDateTime now = OffsetDateTime.now();
+        ReflectionTestUtils.setField(article1, "createdAt", now);
+        ReflectionTestUtils.setField(article1, "updatedAt", now);
+        article1.favoritingByUser(user);
+        article1.updateFavoritedByUser(user);
+        articleList.add(article1);
 
-            articleList.add(article);
-        }
+        Article article2 = Article.from(articleContent1, user);
+        now = OffsetDateTime.now();
+        ReflectionTestUtils.setField(article2, "createdAt", now);
+        ReflectionTestUtils.setField(article2, "updatedAt", now);
+        articleList.add(article2);
 
         int offset = 0;
-        int limit = 4;
-        Page<Article> articles = new PageImpl<>(articleList.subList(0, 4), PageRequest.of(0, 4), articleList.size());
-        when(articleService.findAllArticles(any(), eq("tag1"), eq("username"))).thenReturn(articles);
+        int limit = 2;
+        Page<Article> articles = new PageImpl<>(articleList.subList(0, 2), PageRequest.of(offset, limit), articleList.size());
+        when(articleService.findAllArticles(eq(user.id()), any(), eq("dragons"), eq("jake"))).thenReturn(articles);
 
         // given
         final String URL = "/api/articles";
@@ -208,8 +216,8 @@ class ArticleControllerTest {
         ResultActions resultActions = mockMvc.perform(get(URL)
             .param("offset", String.valueOf(offset))
             .param("limit", String.valueOf(limit))
-            .param("tag", "tag1")
-            .param("author", "username")
+            .param("tag", "dragons")
+            .param("author", "jake")
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
@@ -234,7 +242,7 @@ class ArticleControllerTest {
             .andExpect(jsonPath("$.articles.[0].favoritesCount", is(expected.favoritesCount())))
 
             .andExpect(jsonPath("$.articles.[0].author.username", is(expected.author().username().value())))
-            .andExpect(jsonPath("$.articles.[0].author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.articles.[0].author.bio", is(expected.author().bio().value())))
             .andExpect(jsonPath("$.articles.[0].author.image", is(nullValue())))
             .andExpect(jsonPath("$.articles.[0].author.following", is(false)))
 
@@ -286,33 +294,21 @@ class ArticleControllerTest {
     void createArticleTestTest() throws Exception {
 
         // setup
-        User author = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .build();
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title title title")))
-            .description(Description.of("test article description"))
-            .body(Body.of("test article body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
-            .build();
-        Article article = Article.from(articleContent, author);
-
+        Article article = Article.from(articleContent1, user);
         OffsetDateTime now = OffsetDateTime.now();
         ReflectionTestUtils.setField(article, "createdAt", now);
         ReflectionTestUtils.setField(article, "updatedAt", now);
 
-        when(articleService.createArticle(any(), any())).thenReturn(article);
+        when(articleService.createArticle(eq(user.id()), any())).thenReturn(article);
 
         // given
         final String URL = "/api/articles";
         final String content = "{\n"
             + "  \"article\": {\n"
-            + "    \"title\": \"title title title\",\n"
-            + "    \"description\": \"test article description\",\n"
-            + "    \"body\": \"test article body\",\n"
-            + "    \"tagList\": [\"tag1\", \"tag2\"]\n"
+            + "    \"title\": \"How to train your dragon\",\n"
+            + "    \"description\": \"Ever wonder how?\",\n"
+            + "    \"body\": \"It takes a Jacobian\",\n"
+            + "    \"tagList\": [\"dragons\", \"training\"]\n"
             + "  }\n"
             + "}";
 
@@ -352,34 +348,23 @@ class ArticleControllerTest {
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("article title"),
                     fieldWithPath("article.description").type(JsonFieldType.STRING).description("article description"),
                     fieldWithPath("article.body").type(JsonFieldType.STRING).description("article body"),
-                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article tag's list")
-                        .optional()
+                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article tag's list").optional()
                 ),
                 responseFields(
                     fieldWithPath("article.slug").type(JsonFieldType.STRING).description("created article's slug"),
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("created article's title"),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING)
-                        .description("created article's description"),
+                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("created article's description"),
                     fieldWithPath("article.body").type(JsonFieldType.STRING).description("created article's body"),
-                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY)
-                        .description("created article's tag's list"),
-                    fieldWithPath("article.createdAt").type(JsonFieldType.STRING)
-                        .description("created article's create time"),
-                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING)
-                        .description("created article's update time"),
-                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
-                        .description("login user's favoriting"),
-                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
-                        .description("article's favoriting count"),
+                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("created article's tag's list"),
+                    fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("created article's create time"),
+                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("created article's update time"),
+                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN).description("login user's favoriting"),
+                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER).description("article's favoriting count"),
 
-                    fieldWithPath("article.author.username").type(JsonFieldType.STRING)
-                        .description("author's username"),
-                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio")
-                        .optional(),
-                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image")
-                        .optional(),
-                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
-                        .description("author's following")
+                    fieldWithPath("article.author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
+                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image").optional(),
+                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN).description("author's following")
                 )
             ))
         ;
@@ -389,33 +374,22 @@ class ArticleControllerTest {
     void updateArticleTest() throws Exception {
 
         // setup
-        User author = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .build();
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title title")))
-            .description(Description.of("change test article description"))
-            .body(Body.of("change test article body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
-            .build();
-        Article article = Article.from(articleContent, author);
+        Article article = Article.from(articleContent1, user);
 
         OffsetDateTime now = OffsetDateTime.now();
         ReflectionTestUtils.setField(article, "createdAt", now);
         ReflectionTestUtils.setField(article, "updatedAt", now);
 
-        when(articleService.updateArticle(any(), eq(Slug.of("title-title-title")), any())).thenReturn(article);
+        when(articleService.updateArticle(eq(user.id()), eq(article.slug()), any())).thenReturn(article);
 
         // given
-        final String slug = "title-title-title";
+        final String slug = article.slug().slug();
         final String URL = "/api/articles/{slug}";
         final String content = "{\n"
             + "  \"article\": {\n"
-            + "    \"title\": \"title title\",\n"
-            + "    \"description\": \"change test article description\",\n"
-            + "    \"body\": \"change test article body\"\n"
+            + "    \"title\": \"How to train your dragon\",\n"
+            + "    \"description\": \"Ever wonder how?\",\n"
+            + "    \"body\": \"It takes a Jacobian\"\n"
             + "  }\n"
             + "}";
 
@@ -444,7 +418,7 @@ class ArticleControllerTest {
             .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
 
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
-            .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.article.author.bio", is(article.author().bio().value())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
             .andExpect(jsonPath("$.article.author.following", is(false)))
 
@@ -453,38 +427,25 @@ class ArticleControllerTest {
                 getDocumentResponse(),
                 requestFields(
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("article title").optional(),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("article description")
-                        .optional(),
-                    fieldWithPath("article.body").type(JsonFieldType.STRING).description("article body")
-                        .optional(),
-                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article tag's list")
-                        .optional()
+                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("article description").optional(),
+                    fieldWithPath("article.body").type(JsonFieldType.STRING).description("article body").optional(),
+                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article tag's list").optional()
                 ),
                 responseFields(
                     fieldWithPath("article.slug").type(JsonFieldType.STRING).description("changed article's slug"),
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("changed article's title"),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING)
-                        .description("created article's description"),
+                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("created article's description"),
                     fieldWithPath("article.body").type(JsonFieldType.STRING).description("changed article's body"),
-                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY)
-                        .description("article's tag's list"),
-                    fieldWithPath("article.createdAt").type(JsonFieldType.STRING)
-                        .description("article's create time"),
-                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING)
-                        .description("article's update time"),
-                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
-                        .description("login user's favoriting"),
-                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
-                        .description("article's favoriting count"),
+                    fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
+                    fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("article's create time"),
+                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
+                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN).description("login user's favoriting"),
+                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER).description("article's favoriting count"),
 
-                    fieldWithPath("article.author.username").type(JsonFieldType.STRING)
-                        .description("author's username"),
-                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio")
-                        .optional(),
-                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image")
-                        .optional(),
-                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
-                        .description("author's following")
+                    fieldWithPath("article.author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
+                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image").optional(),
+                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN).description("author's following")
                 )
             ))
         ;
@@ -494,7 +455,7 @@ class ArticleControllerTest {
     void deleteArticleTest() throws Exception {
 
         // given
-        String slug = "title-title-title";
+        String slug = articleContent1.slug().slug();
         final String URL = "/api/articles/{slug}";
 
         // when
@@ -517,28 +478,17 @@ class ArticleControllerTest {
     void favoriteArticleTest() throws Exception {
 
         // setup
-        User author = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .build();
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title title title")))
-            .description(Description.of("test article description"))
-            .body(Body.of("test article body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
-            .build();
-        Article article = Article.from(articleContent, author);
-        article.favoritingByUser(author);
+        Article article = Article.from(articleContent1, user);
+        article.favoritingByUser(user);
 
         OffsetDateTime now = OffsetDateTime.now();
         ReflectionTestUtils.setField(article, "createdAt", now);
         ReflectionTestUtils.setField(article, "updatedAt", now);
 
-        when(articleService.favoriteArticle(any(), eq(Slug.of("title-title-title")))).thenReturn(article);
+        when(articleService.favoriteArticle(eq(user.id()), eq(article.slug()))).thenReturn(article);
 
         // given
-        final String slug = "title-title-title";
+        final String slug = article.slug().slug();
         final String URL = "/api/articles/{slug}/favorite";
 
         // when
@@ -565,35 +515,28 @@ class ArticleControllerTest {
             .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
 
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
-            .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.article.author.bio", is(article.author().bio().value())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
             .andExpect(jsonPath("$.article.author.following", is(false)))
 
-            .andDo(document("article-find",
+            .andDo(document("article-favorite",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 responseFields(
                     fieldWithPath("article.slug").type(JsonFieldType.STRING).description("article's slug"),
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("article's title"),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING)
-                        .description("article's description"),
+                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("article's description"),
                     fieldWithPath("article.body").type(JsonFieldType.STRING).description("article's body"),
                     fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
                     fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("article's create time"),
                     fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
-                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
-                        .description("login user's favoriting"),
-                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
-                        .description("article's favoriting count"),
+                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN).description("login user's favoriting"),
+                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER).description("article's favoriting count"),
 
-                    fieldWithPath("article.author.username").type(JsonFieldType.STRING)
-                        .description("author's username"),
-                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio")
-                        .optional(),
-                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image")
-                        .optional(),
-                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
-                        .description("author's following")
+                    fieldWithPath("article.author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
+                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image").optional(),
+                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN).description("author's following")
                 )
             ))
         ;
@@ -603,27 +546,16 @@ class ArticleControllerTest {
     void unfavoriteArticleTest() throws Exception {
 
         // setup
-        User author = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .build();
-        ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title title title")))
-            .description(Description.of("test article description"))
-            .body(Body.of("test article body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
-            .build();
-        Article article = Article.from(articleContent, author);
+        Article article = Article.from(articleContent1, user);
 
         OffsetDateTime now = OffsetDateTime.now();
         ReflectionTestUtils.setField(article, "createdAt", now);
         ReflectionTestUtils.setField(article, "updatedAt", now);
 
-        when(articleService.unfavoriteArticle(any(), eq(Slug.of("title-title-title")))).thenReturn(article);
+        when(articleService.unfavoriteArticle(eq(user.id()), eq(article.slug()))).thenReturn(article);
 
         // given
-        final String slug = "title-title-title";
+        final String slug = article.slug().slug();
         final String URL = "/api/articles/{slug}/favorite";
 
         // when
@@ -650,35 +582,28 @@ class ArticleControllerTest {
             .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
 
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
-            .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.article.author.bio", is(article.author().bio().value())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
             .andExpect(jsonPath("$.article.author.following", is(false)))
 
-            .andDo(document("article-find",
+            .andDo(document("article-unfollow",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 responseFields(
                     fieldWithPath("article.slug").type(JsonFieldType.STRING).description("article's slug"),
                     fieldWithPath("article.title").type(JsonFieldType.STRING).description("article's title"),
-                    fieldWithPath("article.description").type(JsonFieldType.STRING)
-                        .description("article's description"),
+                    fieldWithPath("article.description").type(JsonFieldType.STRING).description("article's description"),
                     fieldWithPath("article.body").type(JsonFieldType.STRING).description("article's body"),
                     fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
                     fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("article's create time"),
                     fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
-                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
-                        .description("login user's favoriting"),
-                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
-                        .description("article's favoriting count"),
+                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN).description("login user's favoriting"),
+                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER).description("article's favoriting count"),
 
-                    fieldWithPath("article.author.username").type(JsonFieldType.STRING)
-                        .description("author's username"),
-                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio")
-                        .optional(),
-                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image")
-                        .optional(),
-                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN)
-                        .description("author's following")
+                    fieldWithPath("article.author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("article.author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
+                    fieldWithPath("article.author.image").type(JsonFieldType.STRING).description("author's image").optional(),
+                    fieldWithPath("article.author.following").type(JsonFieldType.BOOLEAN).description("author's following")
                 )
             ))
         ;

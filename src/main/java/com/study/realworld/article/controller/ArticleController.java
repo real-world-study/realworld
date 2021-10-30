@@ -8,6 +8,7 @@ import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.global.security.CurrentUserId;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -41,8 +42,11 @@ public class ArticleController {
     @GetMapping("/articles")
     public ResponseEntity<ArticlesResponse> getArticles(@PageableDefault(page = 0, size = 20) Pageable pageable,
         @RequestParam(required = false) String tag, @RequestParam(required = false) String author,
-        @RequestParam(required = false) String favorited) {
-        Page<Article> articles = articleService.findAllArticles(pageable, tag, author);
+        @RequestParam(required = false) String favorited,
+        @CurrentUserId Long userId) {
+        Page<Article> articles = Optional.ofNullable(userId)
+            .map(id -> articleService.findAllArticles(id, pageable, tag, author))
+            .orElse(articleService.findAllArticles(pageable, tag, author));
         return ResponseEntity.ok().body(ArticlesResponse.fromPageArticles(articles));
     }
 

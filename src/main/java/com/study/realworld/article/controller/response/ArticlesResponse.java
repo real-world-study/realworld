@@ -28,7 +28,7 @@ public class ArticlesResponse {
             articles.getContent().stream()
                 .map(ArticleResponseNested::fromArticle)
                 .collect(Collectors.toList()),
-            articles.getSize()
+            articles.getContent().size()
         );
     }
 
