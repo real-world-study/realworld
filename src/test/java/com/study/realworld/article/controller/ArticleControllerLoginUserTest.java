@@ -291,7 +291,7 @@ class ArticleControllerLoginUserTest {
     }
 
     @Test
-    void createArticleTestTest() throws Exception {
+    void createArticleTest() throws Exception {
 
         // setup
         Article article = Article.from(articleContent1, user);
@@ -337,7 +337,7 @@ class ArticleControllerLoginUserTest {
             .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
 
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
-            .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.article.author.bio", is(article.author().bio().value())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
             .andExpect(jsonPath("$.article.author.following", is(false)))
 
