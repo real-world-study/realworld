@@ -35,6 +35,12 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
+    public Article findBySlug(Long userId, Slug slug) {
+        User user = userService.findById(userId);
+        return findBySlug(slug).updateFavoritedByUser(user);
+    }
+
+    @Transactional(readOnly = true)
     public Page<Article> findAllArticles(Pageable pageable, String tag, String author) {
         return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
     }

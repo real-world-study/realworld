@@ -116,6 +116,61 @@ class ArticleServiceTest {
 
     }
 
+    @Nested
+    @DisplayName("findBySlug Article(parameter + userId) 로그인 유저 단일 조회 테스트")
+    class findBySlugLoginUSerTest {
+
+        @Test
+        @DisplayName("login한 유저가 slug를 가지고 article을 조회할 수 있다.")
+        void findBySlugSuccessTest() {
+
+            // given
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(user);
+            Article expected = Article.from(articleContent, user).favoritingByUser(user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(expected.slug())).thenReturn(Optional.of(expected));
+
+            // when
+            Article result = articleService.findBySlug(userId, expected.slug());
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+        @Test
+        @DisplayName("없는 user을 조회하려고할 때 exception이 발생해야 한다.")
+        void findBySlugExceptionByNotFoundUserTest() {
+
+            // given
+            Long userId = 1L;
+            when(userService.findById(userId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+            Article article = Article.from(articleContent, user);
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.findBySlug(userId, article.slug()))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("없는 article을 조회하려고할 때 exception이 발생해야 한다.")
+        void findBySlugExceptionTest() {
+
+            // given
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(user);
+            Article article = Article.from(articleContent, user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(article.slug()))
+                .thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.findBySlug(userId, article.slug()))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+    }
+
     @Test
     @DisplayName("user id를 가지고 article을 생성할 수 있다.")
     void createArticleTest() {
