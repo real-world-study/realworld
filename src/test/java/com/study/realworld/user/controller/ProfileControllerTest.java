@@ -4,7 +4,6 @@ import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentRe
 import static com.study.realworld.user.controller.ApiDocumentUtils.getDocumentResponse;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -23,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.study.realworld.testutil.PrincipalArgumentResolver;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
@@ -165,13 +163,9 @@ class ProfileControllerTest {
     void followTest() throws Exception {
 
         // setup
-        String username = "username";
-        Profile profile = Profile.Builder()
-            .username(Username.of(username))
-            .bio(Bio.of("bio"))
-            .image(Image.of("image"))
-            .following(true).build();
-        when(profileService.followUser(any(), any(Username.class))).thenReturn(profile);
+        String username = user.username().value();
+        Profile expected = user.profile().profileByFollowing(true);
+        when(profileService.followUser(1L, expected.username())).thenReturn(expected);
 
         // given
         final String URL = "/api/profiles/{username}/follow";
@@ -186,21 +180,21 @@ class ProfileControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-            .andExpect(jsonPath("$.profile.username", is("username")))
-            .andExpect(jsonPath("$.profile.bio", is("bio")))
-            .andExpect(jsonPath("$.profile.image", is("image")))
-            .andExpect(jsonPath("$.profile.following", is(true)))
+            .andExpect(jsonPath("$.profile.username", is(expected.username().value())))
+            .andExpect(jsonPath("$.profile.bio", is(expected.bio().value())))
+            .andExpect(jsonPath("$.profile.image", is(nullValue())))
+            .andExpect(jsonPath("$.profile.following", is(expected.isFollow())))
             .andDo(document("follow-profile",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
-                    parameterWithName("username").description("검색 유저 이름")
+                    parameterWithName("username").description("want to search user's username")
                 ),
                 responseFields(
-                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("bio").optional(),
-                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("이미지").optional(),
-                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("팔로우 여부")
+                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("user's username"),
+                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("user's bio").optional(),
+                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("user's image").optional(),
+                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("user's is following")
                 )
             ))
         ;
@@ -210,13 +204,9 @@ class ProfileControllerTest {
     void unfollowTest() throws Exception {
 
         // setup
-        String username = "username";
-        Profile profile = Profile.Builder()
-            .username(Username.of(username))
-            .bio(Bio.of("bio"))
-            .image(Image.of("image"))
-            .following(false).build();
-        when(profileService.unfollowUser(any(), any(Username.class))).thenReturn(profile);
+        String username = user.username().value();
+        Profile expected = user.profile().profileByFollowing(false);
+        when(profileService.unfollowUser(1L, expected.username())).thenReturn(expected);
 
         // given
         final String URL = "/api/profiles/{username}/follow";
@@ -231,21 +221,21 @@ class ProfileControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-            .andExpect(jsonPath("$.profile.username", is("username")))
-            .andExpect(jsonPath("$.profile.bio", is("bio")))
-            .andExpect(jsonPath("$.profile.image", is("image")))
-            .andExpect(jsonPath("$.profile.following", is(false)))
+            .andExpect(jsonPath("$.profile.username", is(expected.username().value())))
+            .andExpect(jsonPath("$.profile.bio", is(expected.bio().value())))
+            .andExpect(jsonPath("$.profile.image", is(nullValue())))
+            .andExpect(jsonPath("$.profile.following", is(expected.isFollow())))
             .andDo(document("unfollow-profile",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
-                    parameterWithName("username").description("검색 유저 이름")
+                    parameterWithName("username").description("want to search user's username")
                 ),
                 responseFields(
-                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("유저이름"),
-                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("bio").optional(),
-                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("이미지").optional(),
-                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("팔로우 여부")
+                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("user's username"),
+                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("user's bio").optional(),
+                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("user's image").optional(),
+                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("user's is following")
                 )
             ))
         ;
