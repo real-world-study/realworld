@@ -5,6 +5,7 @@ import com.study.realworld.user.controller.response.ProfileResponse;
 import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.ProfileService;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,9 @@ public class ProfileController {
 
     @GetMapping("/profiles/{username}")
     public ResponseEntity<ProfileResponse> getProfile(@PathVariable String username, @CurrentUserId Long loginId) {
-        Profile profile = profileService.findProfile(loginId, Username.of(username));
+        Profile profile = Optional.ofNullable(loginId)
+            .map(id -> profileService.findProfile(id, Username.of(username)))
+            .orElse(profileService.findProfile(Username.of(username)));
         return ResponseEntity.ok().body(ProfileResponse.ofProfile(profile));
     }
 
