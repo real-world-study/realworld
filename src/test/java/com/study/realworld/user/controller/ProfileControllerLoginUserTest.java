@@ -44,7 +44,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
-class ProfileControllerTest {
+public class ProfileControllerLoginUserTest {
 
     @Mock
     private ProfileService profileService;
@@ -65,8 +65,8 @@ class ProfileControllerTest {
             .alwaysExpect(status().isOk())
             .build();
 
-        user = com.study.realworld.user.domain.User.Builder()
-            .id(2L)
+        user = User.Builder()
+            .id(1L)
             .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
@@ -75,51 +75,6 @@ class ProfileControllerTest {
 
     @Nested
     class getProfile {
-
-        @Test
-        void getProfileByNonLoginTest(RestDocumentationContextProvider restDocumentationContextProvider) throws Exception {
-
-            // setup
-            String username = user.username().value();
-            Profile expected = user.profile();
-            when(profileService.findProfile(user.username())).thenReturn(expected);
-            mockMvc = MockMvcBuilders.standaloneSetup(profileController)
-                .apply(documentationConfiguration(restDocumentationContextProvider))
-                .alwaysExpect(status().isOk())
-                .build();
-
-            // given
-            final String URL = "/api/profiles/{username}";
-
-            // when
-            ResultActions resultActions = mockMvc.perform(get(URL, username)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
-
-            // then
-            resultActions
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(jsonPath("$.profile.username", is(expected.username().value())))
-                .andExpect(jsonPath("$.profile.bio", is(expected.bio().value())))
-                .andExpect(jsonPath("$.profile.image", is(nullValue())))
-                .andExpect(jsonPath("$.profile.following", is(expected.isFollow())))
-                .andDo(document("get-profile-non-login",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
-                    pathParameters(
-                        parameterWithName("username").description("want to search user's username")
-                    ),
-                    responseFields(
-                        fieldWithPath("profile.username").type(JsonFieldType.STRING).description("user's username"),
-                        fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("user's bio").optional(),
-                        fieldWithPath("profile.image").type(JsonFieldType.STRING).description("user's image").optional(),
-                        fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("user's is following")
-                    )
-                ))
-            ;
-        }
 
         @Test
         void getProfileByLoginTest() throws Exception {
