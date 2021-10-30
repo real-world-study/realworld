@@ -2,6 +2,7 @@ package com.study.realworld.user.controller;
 
 import static com.study.realworld.user.controller.response.UserResponse.fromUserAndToken;
 
+import com.study.realworld.global.security.CurrentUserId;
 import com.study.realworld.global.security.JwtService;
 import com.study.realworld.user.controller.request.UserJoinRequest;
 import com.study.realworld.user.controller.request.UserLoginRequest;
@@ -10,7 +11,6 @@ import com.study.realworld.user.controller.response.UserResponse;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,14 +45,13 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal Long loginId) {
+    public ResponseEntity<UserResponse> getCurrentUser(@CurrentUserId Long loginId) {
         User user = userService.findById(loginId);
         return ResponseEntity.ok().body(fromUserAndToken(user, getTokenByContextHolder()));
     }
 
     @PutMapping("/user")
-    public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest request,
-        @AuthenticationPrincipal Long loginId) {
+    public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest request, @CurrentUserId Long loginId) {
         User user = userService.update(request.toUserUpdateModel(), loginId);
         return ResponseEntity.ok().body(fromUserAndToken(user, getTokenByContextHolder()));
     }

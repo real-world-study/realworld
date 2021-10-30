@@ -6,9 +6,9 @@ import com.study.realworld.comment.controller.response.CommentResponse;
 import com.study.realworld.comment.controller.response.CommentsResponse;
 import com.study.realworld.comment.domain.Comment;
 import com.study.realworld.comment.service.CommentService;
+import com.study.realworld.global.security.CurrentUserId;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,15 +35,13 @@ public class CommentController {
 
     @PostMapping("/articles/{slug}/comments")
     public ResponseEntity<CommentResponse> createComment(@PathVariable String slug,
-        @RequestBody CommentCreateRequest request,
-        @AuthenticationPrincipal Long loginId) {
+        @RequestBody CommentCreateRequest request, @CurrentUserId Long loginId) {
         Comment comment = commentService.createComment(loginId, Slug.of(slug), request.toCommentBody());
         return ResponseEntity.ok().body(CommentResponse.fromComment(comment));
     }
 
     @DeleteMapping("/articles/{slug}/comments/{id}")
-    public void deleteComment(@PathVariable String slug, @PathVariable Long id,
-        @AuthenticationPrincipal Long loginId) {
+    public void deleteComment(@PathVariable String slug, @PathVariable Long id, @CurrentUserId Long loginId) {
         commentService.deleteCommentByCommentId(loginId, Slug.of(slug), id);
     }
 
