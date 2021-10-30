@@ -34,8 +34,10 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{slug}")
-    public ResponseEntity<ArticleResponse> getArticle(@PathVariable String slug) {
-        Article article = articleService.findBySlug(Slug.of(slug));
+    public ResponseEntity<ArticleResponse> getArticle(@PathVariable String slug, @CurrentUserId Long userId) {
+        Article article = Optional.ofNullable(userId)
+            .map(id -> articleService.findBySlug(id, Slug.of(slug)))
+            .orElse(articleService.findBySlug(Slug.of(slug)));
         return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
     }
 
