@@ -29,6 +29,8 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -133,7 +135,7 @@ class ArticleServiceTest {
     }
 
     @Nested
-    @DisplayName("updateARticle Article 변경 테스트")
+    @DisplayName("updateArticle Article 변경 테스트")
     class updateArticle {
 
         private ArticleUpdateModel articleUpdateModel;
@@ -321,6 +323,36 @@ class ArticleServiceTest {
             () -> assertThat(result.getNumber()).isEqualTo(offset),
             () -> assertThat(result.getTotalPages()).isEqualTo(2)
         );
+    }
+
+    @Test
+    @DisplayName("로그인한 유저가 원하는 offset, limit을 가진 Page 리스트를 반환할 수 있다.")
+    void findAllArticlesByLoginUserTest() {
+
+        // setup & given
+        int offset = 0;
+        int limit = 4;
+        List<Article> articles = Stream.of(Article.from(articleContent, user),
+            Article.from(articleContent, user),
+            Article.from(articleContent, user),
+            Article.from(articleContent, user),
+            Article.from(articleContent, user)
+        ).map(article -> article.favoritingByUser(user))
+            .collect(Collectors.toList());
+        PageRequest pageRequest = PageRequest.of(offset, limit);
+        when(articleRepository.findPageByTagAndAuthor(pageRequest, null, null))
+            .thenReturn(new PageImpl<>(articles.subList(0, 4), pageRequest, articles.size()));
+
+        List<Article> expectedArticles = articles.stream()
+            .map(article -> article.updateFavoritedByUser(user))
+            .collect(Collectors.toList());
+        Page<Article> expected = new PageImpl<>(expectedArticles.subList(0, 4), pageRequest, articles.size());
+
+        // when
+        Page<Article> result = articleService.findAllArticles(user.id(), pageRequest, null, null);
+
+        // then
+        assertThat(result).isEqualTo(expected);
     }
 
     @Nested

@@ -39,6 +39,13 @@ public class ArticleService {
         return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Article> findAllArticles(Long userId, Pageable pageable, String tag, String author) {
+        User user = userService.findById(userId);
+        return articleRepository.findPageByTagAndAuthor(pageable, tag, author)
+            .map(article -> article.updateFavoritedByUser(user));
+    }
+
     @Transactional
     public Article createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
