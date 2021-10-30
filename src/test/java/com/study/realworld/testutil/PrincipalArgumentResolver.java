@@ -24,7 +24,7 @@ public class PrincipalArgumentResolver implements HandlerMethodArgumentResolver 
 
         User user = User.Builder()
             .id(1L)
-            .profile(Username.of("Jacob"), Bio.of("I work at statefarm"), null)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
             .build();

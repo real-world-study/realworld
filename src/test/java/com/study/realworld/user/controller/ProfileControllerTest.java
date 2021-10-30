@@ -67,7 +67,7 @@ class ProfileControllerTest {
 
         user = com.study.realworld.user.domain.User.Builder()
             .id(2L)
-            .profile(Username.of("Jacob"), Bio.of("I work at statefarm"), null)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
             .build();

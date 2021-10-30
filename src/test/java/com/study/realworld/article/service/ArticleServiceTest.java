@@ -20,6 +20,7 @@ import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.tag.service.TagService;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -66,15 +67,15 @@ class ArticleServiceTest {
     void beforeEach() {
         user = User.Builder()
             .id(1L)
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
             .build();
         articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title")))
-            .description(Description.of("description"))
-            .body(Body.of("body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
             .build();
     }
 
@@ -123,7 +124,7 @@ class ArticleServiceTest {
         Long userId = 1L;
         when(userService.findById(userId)).thenReturn(user);
         when(tagService.refreshTagByExistedTag(articleContent.tags()))
-            .thenReturn(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")));
+            .thenReturn(Arrays.asList(Tag.of("dragons"), Tag.of("training")));
         Article expected = Article.from(articleContent, user);
         when(articleRepository.save(expected)).thenReturn(expected);
 
