@@ -130,6 +130,9 @@ class ArticleControllerTest {
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.updatedAt",
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.article.favorited", is(article.isFavorited())))
+            .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
+
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
             .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
@@ -147,6 +150,10 @@ class ArticleControllerTest {
                     fieldWithPath("article.tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
                     fieldWithPath("article.createdAt").type(JsonFieldType.STRING).description("article's create time"),
                     fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
+                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
+                        .description("login user's favoriting"),
+                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
+                        .description("article's favoriting count"),
 
                     fieldWithPath("article.author.username").type(JsonFieldType.STRING)
                         .description("author's username"),
@@ -223,6 +230,9 @@ class ArticleControllerTest {
                 is(expected.createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.articles.[0].updatedAt",
                 is(expected.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.articles.[0].favorited", is(expected.isFavorited())))
+            .andExpect(jsonPath("$.articles.[0].favoritesCount", is(expected.favoritesCount())))
+
             .andExpect(jsonPath("$.articles.[0].author.username", is(expected.author().username().value())))
             .andExpect(jsonPath("$.articles.[0].author.bio", is(nullValue())))
             .andExpect(jsonPath("$.articles.[0].author.image", is(nullValue())))
@@ -253,6 +263,10 @@ class ArticleControllerTest {
                         .description("article's create time"),
                     fieldWithPath("articles[].updatedAt").type(JsonFieldType.STRING)
                         .description("article's update time"),
+                    fieldWithPath("articles[].favorited").type(JsonFieldType.BOOLEAN)
+                        .description("login user's favoriting"),
+                    fieldWithPath("articles[].favoritesCount").type(JsonFieldType.NUMBER)
+                        .description("article's favoriting count"),
 
                     fieldWithPath("articles[].author.username").type(JsonFieldType.STRING)
                         .description("author's username"),
@@ -323,6 +337,9 @@ class ArticleControllerTest {
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.updatedAt",
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.article.favorited", is(article.isFavorited())))
+            .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
+
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
             .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
@@ -350,6 +367,10 @@ class ArticleControllerTest {
                         .description("created article's create time"),
                     fieldWithPath("article.updatedAt").type(JsonFieldType.STRING)
                         .description("created article's update time"),
+                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
+                        .description("login user's favoriting"),
+                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
+                        .description("article's favoriting count"),
 
                     fieldWithPath("article.author.username").type(JsonFieldType.STRING)
                         .description("author's username"),
@@ -419,6 +440,9 @@ class ArticleControllerTest {
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.updatedAt",
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.article.favorited", is(article.isFavorited())))
+            .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
+
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
             .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
@@ -448,6 +472,10 @@ class ArticleControllerTest {
                         .description("article's create time"),
                     fieldWithPath("article.updatedAt").type(JsonFieldType.STRING)
                         .description("article's update time"),
+                    fieldWithPath("article.favorited").type(JsonFieldType.BOOLEAN)
+                        .description("login user's favoriting"),
+                    fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
+                        .description("article's favoriting count"),
 
                     fieldWithPath("article.author.username").type(JsonFieldType.STRING)
                         .description("author's username"),
@@ -535,6 +563,7 @@ class ArticleControllerTest {
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.favorited", is(article.isFavorited())))
             .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
+
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
             .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
@@ -556,7 +585,6 @@ class ArticleControllerTest {
                         .description("login user's favoriting"),
                     fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
                         .description("article's favoriting count"),
-                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
 
                     fieldWithPath("article.author.username").type(JsonFieldType.STRING)
                         .description("author's username"),
@@ -620,6 +648,7 @@ class ArticleControllerTest {
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.favorited", is(article.isFavorited())))
             .andExpect(jsonPath("$.article.favoritesCount", is(article.favoritesCount())))
+
             .andExpect(jsonPath("$.article.author.username", is(article.author().username().value())))
             .andExpect(jsonPath("$.article.author.bio", is(nullValue())))
             .andExpect(jsonPath("$.article.author.image", is(nullValue())))
@@ -641,7 +670,6 @@ class ArticleControllerTest {
                         .description("login user's favoriting"),
                     fieldWithPath("article.favoritesCount").type(JsonFieldType.NUMBER)
                         .description("article's favoriting count"),
-                    fieldWithPath("article.updatedAt").type(JsonFieldType.STRING).description("article's update time"),
 
                     fieldWithPath("article.author.username").type(JsonFieldType.STRING)
                         .description("author's username"),
