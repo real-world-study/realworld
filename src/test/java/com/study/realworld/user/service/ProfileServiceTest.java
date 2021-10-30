@@ -49,6 +49,43 @@ class ProfileServiceTest {
     }
 
     @Nested
+    @DisplayName("findProfile profile 조회 (parameter : username")
+    class findProfileByUsername {
+
+        @Test
+        @DisplayName("username에 해당하는 유저가 없다면 exception이 발생해야 한다.")
+        void findProfileExceptionByNotFoundUserTest() {
+
+            // setup & given
+            Username username = Username.of("username");
+            when(userService.findByUsername(username)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+            // when & then
+            assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> profileService.findProfile(username))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("username을 받아 해당하는 유저의 프로필을 반환할 수 있다.")
+        void findProfileSuccessTest() {
+
+            // setup & given
+            Username username = Username.of("username");
+            when(userService.findByUsername(username)).thenReturn(loginUser);
+
+            Profile expected = loginUser.profile();
+
+            // when
+            Profile result = profileService.findProfile(username);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+    }
+
+    @Nested
     @DisplayName("Follow user method")
     class followingUser {
 

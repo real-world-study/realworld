@@ -18,7 +18,7 @@ public class Profile {
     private Image image;
 
     @Transient
-    private boolean following;
+    private boolean following = false;
 
     protected Profile() {
     }

@@ -16,6 +16,11 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = true)
+    public Profile findProfile(Username username) {
+        return userService.findByUsername(username).profile();
+    }
+
+    @Transactional(readOnly = true)
     public Profile findProfile(Long loginId, Username username) {
         User user = userService.findById(loginId);
         User followee = userService.findByUsername(username);
