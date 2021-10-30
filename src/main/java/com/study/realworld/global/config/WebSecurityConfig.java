@@ -3,9 +3,9 @@ package com.study.realworld.global.config;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
-import com.study.realworld.security.JwtAuthenticationEntryPoint;
-import com.study.realworld.security.JwtAuthenticationTokenFilter;
-import com.study.realworld.security.JwtExceptionFilter;
+import com.study.realworld.global.security.JwtAuthenticationEntryPoint;
+import com.study.realworld.global.security.JwtAuthenticationTokenFilter;
+import com.study.realworld.global.security.JwtExceptionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
