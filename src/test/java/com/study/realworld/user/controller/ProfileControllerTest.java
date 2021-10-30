@@ -77,12 +77,16 @@ class ProfileControllerTest {
     class getProfile {
 
         @Test
-        void getProfileByNonLoginTest() throws Exception {
+        void getProfileByNonLoginTest(RestDocumentationContextProvider restDocumentationContextProvider) throws Exception {
 
             // setup
             String username = user.username().value();
             Profile expected = user.profile();
             when(profileService.findProfile(user.username())).thenReturn(expected);
+            mockMvc = MockMvcBuilders.standaloneSetup(profileController)
+                .apply(documentationConfiguration(restDocumentationContextProvider))
+                .alwaysExpect(status().isOk())
+                .build();
 
             // given
             final String URL = "/api/profiles/{username}";
