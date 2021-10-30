@@ -14,22 +14,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class FollowingUsersTest {
+class FolloweesTest {
 
-    private User followingUser;
+    private User followee;
 
     @BeforeEach
     void beforeEach() {
-        followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
+        followee = User.Builder()
+            .profile(Username.of("followee"), null, null)
             .password(Password.of("password"))
             .email(Email.of("email2@email2.com"))
             .build();
     }
 
     @Test
-    void followingUserTest() {
-        FollowingUsers followingUsers = new FollowingUsers();
+    void followeesTest() {
+        Followees followees = new Followees();
     }
 
     @Nested
@@ -42,11 +42,11 @@ class FollowingUsersTest {
 
             // given
             Set<User> userSet = new HashSet<>();
-            userSet.add(followingUser);
-            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+            userSet.add(followee);
+            Followees followees = Followees.of(userSet);
 
             // when
-            boolean result = followingUsers.isFollow(followingUser);
+            boolean result = followees.isFollow(followee);
 
             // then
             assertTrue(result);
@@ -58,10 +58,10 @@ class FollowingUsersTest {
 
             // given
             Set<User> userSet = new HashSet<>();
-            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+            Followees followees = Followees.of(userSet);
 
             // when
-            boolean result = followingUsers.isFollow(followingUser);
+            boolean result = followees.isFollow(followee);
 
             // then
             assertFalse(result);
@@ -78,14 +78,14 @@ class FollowingUsersTest {
 
             // given
             Set<User> userSet = new HashSet<>();
-            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+            Followees followees = Followees.of(userSet);
 
             Set<User> expectedUserSet = new HashSet<>();
-            expectedUserSet.add(followingUser);
-            FollowingUsers expected = FollowingUsers.of(expectedUserSet);
+            expectedUserSet.add(followee);
+            Followees expected = Followees.of(expectedUserSet);
 
             // when
-            FollowingUsers result = followingUsers.followingUser(followingUser);
+            Followees result = followees.followingUser(followee);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -97,12 +97,12 @@ class FollowingUsersTest {
 
             // given
             Set<User> userSet = new HashSet<>();
-            userSet.add(followingUser);
-            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+            userSet.add(followee);
+            Followees followees = Followees.of(userSet);
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> followingUsers.followingUser(followingUser))
+                .isThrownBy(() -> followees.followingUser(followee))
                 .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
         }
 
@@ -118,14 +118,14 @@ class FollowingUsersTest {
 
             // given
             Set<User> userSet = new HashSet<>();
-            userSet.add(followingUser);
-            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+            userSet.add(followee);
+            Followees followees = Followees.of(userSet);
 
             Set<User> expectedUserSet = new HashSet<>();
-            FollowingUsers expected = FollowingUsers.of(expectedUserSet);
+            Followees expected = Followees.of(expectedUserSet);
 
             // when
-            FollowingUsers result = followingUsers.unfollowingUser(followingUser);
+            Followees result = followees.unfollowingUser(followee);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -137,11 +137,11 @@ class FollowingUsersTest {
 
             // given
             Set<User> userSet = new HashSet<>();
-            FollowingUsers followingUsers = FollowingUsers.of(userSet);
+            Followees followees = Followees.of(userSet);
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> followingUsers.unfollowingUser(followingUser))
+                .isThrownBy(() -> followees.unfollowingUser(followee))
                 .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
         }
 
@@ -153,13 +153,13 @@ class FollowingUsersTest {
 
         // given
         Set<User> userSet = new HashSet<>();
-        userSet.add(followingUser);
-        FollowingUsers followingUsers = FollowingUsers.of(userSet);
+        userSet.add(followee);
+        Followees followees = Followees.of(userSet);
 
         // when & then
-        assertThat(followingUsers)
-            .isEqualTo(FollowingUsers.of(userSet))
-            .hasSameHashCodeAs(FollowingUsers.of(userSet));
+        assertThat(followees)
+            .isEqualTo(Followees.of(userSet))
+            .hasSameHashCodeAs(Followees.of(userSet));
     }
 
 }

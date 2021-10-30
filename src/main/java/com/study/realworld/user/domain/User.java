@@ -30,7 +30,7 @@ public class User extends BaseTimeEntity {
     private Password password;
 
     @Embedded
-    private FollowingUsers followingUsers = new FollowingUsers();
+    private Followees followees = new Followees();
 
     protected User() {
     }
@@ -103,15 +103,15 @@ public class User extends BaseTimeEntity {
     }
 
     private boolean isFollow(User user) {
-        return followingUsers.isFollow(user);
+        return followees.isFollow(user);
     }
 
     public void followingUser(User user) {
-        followingUsers.followingUser(user);
+        followees.followingUser(user);
     }
 
     public void unfollowingUser(User user) {
-        followingUsers.unfollowingUser(user);
+        followees.unfollowingUser(user);
     }
 
     @Override

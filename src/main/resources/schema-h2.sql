@@ -19,10 +19,10 @@ CREATE TABLE IF NOT EXISTS user
 CREATE TABLE IF NOT EXISTS follow
 (
     user_id         bigint          NOT NULL,
-    follower_id     bigint          NOT NULL,
-    PRIMARY KEY(user_id, follower_id),
+    followee_id     bigint          NOT NULL,
+    PRIMARY KEY(user_id, followee_id),
     CONSTRAINT fk_follow_to_user_id FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
-    CONSTRAINT fk_follow_to_follower_id FOREIGN KEY (follower_id) REFERENCES user (id) ON DELETE CASCADE
+    CONSTRAINT fk_follow_to_followee_id FOREIGN KEY (followee_id) REFERENCES user (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS article

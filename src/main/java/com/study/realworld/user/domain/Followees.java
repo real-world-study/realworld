@@ -13,51 +13,51 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Embeddable
-public class FollowingUsers {
+public class Followees {
 
     @JoinTable(name = "follow",
         joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "follower_id"))
+        inverseJoinColumns = @JoinColumn(name = "followee_id"))
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<User> followingUsers = new HashSet<>();
+    private Set<User> followees = new HashSet<>();
 
-    protected FollowingUsers() {
+    protected Followees() {
     }
 
-    private FollowingUsers(Set<User> followingUsers) {
-        this.followingUsers = followingUsers;
+    private Followees(Set<User> followees) {
+        this.followees = followees;
     }
 
-    public static FollowingUsers of(Set<User> followingUsers) {
-        return new FollowingUsers(followingUsers);
+    public static Followees of(Set<User> followees) {
+        return new Followees(followees);
     }
 
     public boolean isFollow(User user) {
-        return followingUsers.contains(user);
+        return followees.contains(user);
     }
 
-    public FollowingUsers followingUser(User user) {
+    public Followees followingUser(User user) {
         checkFollowingUser(user);
 
-        followingUsers.add(user);
+        followees.add(user);
         return this;
     }
 
     private void checkFollowingUser(User user) {
-        if (followingUsers.contains(user)) {
+        if (followees.contains(user)) {
             throw new BusinessException(ErrorCode.INVALID_FOLLOW);
         }
     }
 
-    public FollowingUsers unfollowingUser(User user) {
+    public Followees unfollowingUser(User user) {
         checkUnfollowingUser(user);
 
-        followingUsers.remove(user);
+        followees.remove(user);
         return this;
     }
 
     private void checkUnfollowingUser(User user) {
-        if (!followingUsers.contains(user)) {
+        if (!followees.contains(user)) {
             throw new BusinessException(ErrorCode.INVALID_UNFOLLOW);
         }
     }
@@ -70,13 +70,13 @@ public class FollowingUsers {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        FollowingUsers that = (FollowingUsers) o;
-        return Objects.equals(followingUsers, that.followingUsers);
+        Followees that = (Followees) o;
+        return Objects.equals(followees, that.followees);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(followingUsers);
+        return Objects.hash(followees);
     }
 
 }
