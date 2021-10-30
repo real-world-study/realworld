@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.global.exception.GlobalExceptionHandler;
-import com.study.realworld.security.JwtService;
+import com.study.realworld.global.security.JwtService;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.Profile;

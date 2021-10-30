@@ -3,6 +3,8 @@ package com.study.realworld.article.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.article.domain.Article;
@@ -319,6 +321,156 @@ class ArticleServiceTest {
             () -> assertThat(result.getNumber()).isEqualTo(offset),
             () -> assertThat(result.getTotalPages()).isEqualTo(2)
         );
+    }
+
+    @Nested
+    @DisplayName("favoriteArticle article 좋아요 기능 테스트")
+    class favoriteArticleTest {
+
+        @Test
+        @DisplayName("유저가 존재하지 않으면 exception이 발생해야 한다.")
+        void userNotFoundExceptionTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            Long userId = 2L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.favoriteArticle(userId, slug))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("Article이 존재하지 않으면 exception이 발생해야 한다.")
+        void favoriteArticleBySlugExceptionTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(slug)).thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.favoriteArticle(userId, slug))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+        @Test
+        @DisplayName("이미 좋아요한 user가 좋아요하면 exception이 발생해야 한다.")
+        void favoriteArticleExceptionByAlreadyFavoriteUserTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            article.favoritingByUser(user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(slug)).thenReturn(Optional.of(article));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.favoriteArticle(userId, slug))
+                .withMessageMatching(ErrorCode.INVALID_FAVORITE_ARTICLE.getMessage());
+        }
+
+        @Test
+        @DisplayName("user가 article에 좋아요를 할 수 있다.")
+        void favoriteArticleSuccessTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(slug)).thenReturn(Optional.of(article));
+
+            // when
+            Article result = articleService.favoriteArticle(userId, slug);
+
+            // then
+            assertTrue(result.isFavorited());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("unfavoriteArticle article 좋아요 취소 기능 테스트")
+    class unfavoriteArticleTest {
+
+        @Test
+        @DisplayName("유저가 존재하지 않으면 exception이 발생해야 한다.")
+        void userNotFoundExceptionTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            Long userId = 2L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.unfavoriteArticle(userId, slug))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("Article이 존재하지 않으면 exception이 발생해야 한다.")
+        void unfavoriteArticleBySlugExceptionTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(slug)).thenReturn(Optional.empty());
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.unfavoriteArticle(userId, slug))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+        @Test
+        @DisplayName("좋아요 안한 user가 좋아요 취소하면 exception이 발생해야 한다.")
+        void unfavoriteArticleExceptionByUnFavoriteUserTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(slug)).thenReturn(Optional.of(article));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.unfavoriteArticle(userId, slug))
+                .withMessageMatching(ErrorCode.INVALID_UNFAVORITE_ARTICLE.getMessage());
+        }
+
+        @Test
+        @DisplayName("user가 article에 좋아요 취소를 할 수 있다.")
+        void unfavoriteArticleSuccessTest() {
+
+            // setup & given
+            Article article = Article.from(articleContent, user);
+            article.favoritingByUser(user);
+            Long userId = 1L;
+            Slug slug = article.slug();
+            when(userService.findById(userId)).thenReturn(user);
+            when(articleRepository.findByArticleContentSlugTitleSlug(slug)).thenReturn(Optional.of(article));
+
+            // when
+            Article result = articleService.unfavoriteArticle(userId, slug);
+
+            // then
+            assertFalse(result.isFavorited());
+        }
+
     }
 
 

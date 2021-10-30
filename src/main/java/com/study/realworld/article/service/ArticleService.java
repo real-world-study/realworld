@@ -57,7 +57,7 @@ public class ArticleService {
         updateArticle.getDescription().ifPresent(article::changeDescription);
         updateArticle.getBody().ifPresent(article::changeBody);
 
-        return article;
+        return article.updateFavoritedByUser(author);
     }
 
     @Transactional
@@ -66,6 +66,22 @@ public class ArticleService {
         Article article = findByAuthorAndSlug(author, slug);
 
         article.deleteArticle();
+    }
+
+    @Transactional
+    public Article favoriteArticle(Long userId, Slug slug) {
+        User user = userService.findById(userId);
+        Article article = findBySlug(slug);
+
+        return article.favoritingByUser(user);
+    }
+
+    @Transactional
+    public Article unfavoriteArticle(Long userId, Slug slug) {
+        User user = userService.findById(userId);
+        Article article = findBySlug(slug);
+
+        return article.unfavoritingByUser(user);
     }
 
     private Article findByAuthorAndSlug(User author, Slug slug) {

@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.study.realworld.security.JwtAuthentication;
-import com.study.realworld.security.JwtService;
+import com.study.realworld.global.security.JwtAuthentication;
+import com.study.realworld.global.security.JwtService;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Image;
