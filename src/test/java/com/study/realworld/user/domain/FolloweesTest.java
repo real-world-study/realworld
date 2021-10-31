@@ -68,83 +68,33 @@ class FolloweesTest {
         }
     }
 
-    @Nested
-    @DisplayName("특정 User를 follow할 수 있다.")
-    class followingUserTest {
+    @Test
+    @DisplayName("특정 유저를 follow하고 있을 경우 Exception이 발생해야 한다.")
+    void checkIsFollowingUserExceptionTest() {
 
-        @Test
-        @DisplayName("정상적인 경우 user가 포함된다.")
-        void successTest() {
+        // given
+        Set<User> userSet = new HashSet<>();
+        userSet.add(followee);
+        Followees followees = Followees.of(userSet);
 
-            // given
-            Set<User> userSet = new HashSet<>();
-            Followees followees = Followees.of(userSet);
-
-            Set<User> expectedUserSet = new HashSet<>();
-            expectedUserSet.add(followee);
-            Followees expected = Followees.of(expectedUserSet);
-
-            // when
-            Followees result = followees.followingUser(followee);
-
-            // then
-            assertThat(result).isEqualTo(expected);
-        }
-
-        @Test
-        @DisplayName("이미 follow한 유저를 follow할 경우 exception이 발생해야 한다.")
-        void exceptionTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            userSet.add(followee);
-            Followees followees = Followees.of(userSet);
-
-            // when & then
-            assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> followees.followingUser(followee))
-                .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
-        }
-
+        // when & then
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> followees.checkIsFollowingUser(followee))
+            .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
     }
 
-    @Nested
-    @DisplayName("특정 User를 unfollow할 수 있다.")
-    class unfollowingUserTest {
+    @Test
+    @DisplayName("특정 유저를 unfollow하고 있을 경우 Exception이 발생해야 한다.")
+    void checkInUnFollowingUserExceptionTest() {
 
-        @Test
-        @DisplayName("정상적인 경우 user가 제거된다.")
-        void successTest() {
+        // given
+        Set<User> userSet = new HashSet<>();
+        Followees followees = Followees.of(userSet);
 
-            // given
-            Set<User> userSet = new HashSet<>();
-            userSet.add(followee);
-            Followees followees = Followees.of(userSet);
-
-            Set<User> expectedUserSet = new HashSet<>();
-            Followees expected = Followees.of(expectedUserSet);
-
-            // when
-            Followees result = followees.unfollowingUser(followee);
-
-            // then
-            assertThat(result).isEqualTo(expected);
-        }
-
-        @Test
-        @DisplayName("이미 unfollow한 유저를 unfollow할 경우 exception이 발생해야 한다.")
-        void exceptionTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            Followees followees = Followees.of(userSet);
-
-            // when & then
-            assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> followees.unfollowingUser(followee))
-                .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
-        }
-
+        // when & then
+        assertThatExceptionOfType(BusinessException.class)
+            .isThrownBy(() -> followees.checkIsFollowingUser(followee))
+            .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
     }
 
     @Test

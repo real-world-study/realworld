@@ -7,9 +7,10 @@ import static org.mockito.Mockito.when;
 
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -22,37 +23,29 @@ class UserTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Test
-    void userTest() {
-        User user = new User();
+    private User user;
+    private User followee;
+
+    @BeforeEach
+    void beforeEachTest() {
+        user = User.Builder()
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .build();
+
+        followee = User.Builder()
+            .id(2L)
+            .profile(Username.of("jakefriend"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jakefriend@jake.jake"))
+            .password(Password.of("jakejake"))
+            .build();
     }
 
     @Test
-    void userBuilderTest() {
-
-        // given
-        Long id = 1L;
-        Username username = Username.of("username");
-        Email email = Email.of("email@email.com");
-        Password password = Password.of("password");
-        Bio bio = Bio.of("bio");
-        Image image = Image.of("image.jpg");
-
-        // when
-        User user = User.Builder()
-            .id(id)
-            .profile(username, bio, image)
-            .email(email)
-            .password(password)
-            .build();
-
-        // then
-        assertThat(user.id()).isEqualTo(id);
-        assertThat(user.username()).isEqualTo(username);
-        assertThat(user.email()).isEqualTo(email);
-        assertThat(user.password()).isEqualTo(password);
-        assertThat(user.bio()).isEqualTo(bio);
-        assertThat(user.image()).isEqualTo(image);
+    void userTest() {
+        User user = new User();
     }
 
     @Test
@@ -104,151 +97,46 @@ class UserTest {
     }
 
     @Test
-    @DisplayName("특정 유저를 follow하여 following set에 저장할 수 있다.")
-    void followingTest() {
+    @DisplayName("특정 유저가 following했던 유저라면 exception이 발생해야 한다.")
+    void checkIsFollowingUserTest() {
 
         // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
+        Set<User> userSet = new HashSet<>();
+        userSet.add(followee);
+        Followees followees = Followees.of(userSet);
+        user = User.Builder()
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .followees(followees)
             .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
-
-        // when
-        user.followingUser(followingUser);
-
-        // then
-        assertThat(user).isNotNull();
-    }
-
-    @Test
-    @DisplayName("이미 follow된 유저를 follow할 경우 Exception이 발생해야 한다.")
-    void followingAlreadyExceptionTest() {
-
-        // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
-        user.followingUser(followingUser);
 
         // when & then
         assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> user.followingUser(followingUser))
+            .isThrownBy(() -> user.checkIsFollowingUser(followee))
             .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
     }
 
     @Test
-    @DisplayName("특정 유저를 unfollow할 수 있다.")
-    void unfollowingTest() {
+    @DisplayName("특정 유저가 following안한 유저라면 exception이 발생해야 한다.")
+    void checkIsUnfollowingUserTest() {
 
         // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
-        user.followingUser(followingUser);
-
-        // when
-        user.unfollowingUser(followingUser);
-
-        // then
-        assertThat(user).isNotNull();
-    }
-
-    @Test
-    @DisplayName("follow 안된 유저를 unfollow할 경우 Exception이 발생해야 한다.")
-    void unfollowingNotExceptionTest() {
-
-        // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
+        Set<User> userSet = new HashSet<>();
+        Followees followees = Followees.of(userSet);
+        user = User.Builder()
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .followees(followees)
             .build();
 
         // when & then
         assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> user.unfollowingUser(followingUser))
+            .isThrownBy(() -> user.checkIsUnfollowingUser(followee))
             .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
-    }
-
-    @Nested
-    @DisplayName("followee를 받아 profile 을 반환활 수 있다.")
-    class profileByFolloweeTest {
-
-        private User user;
-        private User followingUser;
-
-        @BeforeEach
-        void beforeEach() {
-            user = User.Builder()
-                .profile(Username.of("username"), null, null)
-                .password(Password.of("password"))
-                .email(Email.of("email@email.com"))
-                .build();
-            followingUser = User.Builder()
-                .profile(Username.of("followingUser"), null, null)
-                .password(Password.of("password"))
-                .email(Email.of("email2@email2.com"))
-                .build();
-        }
-
-        @Test
-        @DisplayName("follow한 사람일 경우")
-        void isFollowing() {
-
-            // given
-            user.followingUser(followingUser);
-
-            Profile expected = Profile.Builder()
-                .username(Username.of("followingUser"))
-                .following(true).build();
-
-            // when
-            Profile result = user.profileByFollowee(followingUser);
-
-            // then
-            assertThat(result).isEqualTo(expected);
-        }
-
-        @Test
-        @DisplayName("follow 안 한 사람일 경우")
-        void isNotFollowing() {
-
-            // given
-            Profile expected = Profile.Builder()
-                .username(Username.of("followingUser"))
-                .following(false).build();
-
-            // when
-            Profile result = user.profileByFollowee(followingUser);
-
-            // then
-            assertThat(result).isEqualTo(expected);
-        }
     }
 
     @Test

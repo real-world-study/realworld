@@ -35,11 +35,12 @@ public class User extends BaseTimeEntity {
     protected User() {
     }
 
-    private User(Long id, Profile profile, Email email, Password password) {
+    private User(Long id, Profile profile, Email email, Password password, Followees followees) {
         this.id = id;
         this.profile = profile;
         this.email = email;
         this.password = password;
+        this.followees = followees;
     }
 
     public Long id() {
@@ -106,12 +107,12 @@ public class User extends BaseTimeEntity {
         return followees.isFollow(user);
     }
 
-    public void followingUser(User user) {
-        followees.followingUser(user);
+    public void checkIsFollowingUser(User user) {
+        followees.checkIsFollowingUser(user);
     }
 
-    public void unfollowingUser(User user) {
-        followees.unfollowingUser(user);
+    public void checkIsUnfollowingUser(User user) {
+        followees.checkIsUnfollowingUser(user);
     }
 
     @Override
@@ -141,6 +142,7 @@ public class User extends BaseTimeEntity {
         private Profile profile;
         private Email email;
         private Password password;
+        private Followees followees;
 
         private Builder() {
         }
@@ -174,8 +176,13 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
+        public Builder followees(Followees followees) {
+            this.followees = followees;
+            return this;
+        }
+
         public User build() {
-            return new User(id, profile, email, password);
+            return new User(id, profile, email, password, followees);
         }
     }
 

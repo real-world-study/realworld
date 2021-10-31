@@ -8,17 +8,12 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 @Embeddable
 public class Followees {
 
-    @JoinTable(name = "follow",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "followee_id"))
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "followee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<User> followees = new HashSet<>();
 
     protected Followees() {
@@ -36,28 +31,14 @@ public class Followees {
         return followees.contains(user);
     }
 
-    public Followees followingUser(User user) {
-        checkFollowingUser(user);
-
-        followees.add(user);
-        return this;
-    }
-
-    private void checkFollowingUser(User user) {
-        if (followees.contains(user)) {
+    public void checkIsFollowingUser(User user) {
+        if (isFollow(user)) {
             throw new BusinessException(ErrorCode.INVALID_FOLLOW);
         }
     }
 
-    public Followees unfollowingUser(User user) {
-        checkUnfollowingUser(user);
-
-        followees.remove(user);
-        return this;
-    }
-
-    private void checkUnfollowingUser(User user) {
-        if (!followees.contains(user)) {
+    public void checkIsUnfollowingUser(User user) {
+        if (!isFollow(user)) {
             throw new BusinessException(ErrorCode.INVALID_UNFOLLOW);
         }
     }
