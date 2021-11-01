@@ -1,5 +1,6 @@
 package com.study.realworld.follow.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
@@ -128,7 +129,7 @@ public class FollowServiceTest {
             FollowResponse result = followService.followUser(userId, username);
 
             // then
-            System.out.println(result);
+            assertThat(result).isEqualTo(expected);
         }
 
     }
@@ -207,7 +208,7 @@ public class FollowServiceTest {
             FollowResponse result = followService.unfollowUser(userId, username);
 
             // then
-            System.out.println(result);
+            assertThat(result).isEqualTo(expected);
         }
 
     }
