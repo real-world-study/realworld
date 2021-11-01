@@ -133,7 +133,7 @@ class CommentControllerNonLoginUserTest {
             .andExpect(jsonPath("$.comments.[0].author.username", is(comments.get(0).author().username().value())))
             .andExpect(jsonPath("$.comments.[0].author.bio", is(comments.get(0).author().bio().value())))
             .andExpect(jsonPath("$.comments.[0].author.image", is(nullValue())))
-            .andExpect(jsonPath("$.comments.[0].author.following", is(comments.get(0).author().profile().isFollow())))
+            .andExpect(jsonPath("$.comments.[0].author.following", is(false)))
 
             .andDo(document("comments-get",
                 getDocumentRequest(),
