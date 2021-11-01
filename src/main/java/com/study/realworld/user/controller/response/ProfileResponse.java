@@ -5,6 +5,7 @@ import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.service.model.response.ProfileResponseModel;
 
 public class ProfileResponse {
 
@@ -44,6 +45,15 @@ public class ProfileResponse {
             this.bio = bio;
             this.image = image;
             this.following = following;
+        }
+
+        public static ProfileResponseNested ofProfileResponseModel(ProfileResponseModel model) {
+            return new ProfileResponseNested(
+                model.username(),
+                model.bio(),
+                model.image(),
+                model.following()
+            );
         }
 
         public static ProfileResponseNested ofProfile(Profile profile) {
