@@ -22,12 +22,14 @@ import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Follows;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,6 +66,7 @@ class CommentServiceTest {
             .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
+            .follows(Follows.of(new HashSet<>()))
             .build();
         ArticleContent articleContent = ArticleContent.builder()
             .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
@@ -99,7 +102,7 @@ class CommentServiceTest {
 
             // setup & given
             Long userId = 1L;
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             when(userService.findById(userId)).thenReturn(author);
             when(articleService.findBySlug(slug)).thenThrow(new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
 
@@ -115,7 +118,7 @@ class CommentServiceTest {
 
             // setup & given
             Long userId = 1L;
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             when(userService.findById(userId)).thenReturn(author);
             when(articleService.findBySlug(slug)).thenReturn(article);
             Comment comment = Comment.from(commentBody, author, article);
@@ -141,7 +144,7 @@ class CommentServiceTest {
         void getCommentsByArticleSlugExceptionByNotFoundArticleTest() {
 
             // setup & given
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             when(articleService.findBySlug(slug)).thenThrow(new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
 
             // when & then
@@ -155,7 +158,7 @@ class CommentServiceTest {
         void getCommentsByArticleSlugTest() {
 
             // given
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             when(articleService.findBySlug(slug)).thenReturn(article);
             List<Comment> comments = Arrays.asList(Comment.from(commentBody, author, article),
                 Comment.from(commentBody, author, article),
@@ -166,6 +169,66 @@ class CommentServiceTest {
 
             // when
             CommentsResponse result = commentService.getCommentsByArticleSlug(slug);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("getCommentsByArticleSlug comments 반환 테스트 (parameter += Login user")
+    class getCommentsByArticleSlugAndLoginUserTest {
+
+        @Test
+        @DisplayName("없는 유저일 때 exception이 발생해야 한다.")
+        void getCommentsByArticleSlugExceptionByNotFoundUserTest() {
+
+            // setup & given
+            Long userId = 1L;
+            Slug slug = Slug.of("how-to-train-your-dragon");
+            when(userService.findById(userId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> commentService.getCommentsByArticleSlug(userId, slug))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("게시글이 없는 게시글일 때 exception이 발생해야 한다.")
+        void getCommentsByArticleSlugExceptionByNotFoundArticleTest() {
+
+            // setup & given
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(author);
+            Slug slug = Slug.of("how-to-train-your-dragon");
+            when(articleService.findBySlug(slug)).thenThrow(new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> commentService.getCommentsByArticleSlug(userId, slug))
+                .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
+        }
+
+        @Test
+        @DisplayName("comments를 반환할 수 있다.")
+        void getCommentsByArticleUnfollowingSlugTest() {
+
+            // setup & given
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(author);
+            Slug slug = Slug.of("how-to-train-your-dragon");
+            when(articleService.findBySlug(slug)).thenReturn(article);
+            List<Comment> comments = Arrays.asList(Comment.from(commentBody, author, article),
+                Comment.from(commentBody, author, article),
+                Comment.from(commentBody, author, article));
+            when(commentRepository.findAllByArticle(article)).thenReturn(comments);
+
+            CommentsResponse expected = CommentsResponse.fromCommentsAndUser(comments, author);
+
+            // when
+            CommentsResponse result = commentService.getCommentsByArticleSlug(userId, slug);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -197,7 +260,7 @@ class CommentServiceTest {
 
             // setup & given
             Long userId = 1L;
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             when(userService.findById(userId)).thenReturn(author);
             when(articleService.findBySlug(slug)).thenThrow(new BusinessException(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG));
 
@@ -213,7 +276,7 @@ class CommentServiceTest {
 
             // setup & given
             Long userId = 1L;
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             Long commentId = 2L;
             when(userService.findById(userId)).thenReturn(author);
             when(articleService.findBySlug(slug)).thenReturn(article);
@@ -235,7 +298,7 @@ class CommentServiceTest {
             User user = User.Builder()
                 .email(Email.of("email1@email1.com"))
                 .build();
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             Long commentId = 2L;
             Comment comment = Comment.from(commentBody, author, article);
             when(userService.findById(userId)).thenReturn(user);
@@ -254,7 +317,7 @@ class CommentServiceTest {
 
             // setup & given
             Long userId = 1L;
-            Slug slug = Slug.of("title");
+            Slug slug = Slug.of("how-to-train-your-dragon");
             Long commentId = 2L;
             Comment comment = Comment.from(commentBody, author, article);
             when(userService.findById(userId)).thenReturn(author);

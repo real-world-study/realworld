@@ -3,6 +3,7 @@ package com.study.realworld.comment.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.realworld.comment.domain.Comment;
 import com.study.realworld.comment.dto.response.CommentResponse.CommentResponseNested;
+import com.study.realworld.user.domain.User;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,6 +24,14 @@ public class CommentsResponse {
         return new CommentsResponse(
             comments.stream()
                 .map(CommentResponseNested::fromComment)
+                .collect(Collectors.toList())
+        );
+    }
+
+    public static CommentsResponse fromCommentsAndUser(List<Comment> comments, User user) {
+        return new CommentsResponse(
+            comments.stream()
+                .map(comment -> CommentResponseNested.fromCommentAndUser(comment, user))
                 .collect(Collectors.toList())
         );
     }

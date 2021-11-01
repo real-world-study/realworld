@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.realworld.comment.domain.Comment;
 import com.study.realworld.comment.domain.CommentBody;
+import com.study.realworld.user.domain.User;
 import com.study.realworld.user.dto.response.ProfileResponse.ProfileResponseNested;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -80,6 +81,16 @@ public class CommentResponse {
                 comment.updatedAt(),
                 comment.commentBody(),
                 ProfileResponseNested.fromProfileAndFollowing(comment.author().profile(), false)
+            );
+        }
+
+        public static CommentResponseNested fromCommentAndUser(Comment comment, User user) {
+            return new CommentResponseNested(
+                comment.id(),
+                comment.createdAt(),
+                comment.updatedAt(),
+                comment.commentBody(),
+                ProfileResponseNested.fromProfileAndFollowing(comment.author().profile(), user.isFollow(comment.author()))
             );
         }
 

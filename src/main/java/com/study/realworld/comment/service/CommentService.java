@@ -43,7 +43,7 @@ public class CommentService {
         Article article = articleService.findBySlug(slug);
 
         List<Comment> comments = commentRepository.findAllByArticle(article);
-        return CommentsResponse.fromComments(comments);
+        return CommentsResponse.fromCommentsAndUser(comments, user);
     }
 
     @Transactional
