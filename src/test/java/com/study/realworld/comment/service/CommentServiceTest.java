@@ -149,7 +149,7 @@ class CommentServiceTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> commentService.getCommentsByArticleSlug(slug))
+                .isThrownBy(() -> commentService.findCommentsByArticleSlug(slug))
                 .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
         }
 
@@ -168,7 +168,7 @@ class CommentServiceTest {
             CommentsResponse expected = CommentsResponse.fromComments(comments);
 
             // when
-            CommentsResponse result = commentService.getCommentsByArticleSlug(slug);
+            CommentsResponse result = commentService.findCommentsByArticleSlug(slug);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -191,7 +191,7 @@ class CommentServiceTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> commentService.getCommentsByArticleSlug(userId, slug))
+                .isThrownBy(() -> commentService.findCommentsByArticleSlug(userId, slug))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
         }
 
@@ -207,7 +207,7 @@ class CommentServiceTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> commentService.getCommentsByArticleSlug(userId, slug))
+                .isThrownBy(() -> commentService.findCommentsByArticleSlug(userId, slug))
                 .withMessageMatching(ErrorCode.ARTICLE_NOT_FOUND_BY_SLUG.getMessage());
         }
 
@@ -228,7 +228,7 @@ class CommentServiceTest {
             CommentsResponse expected = CommentsResponse.fromCommentsAndUser(comments, author);
 
             // when
-            CommentsResponse result = commentService.getCommentsByArticleSlug(userId, slug);
+            CommentsResponse result = commentService.findCommentsByArticleSlug(userId, slug);
 
             // then
             assertThat(result).isEqualTo(expected);

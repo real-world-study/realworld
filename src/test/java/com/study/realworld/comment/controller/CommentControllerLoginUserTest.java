@@ -6,8 +6,6 @@ import static java.time.ZoneOffset.UTC;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
@@ -30,15 +28,21 @@ import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.comment.domain.Comment;
 import com.study.realworld.comment.domain.CommentBody;
+import com.study.realworld.comment.dto.response.CommentResponse;
+import com.study.realworld.comment.dto.response.CommentsResponse;
 import com.study.realworld.comment.service.CommentService;
 import com.study.realworld.tag.domain.Tag;
+import com.study.realworld.testutil.PrincipalArgumentResolver;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Follows;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +61,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith({MockitoExtension.class, RestDocumentationExtension.class})
-class CommentControllerTest {
+
+public class CommentControllerLoginUserTest {
 
     @Mock
     private CommentService commentService;
@@ -75,19 +80,22 @@ class CommentControllerTest {
         SecurityContextHolder.clearContext();
         mockMvc = MockMvcBuilders.standaloneSetup(commentController)
             .apply(documentationConfiguration(restDocumentationContextProvider))
+            .setCustomArgumentResolvers(new PrincipalArgumentResolver())
             .alwaysExpect(status().isOk())
             .build();
 
         author = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .follows(Follows.of(new HashSet<>()))
             .build();
         ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title title title")))
-            .description(Description.of("test article description"))
-            .body(Body.of("test article body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
             .build();
         article = Article.from(articleContent, author);
     }
@@ -96,7 +104,8 @@ class CommentControllerTest {
     void getCommentByArticleSlugTest() throws Exception {
 
         // setup
-        List<Comment> expected = new ArrayList<>();
+        Long userId = 1L;
+        List<Comment> comments = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Comment comment = Comment.from(CommentBody.of("His name was my name too." + i), author, article);
             ReflectionTestUtils.setField(comment, "id", (long) i);
@@ -105,10 +114,11 @@ class CommentControllerTest {
             ReflectionTestUtils.setField(comment, "createdAt", now);
             ReflectionTestUtils.setField(comment, "updatedAt", now);
 
-            expected.add(comment);
+            comments.add(comment);
         }
+        CommentsResponse response = CommentsResponse.fromCommentsAndUser(comments, author);
 
-        when(commentService.getCommentsByArticleSlug(eq(article.slug()))).thenReturn(expected);
+        when(commentService.findCommentsByArticleSlug(userId, article.slug())).thenReturn(response);
 
         // given
         final String URL = "/api/articles/{slug}/comments";
@@ -123,19 +133,19 @@ class CommentControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-            .andExpect(jsonPath("$.comments.size()", is(expected.size())))
+            .andExpect(jsonPath("$.comments.size()", is(comments.size())))
 
-            .andExpect(jsonPath("$.comments.[0].id", is(expected.get(0).id().intValue())))
+            .andExpect(jsonPath("$.comments.[0].id", is(comments.get(0).id().intValue())))
             .andExpect(jsonPath("$.comments.[0].createdAt",
-                is(expected.get(0).createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+                is(comments.get(0).createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.comments.[0].updatedAt",
-                is(expected.get(0).updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
-            .andExpect(jsonPath("$.comments.[0].body", is(expected.get(0).commentBody().body())))
+                is(comments.get(0).updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.comments.[0].body", is(comments.get(0).commentBody().body())))
 
-            .andExpect(jsonPath("$.comments.[0].author.username", is(expected.get(0).author().username().value())))
-            .andExpect(jsonPath("$.comments.[0].author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.comments.[0].author.username", is(comments.get(0).author().username().value())))
+            .andExpect(jsonPath("$.comments.[0].author.bio", is(comments.get(0).author().bio().value())))
             .andExpect(jsonPath("$.comments.[0].author.image", is(nullValue())))
-            .andExpect(jsonPath("$.comments.[0].author.following", is(expected.get(0).author().profile().isFollow())))
+            .andExpect(jsonPath("$.comments.[0].author.following", is(comments.get(0).author().profile().isFollow())))
 
             .andDo(document("comments-get",
                 getDocumentRequest(),
@@ -144,20 +154,14 @@ class CommentControllerTest {
                     fieldWithPath("comments").type(JsonFieldType.ARRAY).description("comments list"),
 
                     fieldWithPath("comments[].id").type(JsonFieldType.NUMBER).description("created comment's id"),
-                    fieldWithPath("comments[].createdAt").type(JsonFieldType.STRING)
-                        .description("created comment's create time"),
-                    fieldWithPath("comments[].updatedAt").type(JsonFieldType.STRING)
-                        .description("created comment's update time"),
+                    fieldWithPath("comments[].createdAt").type(JsonFieldType.STRING).description("created comment's create time"),
+                    fieldWithPath("comments[].updatedAt").type(JsonFieldType.STRING).description("created comment's update time"),
                     fieldWithPath("comments[].body").type(JsonFieldType.STRING).description("created comment's body"),
 
-                    fieldWithPath("comments[].author.username").type(JsonFieldType.STRING)
-                        .description("author's username"),
-                    fieldWithPath("comments[].author.bio").type(JsonFieldType.STRING).description("author's bio")
-                        .optional(),
-                    fieldWithPath("comments[].author.image").type(JsonFieldType.STRING).description("author's image")
-                        .optional(),
-                    fieldWithPath("comments[].author.following").type(JsonFieldType.BOOLEAN)
-                        .description("author's following")
+                    fieldWithPath("comments[].author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("comments[].author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
+                    fieldWithPath("comments[].author.image").type(JsonFieldType.STRING).description("author's image").optional(),
+                    fieldWithPath("comments[].author.following").type(JsonFieldType.BOOLEAN).description("author's following")
                 )
             ))
         ;
@@ -167,6 +171,8 @@ class CommentControllerTest {
     void createCommentTest() throws Exception {
 
         // setup
+        Long userId = 1L;
+        CommentBody commentBody = CommentBody.of("His name was my name too.");
         Comment comment = Comment.from(CommentBody.of("His name was my name too."), author, article);
         ReflectionTestUtils.setField(comment, "id", 1L);
 
@@ -174,7 +180,9 @@ class CommentControllerTest {
         ReflectionTestUtils.setField(comment, "createdAt", now);
         ReflectionTestUtils.setField(comment, "updatedAt", now);
 
-        when(commentService.createComment(any(), eq(article.slug()), any())).thenReturn(comment);
+        CommentResponse response = CommentResponse.fromComment(comment);
+
+        when(commentService.createComment(userId, article.slug(), commentBody)).thenReturn(response);
 
         // given
         final String URL = "/api/articles/{slug}/comments";
@@ -202,7 +210,7 @@ class CommentControllerTest {
                 is(comment.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.comment.body", is(comment.commentBody().body())))
             .andExpect(jsonPath("$.comment.author.username", is(article.author().username().value())))
-            .andExpect(jsonPath("$.comment.author.bio", is(nullValue())))
+            .andExpect(jsonPath("$.comment.author.bio", is(author.bio().value())))
             .andExpect(jsonPath("$.comment.author.image", is(nullValue())))
             .andExpect(jsonPath("$.comment.author.following", is(false)))
 
@@ -214,20 +222,14 @@ class CommentControllerTest {
                 ),
                 responseFields(
                     fieldWithPath("comment.id").type(JsonFieldType.NUMBER).description("created comment's id"),
-                    fieldWithPath("comment.createdAt").type(JsonFieldType.STRING)
-                        .description("created comment's create time"),
-                    fieldWithPath("comment.updatedAt").type(JsonFieldType.STRING)
-                        .description("created comment's update time"),
+                    fieldWithPath("comment.createdAt").type(JsonFieldType.STRING).description("created comment's create time"),
+                    fieldWithPath("comment.updatedAt").type(JsonFieldType.STRING).description("created comment's update time"),
                     fieldWithPath("comment.body").type(JsonFieldType.STRING).description("created comment's body"),
 
-                    fieldWithPath("comment.author.username").type(JsonFieldType.STRING)
-                        .description("author's username"),
-                    fieldWithPath("comment.author.bio").type(JsonFieldType.STRING).description("author's bio")
-                        .optional(),
-                    fieldWithPath("comment.author.image").type(JsonFieldType.STRING).description("author's image")
-                        .optional(),
-                    fieldWithPath("comment.author.following").type(JsonFieldType.BOOLEAN)
-                        .description("author's following")
+                    fieldWithPath("comment.author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("comment.author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
+                    fieldWithPath("comment.author.image").type(JsonFieldType.STRING).description("author's image").optional(),
+                    fieldWithPath("comment.author.following").type(JsonFieldType.BOOLEAN).description("author's following")
                 )
             ))
         ;

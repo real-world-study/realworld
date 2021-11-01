@@ -30,7 +30,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public CommentsResponse getCommentsByArticleSlug(Slug slug) {
+    public CommentsResponse findCommentsByArticleSlug(Slug slug) {
         Article article = articleService.findBySlug(slug);
 
         List<Comment> comments = commentRepository.findAllByArticle(article);
@@ -38,7 +38,7 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public CommentsResponse getCommentsByArticleSlug(Long userId, Slug slug) {
+    public CommentsResponse findCommentsByArticleSlug(Long userId, Slug slug) {
         User user = userService.findById(userId);
         Article article = articleService.findBySlug(slug);
 
