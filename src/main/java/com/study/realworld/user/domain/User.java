@@ -143,7 +143,7 @@ public class User extends BaseTimeEntity {
         private Profile profile;
         private Email email;
         private Password password;
-        private Follows followees;
+        private Follows follows;
 
         private Builder() {
         }
@@ -177,13 +177,13 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
-        public Builder followees(Follows followees) {
-            this.followees = followees;
+        public Builder follows(Follows follows) {
+            this.follows = follows;
             return this;
         }
 
         public User build() {
-            return new User(id, profile, email, password, followees);
+            return new User(id, profile, email, password, follows);
         }
     }
 

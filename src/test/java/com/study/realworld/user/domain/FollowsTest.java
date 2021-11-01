@@ -98,7 +98,7 @@ public class FollowsTest {
 
         @Test
         @DisplayName("팔로윙 안한 유저를 언팔로윙하는 경우 exception이 발생해야 한다.")
-        void followingExceptionByExistFollowTest() {
+        void followingExceptionByNoExistFollowTest() {
 
             // given
             Set<Follow> followSet = new HashSet<>();

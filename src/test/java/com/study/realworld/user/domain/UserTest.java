@@ -37,7 +37,7 @@ class UserTest {
             .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
-            .followees(new Follows())
+            .follows(new Follows())
             .build();
 
         followee = User.Builder()
@@ -45,7 +45,7 @@ class UserTest {
             .profile(Username.of("jakefriend"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jakefriend@jake.jake"))
             .password(Password.of("jakejake"))
-            .followees(new Follows())
+            .follows(new Follows())
             .build();
     }
 
@@ -122,7 +122,7 @@ class UserTest {
                 .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
                 .email(Email.of("jake@jake.jake"))
                 .password(Password.of("jakejake"))
-                .followees(Follows.of(followSet))
+                .follows(Follows.of(followSet))
                 .build();
 
             // when & then
@@ -173,7 +173,7 @@ class UserTest {
                 .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
                 .email(Email.of("jake@jake.jake"))
                 .password(Password.of("jakejake"))
-                .followees(Follows.of(followSet))
+                .follows(Follows.of(followSet))
                 .build();
 
             // when
