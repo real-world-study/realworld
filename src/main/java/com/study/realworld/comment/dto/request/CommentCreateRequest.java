@@ -1,4 +1,4 @@
-package com.study.realworld.comment.controller.request;
+package com.study.realworld.comment.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

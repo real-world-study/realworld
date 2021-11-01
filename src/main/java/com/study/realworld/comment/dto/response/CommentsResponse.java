@@ -1,9 +1,10 @@
-package com.study.realworld.comment.controller.response;
+package com.study.realworld.comment.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.study.realworld.comment.controller.response.CommentResponse.CommentResponseNested;
 import com.study.realworld.comment.domain.Comment;
+import com.study.realworld.comment.dto.response.CommentResponse.CommentResponseNested;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CommentsResponse {
@@ -24,6 +25,23 @@ public class CommentsResponse {
                 .map(CommentResponseNested::fromComment)
                 .collect(Collectors.toList())
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CommentsResponse that = (CommentsResponse) o;
+        return Objects.equals(commentResponseNesteds, that.commentResponseNesteds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(commentResponseNesteds);
     }
 
 }

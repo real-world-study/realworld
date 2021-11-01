@@ -15,12 +15,13 @@ import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.comment.domain.Comment;
 import com.study.realworld.comment.domain.CommentBody;
 import com.study.realworld.comment.domain.CommentRepository;
+import com.study.realworld.comment.dto.response.CommentResponse;
+import com.study.realworld.comment.dto.response.CommentsResponse;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
@@ -60,18 +61,18 @@ class CommentServiceTest {
     @BeforeEach
     void beforeEach() {
         author = User.Builder()
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .profile(Username.of("username"), Bio.of("bio"), Image.of("image"))
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
             .build();
         ArticleContent articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title")))
-            .description(Description.of("description"))
-            .body(Body.of("body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
             .build();
         article = Article.from(articleContent, author);
-        commentBody = CommentBody.of("comment body");
+        commentBody = CommentBody.of("It takes a Jacobian");
     }
 
     @Nested
@@ -117,11 +118,13 @@ class CommentServiceTest {
             Slug slug = Slug.of("title");
             when(userService.findById(userId)).thenReturn(author);
             when(articleService.findBySlug(slug)).thenReturn(article);
-            Comment expected = Comment.from(commentBody, author, article);
-            when(commentRepository.save(expected)).thenReturn(expected);
+            Comment comment = Comment.from(commentBody, author, article);
+            when(commentRepository.save(comment)).thenReturn(comment);
+
+            CommentResponse expected = CommentResponse.fromComment(comment);
 
             // when
-            Comment result = commentService.createComment(userId, slug, commentBody);
+            CommentResponse result = commentService.createComment(userId, slug, commentBody);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -154,13 +157,15 @@ class CommentServiceTest {
             // given
             Slug slug = Slug.of("title");
             when(articleService.findBySlug(slug)).thenReturn(article);
-            List<Comment> expected = Arrays.asList(Comment.from(commentBody, author, article),
+            List<Comment> comments = Arrays.asList(Comment.from(commentBody, author, article),
                 Comment.from(commentBody, author, article),
                 Comment.from(commentBody, author, article));
-            when(commentRepository.findAllByArticle(article)).thenReturn(expected);
+            when(commentRepository.findAllByArticle(article)).thenReturn(comments);
+
+            CommentsResponse expected = CommentsResponse.fromComments(comments);
 
             // when
-            List<Comment> result = commentService.getCommentsByArticleSlug(slug);
+            CommentsResponse result = commentService.getCommentsByArticleSlug(slug);
 
             // then
             assertThat(result).isEqualTo(expected);

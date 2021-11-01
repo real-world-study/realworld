@@ -1,11 +1,12 @@
-package com.study.realworld.comment.controller.response;
+package com.study.realworld.comment.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.realworld.comment.domain.Comment;
 import com.study.realworld.comment.domain.CommentBody;
-import com.study.realworld.user.controller.response.ProfileResponse.ProfileResponseNested;
+import com.study.realworld.user.dto.response.ProfileResponse.ProfileResponseNested;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 public class CommentResponse {
 
@@ -21,6 +22,23 @@ public class CommentResponse {
 
     public static CommentResponse fromComment(Comment comment) {
         return new CommentResponse(CommentResponseNested.fromComment(comment));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CommentResponse that = (CommentResponse) o;
+        return Objects.equals(commentResponseNested, that.commentResponseNested);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(commentResponseNested);
     }
 
     public static class CommentResponseNested {
@@ -61,8 +79,28 @@ public class CommentResponse {
                 comment.createdAt(),
                 comment.updatedAt(),
                 comment.commentBody(),
-                ProfileResponseNested.ofProfile(comment.author().profile())
+                ProfileResponseNested.fromProfileAndFollowing(comment.author().profile(), false)
             );
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            CommentResponseNested that = (CommentResponseNested) o;
+            return Objects.equals(id, that.id) && Objects.equals(createdAt, that.createdAt) && Objects
+                .equals(updatedAt, that.updatedAt) && Objects.equals(commentBody, that.commentBody) && Objects
+                .equals(profileResponseNested, that.profileResponseNested);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, createdAt, updatedAt, commentBody, profileResponseNested);
+        }
+
     }
 }
