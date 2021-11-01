@@ -1,6 +1,7 @@
 package com.study.realworld.follow.domain;
 
 import com.study.realworld.user.domain.User;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -30,10 +31,26 @@ public class Follow {
     protected Follow() {
     }
 
-    private Follow(Long id, User follower, User followee) {
-        this.id = id;
+    private Follow(User follower, User followee) {
         this.follower = follower;
         this.followee = followee;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Follow follow = (Follow) o;
+        return Objects.equals(follower, follow.follower) && Objects.equals(followee, follow.followee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(follower, followee);
     }
 
     public static Builder builder() {
@@ -42,7 +59,6 @@ public class Follow {
 
     public static class Builder {
 
-        private Long id;
         private User follower;
         private User followee;
 
@@ -60,7 +76,7 @@ public class Follow {
         }
 
         public Follow build() {
-            return new Follow(id, follower, followee);
+            return new Follow(follower, followee);
         }
 
     }
