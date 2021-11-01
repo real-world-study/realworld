@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS user
 CREATE TABLE IF NOT EXISTS follow
 (
     id          bigint NOT NULL AUTO_INCREMENT,
-    follower_id     bigint NOT NULL,
+    follower_id bigint NOT NULL,
     followee_id bigint NOT NULL,
     PRIMARY KEY (id),
     UNIQUE (follower_id, followee_id),
