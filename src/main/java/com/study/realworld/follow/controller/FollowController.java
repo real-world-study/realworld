@@ -1,8 +1,7 @@
 package com.study.realworld.follow.controller;
 
-import com.study.realworld.follow.controller.response.FollowResponse;
+import com.study.realworld.follow.dto.response.FollowResponse;
 import com.study.realworld.follow.service.FollowService;
-import com.study.realworld.follow.service.model.response.FollowResponseModel;
 import com.study.realworld.global.security.CurrentUserId;
 import com.study.realworld.user.domain.Username;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +23,14 @@ public class FollowController {
 
     @PostMapping("/profiles/{username}/follow")
     public ResponseEntity<FollowResponse> follow(@PathVariable String username, @CurrentUserId Long loginId) {
-        FollowResponseModel followResponse = followService.followUser(loginId, Username.of(username));
-        return ResponseEntity.ok().body(FollowResponse.of(followResponse));
+        FollowResponse followResponse = followService.followUser(loginId, Username.of(username));
+        return ResponseEntity.ok().body(followResponse);
     }
 
     @DeleteMapping("/profiles/{username}/follow")
     public ResponseEntity<FollowResponse> unfollow(@PathVariable String username, @CurrentUserId Long loginId) {
-        FollowResponseModel followResponse = followService.followUser(loginId, Username.of(username));
-        return ResponseEntity.ok().body(FollowResponse.of(followResponse));
+        FollowResponse followResponse = followService.followUser(loginId, Username.of(username));
+        return ResponseEntity.ok().body(followResponse);
     }
 
 }

@@ -7,9 +7,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -23,12 +21,11 @@ import com.study.realworld.testutil.PrincipalArgumentResolver;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
-import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.dto.response.ProfileResponse;
 import com.study.realworld.user.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,6 +52,7 @@ public class ProfileControllerLoginUserTest {
     private MockMvc mockMvc;
 
     private User user;
+    private User followee;
 
     @BeforeEach
     void beforeEach(RestDocumentationContextProvider restDocumentationContextProvider) {
@@ -71,66 +69,28 @@ public class ProfileControllerLoginUserTest {
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
             .build();
-    }
 
-    @Nested
-    class getProfile {
-
-        @Test
-        void getProfileByLoginTest() throws Exception {
-
-            // setup
-            String username = user.username().value();
-            Profile expected = user.profile().profileByFollowing(true);
-            when(profileService.findProfile(1L, user.username())).thenReturn(expected);
-
-            // given
-            final String URL = "/api/profiles/{username}";
-
-            // when
-            ResultActions resultActions = mockMvc.perform(get(URL, username)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
-
-            // then
-            resultActions
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(jsonPath("$.profile.username", is(expected.username().value())))
-                .andExpect(jsonPath("$.profile.bio", is(expected.bio().value())))
-                .andExpect(jsonPath("$.profile.image", is(nullValue())))
-                .andExpect(jsonPath("$.profile.following", is(expected.isFollow())))
-                .andDo(document("get-profile-non-login",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
-                    pathParameters(
-                        parameterWithName("username").description("want to search user's username")
-                    ),
-                    responseFields(
-                        fieldWithPath("profile.username").type(JsonFieldType.STRING).description("user's username"),
-                        fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("user's bio").optional(),
-                        fieldWithPath("profile.image").type(JsonFieldType.STRING).description("user's image").optional(),
-                        fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("user's is following")
-                    )
-                ))
-            ;
-        }
+        followee = User.Builder()
+            .id(2L)
+            .profile(Username.of("jakefriend"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jakefriend@jake.jake"))
+            .password(Password.of("jakejake"))
+            .build();
     }
 
     @Test
-    void followTest() throws Exception {
+    void getProfileByLoginTest() throws Exception {
 
         // setup
-        String username = user.username().value();
-        Profile expected = user.profile().profileByFollowing(true);
-        when(profileService.followUser(1L, expected.username())).thenReturn(expected);
+        String username = followee.username().value();
+        ProfileResponse response = ProfileResponse.fromUserAndFollowing(followee, true);
+        when(profileService.findProfile(user.id(), followee.username())).thenReturn(response);
 
         // given
-        final String URL = "/api/profiles/{username}/follow";
+        final String URL = "/api/profiles/{username}";
 
         // when
-        ResultActions resultActions = mockMvc.perform(post(URL, username)
+        ResultActions resultActions = mockMvc.perform(get(URL, username)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
@@ -139,52 +99,11 @@ public class ProfileControllerLoginUserTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-            .andExpect(jsonPath("$.profile.username", is(expected.username().value())))
-            .andExpect(jsonPath("$.profile.bio", is(expected.bio().value())))
+            .andExpect(jsonPath("$.profile.username", is(followee.username().value())))
+            .andExpect(jsonPath("$.profile.bio", is(followee.bio().value())))
             .andExpect(jsonPath("$.profile.image", is(nullValue())))
-            .andExpect(jsonPath("$.profile.following", is(expected.isFollow())))
-            .andDo(document("follow-profile",
-                getDocumentRequest(),
-                getDocumentResponse(),
-                pathParameters(
-                    parameterWithName("username").description("want to search user's username")
-                ),
-                responseFields(
-                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("user's username"),
-                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("user's bio").optional(),
-                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("user's image").optional(),
-                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("user's is following")
-                )
-            ))
-        ;
-    }
-
-    @Test
-    void unfollowTest() throws Exception {
-
-        // setup
-        String username = user.username().value();
-        Profile expected = user.profile().profileByFollowing(false);
-        when(profileService.unfollowUser(1L, expected.username())).thenReturn(expected);
-
-        // given
-        final String URL = "/api/profiles/{username}/follow";
-
-        // when
-        ResultActions resultActions = mockMvc.perform(delete(URL, username)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print());
-
-        // then
-        resultActions
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
-            .andExpect(jsonPath("$.profile.username", is(expected.username().value())))
-            .andExpect(jsonPath("$.profile.bio", is(expected.bio().value())))
-            .andExpect(jsonPath("$.profile.image", is(nullValue())))
-            .andExpect(jsonPath("$.profile.following", is(expected.isFollow())))
-            .andDo(document("unfollow-profile",
+            .andExpect(jsonPath("$.profile.following", is(true)))
+            .andDo(document("get-profile-login",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(

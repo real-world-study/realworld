@@ -1,4 +1,4 @@
-package com.study.realworld.user.controller.request;
+package com.study.realworld.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

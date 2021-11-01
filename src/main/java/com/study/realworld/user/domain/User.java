@@ -101,19 +101,25 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean followUser(User followee) {
-        Follow follow = Follow.builder()
-            .follower(this)
-            .followee(followee)
-            .build();
+        Follow follow = createFollow(followee);
         return follows.following(follow);
     }
 
     public boolean unfollowUser(User followee) {
-        Follow follow = Follow.builder()
+        Follow follow = createFollow(followee);
+        return follows.unfollowing(follow);
+    }
+
+    public boolean isFollow(User followee) {
+        Follow follow = createFollow(followee);
+        return follows.isFollow(follow);
+    }
+
+    private Follow createFollow(User followee) {
+        return Follow.builder()
             .follower(this)
             .followee(followee)
             .build();
-        return follows.unfollowing(follow);
     }
 
     @Override

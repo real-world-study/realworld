@@ -20,12 +20,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
-import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.dto.response.ProfileResponse;
 import com.study.realworld.user.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -69,50 +68,45 @@ class ProfileControllerNonLoginUserTest {
             .build();
     }
 
-    @Nested
-    class getProfile {
+    @Test
+    void getProfileByLoginTest() throws Exception {
 
-        @Test
-        void getProfileByNonLoginTest() throws Exception {
+        // setup
+        String username = user.username().value();
+        ProfileResponse response = ProfileResponse.fromUserAndFollowing(user, false);
+        when(profileService.findProfile(user.username())).thenReturn(response);
 
-            // setup
-            String username = user.username().value();
-            Profile expected = user.profile();
-            when(profileService.findProfile(user.username())).thenReturn(expected);
+        // given
+        final String URL = "/api/profiles/{username}";
 
-            // given
-            final String URL = "/api/profiles/{username}";
+        // when
+        ResultActions resultActions = mockMvc.perform(get(URL, username)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
 
-            // when
-            ResultActions resultActions = mockMvc.perform(get(URL, username)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print());
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-            // then
-            resultActions
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(jsonPath("$.profile.username", is(expected.username().value())))
-                .andExpect(jsonPath("$.profile.bio", is(expected.bio().value())))
-                .andExpect(jsonPath("$.profile.image", is(nullValue())))
-                .andExpect(jsonPath("$.profile.following", is(expected.isFollow())))
-                .andDo(document("get-profile-non-login",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
-                    pathParameters(
-                        parameterWithName("username").description("want to search user's username")
-                    ),
-                    responseFields(
-                        fieldWithPath("profile.username").type(JsonFieldType.STRING).description("user's username"),
-                        fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("user's bio").optional(),
-                        fieldWithPath("profile.image").type(JsonFieldType.STRING).description("user's image").optional(),
-                        fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("user's is following")
-                    )
-                ))
-            ;
-        }
-
+            .andExpect(jsonPath("$.profile.username", is(user.username().value())))
+            .andExpect(jsonPath("$.profile.bio", is(user.bio().value())))
+            .andExpect(jsonPath("$.profile.image", is(nullValue())))
+            .andExpect(jsonPath("$.profile.following", is(false)))
+            .andDo(document("get-profile-login",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                    parameterWithName("username").description("want to search user's username")
+                ),
+                responseFields(
+                    fieldWithPath("profile.username").type(JsonFieldType.STRING).description("user's username"),
+                    fieldWithPath("profile.bio").type(JsonFieldType.STRING).description("user's bio").optional(),
+                    fieldWithPath("profile.image").type(JsonFieldType.STRING).description("user's image").optional(),
+                    fieldWithPath("profile.following").type(JsonFieldType.BOOLEAN).description("user's is following")
+                )
+            ))
+        ;
     }
 
 }

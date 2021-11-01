@@ -1,14 +1,14 @@
 package com.study.realworld.user.controller;
 
-import static com.study.realworld.user.controller.response.UserResponse.fromUserAndToken;
+import static com.study.realworld.user.dto.response.UserResponse.fromUserAndToken;
 
 import com.study.realworld.global.security.CurrentUserId;
 import com.study.realworld.global.security.JwtService;
-import com.study.realworld.user.controller.request.UserJoinRequest;
-import com.study.realworld.user.controller.request.UserLoginRequest;
-import com.study.realworld.user.controller.request.UserUpdateRequest;
-import com.study.realworld.user.controller.response.UserResponse;
 import com.study.realworld.user.domain.User;
+import com.study.realworld.user.dto.request.UserJoinRequest;
+import com.study.realworld.user.dto.request.UserLoginRequest;
+import com.study.realworld.user.dto.request.UserUpdateRequest;
+import com.study.realworld.user.dto.response.UserResponse;
 import com.study.realworld.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

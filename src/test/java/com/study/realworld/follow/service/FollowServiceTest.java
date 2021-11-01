@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.follow.domain.Follow;
-import com.study.realworld.follow.service.model.response.FollowResponse;
+import com.study.realworld.follow.dto.response.FollowResponse;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.Bio;
@@ -123,7 +123,7 @@ public class FollowServiceTest {
             when(userService.findById(userId)).thenReturn(user);
             when(userService.findByUsername(username)).thenReturn(followee);
 
-            FollowResponse expected = FollowResponse.from(followee.profile(), true);
+            FollowResponse expected = FollowResponse.fromProfileAndFollowing(followee.profile(), true);
 
             // when
             FollowResponse result = followService.followUser(userId, username);
@@ -202,7 +202,7 @@ public class FollowServiceTest {
             when(userService.findById(userId)).thenReturn(user);
             when(userService.findByUsername(username)).thenReturn(followee);
 
-            FollowResponse expected = FollowResponse.from(followee.profile(), false);
+            FollowResponse expected = FollowResponse.fromProfileAndFollowing(followee.profile(), false);
 
             // when
             FollowResponse result = followService.unfollowUser(userId, username);

@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.study.realworld.follow.dto.response.FollowResponse;
 import com.study.realworld.follow.service.FollowService;
-import com.study.realworld.follow.service.model.response.FollowResponseModel;
 import com.study.realworld.testutil.PrincipalArgumentResolver;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
@@ -87,8 +87,8 @@ class FollowControllerTest {
         // setup
         String username = followee.username().value();
         Profile expected = followee.profile();
-        FollowResponseModel responseModel = FollowResponseModel.from(expected, true);
-        when(followService.followUser(1L, followee.username())).thenReturn(responseModel);
+        FollowResponse response = FollowResponse.fromProfileAndFollowing(expected, true);
+        when(followService.followUser(1L, followee.username())).thenReturn(response);
 
         // given
         final String URL = "/api/profiles/{username}/follow";
@@ -129,8 +129,8 @@ class FollowControllerTest {
         // setup
         String username = followee.username().value();
         Profile expected = followee.profile();
-        FollowResponseModel responseModel = FollowResponseModel.from(expected, false);
-        when(followService.followUser(1L, followee.username())).thenReturn(responseModel);
+        FollowResponse response = FollowResponse.fromProfileAndFollowing(expected, false);
+        when(followService.followUser(1L, followee.username())).thenReturn(response);
 
         // given
         final String URL = "/api/profiles/{username}/follow";

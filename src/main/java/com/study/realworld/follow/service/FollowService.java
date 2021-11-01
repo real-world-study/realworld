@@ -1,6 +1,6 @@
 package com.study.realworld.follow.service;
 
-import com.study.realworld.follow.service.model.response.FollowResponseModel;
+import com.study.realworld.follow.dto.response.FollowResponse;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
@@ -17,19 +17,19 @@ public class FollowService {
     }
 
     @Transactional
-    public FollowResponseModel followUser(Long userId, Username username) {
+    public FollowResponse followUser(Long userId, Username username) {
         User user = userService.findById(userId);
         User followee = userService.findByUsername(username);
 
-        return FollowResponseModel.from(followee.profile(), user.followUser(followee));
+        return FollowResponse.fromProfileAndFollowing(followee.profile(), user.followUser(followee));
     }
 
     @Transactional
-    public FollowResponseModel unfollowUser(Long userId, Username username) {
+    public FollowResponse unfollowUser(Long userId, Username username) {
         User user = userService.findById(userId);
         User followee = userService.findByUsername(username);
 
-        return FollowResponseModel.from(followee.profile(), user.unfollowUser(followee));
+        return FollowResponse.fromProfileAndFollowing(followee.profile(), user.unfollowUser(followee));
     }
 
 }

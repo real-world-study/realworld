@@ -52,7 +52,7 @@ public class Follows {
         }
     }
 
-    private boolean isFollow(Follow follow) {
+    public boolean isFollow(Follow follow) {
         return follows.contains(follow);
     }
 
