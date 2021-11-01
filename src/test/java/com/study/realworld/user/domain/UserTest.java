@@ -3,14 +3,18 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -33,6 +37,7 @@ class UserTest {
             .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
+            .followees(new Follows())
             .build();
 
         followee = User.Builder()
@@ -40,6 +45,7 @@ class UserTest {
             .profile(Username.of("jakefriend"), Bio.of("I work at statefarm"), null)
             .email(Email.of("jakefriend@jake.jake"))
             .password(Password.of("jakejake"))
+            .followees(new Follows())
             .build();
     }
 
@@ -96,47 +102,86 @@ class UserTest {
             .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
-    @Test
-    @DisplayName("특정 유저가 following했던 유저라면 exception이 발생해야 한다.")
-    void checkIsFollowingUserTest() {
+    @Nested
+    @DisplayName("followUser user 팔로윙 기능")
+    class followUserTest {
 
-        // given
-        Set<User> userSet = new HashSet<>();
-        userSet.add(followee);
-        Followees followees = Followees.of(userSet);
-        user = User.Builder()
-            .id(1L)
-            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
-            .email(Email.of("jake@jake.jake"))
-            .password(Password.of("jakejake"))
-            .followees(followees)
-            .build();
+        @Test
+        @DisplayName("이미 팔로윙한 유저를 팔로윙하는 경우 exception이 발생해야 한다.")
+        void followUserExceptionByExistFollowTest() {
 
-        // when & then
-        assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> user.checkIsFollowingUser(followee))
-            .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
+            // given
+            Set<Follow> followSet = new HashSet<>();
+            Follow follow = Follow.builder()
+                .follower(user)
+                .followee(followee)
+                .build();
+            followSet.add(follow);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .followees(Follows.of(followSet))
+                .build();
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.followUser(followee))
+                .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
+        }
+
+        @Test
+        @DisplayName("정상적으로 유저를 팔로우할 수 있다.")
+        void followUserSuccessTest() {
+
+            // when
+            boolean result = user.followUser(followee);
+
+            // then
+            assertTrue(result);
+        }
     }
 
-    @Test
-    @DisplayName("특정 유저가 following안한 유저라면 exception이 발생해야 한다.")
-    void checkIsUnfollowingUserTest() {
+    @Nested
+    @DisplayName("unfollowUser user 언팔로윙 기능")
+    class unfollowUserTest {
 
-        // given
-        Set<User> userSet = new HashSet<>();
-        Followees followees = Followees.of(userSet);
-        user = User.Builder()
-            .id(1L)
-            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
-            .email(Email.of("jake@jake.jake"))
-            .password(Password.of("jakejake"))
-            .followees(followees)
-            .build();
+        @Test
+        @DisplayName("팔로윙 안한 유저를 언팔로윙하는 경우 exception이 발생해야 한다.")
+        void unfollowUserExceptionByNoExistFollowTest() {
 
-        // when & then
-        assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> user.checkIsUnfollowingUser(followee))
-            .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.unfollowUser(followee))
+                .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
+        }
+
+        @Test
+        @DisplayName("정상적으로 유저를 언팔로우할 수 있다.")
+        void unfollowUserSuccessTest() {
+
+            // given
+            Set<Follow> followSet = new HashSet<>();
+            Follow follow = Follow.builder()
+                .follower(user)
+                .followee(followee)
+                .build();
+            followSet.add(follow);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .followees(Follows.of(followSet))
+                .build();
+
+            // when
+            boolean result = user.unfollowUser(followee);
+
+            // then
+            assertFalse(result);
+        }
     }
 
     @Test

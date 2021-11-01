@@ -2,6 +2,9 @@ package com.study.realworld.user.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.exception.BusinessException;
@@ -77,10 +80,14 @@ public class FollowsTest {
             Follows expected = Follows.of(followSet);
 
             // when
-            follows.following(follow);
+            boolean result = follows.following(follow);
 
             // then
-            assertThat(follows).isEqualTo(expected);
+            assertAll(
+                () -> assertThat(follows).isEqualTo(expected),
+                () -> assertTrue(result)
+            );
+
         }
 
     }
@@ -123,10 +130,14 @@ public class FollowsTest {
             Follows expected = Follows.of(new HashSet<>());
 
             // when
-            follows.unfollowing(follow);
+            boolean result = follows.unfollowing(follow);
 
             // then
-            assertThat(follows).isEqualTo(expected);
+            assertAll(
+                () -> assertThat(follows).isEqualTo(expected),
+                () -> assertFalse(result)
+            );
+
         }
 
     }

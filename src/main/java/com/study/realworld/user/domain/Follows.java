@@ -43,7 +43,7 @@ public class Follows {
     public boolean unfollowing(Follow follow) {
         checkIsUnfollow(follow);
 
-        return follows.remove(follow);
+        return !follows.remove(follow);
     }
 
     private void checkIsUnfollow(Follow follow) {

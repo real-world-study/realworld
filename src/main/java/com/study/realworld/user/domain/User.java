@@ -1,5 +1,6 @@
 package com.study.realworld.user.domain;
 
+import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import java.util.Objects;
 import javax.persistence.Embedded;
@@ -30,17 +31,17 @@ public class User extends BaseTimeEntity {
     private Password password;
 
     @Embedded
-    private Followees followees = new Followees();
+    private Follows follows = new Follows();
 
     protected User() {
     }
 
-    private User(Long id, Profile profile, Email email, Password password, Followees followees) {
+    private User(Long id, Profile profile, Email email, Password password, Follows follows) {
         this.id = id;
         this.profile = profile;
         this.email = email;
         this.password = password;
-        this.followees = followees;
+        this.follows = follows;
     }
 
     public Long id() {
@@ -99,20 +100,20 @@ public class User extends BaseTimeEntity {
         return profile;
     }
 
-    public Profile profileByFollowee(User followee) {
-        return followee.profile.profileByFollowing(isFollow(followee));
+    public boolean followUser(User followee) {
+        Follow follow = Follow.builder()
+            .follower(this)
+            .followee(followee)
+            .build();
+        return follows.following(follow);
     }
 
-    private boolean isFollow(User user) {
-        return followees.isFollow(user);
-    }
-
-    public void checkIsFollowingUser(User user) {
-        followees.checkIsFollowingUser(user);
-    }
-
-    public void checkIsUnfollowingUser(User user) {
-        followees.checkIsUnfollowingUser(user);
+    public boolean unfollowUser(User followee) {
+        Follow follow = Follow.builder()
+            .follower(this)
+            .followee(followee)
+            .build();
+        return follows.unfollowing(follow);
     }
 
     @Override
@@ -142,7 +143,7 @@ public class User extends BaseTimeEntity {
         private Profile profile;
         private Email email;
         private Password password;
-        private Followees followees;
+        private Follows followees;
 
         private Builder() {
         }
@@ -176,7 +177,7 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
-        public Builder followees(Followees followees) {
+        public Builder followees(Follows followees) {
             this.followees = followees;
             return this;
         }
