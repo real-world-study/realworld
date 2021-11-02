@@ -57,9 +57,11 @@ CREATE TABLE IF NOT EXISTS comment
 
 CREATE TABLE IF NOT EXISTS favorite
 (
+    id         bigint NOT NULL AUTO_INCREMENT,
     user_id    bigint NOT NULL,
     article_id bigint NOT NULL,
-    PRIMARY KEY (user_id, article_id),
+    PRIMARY KEY (id),
+    UNIQUE (user_id, article_id),
     CONSTRAINT fk_favorite_to_user_id FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
     CONSTRAINT fk_favorite_to_article_id FOREIGN KEY (article_id) REFERENCES article (id) ON DELETE CASCADE
 );
