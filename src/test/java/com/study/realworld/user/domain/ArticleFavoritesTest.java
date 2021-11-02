@@ -194,7 +194,6 @@ class ArticleFavoritesTest {
 
     }
 
-
     @Test
     @DisplayName("equals hashCode 테스트")
     void favoriteArticlesEqualsHashCodeTest() {

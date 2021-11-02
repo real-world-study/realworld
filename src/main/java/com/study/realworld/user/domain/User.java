@@ -1,5 +1,7 @@
 package com.study.realworld.user.domain;
 
+import com.study.realworld.article.domain.Article;
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
 import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import java.util.Objects;
@@ -33,15 +35,19 @@ public class User extends BaseTimeEntity {
     @Embedded
     private Follows follows = new Follows();
 
+    @Embedded
+    private ArticleFavorites articleFavorites = new ArticleFavorites();
+
     protected User() {
     }
 
-    private User(Long id, Profile profile, Email email, Password password, Follows follows) {
+    private User(Long id, Profile profile, Email email, Password password, Follows follows, ArticleFavorites favorites) {
         this.id = id;
         this.profile = profile;
         this.email = email;
         this.password = password;
         this.follows = follows;
+        this.articleFavorites = favorites;
     }
 
     public Long id() {
@@ -122,6 +128,28 @@ public class User extends BaseTimeEntity {
             .build();
     }
 
+    public boolean favoriteArticle(Article article) {
+        ArticleFavorite favorite = createArticleFavorite(article);
+        return articleFavorites.favoriting(favorite);
+    }
+
+    public boolean unfavoriteArticle(Article article) {
+        ArticleFavorite favorite = createArticleFavorite(article);
+        return articleFavorites.unfavoriting(favorite);
+    }
+
+    public boolean isFavoriteArticle(Article article) {
+        ArticleFavorite favorite = createArticleFavorite(article);
+        return articleFavorites.isFavoriteArticle(favorite);
+    }
+
+    private ArticleFavorite createArticleFavorite(Article article) {
+        return ArticleFavorite.builder()
+            .user(this)
+            .article(article)
+            .build();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -150,6 +178,7 @@ public class User extends BaseTimeEntity {
         private Email email;
         private Password password;
         private Follows follows;
+        private ArticleFavorites favorites;
 
         private Builder() {
         }
@@ -188,8 +217,13 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
+        public Builder articleFavorites(ArticleFavorites favorites) {
+            this.favorites = favorites;
+            return this;
+        }
+
         public User build() {
-            return new User(id, profile, email, password, follows);
+            return new User(id, profile, email, password, follows, favorites);
         }
     }
 

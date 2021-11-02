@@ -7,9 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.article.domain.Article;
+import com.study.realworld.article.domain.ArticleContent;
+import com.study.realworld.article.domain.Body;
+import com.study.realworld.article.domain.Description;
+import com.study.realworld.article.domain.SlugTitle;
+import com.study.realworld.article.domain.Title;
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
 import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
+import com.study.realworld.tag.domain.Tag;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +39,8 @@ class UserTest {
     private User user;
     private User followee;
 
+    private Article article;
+
     @BeforeEach
     void beforeEachTest() {
         user = User.Builder()
@@ -38,6 +49,7 @@ class UserTest {
             .email(Email.of("jake@jake.jake"))
             .password(Password.of("jakejake"))
             .follows(new Follows())
+            .articleFavorites(new ArticleFavorites())
             .build();
 
         followee = User.Builder()
@@ -47,6 +59,15 @@ class UserTest {
             .password(Password.of("jakejake"))
             .follows(new Follows())
             .build();
+
+        ArticleContent articleContent = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
+            .build();
+
+        article = Article.from(articleContent, followee);
     }
 
     @Test
@@ -182,6 +203,113 @@ class UserTest {
             // then
             assertFalse(result);
         }
+    }
+
+    @Nested
+    @DisplayName("favoriteArticle Article 좋아요 기능")
+    class favoriteArticleTest {
+
+        @Test
+        @DisplayName("좋아요한 게시글를 좋아요하는 경우 exception이 발생해야 한다.")
+        void favoriteArticleExceptionByExistFavoriteTest() {
+
+            // given
+            Set<ArticleFavorite> favoriteSet = new HashSet<>();
+            ArticleFavorite favorite = ArticleFavorite.builder()
+                .user(user)
+                .article(article).build();
+            favoriteSet.add(favorite);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .articleFavorites(ArticleFavorites.of(favoriteSet))
+                .build();
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.favoriteArticle(article))
+                .withMessageMatching(ErrorCode.INVALID_FAVORITE_ARTICLE.getMessage());
+        }
+
+        @Test
+        @DisplayName("정상적으로 게시글 좋아요를 할 수 있다.")
+        void favoriteArticleSuccessTest() {
+
+            // when
+            boolean result = user.favoriteArticle(article);
+
+            // then
+            assertTrue(result);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("unfavoriteArticle Article 좋아요 취소 기능")
+    class unfavoriteArticleTest {
+
+        @Test
+        @DisplayName("좋아요 안한 게시글를 좋아요 취소하는 경우 exception이 발생해야 한다.")
+        void unfavoriteArticleExceptionByNoExistFavoriteTest() {
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.unfavoriteArticle(article))
+                .withMessageMatching(ErrorCode.INVALID_UNFAVORITE_ARTICLE.getMessage());
+        }
+
+        @Test
+        @DisplayName("정상적으로 게시글 좋아요 취소를 할 수 있다.")
+        void unfavoriteArticleSuccessTest() {
+
+            // given
+            Set<ArticleFavorite> favoriteSet = new HashSet<>();
+            ArticleFavorite favorite = ArticleFavorite.builder()
+                .user(user)
+                .article(article).build();
+            favoriteSet.add(favorite);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .articleFavorites(ArticleFavorites.of(favoriteSet))
+                .build();
+
+            // when
+            boolean result = user.unfavoriteArticle(article);
+
+            // then
+            assertFalse(result);
+        }
+
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 유무를 확인할 수 있다.")
+    void isFavoriteArticleTest() {
+
+        // given
+        Set<ArticleFavorite> favoriteSet = new HashSet<>();
+        ArticleFavorite favorite = ArticleFavorite.builder()
+            .user(user)
+            .article(article).build();
+        favoriteSet.add(favorite);
+        user = User.Builder()
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .articleFavorites(ArticleFavorites.of(favoriteSet))
+            .build();
+
+        // when
+        boolean result = user.isFavoriteArticle(article);
+
+        // then
+        assertTrue(result);
     }
 
     @Test

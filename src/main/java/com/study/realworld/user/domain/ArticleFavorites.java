@@ -43,7 +43,7 @@ public class ArticleFavorites {
     public boolean unfavoriting(ArticleFavorite favorite) {
         checkIsUnfavorite(favorite);
 
-        return favorites.remove(favorite);
+        return !favorites.remove(favorite);
     }
 
     private void checkIsUnfavorite(ArticleFavorite favorite) {
