@@ -2,13 +2,10 @@ package com.study.realworld.article.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Image;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
@@ -26,15 +23,16 @@ class ArticleTest {
     @BeforeEach
     void beforeEach() {
         author = User.Builder()
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
-            .profile(Username.of("username"), Bio.of("bio"), Image.of("image"))
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
             .build();
         articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title")))
-            .description(Description.of("description"))
-            .body(Body.of("body"))
-            .tags(Arrays.asList(Tag.of("tag1"), Tag.of("tag2")))
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
             .build();
     }
 
@@ -106,43 +104,6 @@ class ArticleTest {
 
         // then
         assertThat(result).isAfter(startTime).isBefore(endTime);
-    }
-
-    @Test
-    @DisplayName("유저가 글을 좋아요할 수 있다.")
-    void favoritingByUserTest() {
-
-        // given
-        Article article = Article.from(articleContent, author);
-        User user = User.Builder()
-            .email(Email.of("email@email.com"))
-            .build();
-        article.favoritingByUser(user);
-
-        // when
-        boolean result = article.isFavorited();
-
-        // then
-        assertTrue(result);
-    }
-
-    @Test
-    @DisplayName("유저가 글을 좋아요 취소할 수 있다.")
-    void unfavoritingByUserTest() {
-
-        // given
-        Article article = Article.from(articleContent, author);
-        User user = User.Builder()
-            .email(Email.of("email@email.com"))
-            .build();
-        article.favoritingByUser(user);
-        article.unfavoritingByUser(user);
-
-        // when
-        boolean result = article.isFavorited();
-
-        // then
-        assertFalse(result);
     }
 
     @Test
