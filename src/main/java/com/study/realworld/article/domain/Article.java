@@ -34,6 +34,9 @@ public class Article extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
+    @Embedded
+    private FavoritingUsers favoritingUsers = new FavoritingUsers();
+
     protected Article() {
     }
 
@@ -80,6 +83,10 @@ public class Article extends BaseTimeEntity {
 
     public void changeBody(Body body) {
         articleContent.changeBody(body);
+    }
+
+    public int favoritesCount() {
+        return favoritingUsers.size();
     }
 
     public void deleteArticle() {

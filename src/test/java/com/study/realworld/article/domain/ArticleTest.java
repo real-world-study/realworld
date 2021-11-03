@@ -107,6 +107,20 @@ class ArticleTest {
     }
 
     @Test
+    @DisplayName("현재 Article을 좋아요한 개수를 반환할 수 있다.")
+    void favoritesCountTest() {
+
+        // given
+        Article article = Article.from(articleContent, author);
+
+        // when
+        int result = article.favoritesCount();
+
+        // then
+        assertThat(result).isEqualTo(0);
+    }
+
+    @Test
     @DisplayName("equals hashCode 테스트")
     void articleEqualsHashCodeTest() {
 
