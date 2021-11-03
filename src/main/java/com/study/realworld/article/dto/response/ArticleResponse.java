@@ -1,4 +1,4 @@
-package com.study.realworld.article.controller.response;
+package com.study.realworld.article.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,9 +8,10 @@ import com.study.realworld.article.domain.Description;
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.tag.domain.Tag;
-import com.study.realworld.user.controller.response.ProfileResponse.ProfileResponseNested;
+import com.study.realworld.user.dto.response.ProfileResponse.ProfileResponseNested;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class ArticleResponse {
 
@@ -26,6 +27,23 @@ public class ArticleResponse {
 
     public static ArticleResponse fromArticle(Article article) {
         return new ArticleResponse(ArticleResponseNested.fromArticle(article));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ArticleResponse that = (ArticleResponse) o;
+        return Objects.equals(articleResponseNested, that.articleResponseNested);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(articleResponseNested);
     }
 
     public static class ArticleResponseNested {
@@ -90,12 +108,37 @@ public class ArticleResponse {
                 article.tags(),
                 article.createdAt(),
                 article.updatedAt(),
-                article.isFavorited(),
-                article.favoritesCount(),
-                ProfileResponseNested.ofProfile(article.author().profile())
+//                article.isFavorited(),
+                false,
+//                article.favoritesCount(),
+                0,
+                ProfileResponseNested.fromProfileAndFollowing(article.author().profile(), false)
             );
         }
-    }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            ArticleResponseNested that = (ArticleResponseNested) o;
+            return favorited == that.favorited && favoritesCount == that.favoritesCount && Objects.equals(slug, that.slug)
+                && Objects.equals(title, that.title) && Objects.equals(description, that.description)
+                && Objects.equals(body, that.body) && Objects.equals(tags, that.tags) && Objects
+                .equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt) && Objects
+                .equals(profileResponseNested, that.profileResponseNested);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects
+                .hash(slug, title, description, body, tags, createdAt, updatedAt, favorited, favoritesCount,
+                    profileResponseNested);
+        }
+
+    }
 
 }

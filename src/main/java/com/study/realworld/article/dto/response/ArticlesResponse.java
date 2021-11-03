@@ -1,8 +1,8 @@
-package com.study.realworld.article.controller.response;
+package com.study.realworld.article.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.study.realworld.article.controller.response.ArticleResponse.ArticleResponseNested;
 import com.study.realworld.article.domain.Article;
+import com.study.realworld.article.dto.response.ArticleResponse.ArticleResponseNested;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;

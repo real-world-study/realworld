@@ -1,6 +1,6 @@
-package com.study.realworld.article.controller.response;
+package com.study.realworld.article.dto.response;
 
-import com.study.realworld.article.controller.response.ArticleResponse.ArticleResponseNested;
+import com.study.realworld.article.dto.response.ArticleResponse.ArticleResponseNested;
 import org.junit.jupiter.api.Test;
 
 class ArticleResponseTest {

@@ -1,4 +1,4 @@
-package com.study.realworld.article.controller.response;
+package com.study.realworld.article.dto.response;
 
 import org.junit.jupiter.api.Test;
 
