@@ -68,16 +68,16 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article createArticle(Long userId, ArticleContent articleContent) {
+    public ArticleResponse createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
 
         articleContent.refreshTags(tagService.refreshTagByExistedTag(articleContent.tags()));
         Article article = Article.from(articleContent, author);
-        return articleRepository.save(article);
+        return ArticleResponse.fromArticle(articleRepository.save(article));
     }
 
     @Transactional
-    public Article updateArticle(Long userId, Slug slug, ArticleUpdateModel updateArticle) {
+    public ArticleResponse updateArticle(Long userId, Slug slug, ArticleUpdateModel updateArticle) {
         User author = userService.findById(userId);
         Article article = findByAuthorAndSlug(author, slug);
 
@@ -85,8 +85,7 @@ public class ArticleService {
         updateArticle.getDescription().ifPresent(article::changeDescription);
         updateArticle.getBody().ifPresent(article::changeBody);
 
-//        return article.updateFavoritedByUser(author);
-        return null;
+        return ArticleResponse.fromArticle(article);
     }
 
     @Transactional
