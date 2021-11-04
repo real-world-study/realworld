@@ -2,6 +2,7 @@ package com.study.realworld.article.controller;
 
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.dto.request.ArticleCreateRequest;
+import com.study.realworld.article.dto.request.ArticleUpdateRequest;
 import com.study.realworld.article.dto.response.ArticleResponse;
 import com.study.realworld.article.dto.response.ArticleResponses;
 import com.study.realworld.article.service.ArticleService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,14 +55,13 @@ public class ArticleController {
         return ResponseEntity.ok().body(response);
     }
 
-//    @PutMapping("/articles/{slug}")
-//    public ResponseEntity<ArticleResponse> updateArticle(@PathVariable String slug,
-//        @RequestBody ArticleUpdateRequest request,
-//        @CurrentUserId Long loginId) {
-//        Article article = articleService.updateArticle(loginId, Slug.of(slug), request.toArticleUpdateModel());
-//        return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
-//    }
-//
+    @PutMapping("/articles/{slug}")
+    public ResponseEntity<ArticleResponse> updateArticle(@PathVariable String slug, @RequestBody ArticleUpdateRequest request,
+        @CurrentUserId Long loginId) {
+        ArticleResponse response = articleService.updateArticle(loginId, Slug.of(slug), request.toArticleUpdateModel());
+        return ResponseEntity.ok().body(response);
+    }
+
 //    @DeleteMapping("/articles/{slug}")
 //    public void deleteArticle(@PathVariable String slug, @CurrentUserId Long loginId) {
 //        articleService.deleteArticleByAuthorAndSlug(loginId, Slug.of(slug));
