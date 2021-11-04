@@ -10,6 +10,8 @@ import com.study.realworld.article.domain.Body;
 import com.study.realworld.article.domain.Description;
 import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
+import com.study.realworld.article.dto.response.ArticleResponse;
+import com.study.realworld.article.dto.response.ArticleResponses;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.tag.domain.TagRepository;
 import com.study.realworld.user.domain.Email;
@@ -17,7 +19,9 @@ import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +29,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,16 +75,23 @@ public class ArticleIntegrationTest {
 
         // given
         Tag existTag = Tag.of("tag");
-        Tag expected = tagRepository.save(existTag);
+        tagRepository.save(existTag);
         User author = userService.join(user);
+
+        Article article = Article.from(articleContent, author);
+        ArticleResponse expected = ArticleResponse.fromArticle(article);
+        System.out.println(expected);
+        entityManager.flush();
         entityManager.clear();
 
         // when
-        Article result = articleService.createArticle(author.id(), articleContent);
+        ArticleResponse result = articleService.createArticle(author.id(), articleContent);
+        entityManager.clear();
+        System.out.println(result);
 
         // then
         assertAll(
-            () -> assertThat(result.tags().get(0)).isEqualTo(expected),
+            () -> assertThat(result).isEqualTo(expected),
             () -> assertThat(tagRepository.findAll().size()).isEqualTo(1)
         );
     }
@@ -111,6 +121,8 @@ public class ArticleIntegrationTest {
 
         // setup
         userService.join(user);
+
+        List<Article> articles = new ArrayList<>();
         for (int i=1; i<=10; i++){
             ArticleContent articleContent = ArticleContent.builder()
                 .slugTitle(SlugTitle.of(Title.of("title" + i)))
@@ -118,9 +130,10 @@ public class ArticleIntegrationTest {
                 .body(Body.of("body" + i))
                 .tags(Arrays.asList(Tag.of("tagA"), Tag.of("tag" + i)))
                 .build();
-            Article article = Article.from(articleContent, user);
-            articleRepository.save(article);
+            articles.add(Article.from(articleContent, user));
         }
+        articles
+            .forEach(article -> articleRepository.save(article));
         entityManager.flush();
         entityManager.clear();
 
@@ -129,23 +142,13 @@ public class ArticleIntegrationTest {
         int limit = 4;  // airtlce counts
         PageRequest pageRequest = PageRequest.of(offset, limit);
 
+        ArticleResponses expected = ArticleResponses.fromArticles(articles.subList(0, 4));
+
         // when
-        Page<Article> result = articleService.findAllArticles(pageRequest, "tagA", "username");
+        ArticleResponses result = articleService.findArticleResponsesByTagAndAuthor(pageRequest, "tagA", "username");
 
         // then
-        assertAll(
-            () -> assertThat(result.getSize()).isEqualTo(limit),
-            () -> assertThat(result.getNumber()).isEqualTo(offset),
-            () -> assertThat(result.getTotalPages()).isEqualTo(3),
-            () -> {
-                for (Article article : result) {
-                    assertAll(
-                        () -> assertThat(article.author().username()).isEqualTo(Username.of("username")),
-                        () -> assertThat(article.tags()).contains(Tag.of("tagA"))
-                    );
-                }
-            }
-        );
+        assertThat(result).isEqualTo(expected);
     }
 
 }
