@@ -29,7 +29,7 @@ public class FollowController {
 
     @DeleteMapping("/profiles/{username}/follow")
     public ResponseEntity<FollowResponse> unfollow(@PathVariable String username, @CurrentUserId Long loginId) {
-        FollowResponse followResponse = followService.followUser(loginId, Username.of(username));
+        FollowResponse followResponse = followService.unfollowUser(loginId, Username.of(username));
         return ResponseEntity.ok().body(followResponse);
     }
 

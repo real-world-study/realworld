@@ -130,7 +130,7 @@ class FollowControllerTest {
         String username = followee.username().value();
         Profile expected = followee.profile();
         FollowResponse response = FollowResponse.fromProfileAndFollowing(expected, false);
-        when(followService.followUser(1L, followee.username())).thenReturn(response);
+        when(followService.unfollowUser(1L, followee.username())).thenReturn(response);
 
         // given
         final String URL = "/api/profiles/{username}/follow";
