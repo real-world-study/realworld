@@ -177,8 +177,8 @@ public class User extends BaseTimeEntity {
         private Profile profile;
         private Email email;
         private Password password;
-        private Follows follows;
-        private ArticleFavorites favorites;
+        private Follows follows = new Follows();
+        private ArticleFavorites favorites = new ArticleFavorites();
 
         private Builder() {
         }

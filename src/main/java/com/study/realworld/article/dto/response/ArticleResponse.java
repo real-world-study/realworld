@@ -8,6 +8,7 @@ import com.study.realworld.article.domain.Description;
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.tag.domain.Tag;
+import com.study.realworld.user.domain.User;
 import com.study.realworld.user.dto.response.ProfileResponse.ProfileResponseNested;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -85,8 +86,7 @@ public class ArticleResponse {
 
         private ArticleResponseNested(Slug slug, Title title, Description description,
             Body body, List<Tag> tags, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean favorited,
-            int favoritesCount,
-            ProfileResponseNested profileResponseNested) {
+            int favoritesCount, ProfileResponseNested profileResponseNested) {
             this.slug = slug;
             this.title = title;
             this.description = description;
@@ -99,7 +99,7 @@ public class ArticleResponse {
             this.profileResponseNested = profileResponseNested;
         }
 
-        public static ArticleResponseNested fromArticle(Article article) {
+        public static ArticleResponseNested from(Article article, User user, boolean favorited, boolean following) {
             return new ArticleResponseNested(
                 article.slug(),
                 article.title(),
@@ -108,13 +108,20 @@ public class ArticleResponse {
                 article.tags(),
                 article.createdAt(),
                 article.updatedAt(),
-//                article.isFavorited(),
-                false,
-//                article.favoritesCount(),
-                0,
-                ProfileResponseNested.fromProfileAndFollowing(article.author().profile(), false)
+                favorited,
+                article.favoritesCount(),
+                ProfileResponseNested.fromProfileAndFollowing(article.author().profile(), following)
             );
         }
+
+        public static ArticleResponseNested fromArticle(Article article) {
+            return from(article, null, false, false);
+        }
+
+        public static ArticleResponseNested fromArticleAndUser(Article article, User user) {
+            return from(article, user, user.isFavoriteArticle(article), user.isFollow(article.author()));
+        }
+
 
         @Override
         public boolean equals(Object o) {
