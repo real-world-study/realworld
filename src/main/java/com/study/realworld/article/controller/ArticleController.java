@@ -2,13 +2,17 @@ package com.study.realworld.article.controller;
 
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.dto.response.ArticleResponse;
+import com.study.realworld.article.dto.response.ArticleResponses;
 import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.global.security.CurrentUserId;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api")
@@ -29,16 +33,16 @@ public class ArticleController {
         return ResponseEntity.ok().body(response);
     }
 
-//    @GetMapping("/articles")
-//    public ResponseEntity<ArticleResponses> getArticles(@PageableDefault(page = 0, size = 20) Pageable pageable,
-//        @RequestParam(required = false) String tag, @RequestParam(required = false) String author,
-//        @RequestParam(required = false) String favorited,
-//        @CurrentUserId Long userId) {
-//        Page<Article> articles = Optional.ofNullable(userId)
-//            .map(id -> articleService.findAllArticles(id, pageable, tag, author))
-//            .orElse(articleService.findAllArticles(pageable, tag, author));
-//        return ResponseEntity.ok().body(ArticleResponses.fromPageArticles(articles));
-//    }
+    @GetMapping("/articles")
+    public ResponseEntity<ArticleResponses> getArticles(@PageableDefault(page = 0, size = 20) Pageable pageable,
+        @RequestParam(required = false) String tag, @RequestParam(required = false) String author,
+        @RequestParam(required = false) String favorited,
+        @CurrentUserId Long userId) {
+        ArticleResponses response = Optional.ofNullable(userId)
+            .map(id -> articleService.findArticleResponsesByTagAndAuthor(id, pageable, tag, author))
+            .orElse(articleService.findArticleResponsesByTagAndAuthor(pageable, tag, author));
+        return ResponseEntity.ok().body(response);
+    }
 
 //    @PostMapping("/articles")
 //    public ResponseEntity<ArticleResponse> createArticle(@RequestBody ArticleCreateRequest request,
