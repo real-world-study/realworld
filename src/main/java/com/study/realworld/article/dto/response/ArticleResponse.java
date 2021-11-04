@@ -30,6 +30,10 @@ public class ArticleResponse {
         return new ArticleResponse(ArticleResponseNested.fromArticle(article));
     }
 
+    public static ArticleResponse fromArticleAndUser(Article article, User user) {
+        return new ArticleResponse(ArticleResponseNested.fromArticleAndUser(article, user));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

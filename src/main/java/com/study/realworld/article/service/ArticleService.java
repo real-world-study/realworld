@@ -5,6 +5,7 @@ import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.ArticleRepository;
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.dto.response.ArticleResponse;
+import com.study.realworld.article.dto.response.ArticleResponses;
 import com.study.realworld.article.service.model.ArticleUpdateModel;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
@@ -49,16 +50,21 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Article> findAllArticles(Pageable pageable, String tag, String author) {
-        return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
+    public ArticleResponses findArticleResponsesByTagAndAuthor(Pageable pageable, String tag, String author) {
+        Page<Article> articles = findArticlesPageByTagAndAuthor(pageable, tag, author);
+        return ArticleResponses.fromArticles(articles.getContent());
     }
 
     @Transactional(readOnly = true)
-    public Page<Article> findAllArticles(Long userId, Pageable pageable, String tag, String author) {
+    public ArticleResponses findArticleResponsesByTagAndAuthor(Long userId, Pageable pageable, String tag, String author) {
         User user = userService.findById(userId);
-//        return articleRepository.findPageByTagAndAuthor(pageable, tag, author)
-//            .map(article -> article.updateFavoritedByUser(user));
-        return null;
+        Page<Article> articles = findArticlesPageByTagAndAuthor(pageable, tag, author);
+
+        return ArticleResponses.fromArticlesAndUser(articles.getContent(), user);
+    }
+
+    private Page<Article> findArticlesPageByTagAndAuthor(Pageable pageable, String tag, String author) {
+        return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
     }
 
     @Transactional
