@@ -99,7 +99,9 @@ public class ArticleResponse {
             this.profileResponseNested = profileResponseNested;
         }
 
-        public static ArticleResponseNested from(Article article, User user, boolean favorited, boolean following) {
+        public static ArticleResponseNested from(Article article, User user, boolean favorited, int favoritesCount,
+            boolean following) {
+
             return new ArticleResponseNested(
                 article.slug(),
                 article.title(),
@@ -109,17 +111,18 @@ public class ArticleResponse {
                 article.createdAt(),
                 article.updatedAt(),
                 favorited,
-                article.favoritesCount(),
+                favoritesCount,
                 ProfileResponseNested.fromProfileAndFollowing(article.author().profile(), following)
             );
         }
 
         public static ArticleResponseNested fromArticle(Article article) {
-            return from(article, null, false, false);
+            return from(article, null, false, article.favoritesCount(), false);
         }
 
         public static ArticleResponseNested fromArticleAndUser(Article article, User user) {
-            return from(article, user, user.isFavoriteArticle(article), user.isFollow(article.author()));
+            return from(article, user, user.isFavoriteArticle(article), article.favoritesCount(),
+                user.isFollow(article.author()));
         }
 
 
