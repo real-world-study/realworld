@@ -136,7 +136,7 @@ class ArticleFavoriteServiceTest {
             when(articleService.findBySlug(slug)).thenReturn(article);
 
             ArticleFavoriteResponse expected = ArticleFavoriteResponse.from(
-                ArticleResponseNested.from(article, user, true, false)
+                ArticleResponseNested.from(article, user, true, 0, false)
             );
 
             // when
@@ -209,7 +209,7 @@ class ArticleFavoriteServiceTest {
             when(articleService.findBySlug(slug)).thenReturn(article);
 
             ArticleFavoriteResponse expected = ArticleFavoriteResponse.from(
-                ArticleResponseNested.from(article, user, false, false)
+                ArticleResponseNested.from(article, user, false, 0, false)
             );
 
             // when
