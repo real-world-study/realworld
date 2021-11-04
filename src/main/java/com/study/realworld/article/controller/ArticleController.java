@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,21 +63,9 @@ public class ArticleController {
         return ResponseEntity.ok().body(response);
     }
 
-//    @DeleteMapping("/articles/{slug}")
-//    public void deleteArticle(@PathVariable String slug, @CurrentUserId Long loginId) {
-//        articleService.deleteArticleByAuthorAndSlug(loginId, Slug.of(slug));
-//    }
-
-//    @PostMapping("/articles/{slug}/favorite")
-//    public ResponseEntity<ArticleResponse> favoriteArticle(@PathVariable String slug, @CurrentUserId Long loginId) {
-//        Article article = articleService.favoriteArticle(loginId, Slug.of(slug));
-//        return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
-//    }
-//
-//    @DeleteMapping("/articles/{slug}/favorite")
-//    public ResponseEntity<ArticleResponse> unfavoriteArticle(@PathVariable String slug, @CurrentUserId Long loginId) {
-//        Article article = articleService.unfavoriteArticle(loginId, Slug.of(slug));
-//        return ResponseEntity.ok().body(ArticleResponse.fromArticle(article));
-//    }
+    @DeleteMapping("/articles/{slug}")
+    public void deleteArticle(@PathVariable String slug, @CurrentUserId Long loginId) {
+        articleService.deleteArticleByAuthorAndSlug(loginId, Slug.of(slug));
+    }
 
 }
