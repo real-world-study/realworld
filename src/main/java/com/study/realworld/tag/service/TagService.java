@@ -23,14 +23,14 @@ public class TagService {
     }
 
     @Transactional(readOnly = true)
-    public List<Tag> refreshTagByExistedTag(List<Tag> tags) {
-        return tags.stream()
-            .map(tag -> findByTag(tag).orElse(tag))
+    public List<Tag> refreshTagByExistedTagName(List<String> names) {
+        return names.stream()
+            .map(name -> findByName(name).orElse(Tag.of(name)))
             .collect(Collectors.toList());
     }
 
-    private Optional<Tag> findByTag(Tag tag) {
-        return tagRepository.findByName(tag.name());
+    private Optional<Tag> findByName(String name) {
+        return tagRepository.findByName(name);
     }
 
 }

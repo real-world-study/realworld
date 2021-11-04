@@ -3,6 +3,7 @@ package com.study.realworld.article.domain;
 import com.study.realworld.tag.domain.Tag;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
@@ -57,8 +58,10 @@ public class ArticleContent {
         return body;
     }
 
-    public List<Tag> tags() {
-        return tags;
+    public List<String> tags() {
+        return tags.stream()
+            .map(Tag::name)
+            .collect(Collectors.toList());
     }
 
     public void changeTitle(Title title) {

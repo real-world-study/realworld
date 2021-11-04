@@ -7,7 +7,6 @@ import com.study.realworld.article.domain.Body;
 import com.study.realworld.article.domain.Description;
 import com.study.realworld.article.domain.Slug;
 import com.study.realworld.article.domain.Title;
-import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.dto.response.ProfileResponse.ProfileResponseNested;
 import java.time.OffsetDateTime;
@@ -66,7 +65,7 @@ public class ArticleResponse {
         private Body body;
 
         @JsonProperty("tagList")
-        private List<Tag> tags;
+        private List<String> tags;
 
         @JsonProperty("createdAt")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
@@ -89,7 +88,7 @@ public class ArticleResponse {
         }
 
         private ArticleResponseNested(Slug slug, Title title, Description description,
-            Body body, List<Tag> tags, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean favorited,
+            Body body, List<String> tags, OffsetDateTime createdAt, OffsetDateTime updatedAt, boolean favorited,
             int favoritesCount, ProfileResponseNested profileResponseNested) {
             this.slug = slug;
             this.title = title;
@@ -129,7 +128,6 @@ public class ArticleResponse {
                 user.isFollow(article.author()));
         }
 
-
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -141,16 +139,7 @@ public class ArticleResponse {
             ArticleResponseNested that = (ArticleResponseNested) o;
             return favorited == that.favorited && favoritesCount == that.favoritesCount && Objects.equals(slug, that.slug)
                 && Objects.equals(title, that.title) && Objects.equals(description, that.description)
-                && Objects.equals(body, that.body) && Objects.equals(tags, that.tags) && Objects
-                .equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt) && Objects
-                .equals(profileResponseNested, that.profileResponseNested);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects
-                .hash(slug, title, description, body, tags, createdAt, updatedAt, favorited, favoritesCount,
-                    profileResponseNested);
+                && Objects.equals(body, that.body) && Objects.equals(tags, that.tags);
         }
 
     }

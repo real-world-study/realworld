@@ -1,7 +1,6 @@
 package com.study.realworld.article.domain;
 
 import com.study.realworld.global.domain.BaseTimeEntity;
-import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.user.domain.User;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -65,7 +64,7 @@ public class Article extends BaseTimeEntity {
         return articleContent.body();
     }
 
-    public List<Tag> tags() {
+    public List<String> tags() {
         return articleContent.tags();
     }
 

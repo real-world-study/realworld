@@ -132,8 +132,8 @@ class ArticleFavoriteControllerTest {
             .andExpect(jsonPath("$.article.title", is(article.title().title())))
             .andExpect(jsonPath("$.article.description", is(article.description().description())))
             .andExpect(jsonPath("$.article.body", is(article.body().body())))
-            .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0).name())))
-            .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1).name())))
+            .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0))))
+            .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1))))
             .andExpect(jsonPath("$.article.createdAt",
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.updatedAt",
@@ -201,8 +201,8 @@ class ArticleFavoriteControllerTest {
             .andExpect(jsonPath("$.article.title", is(article.title().title())))
             .andExpect(jsonPath("$.article.description", is(article.description().description())))
             .andExpect(jsonPath("$.article.body", is(article.body().body())))
-            .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0).name())))
-            .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1).name())))
+            .andExpect(jsonPath("$.article.tagList[0]", is(article.tags().get(0))))
+            .andExpect(jsonPath("$.article.tagList[1]", is(article.tags().get(1))))
             .andExpect(jsonPath("$.article.createdAt",
                 is(article.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
             .andExpect(jsonPath("$.article.updatedAt",

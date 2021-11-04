@@ -294,7 +294,7 @@ class ArticleServiceTest {
         // setup & given
         Long userId = 1L;
         when(userService.findById(userId)).thenReturn(user);
-        when(tagService.refreshTagByExistedTag(articleContent.tags()))
+        when(tagService.refreshTagByExistedTagName(articleContent.tags()))
             .thenReturn(Arrays.asList(Tag.of("dragons"), Tag.of("training")));
         Article article = Article.from(articleContent, user);
         when(articleRepository.save(article)).thenReturn(article);

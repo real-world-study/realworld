@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.study.realworld.tag.domain.Tag;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -101,7 +102,7 @@ class ArticleContentTest {
             () -> assertThat(result.title()).isEqualTo(title),
             () -> assertThat(result.description()).isEqualTo(description),
             () -> assertThat(result.body()).isEqualTo(body),
-            () -> assertThat(result.tags()).isEqualTo(tags)
+            () -> assertThat(result.tags().stream().map(Tag::of).collect(Collectors.toList())).isEqualTo(tags)
         );
     }
 

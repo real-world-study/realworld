@@ -33,10 +33,10 @@ public class TagServiceIntegrationTest {
         Tag expected = tagRepository.save(tag);
 
         Tag tag1 = Tag.of("tag1");
-        List<Tag> tags = Arrays.asList(tag1);
+        List<String> tags = Arrays.asList("tag1");
 
         // when
-        List<Tag> result = tagService.refreshTagByExistedTag(tags);
+        List<Tag> result = tagService.refreshTagByExistedTagName(tags);
 
         // then
         assertAll(

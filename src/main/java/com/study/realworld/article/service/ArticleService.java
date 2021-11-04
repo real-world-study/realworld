@@ -71,7 +71,7 @@ public class ArticleService {
     public ArticleResponse createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
 
-        articleContent.refreshTags(tagService.refreshTagByExistedTag(articleContent.tags()));
+        articleContent.refreshTags(tagService.refreshTagByExistedTagName(articleContent.tags()));
         Article article = Article.from(articleContent, author);
         return ArticleResponse.fromArticle(articleRepository.save(article));
     }
