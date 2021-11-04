@@ -4,6 +4,7 @@ import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.ArticleRepository;
 import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.dto.response.ArticleResponse;
 import com.study.realworld.article.service.model.ArticleUpdateModel;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
@@ -35,9 +36,16 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Article findBySlug(Long userId, Slug slug) {
+    public ArticleResponse findArticleResponseBySlug(Slug slug) {
+        return ArticleResponse.fromArticle(findBySlug(slug));
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleResponse findArticleResponseBySlug(Long userId, Slug slug) {
         User user = userService.findById(userId);
-        return findBySlug(slug).updateFavoritedByUser(user);
+        Article article = findBySlug(slug);
+
+        return ArticleResponse.fromArticleAndUser(article, user);
     }
 
     @Transactional(readOnly = true)
@@ -48,8 +56,9 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Page<Article> findAllArticles(Long userId, Pageable pageable, String tag, String author) {
         User user = userService.findById(userId);
-        return articleRepository.findPageByTagAndAuthor(pageable, tag, author)
-            .map(article -> article.updateFavoritedByUser(user));
+//        return articleRepository.findPageByTagAndAuthor(pageable, tag, author)
+//            .map(article -> article.updateFavoritedByUser(user));
+        return null;
     }
 
     @Transactional
@@ -70,7 +79,8 @@ public class ArticleService {
         updateArticle.getDescription().ifPresent(article::changeDescription);
         updateArticle.getBody().ifPresent(article::changeBody);
 
-        return article.updateFavoritedByUser(author);
+//        return article.updateFavoritedByUser(author);
+        return null;
     }
 
     @Transactional
@@ -79,22 +89,6 @@ public class ArticleService {
         Article article = findByAuthorAndSlug(author, slug);
 
         article.deleteArticle();
-    }
-
-    @Transactional
-    public Article favoriteArticle(Long userId, Slug slug) {
-        User user = userService.findById(userId);
-        Article article = findBySlug(slug);
-
-        return article.favoritingByUser(user);
-    }
-
-    @Transactional
-    public Article unfavoriteArticle(Long userId, Slug slug) {
-        User user = userService.findById(userId);
-        Article article = findBySlug(slug);
-
-        return article.unfavoritingByUser(user);
     }
 
     private Article findByAuthorAndSlug(User author, Slug slug) {
