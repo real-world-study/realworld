@@ -270,8 +270,7 @@ class ArticleServiceTest {
                     .build();
                 articles.add(Article.from(articleContent, user));
             }
-            articles
-                .forEach(article -> user.favoriteArticle(article));
+
             PageRequest pageRequest = PageRequest.of(offset, limit);
             when(articleRepository.findPageByTagAndAuthor(pageRequest, null, null))
                 .thenReturn(new PageImpl<>(articles.subList(0, 4), pageRequest, articles.size()));
