@@ -28,25 +28,25 @@ public class ArticleFavorites {
         return new ArticleFavorites(favorites);
     }
 
-    public boolean favoriting(ArticleFavorite favorite) {
-        checkIsFavorite(favorite);
+    public ArticleFavorite checkCanFavorite(ArticleFavorite favorite) {
+        checkFavoriteNotExist(favorite);
 
-        return favorites.add(favorite);
+        return favorite;
     }
 
-    private void checkIsFavorite(ArticleFavorite favorite) {
+    private void checkFavoriteNotExist(ArticleFavorite favorite) {
         if (isFavoriteArticle(favorite)) {
             throw new BusinessException(ErrorCode.INVALID_FAVORITE_ARTICLE);
         }
     }
 
-    public boolean unfavoriting(ArticleFavorite favorite) {
-        checkIsUnfavorite(favorite);
+    public ArticleFavorite checkCanUnfavorite(ArticleFavorite favorite) {
+        checkFavoriteExist(favorite);
 
-        return !favorites.remove(favorite);
+        return favorite;
     }
 
-    private void checkIsUnfavorite(ArticleFavorite favorite) {
+    private void checkFavoriteExist(ArticleFavorite favorite) {
         if (!isFavoriteArticle(favorite)) {
             throw new BusinessException(ErrorCode.INVALID_UNFAVORITE_ARTICLE);
         }

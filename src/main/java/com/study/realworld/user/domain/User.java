@@ -128,14 +128,14 @@ public class User extends BaseTimeEntity {
             .build();
     }
 
-    public boolean favoriteArticle(Article article) {
+    public ArticleFavorite createFavoriteForFavoriting(Article article) {
         ArticleFavorite favorite = createArticleFavorite(article);
-        return articleFavorites.favoriting(favorite);
+        return articleFavorites.checkCanFavorite(favorite);
     }
 
-    public boolean unfavoriteArticle(Article article) {
+    public ArticleFavorite createFavoriteForUnfavoriting(Article article) {
         ArticleFavorite favorite = createArticleFavorite(article);
-        return articleFavorites.unfavoriting(favorite);
+        return articleFavorites.checkCanUnfavorite(favorite);
     }
 
     public boolean isFavoriteArticle(Article article) {

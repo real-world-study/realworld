@@ -62,12 +62,12 @@ class ArticleFavoritesTest {
     }
 
     @Nested
-    @DisplayName("favoritingArticle 게시글 좋아요 기능 테스트")
-    class favoritingArticleTest {
+    @DisplayName("checkCanFavorite 좋아요 가능여부 테스트")
+    class checkCanFavoriteTest {
 
         @Test
         @DisplayName("이미 좋아요한 유저가 좋아요하는 경우 exception이 발생해야 한다.")
-        void favoritingArticleExceptionByExistFavoriteTest() {
+        void checkCanFavoriteByExistFavoriteExceptionTest() {
 
             // given
             Set<ArticleFavorite> favoriteSet = new HashSet<>();
@@ -80,13 +80,13 @@ class ArticleFavoritesTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> favorites.favoriting(favorite))
+                .isThrownBy(() -> favorites.checkCanFavorite(favorite))
                 .withMessageMatching(ErrorCode.INVALID_FAVORITE_ARTICLE.getMessage());
         }
 
         @Test
-        @DisplayName("정상적으로 게시글을 좋아요할 수 있다.")
-        void favoritingArticleSuccessTest() {
+        @DisplayName("정상적으로 가능한 경우 그대로 반환해야 한다.")
+        void checkCanFavoriteSuccessTest() {
 
             // given
             Set<ArticleFavorite> favoriteSet = new HashSet<>();
@@ -96,25 +96,27 @@ class ArticleFavoritesTest {
                 .build();
             ArticleFavorites favorites = ArticleFavorites.of(favoriteSet);
 
-            Set<ArticleFavorite> expectedSet = new HashSet<>();
-            expectedSet.add(favorite);
-            ArticleFavorites expected = ArticleFavorites.of(expectedSet);
+            ArticleFavorite expected = ArticleFavorite.builder()
+                .user(user)
+                .article(article)
+                .build();
 
             // when
-            favorites.favoriting(favorite);
+            ArticleFavorite result = favorites.checkCanFavorite(favorite);
 
             // then
-            assertThat(favorites).isEqualTo(expected);
+            assertThat(result).isEqualTo(expected);
         }
+
     }
 
     @Nested
-    @DisplayName("unfavoritingArticle 게시글 좋아요취소 기능 테스트")
-    class unfavoritingArticleTest {
+    @DisplayName("checkCanUnfavorite 좋아요 취소가능여부 테스트")
+    class checkCanUnfavoriteTest {
 
         @Test
-        @DisplayName("좋아요 안한 유저가 좋아요 취소하는 경우 exception이 발생해야 한다.")
-        void unfavoritingArticleExceptionByNoExistFavoriteTest() {
+        @DisplayName("좋아요안한 유저가 좋아요 취소하는 경우 exception이 발생해야 한다.")
+        void checkCanUnfavoriteByNotExistFavoriteExceptionTest() {
 
             // given
             Set<ArticleFavorite> favoriteSet = new HashSet<>();
@@ -126,13 +128,13 @@ class ArticleFavoritesTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> favorites.unfavoriting(favorite))
+                .isThrownBy(() -> favorites.checkCanUnfavorite(favorite))
                 .withMessageMatching(ErrorCode.INVALID_UNFAVORITE_ARTICLE.getMessage());
         }
 
         @Test
-        @DisplayName("정상적으로 게시글을 좋아요취소 할 수 있다.")
-        void unfavoritingArticleSuccessTest() {
+        @DisplayName("정상적으로 가능한 경우 그대로 반환해야 한다.")
+        void checkCanUnfavoriteSuccessTest() {
 
             // given
             Set<ArticleFavorite> favoriteSet = new HashSet<>();
@@ -143,14 +145,18 @@ class ArticleFavoritesTest {
             favoriteSet.add(favorite);
             ArticleFavorites favorites = ArticleFavorites.of(favoriteSet);
 
-            ArticleFavorites expected = ArticleFavorites.of(new HashSet<>());
+            ArticleFavorite expected = ArticleFavorite.builder()
+                .user(user)
+                .article(article)
+                .build();
 
             // when
-            favorites.unfavoriting(favorite);
+            ArticleFavorite result = favorites.checkCanUnfavorite(favorite);
 
             // then
-            assertThat(favorites).isEqualTo(expected);
+            assertThat(result).isEqualTo(expected);
         }
+
     }
 
     @Nested
