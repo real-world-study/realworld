@@ -13,10 +13,13 @@ import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.article.dto.response.ArticleResponse.ArticleResponseNested;
 import com.study.realworld.article.service.ArticleService;
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
+import com.study.realworld.articlefavorite.domain.ArticleFavoriteRepository;
 import com.study.realworld.articlefavorite.dto.response.ArticleFavoriteResponse;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.tag.domain.Tag;
+import com.study.realworld.user.domain.ArticleFavorites;
 import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
@@ -24,6 +27,8 @@ import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
 import com.study.realworld.user.service.UserService;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -41,6 +46,9 @@ class ArticleFavoriteServiceTest {
 
     @Mock
     private ArticleService articleService;
+
+    @Mock
+    private ArticleFavoriteRepository articleFavoriteRepository;
 
     @InjectMocks
     private ArticleFavoriteService articleFavoriteService;
@@ -115,7 +123,19 @@ class ArticleFavoriteServiceTest {
             // given
             Long userId = 1L;
             Slug slug = article.slug();
-            user.favoriteArticle(article);
+            Set<ArticleFavorite> favoriteSet = new HashSet<>();
+            ArticleFavorite favorite = ArticleFavorite.builder()
+                .user(user)
+                .article(article)
+                .build();
+            favoriteSet.add(favorite);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .articleFavorites(ArticleFavorites.of(favoriteSet))
+                .build();
             when(userService.findById(userId)).thenReturn(user);
             when(articleService.findBySlug(slug)).thenReturn(article);
 
@@ -204,12 +224,24 @@ class ArticleFavoriteServiceTest {
             // given
             Long userId = 1L;
             Slug slug = article.slug();
-            user.favoriteArticle(article);
+            Set<ArticleFavorite> favoriteSet = new HashSet<>();
+            ArticleFavorite favorite = ArticleFavorite.builder()
+                .user(user)
+                .article(article)
+                .build();
+            favoriteSet.add(favorite);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .articleFavorites(ArticleFavorites.of(favoriteSet))
+                .build();
             when(userService.findById(userId)).thenReturn(user);
             when(articleService.findBySlug(slug)).thenReturn(article);
 
             ArticleFavoriteResponse expected = ArticleFavoriteResponse.from(
-                ArticleResponseNested.from(article, user, false, 0, false)
+                ArticleResponseNested.from(article, user, true, 0, false)
             );
 
             // when
