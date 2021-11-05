@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -106,7 +107,6 @@ class ArticleFavoriteControllerTest {
         OffsetDateTime now = OffsetDateTime.now();
         ReflectionTestUtils.setField(article, "createdAt", now);
         ReflectionTestUtils.setField(article, "updatedAt", now);
-        user.favoriteArticle(article);
 
         Long userId = 1L;
         Slug slug = article.slug();
@@ -179,7 +179,7 @@ class ArticleFavoriteControllerTest {
 
         Long userId = 1L;
         Slug slug = article.slug();
-        when(articleFavoriteService.favoriteArticle(userId, slug))
+        when(articleFavoriteService.unfavoriteArticle(userId, slug))
             .thenReturn(ArticleFavoriteResponse.from(
                 ArticleResponseNested.from(article, user, false, 0, false)
             ));
@@ -188,7 +188,7 @@ class ArticleFavoriteControllerTest {
         final String URL = "/api/articles/{slug}/favorite";
 
         // when
-        ResultActions resultActions = mockMvc.perform(post(URL, slug.slug())
+        ResultActions resultActions = mockMvc.perform(delete(URL, slug.slug())
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
