@@ -3,10 +3,24 @@ package com.study.realworld.user.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+import com.study.realworld.article.domain.Article;
+import com.study.realworld.article.domain.ArticleContent;
+import com.study.realworld.article.domain.Body;
+import com.study.realworld.article.domain.Description;
+import com.study.realworld.article.domain.SlugTitle;
+import com.study.realworld.article.domain.Title;
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
+import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
+import com.study.realworld.tag.domain.Tag;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,37 +36,43 @@ class UserTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Test
-    void userTest() {
-        User user = new User();
+    private User user;
+    private User followee;
+
+    private Article article;
+
+    @BeforeEach
+    void beforeEachTest() {
+        user = User.Builder()
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .follows(new Follows())
+            .articleFavorites(new ArticleFavorites())
+            .build();
+
+        followee = User.Builder()
+            .id(2L)
+            .profile(Username.of("jakefriend"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jakefriend@jake.jake"))
+            .password(Password.of("jakejake"))
+            .follows(new Follows())
+            .build();
+
+        ArticleContent articleContent = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
+            .build();
+
+        article = Article.from(articleContent, followee);
     }
 
     @Test
-    void userBuilderTest() {
-
-        // given
-        Long id = 1L;
-        Username username = Username.of("username");
-        Email email = Email.of("email@email.com");
-        Password password = Password.of("password");
-        Bio bio = Bio.of("bio");
-        Image image = Image.of("image.jpg");
-
-        // when
-        User user = User.Builder()
-            .id(id)
-            .profile(username, bio, image)
-            .email(email)
-            .password(password)
-            .build();
-
-        // then
-        assertThat(user.id()).isEqualTo(id);
-        assertThat(user.username()).isEqualTo(username);
-        assertThat(user.email()).isEqualTo(email);
-        assertThat(user.password()).isEqualTo(password);
-        assertThat(user.bio()).isEqualTo(bio);
-        assertThat(user.image()).isEqualTo(image);
+    void userTest() {
+        User user = new User();
     }
 
     @Test
@@ -103,152 +123,216 @@ class UserTest {
             .withMessageMatching(ErrorCode.PASSWORD_DISMATCH.getMessage());
     }
 
-    @Test
-    @DisplayName("특정 유저를 follow하여 following set에 저장할 수 있다.")
-    void followingTest() {
+    @Nested
+    @DisplayName("followUser user 팔로윙 기능")
+    class followUserTest {
 
-        // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
+        @Test
+        @DisplayName("이미 팔로윙한 유저를 팔로윙하는 경우 exception이 발생해야 한다.")
+        void followUserExceptionByExistFollowTest() {
 
-        // when
-        user.followingUser(followingUser);
+            // given
+            Set<Follow> followSet = new HashSet<>();
+            Follow follow = Follow.builder()
+                .follower(user)
+                .followee(followee)
+                .build();
+            followSet.add(follow);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .follows(Follows.of(followSet))
+                .build();
 
-        // then
-        assertThat(user).isNotNull();
-    }
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.followUser(followee))
+                .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
+        }
 
-    @Test
-    @DisplayName("이미 follow된 유저를 follow할 경우 Exception이 발생해야 한다.")
-    void followingAlreadyExceptionTest() {
+        @Test
+        @DisplayName("정상적으로 유저를 팔로우할 수 있다.")
+        void followUserSuccessTest() {
 
-        // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
-        user.followingUser(followingUser);
+            // when
+            boolean result = user.followUser(followee);
 
-        // when & then
-        assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> user.followingUser(followingUser))
-            .withMessageMatching(ErrorCode.INVALID_FOLLOW.getMessage());
-    }
-
-    @Test
-    @DisplayName("특정 유저를 unfollow할 수 있다.")
-    void unfollowingTest() {
-
-        // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
-        user.followingUser(followingUser);
-
-        // when
-        user.unfollowingUser(followingUser);
-
-        // then
-        assertThat(user).isNotNull();
-    }
-
-    @Test
-    @DisplayName("follow 안된 유저를 unfollow할 경우 Exception이 발생해야 한다.")
-    void unfollowingNotExceptionTest() {
-
-        // given
-        User user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
-            .build();
-        User followingUser = User.Builder()
-            .profile(Username.of("followingUser"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email2@email2.com"))
-            .build();
-
-        // when & then
-        assertThatExceptionOfType(BusinessException.class)
-            .isThrownBy(() -> user.unfollowingUser(followingUser))
-            .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
+            // then
+            assertTrue(result);
+        }
     }
 
     @Nested
-    @DisplayName("followee를 받아 profile 을 반환활 수 있다.")
-    class profileByFolloweeTest {
+    @DisplayName("unfollowUser user 언팔로윙 기능")
+    class unfollowUserTest {
 
-        private User user;
-        private User followingUser;
+        @Test
+        @DisplayName("팔로윙 안한 유저를 언팔로윙하는 경우 exception이 발생해야 한다.")
+        void unfollowUserExceptionByNoExistFollowTest() {
 
-        @BeforeEach
-        void beforeEach() {
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.unfollowUser(followee))
+                .withMessageMatching(ErrorCode.INVALID_UNFOLLOW.getMessage());
+        }
+
+        @Test
+        @DisplayName("정상적으로 유저를 언팔로우할 수 있다.")
+        void unfollowUserSuccessTest() {
+
+            // given
+            Set<Follow> followSet = new HashSet<>();
+            Follow follow = Follow.builder()
+                .follower(user)
+                .followee(followee)
+                .build();
+            followSet.add(follow);
             user = User.Builder()
-                .profile(Username.of("username"), null, null)
-                .password(Password.of("password"))
-                .email(Email.of("email@email.com"))
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .follows(Follows.of(followSet))
                 .build();
-            followingUser = User.Builder()
-                .profile(Username.of("followingUser"), null, null)
-                .password(Password.of("password"))
-                .email(Email.of("email2@email2.com"))
+
+            // when
+            boolean result = user.unfollowUser(followee);
+
+            // then
+            assertFalse(result);
+        }
+    }
+
+    @Nested
+    @DisplayName("createFavoriteForFavoriting Favorite 생성(좋아요용도)")
+    class createFavoriteForFavoritingTest {
+
+        @Test
+        @DisplayName("좋아요한 게시글를 좋아요하는 경우 exception이 발생해야 한다.")
+        void createFavoriteForFavoritingExceptionByExistFavoriteTest() {
+
+            // given
+            Set<ArticleFavorite> favoriteSet = new HashSet<>();
+            ArticleFavorite favorite = ArticleFavorite.builder()
+                .user(user)
+                .article(article).build();
+            favoriteSet.add(favorite);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .articleFavorites(ArticleFavorites.of(favoriteSet))
                 .build();
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.createFavoriteForFavoriting(article))
+                .withMessageMatching(ErrorCode.INVALID_FAVORITE_ARTICLE.getMessage());
         }
 
         @Test
-        @DisplayName("follow한 사람일 경우")
-        void isFollowing() {
+        @DisplayName("정상적으로 게시글 좋아요를 생성할 수 있다.")
+        void favoriteArticleSuccessTest() {
 
             // given
-            user.followingUser(followingUser);
+            Set<ArticleFavorite> favoriteSet = new HashSet<>();
+            ArticleFavorite favorite = ArticleFavorite.builder()
+                .user(user)
+                .article(article).build();
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .articleFavorites(ArticleFavorites.of(favoriteSet))
+                .build();
 
-            Profile expected = Profile.Builder()
-                .username(Username.of("followingUser"))
-                .following(true).build();
+            ArticleFavorite expected = ArticleFavorite.builder()
+                .user(user)
+                .article(article)
+                .build();
 
             // when
-            Profile result = user.profileByFollowee(followingUser);
+            ArticleFavorite result = user.createFavoriteForFavoriting(article);
 
             // then
             assertThat(result).isEqualTo(expected);
         }
 
+    }
+
+    @Nested
+    @DisplayName("createFavoriteForUnfavoriting Favorite 생성(좋아요취소용도)")
+    class createFavoriteForUnfavoritingTest {
+
         @Test
-        @DisplayName("follow 안 한 사람일 경우")
-        void isNotFollowing() {
+        @DisplayName("좋아요 안한 게시글를 좋아요 생성하는 경우 exception이 발생해야 한다.")
+        void createFavoriteForUnfavoritingExceptionByNotExistFavoriteTest() {
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> user.createFavoriteForUnfavoriting(article))
+                .withMessageMatching(ErrorCode.INVALID_UNFAVORITE_ARTICLE.getMessage());
+        }
+
+        @Test
+        @DisplayName("정상적으로 취소용 게시글 좋아요를 생성할 수 있다.")
+        void reateFavoriteForUnfavoritingSuccessTest() {
 
             // given
-            Profile expected = Profile.Builder()
-                .username(Username.of("followingUser"))
-                .following(false).build();
+            Set<ArticleFavorite> favoriteSet = new HashSet<>();
+            ArticleFavorite favorite = ArticleFavorite.builder()
+                .user(user)
+                .article(article).build();
+            favoriteSet.add(favorite);
+            user = User.Builder()
+                .id(1L)
+                .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+                .email(Email.of("jake@jake.jake"))
+                .password(Password.of("jakejake"))
+                .articleFavorites(ArticleFavorites.of(favoriteSet))
+                .build();
+
+            ArticleFavorite expected = ArticleFavorite.builder()
+                .user(user)
+                .article(article)
+                .build();
 
             // when
-            Profile result = user.profileByFollowee(followingUser);
+            ArticleFavorite result = user.createFavoriteForUnfavoriting(article);
 
             // then
             assertThat(result).isEqualTo(expected);
         }
+
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 유무를 확인할 수 있다.")
+    void isFavoriteArticleTest() {
+
+        // given
+        Set<ArticleFavorite> favoriteSet = new HashSet<>();
+        ArticleFavorite favorite = ArticleFavorite.builder()
+            .user(user)
+            .article(article).build();
+        favoriteSet.add(favorite);
+        user = User.Builder()
+            .id(1L)
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .articleFavorites(ArticleFavorites.of(favoriteSet))
+            .build();
+
+        // when
+        boolean result = user.isFavoriteArticle(article);
+
+        // then
+        assertTrue(result);
     }
 
     @Test

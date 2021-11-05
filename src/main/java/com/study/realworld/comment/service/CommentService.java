@@ -6,6 +6,8 @@ import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.comment.domain.Comment;
 import com.study.realworld.comment.domain.CommentBody;
 import com.study.realworld.comment.domain.CommentRepository;
+import com.study.realworld.comment.dto.response.CommentResponse;
+import com.study.realworld.comment.dto.response.CommentsResponse;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import com.study.realworld.user.domain.User;
@@ -28,19 +30,29 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Comment> getCommentsByArticleSlug(Slug slug) {
+    public CommentsResponse findCommentsByArticleSlug(Slug slug) {
         Article article = articleService.findBySlug(slug);
 
-        return commentRepository.findAllByArticle(article);
+        List<Comment> comments = commentRepository.findAllByArticle(article);
+        return CommentsResponse.fromComments(comments);
+    }
+
+    @Transactional(readOnly = true)
+    public CommentsResponse findCommentsByArticleSlug(Long userId, Slug slug) {
+        User user = userService.findById(userId);
+        Article article = articleService.findBySlug(slug);
+
+        List<Comment> comments = commentRepository.findAllByArticle(article);
+        return CommentsResponse.fromCommentsAndUser(comments, user);
     }
 
     @Transactional
-    public Comment createComment(Long userId, Slug slug, CommentBody commentBody) {
+    public CommentResponse createComment(Long userId, Slug slug, CommentBody commentBody) {
         User author = userService.findById(userId);
         Article article = articleService.findBySlug(slug);
 
         Comment comment = Comment.from(commentBody, author, article);
-        return commentRepository.save(comment);
+        return CommentResponse.fromComment(commentRepository.save(comment));
     }
 
     @Transactional

@@ -8,6 +8,7 @@ import com.study.realworld.tag.domain.TagRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,14 +45,18 @@ class TagServiceTest {
     void refreshTagByExistedTagTest() {
 
         // given
-        List<Tag> tags = Arrays.asList(Tag.of("tag1"), Tag.of("tag2"), Tag.of("tag3"));
+        List<String> tags = Arrays.asList("tag1", "tag2", "tag3");
         when(tagRepository.findByName("tag1")).thenReturn(Optional.of(Tag.of("tag1")));
 
+        List<Tag> expected = tags.stream()
+            .map(Tag::of)
+            .collect(Collectors.toList());
+
         // when
-        List<Tag> result = tagService.refreshTagByExistedTag(tags);
+        List<Tag> result = tagService.refreshTagByExistedTagName(tags);
 
         // then
-        assertThat(result).isEqualTo(tags);
+        assertThat(result).isEqualTo(expected);
     }
 
 }

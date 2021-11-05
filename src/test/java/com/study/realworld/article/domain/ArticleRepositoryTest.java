@@ -61,7 +61,7 @@ class ArticleRepositoryTest {
                 .tags(Arrays.asList(Tag.of("tag" + i), Tag.of("tagA")))
                 .build();
             Article article = articleRepository.save(Article.from(articleContent, author1));
-            System.out.println("input article tag " + i + " : " + article.tags().get(0).name());
+            System.out.println("input article tag " + i + " : " + article.tags().get(0));
         }
 
         User author2 = userRepository.findById(2L).orElse(null);
@@ -110,7 +110,7 @@ class ArticleRepositoryTest {
                 for (Article article : result) {
                     assertAll(
                         () -> assertThat(article.author().username()).isEqualTo(Username.of("user1")),
-                        () -> assertThat(article.tags()).contains(Tag.of("tagA"))
+                        () -> assertThat(article.tags()).contains("tagA")
                     );
                 }
             }

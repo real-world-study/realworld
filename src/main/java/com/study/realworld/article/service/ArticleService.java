@@ -4,6 +4,8 @@ import com.study.realworld.article.domain.Article;
 import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.ArticleRepository;
 import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.dto.response.ArticleResponse;
+import com.study.realworld.article.dto.response.ArticleResponses;
 import com.study.realworld.article.service.model.ArticleUpdateModel;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
@@ -35,21 +37,47 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Article> findAllArticles(Pageable pageable, String tag, String author) {
+    public ArticleResponse findArticleResponseBySlug(Slug slug) {
+        return ArticleResponse.fromArticle(findBySlug(slug));
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleResponse findArticleResponseBySlug(Long userId, Slug slug) {
+        User user = userService.findById(userId);
+        Article article = findBySlug(slug);
+
+        return ArticleResponse.fromArticleAndUser(article, user);
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleResponses findArticleResponsesByTagAndAuthor(Pageable pageable, String tag, String author) {
+        Page<Article> articles = findArticlesPageByTagAndAuthor(pageable, tag, author);
+        return ArticleResponses.fromArticles(articles.getContent());
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleResponses findArticleResponsesByTagAndAuthor(Long userId, Pageable pageable, String tag, String author) {
+        User user = userService.findById(userId);
+        Page<Article> articles = findArticlesPageByTagAndAuthor(pageable, tag, author);
+
+        return ArticleResponses.fromArticlesAndUser(articles.getContent(), user);
+    }
+
+    private Page<Article> findArticlesPageByTagAndAuthor(Pageable pageable, String tag, String author) {
         return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
     }
 
     @Transactional
-    public Article createArticle(Long userId, ArticleContent articleContent) {
+    public ArticleResponse createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
 
-        articleContent.refreshTags(tagService.refreshTagByExistedTag(articleContent.tags()));
+        articleContent.refreshTags(tagService.refreshTagByExistedTagName(articleContent.tags()));
         Article article = Article.from(articleContent, author);
-        return articleRepository.save(article);
+        return ArticleResponse.fromArticle(articleRepository.save(article));
     }
 
     @Transactional
-    public Article updateArticle(Long userId, Slug slug, ArticleUpdateModel updateArticle) {
+    public ArticleResponse updateArticle(Long userId, Slug slug, ArticleUpdateModel updateArticle) {
         User author = userService.findById(userId);
         Article article = findByAuthorAndSlug(author, slug);
 
@@ -57,7 +85,7 @@ public class ArticleService {
         updateArticle.getDescription().ifPresent(article::changeDescription);
         updateArticle.getBody().ifPresent(article::changeBody);
 
-        return article.updateFavoritedByUser(author);
+        return ArticleResponse.fromArticle(article);
     }
 
     @Transactional
@@ -66,22 +94,6 @@ public class ArticleService {
         Article article = findByAuthorAndSlug(author, slug);
 
         article.deleteArticle();
-    }
-
-    @Transactional
-    public Article favoriteArticle(Long userId, Slug slug) {
-        User user = userService.findById(userId);
-        Article article = findBySlug(slug);
-
-        return article.favoritingByUser(user);
-    }
-
-    @Transactional
-    public Article unfavoriteArticle(Long userId, Slug slug) {
-        User user = userService.findById(userId);
-        Article article = findBySlug(slug);
-
-        return article.unfavoritingByUser(user);
     }
 
     private Article findByAuthorAndSlug(User author, Slug slug) {

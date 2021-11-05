@@ -1,171 +1,67 @@
 package com.study.realworld.article.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.study.realworld.global.exception.BusinessException;
-import com.study.realworld.global.exception.ErrorCode;
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
+import com.study.realworld.tag.domain.Tag;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
+import com.study.realworld.user.domain.Follows;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.Username;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class FavoritingUsersTest {
 
     private User user;
+    private Article article;
 
     @BeforeEach
     void beforeEach() {
         user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .password(Password.of("password"))
-            .email(Email.of("email@email.com"))
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
+            .follows(Follows.of(new HashSet<>()))
             .build();
+        ArticleContent articleContent = ArticleContent.builder()
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
+            .build();
+        article = Article.from(articleContent, user);
     }
 
     @Test
-    void favoritingUsersTest() {
+    void favoritingUsers() {
         FavoritingUsers favoritingUsers = new FavoritingUsers();
     }
 
-    @Nested
-    @DisplayName("favorited 여부를 확인할 수 있다.")
-    class isFavoritedTest {
-
-        @Test
-        @DisplayName("favorited된 상태일 때 true여야 한다.")
-        void trueTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            userSet.add(user);
-            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
-
-            // when
-            boolean result = favoritingUsers.isFavorite(user);
-
-            // then
-            assertTrue(result);
-        }
-
-        @Test
-        @DisplayName("favorited 안된 상태일 때 false여야 한다.")
-        void falseTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
-
-            // when
-            boolean result = favoritingUsers.isFavorite(user);
-
-            // then
-            assertFalse(result);
-        }
-
-    }
-
     @Test
-    @DisplayName("현재 favoriting 중인 유저의 수를 확인할 수 있다.")
-    void favoritesCountTest() {
+    @DisplayName("현재 좋아요 개수를 반환할 수 있다.")
+    void sizeTest() {
 
         // given
-        Set<User> userSet = new HashSet<>();
-        userSet.add(user);
-        FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
-
-        int expected = userSet.size();
+        ArticleFavorite articleFavorite = ArticleFavorite.builder()
+            .user(user)
+            .article(article)
+            .build();
+        Set<ArticleFavorite> articleFavoriteSet = new HashSet<>();
+        articleFavoriteSet.add(articleFavorite);
+        FavoritingUsers favoritingUsers = FavoritingUsers.of(articleFavoriteSet);
 
         // when
-        int result = favoritingUsers.favoritesCount();
+        int result = favoritingUsers.size();
 
         // then
-        assertThat(result).isEqualTo(expected);
-    }
-
-    @Nested
-    @DisplayName("특정 user가 favorite할 수 있다.")
-    class favoritingByUserTest {
-
-        @Test
-        @DisplayName("이미 favorite한 유저가 favorite할 경우 exception이 발생해야 한다.")
-        void favoritingExceptionTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            userSet.add(user);
-            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
-
-            // when & then
-            assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> favoritingUsers.favoritingByUser(user))
-                .withMessageMatching(ErrorCode.INVALID_FAVORITE_ARTICLE.getMessage());
-        }
-
-        @Test
-        @DisplayName("user가 favorite할 수 있다.")
-        void favoritingByUserSuccessTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
-
-            Set<User> expectedUserSet = new HashSet<>();
-            expectedUserSet.add(user);
-            FavoritingUsers expected = FavoritingUsers.of(expectedUserSet);
-
-            // when
-            FavoritingUsers result = favoritingUsers.favoritingByUser(user);
-
-            // then
-            assertThat(result).isEqualTo(expected);
-        }
-    }
-
-    @Nested
-    @DisplayName("특정 user가 unfavorite할 수 있다.")
-    class unfavoritingByUserTest {
-
-        @Test
-        @DisplayName("favorite 안한 유저가 favorite할 경우 exception이 발생해야 한다.")
-        void unfavoritingExceptionTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
-
-            // when & then
-            assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> favoritingUsers.unfavoritingByUser(user))
-                .withMessageMatching(ErrorCode.INVALID_UNFAVORITE_ARTICLE.getMessage());
-        }
-
-        @Test
-        @DisplayName("user가 unfavorite할 수 있다.")
-        void unfavoritingByUserSuccessTest() {
-
-            // given
-            Set<User> userSet = new HashSet<>();
-            userSet.add(user);
-            FavoritingUsers favoritingUsers = FavoritingUsers.of(userSet);
-
-            Set<User> expectedUserSet = new HashSet<>();
-            FavoritingUsers expected = FavoritingUsers.of(expectedUserSet);
-
-            // when
-            FavoritingUsers result = favoritingUsers.unfavoritingByUser(user);
-
-            // then
-            assertThat(result).isEqualTo(expected);
-        }
+        assertThat(result).isEqualTo(articleFavoriteSet.size());
     }
 
     @Test
@@ -173,16 +69,20 @@ class FavoritingUsersTest {
     void favoritingUsersEqualsHashCodeTest() {
 
         // given
-        Set<User> userSet = new HashSet<>();
-        userSet.add(user);
+        ArticleFavorite articleFavorite = ArticleFavorite.builder()
+            .user(user)
+            .article(article)
+            .build();
+        Set<ArticleFavorite> articleFavoriteSet = new HashSet<>();
+        articleFavoriteSet.add(articleFavorite);
 
         // when
-        FavoritingUsers result = FavoritingUsers.of(userSet);
+        FavoritingUsers result = FavoritingUsers.of(articleFavoriteSet);
 
         // then
         assertThat(result)
-            .isEqualTo(FavoritingUsers.of(userSet))
-            .hasSameHashCodeAs(FavoritingUsers.of(userSet));
+            .isEqualTo(FavoritingUsers.of(articleFavoriteSet))
+            .hasSameHashCodeAs(FavoritingUsers.of(articleFavoriteSet));
     }
 
 }

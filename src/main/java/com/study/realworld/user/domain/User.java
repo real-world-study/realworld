@@ -1,5 +1,8 @@
 package com.study.realworld.user.domain;
 
+import com.study.realworld.article.domain.Article;
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
+import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import java.util.Objects;
 import javax.persistence.Embedded;
@@ -30,16 +33,21 @@ public class User extends BaseTimeEntity {
     private Password password;
 
     @Embedded
-    private FollowingUsers followingUsers = new FollowingUsers();
+    private Follows follows = new Follows();
+
+    @Embedded
+    private ArticleFavorites articleFavorites = new ArticleFavorites();
 
     protected User() {
     }
 
-    private User(Long id, Profile profile, Email email, Password password) {
+    private User(Long id, Profile profile, Email email, Password password, Follows follows, ArticleFavorites favorites) {
         this.id = id;
         this.profile = profile;
         this.email = email;
         this.password = password;
+        this.follows = follows;
+        this.articleFavorites = favorites;
     }
 
     public Long id() {
@@ -98,20 +106,48 @@ public class User extends BaseTimeEntity {
         return profile;
     }
 
-    public Profile profileByFollowee(User followee) {
-        return followee.profile.profileByFollowing(isFollow(followee));
+    public boolean followUser(User followee) {
+        Follow follow = createFollow(followee);
+        return follows.following(follow);
     }
 
-    private boolean isFollow(User user) {
-        return followingUsers.isFollow(user);
+    public boolean unfollowUser(User followee) {
+        Follow follow = createFollow(followee);
+        return follows.unfollowing(follow);
     }
 
-    public void followingUser(User user) {
-        followingUsers.followingUser(user);
+    public boolean isFollow(User followee) {
+        Follow follow = createFollow(followee);
+        return follows.isFollow(follow);
     }
 
-    public void unfollowingUser(User user) {
-        followingUsers.unfollowingUser(user);
+    private Follow createFollow(User followee) {
+        return Follow.builder()
+            .follower(this)
+            .followee(followee)
+            .build();
+    }
+
+    public ArticleFavorite createFavoriteForFavoriting(Article article) {
+        ArticleFavorite favorite = createArticleFavorite(article);
+        return articleFavorites.checkCanFavorite(favorite);
+    }
+
+    public ArticleFavorite createFavoriteForUnfavoriting(Article article) {
+        ArticleFavorite favorite = createArticleFavorite(article);
+        return articleFavorites.checkCanUnfavorite(favorite);
+    }
+
+    public boolean isFavoriteArticle(Article article) {
+        ArticleFavorite favorite = createArticleFavorite(article);
+        return articleFavorites.isFavoriteArticle(favorite);
+    }
+
+    private ArticleFavorite createArticleFavorite(Article article) {
+        return ArticleFavorite.builder()
+            .user(this)
+            .article(article)
+            .build();
     }
 
     @Override
@@ -141,6 +177,8 @@ public class User extends BaseTimeEntity {
         private Profile profile;
         private Email email;
         private Password password;
+        private Follows follows = new Follows();
+        private ArticleFavorites favorites = new ArticleFavorites();
 
         private Builder() {
         }
@@ -174,8 +212,18 @@ public class User extends BaseTimeEntity {
             return this;
         }
 
+        public Builder follows(Follows follows) {
+            this.follows = follows;
+            return this;
+        }
+
+        public Builder articleFavorites(ArticleFavorites favorites) {
+            this.favorites = favorites;
+            return this;
+        }
+
         public User build() {
-            return new User(id, profile, email, password);
+            return new User(id, profile, email, password, follows, favorites);
         }
     }
 
