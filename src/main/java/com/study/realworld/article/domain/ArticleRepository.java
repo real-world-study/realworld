@@ -1,6 +1,7 @@
 package com.study.realworld.article.domain;
 
 import com.study.realworld.user.domain.User;
+import java.util.Collection;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,5 +36,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             + "order by a.createdAt"
     )
     Page<Article> findPageByTagAndAuthorAndFavorited(Pageable pageable, @Param("tag") String tag, @Param("author") String author, String favorited);
+
+    @EntityGraph(attributePaths = {"author"}, type = EntityGraphType.FETCH)
+    Page<Article> findByAuthorIn(Pageable pageable, Collection<User> users);
 
 }

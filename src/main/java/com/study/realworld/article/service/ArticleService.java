@@ -72,6 +72,14 @@ public class ArticleService {
         return articleRepository.findPageByTagAndAuthorAndFavorited(pageable, tag, author, favorited);
     }
 
+    @Transactional(readOnly = true)
+    public ArticleResponses findFeedArticleResponses(Long userId, Pageable pageable) {
+        User user = userService.findById(userId);
+
+        Page<Article> articles = articleRepository.findByAuthorIn(pageable, user.followees());
+        return ArticleResponses.fromArticles(articles.getContent());
+    }
+
     @Transactional
     public ArticleResponse createArticle(Long userId, ArticleContent articleContent) {
         User author = userService.findById(userId);
