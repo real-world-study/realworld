@@ -194,7 +194,7 @@ class ArticleControllerLoginUserTest {
 
         int offset = 0;
         int limit = 2;
-        when(articleService.findArticleResponsesByTagAndAuthor(eq(1L), any(), eq("dragons"), eq("jake")))
+        when(articleService.findArticleResponsesByTagAndAuthorAndFavorited(eq(1L), any(), eq("dragons"), eq("jake"), eq("jakefriend")))
             .thenReturn(ArticleResponses.fromArticles(articles));
 
         // given
@@ -208,6 +208,7 @@ class ArticleControllerLoginUserTest {
             .param("limit", String.valueOf(limit))
             .param("tag", "dragons")
             .param("author", "jake")
+            .param("favorited", "jakefriend")
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
@@ -270,6 +271,101 @@ class ArticleControllerLoginUserTest {
             ))
         ;
     }
+
+    @Test
+    void getFeedArticlesTest() throws Exception {
+
+        // setup
+        List<Article> articles = new ArrayList<>();
+        Article article1 = Article.from(articleContent1, user);
+        OffsetDateTime now = OffsetDateTime.now();
+        ReflectionTestUtils.setField(article1, "createdAt", now);
+        ReflectionTestUtils.setField(article1, "updatedAt", now);
+        articles.add(article1);
+
+        Article article2 = Article.from(articleContent1, user);
+        now = OffsetDateTime.now();
+        ReflectionTestUtils.setField(article2, "createdAt", now);
+        ReflectionTestUtils.setField(article2, "updatedAt", now);
+        articles.add(article2);
+
+        int offset = 0;
+        int limit = 2;
+        when(articleService.findFeedArticleResponses(eq(1L), any()))
+            .thenReturn(ArticleResponses.fromArticles(articles));
+
+        // given
+        final String URL = "/api/articles/feed";
+
+        Article expected = articles.get(0);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(get(URL)
+            .param("offset", String.valueOf(offset))
+            .param("limit", String.valueOf(limit))
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print());
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+            .andExpect(jsonPath("$.articles.size()", is(limit)))
+
+            .andExpect(jsonPath("$.articles.[0].slug", is(expected.slug().slug())))
+            .andExpect(jsonPath("$.articles.[0].title", is(expected.title().title())))
+            .andExpect(jsonPath("$.articles.[0].description", is(expected.description().description())))
+            .andExpect(jsonPath("$.articles.[0].body", is(expected.body().body())))
+            .andExpect(jsonPath("$.articles.[0].tagList.[0]", is(expected.tags().get(0))))
+            .andExpect(jsonPath("$.articles.[0].tagList.[1]", is(expected.tags().get(1))))
+            .andExpect(jsonPath("$.articles.[0].createdAt",
+                is(expected.createdAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.articles.[0].updatedAt",
+                is(expected.updatedAt().format(ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC)))))
+            .andExpect(jsonPath("$.articles.[0].favorited", is(false)))
+            .andExpect(jsonPath("$.articles.[0].favoritesCount", is(expected.favoritesCount())))
+
+            .andExpect(jsonPath("$.articles.[0].author.username", is(expected.author().username().value())))
+            .andExpect(jsonPath("$.articles.[0].author.bio", is(expected.author().bio().value())))
+            .andExpect(jsonPath("$.articles.[0].author.image", is(nullValue())))
+            .andExpect(jsonPath("$.articles.[0].author.following", is(false)))
+
+            .andExpect(jsonPath("$.articlesCount", is(limit)))
+
+            .andDo(document("articles-feed",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestParameters(
+                    parameterWithName("offset").description("offset/page number of articles[default=20]").optional(),
+                    parameterWithName("limit").description("limit number of articles[default=0]").optional(),
+                    parameterWithName("tag").description("filter by tag").optional(),
+                    parameterWithName("author").description("filter by author username").optional(),
+                    parameterWithName("favorited").description("filter by favorited user").optional()
+                ),
+                responseFields(
+                    fieldWithPath("articles").type(JsonFieldType.ARRAY).description("articles list"),
+
+                    fieldWithPath("articles[].slug").type(JsonFieldType.STRING).description("article's slug"),
+                    fieldWithPath("articles[].title").type(JsonFieldType.STRING).description("article's title"),
+                    fieldWithPath("articles[].description").type(JsonFieldType.STRING).description("article's description"),
+                    fieldWithPath("articles[].body").type(JsonFieldType.STRING).description("article's body"),
+                    fieldWithPath("articles[].tagList").type(JsonFieldType.ARRAY).description("article's tag's list"),
+                    fieldWithPath("articles[].createdAt").type(JsonFieldType.STRING).description("article's create time"),
+                    fieldWithPath("articles[].updatedAt").type(JsonFieldType.STRING).description("article's update time"),
+                    fieldWithPath("articles[].favorited").type(JsonFieldType.BOOLEAN).description("login user's favoriting"),
+                    fieldWithPath("articles[].favoritesCount").type(JsonFieldType.NUMBER).description("article's favoriting count"),
+
+                    fieldWithPath("articles[].author.username").type(JsonFieldType.STRING).description("author's username"),
+                    fieldWithPath("articles[].author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),
+                    fieldWithPath("articles[].author.image").type(JsonFieldType.STRING).description("author's image").optional(),
+                    fieldWithPath("articles[].author.following").type(JsonFieldType.BOOLEAN).description("author's following"),
+                    fieldWithPath("articlesCount").type(JsonFieldType.NUMBER).description("article list's size")
+                )
+            ))
+        ;
+    }
+
 
     @Test
     void createArticleTest() throws Exception {

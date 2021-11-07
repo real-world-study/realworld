@@ -189,7 +189,7 @@ public class ArticleControllerNonLoginUserTest {
 
         int offset = 0;
         int limit = 2;
-        when(articleService.findArticleResponsesByTagAndAuthor(any(), eq("dragons"), eq("jake")))
+        when(articleService.findArticleResponsesByTagAndAuthorAndFavorited(any(), eq("dragons"), eq("jake"), eq("jakefriend")))
             .thenReturn(ArticleResponses.fromArticles(articles));
 
         // given
@@ -203,6 +203,7 @@ public class ArticleControllerNonLoginUserTest {
             .param("limit", String.valueOf(limit))
             .param("tag", "dragons")
             .param("author", "jake")
+            .param("favorited", "jakefriend")
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 
@@ -254,7 +255,8 @@ public class ArticleControllerNonLoginUserTest {
                     fieldWithPath("articles[].createdAt").type(JsonFieldType.STRING).description("article's create time"),
                     fieldWithPath("articles[].updatedAt").type(JsonFieldType.STRING).description("article's update time"),
                     fieldWithPath("articles[].favorited").type(JsonFieldType.BOOLEAN).description("login user's favoriting"),
-                    fieldWithPath("articles[].favoritesCount").type(JsonFieldType.NUMBER).description("article's favoriting count"),
+                    fieldWithPath("articles[].favoritesCount").type(JsonFieldType.NUMBER)
+                        .description("article's favoriting count"),
 
                     fieldWithPath("articles[].author.username").type(JsonFieldType.STRING).description("author's username"),
                     fieldWithPath("articles[].author.bio").type(JsonFieldType.STRING).description("author's bio").optional(),

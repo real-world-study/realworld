@@ -6,6 +6,7 @@ import com.study.realworld.global.exception.ErrorCode;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
@@ -26,6 +27,12 @@ public class Follows {
 
     public static Follows of(Set<Follow> follows) {
         return new Follows(follows);
+    }
+
+    public Set<User> followees() {
+        return follows.stream()
+            .map(Follow::followee)
+            .collect(Collectors.toSet());
     }
 
     public boolean following(Follow follow) {

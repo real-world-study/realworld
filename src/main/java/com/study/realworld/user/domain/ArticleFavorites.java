@@ -30,7 +30,7 @@ public class ArticleFavorites {
 
     public ArticleFavorite checkCanFavorite(ArticleFavorite favorite) {
         checkFavoriteNotExist(favorite);
-
+        favorites.add(favorite);
         return favorite;
     }
 
@@ -42,7 +42,7 @@ public class ArticleFavorites {
 
     public ArticleFavorite checkCanUnfavorite(ArticleFavorite favorite) {
         checkFavoriteExist(favorite);
-
+        favorites.remove(favorite);
         return favorite;
     }
 

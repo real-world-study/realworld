@@ -45,8 +45,15 @@ public class ArticleController {
         @RequestParam(required = false) String favorited,
         @CurrentUserId Long userId) {
         ArticleResponses response = Optional.ofNullable(userId)
-            .map(id -> articleService.findArticleResponsesByTagAndAuthor(id, pageable, tag, author))
-            .orElse(articleService.findArticleResponsesByTagAndAuthor(pageable, tag, author));
+            .map(id -> articleService.findArticleResponsesByTagAndAuthorAndFavorited(id, pageable, tag, author, favorited))
+            .orElse(articleService.findArticleResponsesByTagAndAuthorAndFavorited(pageable, tag, author, favorited));
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/articles/feed")
+    public ResponseEntity<ArticleResponses> getFeedArticles(@PageableDefault(page = 0, size = 20) Pageable pageable,
+        @CurrentUserId Long userId) {
+        ArticleResponses response = articleService.findFeedArticleResponses(userId, pageable);
         return ResponseEntity.ok().body(response);
     }
 

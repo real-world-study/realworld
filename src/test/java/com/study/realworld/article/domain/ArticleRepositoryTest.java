@@ -3,8 +3,11 @@ package com.study.realworld.article.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
+import com.study.realworld.articlefavorite.domain.ArticleFavoriteRepository;
 import com.study.realworld.global.config.JpaConfiguration;
 import com.study.realworld.tag.domain.Tag;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -35,6 +38,9 @@ class ArticleRepositoryTest {
     private UserRepository userRepository;
 
     @Autowired
+    private ArticleFavoriteRepository articleFavoriteRepository;
+
+    @Autowired
     private EntityManager entityManager;
 
     @BeforeEach
@@ -49,6 +55,12 @@ class ArticleRepositoryTest {
                 .build());
         }
 
+        User favoritingUser = userRepository.save(User.Builder()
+            .profile(Username.of("jakefriend"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jakefriend@jake.jake"))
+            .password(Password.of("jakejake"))
+            .build());
+
         String title = "title";
         String description = "description";
         String body = "body";
@@ -61,7 +73,7 @@ class ArticleRepositoryTest {
                 .tags(Arrays.asList(Tag.of("tag" + i), Tag.of("tagA")))
                 .build();
             Article article = articleRepository.save(Article.from(articleContent, author1));
-            System.out.println("input article tag " + i + " : " + article.tags().get(0));
+            articleFavoriteRepository.save(ArticleFavorite.builder().user(favoritingUser).article(article).build());
         }
 
         User author2 = userRepository.findById(2L).orElse(null);
@@ -90,7 +102,7 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("특정 tag와 username을 가진 작성자의 article을 검색할 수 있다.")
+    @DisplayName("특정 tag와 username와 favorited user를 가진 작성자의 article을 검색할 수 있다.")
     void findAllByAuthornameTagSuccessTest() {
 
         // given
@@ -99,7 +111,7 @@ class ArticleRepositoryTest {
         PageRequest pageRequest = PageRequest.of(offset, limit);
 
         // when
-        Page<Article> result = articleRepository.findPageByTagAndAuthor(pageRequest, "tagA", "user1");
+        Page<Article> result = articleRepository.findPageByTagAndAuthorAndFavorited(pageRequest, "tagA", "user1", "jakefriend");
 
         // then
         assertAll(

@@ -50,21 +50,34 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ArticleResponses findArticleResponsesByTagAndAuthor(Pageable pageable, String tag, String author) {
-        Page<Article> articles = findArticlesPageByTagAndAuthor(pageable, tag, author);
+    public ArticleResponses findArticleResponsesByTagAndAuthorAndFavorited(
+        Pageable pageable, String tag, String author, String favorited) {
+
+        Page<Article> articles = findArticlesPageByTagAndAuthorAndFavorited(pageable, tag, author, favorited);
         return ArticleResponses.fromArticles(articles.getContent());
     }
 
     @Transactional(readOnly = true)
-    public ArticleResponses findArticleResponsesByTagAndAuthor(Long userId, Pageable pageable, String tag, String author) {
-        User user = userService.findById(userId);
-        Page<Article> articles = findArticlesPageByTagAndAuthor(pageable, tag, author);
+    public ArticleResponses findArticleResponsesByTagAndAuthorAndFavorited(
+        Long userId, Pageable pageable, String tag, String author, String favorited) {
 
+        User user = userService.findById(userId);
+        Page<Article> articles = findArticlesPageByTagAndAuthorAndFavorited(pageable, tag, author, favorited);
         return ArticleResponses.fromArticlesAndUser(articles.getContent(), user);
     }
 
-    private Page<Article> findArticlesPageByTagAndAuthor(Pageable pageable, String tag, String author) {
-        return articleRepository.findPageByTagAndAuthor(pageable, tag, author);
+    private Page<Article> findArticlesPageByTagAndAuthorAndFavorited(
+        Pageable pageable, String tag, String author, String favorited) {
+
+        return articleRepository.findPageByTagAndAuthorAndFavorited(pageable, tag, author, favorited);
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleResponses findFeedArticleResponses(Long userId, Pageable pageable) {
+        User user = userService.findById(userId);
+
+        Page<Article> articles = articleRepository.findByAuthorIn(pageable, user.followees());
+        return ArticleResponses.fromArticles(articles.getContent());
     }
 
     @Transactional

@@ -5,6 +5,7 @@ import com.study.realworld.articlefavorite.domain.ArticleFavorite;
 import com.study.realworld.follow.domain.Follow;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -72,6 +73,10 @@ public class User extends BaseTimeEntity {
 
     public Image image() {
         return profile.image();
+    }
+
+    public Set<User> followees() {
+        return follows.followees();
     }
 
     public void changeUsername(Username username) {

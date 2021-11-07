@@ -2,6 +2,8 @@ package com.study.realworld.article.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.study.realworld.article.domain.Article;
@@ -57,7 +59,6 @@ class ArticleServiceTest {
     private ArticleService articleService;
 
     private User user;
-
     private ArticleContent articleContent;
 
     @BeforeEach
@@ -221,13 +222,13 @@ class ArticleServiceTest {
             Article.from(articleContent, user)
         );
         PageRequest pageRequest = PageRequest.of(offset, limit);
-        when(articleRepository.findPageByTagAndAuthor(pageRequest, null, null))
+        when(articleRepository.findPageByTagAndAuthorAndFavorited(pageRequest, null, null, null))
             .thenReturn(new PageImpl<>(articles.subList(0, 4), pageRequest, articles.size()));
 
         ArticleResponses expected = ArticleResponses.fromArticles(articles.subList(0, 4));
 
         // when
-        ArticleResponses result = articleService.findArticleResponsesByTagAndAuthor(pageRequest, null, null);
+        ArticleResponses result = articleService.findArticleResponsesByTagAndAuthorAndFavorited(pageRequest, null, null, null);
 
         // then
         assertThat(result).isEqualTo(expected);
@@ -247,7 +248,7 @@ class ArticleServiceTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> articleService.findArticleResponsesByTagAndAuthor(userId, null, null, null))
+                .isThrownBy(() -> articleService.findArticleResponsesByTagAndAuthorAndFavorited(userId, null, null, null, null))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
         }
 
@@ -261,7 +262,7 @@ class ArticleServiceTest {
             int offset = 0;
             int limit = 4;
             List<Article> articles = new ArrayList<>();
-            for (int i=1; i<=10; i++){
+            for (int i = 1; i <= 10; i++) {
                 articleContent = ArticleContent.builder()
                     .slugTitle(SlugTitle.of(Title.of("How to train your dragon" + i)))
                     .description(Description.of("Ever wonder how?" + i))
@@ -272,18 +273,66 @@ class ArticleServiceTest {
             }
 
             PageRequest pageRequest = PageRequest.of(offset, limit);
-            when(articleRepository.findPageByTagAndAuthor(pageRequest, null, null))
+            when(articleRepository.findPageByTagAndAuthorAndFavorited(pageRequest, null, null, null))
                 .thenReturn(new PageImpl<>(articles.subList(0, 4), pageRequest, articles.size()));
 
             ArticleResponses expected = ArticleResponses.fromArticlesAndUser(articles.subList(0, 4), user);
 
             // when
-            ArticleResponses result = articleService.findArticleResponsesByTagAndAuthor(userId, pageRequest, null, null);
+            ArticleResponses result = articleService.findArticleResponsesByTagAndAuthorAndFavorited(userId, pageRequest, null, null, null);
 
             // then
             assertThat(result).isEqualTo(expected);
         }
 
+    }
+
+    @Nested
+    @DisplayName("findFeedArticleResponse 팔로윙유저 피드 article 조회 테스트")
+    class findFeedArticleResponsesTest {
+
+        @Test
+        @DisplayName("없는 유저의 id를 가지고 유저를 조회할 때 Exception이 반환되어야 한다.")
+        void findFeedArticleResponsesExceptionByNotFoundUserTest() {
+
+            // setup & given
+            Long userId = 1L;
+            when(userService.findById(userId)).thenThrow(new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+            // when & then
+            assertThatExceptionOfType(BusinessException.class)
+                .isThrownBy(() -> articleService.findFeedArticleResponses(userId, null))
+                .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        @DisplayName("following한 유저의 article feed를 반환할 수 있다.")
+        void findFeedArticleResponsesSuccessTest() {
+
+            // given
+            Long userId = 1L;
+            when(userService.findById(userId)).thenReturn(user);
+            List<Article> articles = new ArrayList<>();
+            for (int i = 1; i <= 10; i++) {
+                articleContent = ArticleContent.builder()
+                    .slugTitle(SlugTitle.of(Title.of("How to train your dragon" + i)))
+                    .description(Description.of("Ever wonder how?" + i))
+                    .body(Body.of("It takes a Jacobian" + i))
+                    .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
+                    .build();
+                articles.add(Article.from(articleContent, user));
+            }
+            when(articleRepository.findByAuthorIn(any(), eq(user.followees())))
+                .thenReturn(new PageImpl<>(articles.subList(0, 4)));
+
+            ArticleResponses expected = ArticleResponses.fromArticles(articles.subList(0, 4));
+
+            // when
+            ArticleResponses result = articleService.findFeedArticleResponses(userId, null);
+
+            // then
+            assertThat(result).isEqualTo(expected);
+        }
     }
 
     @Test
