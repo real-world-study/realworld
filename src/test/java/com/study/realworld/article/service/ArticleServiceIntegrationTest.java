@@ -89,24 +89,24 @@ public class ArticleServiceIntegrationTest {
 
         // given
         Tag existTag = Tag.of("tag");
+        articleContent.tags()
+            .forEach(tag -> tagRepository.save(Tag.of(tag)));
         tagRepository.save(existTag);
         User author = userService.join(user);
 
         Article article = Article.from(articleContent, author);
         ArticleResponse expected = ArticleResponse.fromArticle(article);
-        System.out.println(expected);
         entityManager.flush();
         entityManager.clear();
 
         // when
         ArticleResponse result = articleService.createArticle(author.id(), articleContent);
         entityManager.clear();
-        System.out.println(result);
 
         // then
         assertAll(
             () -> assertThat(result).isEqualTo(expected),
-            () -> assertThat(tagRepository.findAll().size()).isEqualTo(1)
+            () -> assertThat(tagRepository.findAll().size()).isEqualTo(3)
         );
     }
 
