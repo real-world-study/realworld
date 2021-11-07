@@ -221,13 +221,13 @@ class ArticleServiceTest {
             Article.from(articleContent, user)
         );
         PageRequest pageRequest = PageRequest.of(offset, limit);
-        when(articleRepository.findPageByTagAndAuthor(pageRequest, null, null))
+        when(articleRepository.findPageByTagAndAuthorAndFavorited(pageRequest, null, null, null))
             .thenReturn(new PageImpl<>(articles.subList(0, 4), pageRequest, articles.size()));
 
         ArticleResponses expected = ArticleResponses.fromArticles(articles.subList(0, 4));
 
         // when
-        ArticleResponses result = articleService.findArticleResponsesByTagAndAuthor(pageRequest, null, null);
+        ArticleResponses result = articleService.findArticleResponsesByTagAndAuthorAndFavorited(pageRequest, null, null, null);
 
         // then
         assertThat(result).isEqualTo(expected);
@@ -247,7 +247,7 @@ class ArticleServiceTest {
 
             // when & then
             assertThatExceptionOfType(BusinessException.class)
-                .isThrownBy(() -> articleService.findArticleResponsesByTagAndAuthor(userId, null, null, null))
+                .isThrownBy(() -> articleService.findArticleResponsesByTagAndAuthorAndFavorited(userId, null, null, null, null))
                 .withMessageMatching(ErrorCode.USER_NOT_FOUND.getMessage());
         }
 
@@ -261,7 +261,7 @@ class ArticleServiceTest {
             int offset = 0;
             int limit = 4;
             List<Article> articles = new ArrayList<>();
-            for (int i=1; i<=10; i++){
+            for (int i = 1; i <= 10; i++) {
                 articleContent = ArticleContent.builder()
                     .slugTitle(SlugTitle.of(Title.of("How to train your dragon" + i)))
                     .description(Description.of("Ever wonder how?" + i))
@@ -272,13 +272,13 @@ class ArticleServiceTest {
             }
 
             PageRequest pageRequest = PageRequest.of(offset, limit);
-            when(articleRepository.findPageByTagAndAuthor(pageRequest, null, null))
+            when(articleRepository.findPageByTagAndAuthorAndFavorited(pageRequest, null, null, null))
                 .thenReturn(new PageImpl<>(articles.subList(0, 4), pageRequest, articles.size()));
 
             ArticleResponses expected = ArticleResponses.fromArticlesAndUser(articles.subList(0, 4), user);
 
             // when
-            ArticleResponses result = articleService.findArticleResponsesByTagAndAuthor(userId, pageRequest, null, null);
+            ArticleResponses result = articleService.findArticleResponsesByTagAndAuthorAndFavorited(userId, pageRequest, null, null, null);
 
             // then
             assertThat(result).isEqualTo(expected);

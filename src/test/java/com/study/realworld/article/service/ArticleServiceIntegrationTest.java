@@ -12,8 +12,11 @@ import com.study.realworld.article.domain.SlugTitle;
 import com.study.realworld.article.domain.Title;
 import com.study.realworld.article.dto.response.ArticleResponse;
 import com.study.realworld.article.dto.response.ArticleResponses;
+import com.study.realworld.articlefavorite.domain.ArticleFavorite;
+import com.study.realworld.articlefavorite.domain.ArticleFavoriteRepository;
 import com.study.realworld.tag.domain.Tag;
 import com.study.realworld.tag.domain.TagRepository;
+import com.study.realworld.user.domain.Bio;
 import com.study.realworld.user.domain.Email;
 import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
@@ -34,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-public class ArticleIntegrationTest {
+public class ArticleServiceIntegrationTest {
 
     @Autowired
     private ArticleService articleService;
@@ -49,23 +52,34 @@ public class ArticleIntegrationTest {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private ArticleFavoriteRepository articleFavoriteRepository;
+
+    @Autowired
     private EntityManager entityManager;
 
     private User user;
+    private User favoritingUser;
     private ArticleContent articleContent;
 
     @BeforeEach
     void beforeEachTest() {
         user = User.Builder()
-            .profile(Username.of("username"), null, null)
-            .email(Email.of("email@email.com"))
-            .password(Password.of("password"))
+            .profile(Username.of("jake"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jake@jake.jake"))
+            .password(Password.of("jakejake"))
             .build();
+
+        favoritingUser = User.Builder()
+            .profile(Username.of("jakefriend"), Bio.of("I work at statefarm"), null)
+            .email(Email.of("jakefriend@jake.jake"))
+            .password(Password.of("jakejake"))
+            .build();
+
         articleContent = ArticleContent.builder()
-            .slugTitle(SlugTitle.of(Title.of("title")))
-            .description(Description.of("description"))
-            .body(Body.of("body"))
-            .tags(Arrays.asList(Tag.of("tag")))
+            .slugTitle(SlugTitle.of(Title.of("How to train your dragon")))
+            .description(Description.of("Ever wonder how?"))
+            .body(Body.of("It takes a Jacobian"))
+            .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
             .build();
     }
 
@@ -121,19 +135,23 @@ public class ArticleIntegrationTest {
 
         // setup
         userService.join(user);
+        userService.join(favoritingUser);
 
         List<Article> articles = new ArrayList<>();
         for (int i=1; i<=10; i++){
             ArticleContent articleContent = ArticleContent.builder()
-                .slugTitle(SlugTitle.of(Title.of("title" + i)))
-                .description(Description.of("description" + i))
-                .body(Body.of("body" + i))
-                .tags(Arrays.asList(Tag.of("tagA"), Tag.of("tag" + i)))
+                .slugTitle(SlugTitle.of(Title.of("How to train your dragon" + i)))
+                .description(Description.of("Ever wonder how?" + i))
+                .body(Body.of("It takes a Jacobian" + i))
+                .tags(Arrays.asList(Tag.of("dragons"), Tag.of("training")))
                 .build();
             articles.add(Article.from(articleContent, user));
         }
-        articles
-            .forEach(article -> articleRepository.save(article));
+
+        for (Article inputArticle : articles) {
+            Article article = articleRepository.save(inputArticle);
+            articleFavoriteRepository.save(ArticleFavorite.builder().user(favoritingUser).article(article).build());
+        }
         entityManager.flush();
         entityManager.clear();
 
@@ -142,10 +160,10 @@ public class ArticleIntegrationTest {
         int limit = 4;  // airtlce counts
         PageRequest pageRequest = PageRequest.of(offset, limit);
 
-        ArticleResponses expected = ArticleResponses.fromArticles(articles.subList(0, 4));
+        ArticleResponses expected = ArticleResponses.fromArticles(articleRepository.findAll().subList(0, 4));
 
         // when
-        ArticleResponses result = articleService.findArticleResponsesByTagAndAuthor(pageRequest, "tagA", "username");
+        ArticleResponses result = articleService.findArticleResponsesByTagAndAuthorAndFavorited(pageRequest, "dragons", "jake", "jakefriend");
 
         // then
         assertThat(result).isEqualTo(expected);

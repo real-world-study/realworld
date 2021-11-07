@@ -194,7 +194,7 @@ class ArticleControllerLoginUserTest {
 
         int offset = 0;
         int limit = 2;
-        when(articleService.findArticleResponsesByTagAndAuthor(eq(1L), any(), eq("dragons"), eq("jake")))
+        when(articleService.findArticleResponsesByTagAndAuthorAndFavorited(eq(1L), any(), eq("dragons"), eq("jake"), eq("jakefriend")))
             .thenReturn(ArticleResponses.fromArticles(articles));
 
         // given
@@ -208,6 +208,7 @@ class ArticleControllerLoginUserTest {
             .param("limit", String.valueOf(limit))
             .param("tag", "dragons")
             .param("author", "jake")
+            .param("favorited", "jakefriend")
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(print());
 

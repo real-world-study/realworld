@@ -45,8 +45,8 @@ public class ArticleController {
         @RequestParam(required = false) String favorited,
         @CurrentUserId Long userId) {
         ArticleResponses response = Optional.ofNullable(userId)
-            .map(id -> articleService.findArticleResponsesByTagAndAuthor(id, pageable, tag, author))
-            .orElse(articleService.findArticleResponsesByTagAndAuthor(pageable, tag, author));
+            .map(id -> articleService.findArticleResponsesByTagAndAuthorAndFavorited(id, pageable, tag, author, favorited))
+            .orElse(articleService.findArticleResponsesByTagAndAuthorAndFavorited(pageable, tag, author, favorited));
         return ResponseEntity.ok().body(response);
     }
 

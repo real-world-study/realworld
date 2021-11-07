@@ -22,14 +22,18 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query(
         value = "select distinct a "
             + "from Article a "
-            + "join a.author u "
+            + "inner join a.author u "
             + "inner join a.articleContent.tags t "
+            + "left join ArticleFavorite f on f.article = a "
+            + "left join User fu on fu = f.user "
             + "where "
             + "(:tag is null or :tag = t.name) "
             + "and "
             + "(:author is null or :author = u.profile.username.name) "
+            + "and "
+            + "(:favorited is null or :favorited = fu.profile.username.name) "
             + "order by a.createdAt"
     )
-    Page<Article> findPageByTagAndAuthor(Pageable pageable, @Param("tag") String tag, @Param("author") String author);
+    Page<Article> findPageByTagAndAuthorAndFavorited(Pageable pageable, @Param("tag") String tag, @Param("author") String author, String favorited);
 
 }
