@@ -11,6 +11,7 @@ import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -39,6 +40,26 @@ public class FollowsTest {
     @Test
     void followsTest() {
         Follows follows = new Follows();
+    }
+
+    @Test
+    @DisplayName("followees 현재 팔로우한 사람 set를 반환할 수 있다.")
+    void followeesTest() {
+
+        // given
+        Set<Follow> followSet = new HashSet<>();
+        followSet.add(Follow.builder().follower(user).followee(followee).build());
+        Follows follows = Follows.of(followSet);
+
+        Set<User> expected = followSet.stream()
+            .map(Follow::followee)
+            .collect(Collectors.toSet());
+
+        // when
+        Set<User> result = follows.followees();
+
+        // then
+        assertThat(result).isEqualTo(expected);
     }
 
     @Nested

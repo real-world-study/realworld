@@ -36,6 +36,10 @@ public class Follow {
         this.followee = followee;
     }
 
+    public User followee() {
+        return followee;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
