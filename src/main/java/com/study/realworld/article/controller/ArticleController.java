@@ -50,6 +50,13 @@ public class ArticleController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/articles/feed")
+    public ResponseEntity<ArticleResponses> getFeedArticles(@PageableDefault(page = 0, size = 20) Pageable pageable,
+        @CurrentUserId Long userId) {
+        ArticleResponses response = articleService.findFeedArticleResponses(userId, pageable);
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping("/articles")
     public ResponseEntity<ArticleResponse> createArticle(@RequestBody ArticleCreateRequest request, @CurrentUserId Long loginId) {
         ArticleResponse response = articleService.createArticle(loginId, request.toArticleContent());
