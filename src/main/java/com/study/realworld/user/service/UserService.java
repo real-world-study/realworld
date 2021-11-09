@@ -2,11 +2,11 @@ package com.study.realworld.user.service;
 
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;
-import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Email;
+import com.study.realworld.user.domain.vo.Password;
+import com.study.realworld.user.domain.vo.Username;
 import com.study.realworld.user.service.model.UserUpdateModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

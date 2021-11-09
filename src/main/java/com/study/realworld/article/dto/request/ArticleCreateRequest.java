@@ -5,11 +5,11 @@ import static java.util.stream.Collectors.toList;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.study.realworld.article.domain.ArticleContent;
-import com.study.realworld.article.domain.Body;
-import com.study.realworld.article.domain.Description;
-import com.study.realworld.article.domain.SlugTitle;
-import com.study.realworld.article.domain.Title;
+import com.study.realworld.article.domain.vo.ArticleContent;
+import com.study.realworld.article.domain.vo.Body;
+import com.study.realworld.article.domain.vo.Description;
+import com.study.realworld.article.domain.vo.SlugTitle;
+import com.study.realworld.article.domain.vo.Title;
 import com.study.realworld.tag.domain.Tag;
 import java.util.List;
 

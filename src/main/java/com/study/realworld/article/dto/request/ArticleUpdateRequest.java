@@ -3,9 +3,9 @@ package com.study.realworld.article.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.study.realworld.article.domain.Body;
-import com.study.realworld.article.domain.Description;
-import com.study.realworld.article.domain.Title;
+import com.study.realworld.article.domain.vo.Body;
+import com.study.realworld.article.domain.vo.Description;
+import com.study.realworld.article.domain.vo.Title;
 import com.study.realworld.article.service.model.ArticleUpdateModel;
 import java.util.Optional;
 

@@ -1,6 +1,6 @@
 package com.study.realworld.article.controller;
 
-import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.domain.vo.Slug;
 import com.study.realworld.article.dto.request.ArticleCreateRequest;
 import com.study.realworld.article.dto.request.ArticleUpdateRequest;
 import com.study.realworld.article.dto.response.ArticleResponse;

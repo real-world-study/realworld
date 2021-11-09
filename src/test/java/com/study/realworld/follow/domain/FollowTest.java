@@ -2,11 +2,11 @@ package com.study.realworld.follow.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.study.realworld.user.domain.Bio;
-import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Bio;
+import com.study.realworld.user.domain.vo.Email;
+import com.study.realworld.user.domain.vo.Password;
+import com.study.realworld.user.domain.vo.Username;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,9 +1,9 @@
 package com.study.realworld.article.service;
 
 import com.study.realworld.article.domain.Article;
-import com.study.realworld.article.domain.ArticleContent;
 import com.study.realworld.article.domain.ArticleRepository;
-import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.domain.vo.ArticleContent;
+import com.study.realworld.article.domain.vo.Slug;
 import com.study.realworld.article.dto.response.ArticleResponse;
 import com.study.realworld.article.dto.response.ArticleResponses;
 import com.study.realworld.article.service.model.ArticleUpdateModel;

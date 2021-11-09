@@ -1,5 +1,6 @@
 package com.study.realworld.article.domain;
 
+import com.study.realworld.article.domain.vo.Slug;
 import com.study.realworld.user.domain.User;
 import java.util.Collection;
 import java.util.Optional;

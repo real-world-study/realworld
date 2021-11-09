@@ -1,11 +1,11 @@
 package com.study.realworld.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.study.realworld.user.domain.Bio;
-import com.study.realworld.user.domain.Image;
-import com.study.realworld.user.domain.Profile;
 import com.study.realworld.user.domain.User;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Bio;
+import com.study.realworld.user.domain.vo.Image;
+import com.study.realworld.user.domain.vo.Profile;
+import com.study.realworld.user.domain.vo.Username;
 import java.util.Objects;
 
 public class ProfileResponse {

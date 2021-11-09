@@ -3,7 +3,7 @@ package com.study.realworld.comment.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.study.realworld.comment.domain.CommentBody;
+import com.study.realworld.comment.domain.vo.CommentBody;
 
 @JsonTypeName(value = "comment")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)

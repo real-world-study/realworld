@@ -1,11 +1,11 @@
 package com.study.realworld.comment.service;
 
 import com.study.realworld.article.domain.Article;
-import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.domain.vo.Slug;
 import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.comment.domain.Comment;
-import com.study.realworld.comment.domain.CommentBody;
 import com.study.realworld.comment.domain.CommentRepository;
+import com.study.realworld.comment.domain.vo.CommentBody;
 import com.study.realworld.comment.dto.response.CommentResponse;
 import com.study.realworld.comment.dto.response.CommentsResponse;
 import com.study.realworld.global.exception.BusinessException;

@@ -1,7 +1,7 @@
 package com.study.realworld.follow.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.study.realworld.user.domain.Profile;
+import com.study.realworld.user.domain.vo.Profile;
 import com.study.realworld.user.dto.response.ProfileResponse.ProfileResponseNested;
 import java.util.Objects;
 

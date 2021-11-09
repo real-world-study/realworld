@@ -1,5 +1,11 @@
 package com.study.realworld.article.domain;
 
+import com.study.realworld.article.domain.vo.ArticleContent;
+import com.study.realworld.article.domain.vo.Body;
+import com.study.realworld.article.domain.vo.Description;
+import com.study.realworld.article.domain.vo.FavoritingUsers;
+import com.study.realworld.article.domain.vo.Slug;
+import com.study.realworld.article.domain.vo.Title;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import com.study.realworld.user.domain.User;
 import java.time.OffsetDateTime;

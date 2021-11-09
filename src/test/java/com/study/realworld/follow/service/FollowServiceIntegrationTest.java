@@ -1,12 +1,12 @@
 package com.study.realworld.follow.service;
 
 import com.study.realworld.follow.domain.FollowRepository;
-import com.study.realworld.user.domain.Bio;
-import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.domain.UserRepository;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Bio;
+import com.study.realworld.user.domain.vo.Email;
+import com.study.realworld.user.domain.vo.Password;
+import com.study.realworld.user.domain.vo.Username;
 import com.study.realworld.user.service.UserService;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;

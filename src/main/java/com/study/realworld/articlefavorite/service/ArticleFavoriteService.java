@@ -1,7 +1,7 @@
 package com.study.realworld.articlefavorite.service;
 
 import com.study.realworld.article.domain.Article;
-import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.domain.vo.Slug;
 import com.study.realworld.article.service.ArticleService;
 import com.study.realworld.articlefavorite.domain.ArticleFavorite;
 import com.study.realworld.articlefavorite.domain.ArticleFavoriteRepository;

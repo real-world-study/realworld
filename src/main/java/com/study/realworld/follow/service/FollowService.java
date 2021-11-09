@@ -2,7 +2,7 @@ package com.study.realworld.follow.service;
 
 import com.study.realworld.follow.dto.response.FollowResponse;
 import com.study.realworld.user.domain.User;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Username;
 import com.study.realworld.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

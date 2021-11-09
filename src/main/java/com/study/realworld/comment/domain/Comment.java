@@ -1,6 +1,7 @@
 package com.study.realworld.comment.domain;
 
 import com.study.realworld.article.domain.Article;
+import com.study.realworld.comment.domain.vo.CommentBody;
 import com.study.realworld.global.domain.BaseTimeEntity;
 import com.study.realworld.global.exception.BusinessException;
 import com.study.realworld.global.exception.ErrorCode;

@@ -1,10 +1,10 @@
 package com.study.realworld.user.service.model;
 
-import com.study.realworld.user.domain.Bio;
-import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Image;
-import com.study.realworld.user.domain.Password;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Bio;
+import com.study.realworld.user.domain.vo.Email;
+import com.study.realworld.user.domain.vo.Image;
+import com.study.realworld.user.domain.vo.Password;
+import com.study.realworld.user.domain.vo.Username;
 import java.util.Optional;
 
 public class UserUpdateModel {

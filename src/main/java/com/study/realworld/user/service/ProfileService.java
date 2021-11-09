@@ -1,7 +1,7 @@
 package com.study.realworld.user.service;
 
 import com.study.realworld.user.domain.User;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Username;
 import com.study.realworld.user.dto.response.ProfileResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

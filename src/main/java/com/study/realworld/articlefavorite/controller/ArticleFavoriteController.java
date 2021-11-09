@@ -1,6 +1,6 @@
 package com.study.realworld.articlefavorite.controller;
 
-import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.domain.vo.Slug;
 import com.study.realworld.articlefavorite.dto.response.ArticleFavoriteResponse;
 import com.study.realworld.articlefavorite.service.ArticleFavoriteService;
 import com.study.realworld.global.security.CurrentUserId;

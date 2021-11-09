@@ -17,11 +17,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.study.realworld.user.domain.Bio;
-import com.study.realworld.user.domain.Email;
-import com.study.realworld.user.domain.Password;
 import com.study.realworld.user.domain.User;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Bio;
+import com.study.realworld.user.domain.vo.Email;
+import com.study.realworld.user.domain.vo.Password;
+import com.study.realworld.user.domain.vo.Username;
 import com.study.realworld.user.dto.response.ProfileResponse;
 import com.study.realworld.user.service.ProfileService;
 import org.junit.jupiter.api.BeforeEach;

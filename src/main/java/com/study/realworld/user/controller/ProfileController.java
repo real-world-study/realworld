@@ -1,7 +1,7 @@
 package com.study.realworld.user.controller;
 
 import com.study.realworld.global.security.CurrentUserId;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Username;
 import com.study.realworld.user.dto.response.ProfileResponse;
 import com.study.realworld.user.service.ProfileService;
 import java.util.Optional;

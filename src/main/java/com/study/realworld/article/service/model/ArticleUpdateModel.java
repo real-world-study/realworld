@@ -1,8 +1,8 @@
 package com.study.realworld.article.service.model;
 
-import com.study.realworld.article.domain.Body;
-import com.study.realworld.article.domain.Description;
-import com.study.realworld.article.domain.Title;
+import com.study.realworld.article.domain.vo.Body;
+import com.study.realworld.article.domain.vo.Description;
+import com.study.realworld.article.domain.vo.Title;
 import java.util.Optional;
 
 public class ArticleUpdateModel {

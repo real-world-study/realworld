@@ -3,7 +3,7 @@ package com.study.realworld.follow.controller;
 import com.study.realworld.follow.dto.response.FollowResponse;
 import com.study.realworld.follow.service.FollowService;
 import com.study.realworld.global.security.CurrentUserId;
-import com.study.realworld.user.domain.Username;
+import com.study.realworld.user.domain.vo.Username;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;

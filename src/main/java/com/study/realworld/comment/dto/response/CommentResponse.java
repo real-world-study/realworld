@@ -3,7 +3,7 @@ package com.study.realworld.comment.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.realworld.comment.domain.Comment;
-import com.study.realworld.comment.domain.CommentBody;
+import com.study.realworld.comment.domain.vo.CommentBody;
 import com.study.realworld.user.domain.User;
 import com.study.realworld.user.dto.response.ProfileResponse.ProfileResponseNested;
 import java.time.OffsetDateTime;

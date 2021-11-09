@@ -1,6 +1,6 @@
 package com.study.realworld.comment.controller;
 
-import com.study.realworld.article.domain.Slug;
+import com.study.realworld.article.domain.vo.Slug;
 import com.study.realworld.comment.dto.request.CommentCreateRequest;
 import com.study.realworld.comment.dto.response.CommentResponse;
 import com.study.realworld.comment.dto.response.CommentsResponse;
