@@ -3,7 +3,6 @@ package com.study.realworld.domain.follow.application;
 import com.study.realworld.domain.follow.domain.Follow;
 import com.study.realworld.domain.follow.domain.FollowQueryDslRepository;
 import com.study.realworld.domain.follow.domain.FollowRepository;
-import com.study.realworld.domain.follow.dto.FollowableDto;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.persist.UserRepository;
 import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;

@@ -6,7 +6,7 @@ import com.study.realworld.domain.user.domain.vo.Bio;
 import com.study.realworld.domain.user.domain.vo.Image;
 import com.study.realworld.domain.user.domain.vo.Name;
 
-public class FollowableDto {
+public class FollowResponse {
 
     @JsonProperty("username")
     private Name username;
@@ -20,21 +20,14 @@ public class FollowableDto {
     @JsonProperty("following")
     private Boolean followable;
 
-    public static FollowableDto fromUserAndFollowable(final User me, final boolean followable) {
-        return new FollowableDto(me.username(), me.bio(), me.image(), followable);
+    FollowResponse() {
     }
 
-    FollowableDto() {
+    public FollowResponse(final User me, final boolean followable) {
+        this(me.username(), me.bio(), me.image(), followable);
     }
 
-    public FollowableDto(final User me, final boolean followable) {
-        this.username = me.username();
-        this.bio = me.bio();
-        this.image = me.image();
-        this.followable = followable;
-    }
-
-    private FollowableDto(final Name username, final Bio bio, final Image image, final Boolean followable) {
+    private FollowResponse(final Name username, final Bio bio, final Image image, final Boolean followable) {
         this.username = username;
         this.bio = bio;
         this.image = image;

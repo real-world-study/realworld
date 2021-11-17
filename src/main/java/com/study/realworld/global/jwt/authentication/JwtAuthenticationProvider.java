@@ -1,7 +1,7 @@
 package com.study.realworld.global.jwt.authentication;
 
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
-import com.study.realworld.domain.user.application.UserFindService;
+import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.global.security.error.exception.UserDetailsNullPointerException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,11 +14,11 @@ import static java.util.Objects.isNull;
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserFindService userFindService;
+    private final UserQueryService userQueryService;
     private final TokenProvider tokenProvider;
 
-    public JwtAuthenticationProvider(final UserFindService userFindService, final TokenProvider tokenProvider) {
-        this.userFindService = userFindService;
+    public JwtAuthenticationProvider(final UserQueryService userQueryService, final TokenProvider tokenProvider) {
+        this.userQueryService = userQueryService;
         this.tokenProvider = tokenProvider;
     }
 
@@ -35,7 +35,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     }
 
     private User retrieveUser(final String email) {
-        final User user = userFindService.findUserByEmail(email);
+        final User user = userQueryService.findUserByEmail(email);
         validateUserDetailsNull(user);
         return user;
     }

@@ -1,7 +1,7 @@
 package com.study.realworld.global.jwt;
 
 import com.study.realworld.domain.auth.infrastructure.TokenProvider;
-import com.study.realworld.domain.user.application.UserFindService;
+import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.global.jwt.authentication.JwtAuthentication;
@@ -36,13 +36,13 @@ import static org.mockito.Mockito.doReturn;
 class JwtAuthenticationProviderTest {
 
     @Mock private TokenProvider tokenProvider;
-    @Mock private UserFindService userFindService;
+    @Mock private UserQueryService userQueryService;
     @InjectMocks private JwtAuthenticationProvider jwtAuthenticationProvider;
 
     @DisplayName("JwtAuthenticationProvider 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(userFindService, tokenProvider);
+        final JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(userQueryService, tokenProvider);
 
         assertAll(
                 () -> assertThat(jwtAuthenticationProvider).isNotNull(),
@@ -60,7 +60,7 @@ class JwtAuthenticationProviderTest {
         final User user = userBuilder(email, new Name(USERNAME), password, new Bio(BIO), new Image(IMAGE));
         ReflectionTestUtils.setField(user, "id", 1L);
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
-        doReturn(user).when(userFindService).findUserByEmail(any());
+        doReturn(user).when(userQueryService).findUserByEmail(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         final Authentication authenticate = jwtAuthenticationProvider.authenticate(jwtAuthentication);
@@ -88,7 +88,7 @@ class JwtAuthenticationProviderTest {
     @Test
     void validateUserDetailsNull_test() {
         doReturn(USERNAME).when(tokenProvider).mapToUsername(any());
-        doReturn(null).when(userFindService).findUserByEmail(any());
+        doReturn(null).when(userQueryService).findUserByEmail(any());
 
         final JwtAuthentication jwtAuthentication = initAuthentication(testToken());
         assertThatThrownBy(() -> jwtAuthenticationProvider.authenticate(jwtAuthenticationProvider.authenticate(jwtAuthentication)))

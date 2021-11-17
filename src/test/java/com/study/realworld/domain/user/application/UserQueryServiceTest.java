@@ -27,20 +27,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class UserFindServiceTest {
+public class UserQueryServiceTest {
 
     @Mock private UserRepository userRepository;
     @Mock private FollowRepository followRepository;
-    @InjectMocks private UserFindService userFindService;
+    @InjectMocks private UserQueryService userQueryService;
 
     @DisplayName("JwtUserDetailsService 인스턴스 생성자 테스트")
     @Test
     void constructor_test() {
-        final UserFindService userFindService = new UserFindService(userRepository, followRepository);
+        final UserQueryService userQueryService = new UserQueryService(userRepository, followRepository);
 
         assertAll(
-                () -> assertThat(userFindService).isNotNull(),
-                () -> assertThat(userFindService).isInstanceOf(UserFindService.class)
+                () -> assertThat(userQueryService).isNotNull(),
+                () -> assertThat(userQueryService).isInstanceOf(UserQueryService.class)
         );
     }
 
@@ -50,7 +50,7 @@ public class UserFindServiceTest {
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(user));
 
-        final User findUser = userFindService.findUserByEmail(EMAIL);
+        final User findUser = userQueryService.findUserByEmail(EMAIL);
         assertAll(
                 () -> assertThat(findUser.email().email()).isEqualTo(EMAIL),
                 () -> assertThat(findUser.password().password()).isEqualTo(PASSWORD)
@@ -62,7 +62,7 @@ public class UserFindServiceTest {
     void fail_findByEmail_test() {
         given(userRepository.findByEmail(any())).willReturn(Optional.ofNullable(null));
 
-        assertThatThrownBy(() -> userFindService.findUserByEmail(EMAIL))
+        assertThatThrownBy(() -> userQueryService.findUserByEmail(EMAIL))
                 .isInstanceOf(EmailNotFoundException.class)
                 .hasMessage(String.format("이메일 : [ %s ] 를 찾을 수 없습니다.", EMAIL));
     }

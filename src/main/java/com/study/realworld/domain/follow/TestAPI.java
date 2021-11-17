@@ -2,7 +2,7 @@ package com.study.realworld.domain.follow;
 
 import com.study.realworld.domain.follow.application.FollowService;
 import com.study.realworld.domain.follow.domain.FollowQueryDslRepository;
-import com.study.realworld.domain.follow.dto.FollowableDto;
+import com.study.realworld.domain.follow.dto.FollowResponse;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.persist.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -27,20 +27,20 @@ public class TestAPI {
     }
 
     @PostMapping("follow/{targetId}")
-    public ResponseEntity<FollowableDto> follow(@AuthenticationPrincipal Long id, @PathVariable Long targetId) {
+    public ResponseEntity<FollowResponse> follow(@AuthenticationPrincipal Long id, @PathVariable Long targetId) {
         User user = userRepository.findById(id).get();
         User user1 = userRepository.findById(targetId).get();
         followService.following(id, targetId);
-        FollowableDto followableDto = queryDslRepository.existMeAndFollowing(user, user1);
-        return ResponseEntity.ok().body(followableDto);
+        FollowResponse followResponse = queryDslRepository.existMeAndFollowing(user, user1);
+        return ResponseEntity.ok().body(followResponse);
     }
 
     @GetMapping("test/{targetId}")
-    public ResponseEntity<FollowableDto> test(@AuthenticationPrincipal Long id, @PathVariable Long targetId) {
+    public ResponseEntity<FollowResponse> test(@AuthenticationPrincipal Long id, @PathVariable Long targetId) {
         User user = userRepository.findById(id).get();
         User user1 = userRepository.findById(targetId).get();
-        FollowableDto followableDto = queryDslRepository.existMeAndFollowing(user, user1);
-        return ResponseEntity.ok().body(followableDto);
+        FollowResponse followResponse = queryDslRepository.existMeAndFollowing(user, user1);
+        return ResponseEntity.ok().body(followResponse);
     }
 
 }

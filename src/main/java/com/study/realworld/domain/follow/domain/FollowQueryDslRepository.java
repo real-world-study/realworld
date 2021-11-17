@@ -4,7 +4,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.study.realworld.domain.follow.dto.FollowableDto;
+import com.study.realworld.domain.follow.dto.FollowResponse;
 import com.study.realworld.domain.user.domain.persist.User;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +19,8 @@ public class FollowQueryDslRepository {
         this.query = jpaQueryFactory;
     }
 
-    public FollowableDto existMeAndFollowing(final User me, final User following) {
-        return query.select(Projections.constructor(FollowableDto.class, user,
+    public FollowResponse existMeAndFollowing(final User me, final User following) {
+        return query.select(Projections.constructor(FollowResponse.class, user,
                 ExpressionUtils.isNotNull(JPAExpressions.selectOne()
                         .from(follow)
                         .where(follow.following.eq(following), follow.follower.eq(me)))))

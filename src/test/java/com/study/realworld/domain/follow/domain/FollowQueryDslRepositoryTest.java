@@ -1,15 +1,12 @@
 package com.study.realworld.domain.follow.domain;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.study.realworld.domain.follow.dto.FollowableDto;
+import com.study.realworld.domain.follow.dto.FollowResponse;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -59,11 +56,11 @@ class FollowQueryDslRepositoryTest {
 
         // when
         final FollowQueryDslRepository followQueryDslRepository = new FollowQueryDslRepository(jpaQueryFactory);
-        final FollowableDto followableDto = followQueryDslRepository.existMeAndFollowing(user, other);
+        final FollowResponse followResponse = followQueryDslRepository.existMeAndFollowing(user, other);
 
         assertAll(
-                () -> assertThat(followableDto).isNotNull(),
-                () -> assertThat(followableDto).isExactlyInstanceOf(FollowableDto.class)
+                () -> assertThat(followResponse).isNotNull(),
+                () -> assertThat(followResponse).isExactlyInstanceOf(FollowResponse.class)
         );
     }
 

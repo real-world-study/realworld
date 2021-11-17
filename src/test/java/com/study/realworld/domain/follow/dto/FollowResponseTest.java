@@ -14,16 +14,16 @@ import static com.study.realworld.domain.user.domain.vo.PasswordTest.PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class FollowableDtoTest {
+class FollowResponseTest {
 
     @DisplayName("FollowableDto 기본 생성자 테스트")
     @Test
     void default_constructor_test() {
-        final FollowableDto followableDto = new FollowableDto();
+        final FollowResponse followResponse = new FollowResponse();
 
         assertAll(
-                () -> assertThat(followableDto).isNotNull(),
-                () -> assertThat(followableDto).isExactlyInstanceOf(FollowableDto.class)
+                () -> assertThat(followResponse).isNotNull(),
+                () -> assertThat(followResponse).isExactlyInstanceOf(FollowResponse.class)
         );
     }
 
@@ -32,11 +32,11 @@ class FollowableDtoTest {
     void fromUserAndFollowable_test() {
         final User user = userBuilder(new Email(EMAIL), new Name(USERNAME), new Password(PASSWORD), new Bio(BIO), new Image(IMAGE));
         final boolean followable = false;
-        final FollowableDto followableDto = FollowableDto.fromUserAndFollowable(user, followable);
+        final FollowResponse followResponse = new FollowResponse(user, followable);
 
         assertAll(
-                () -> assertThat(followableDto).isNotNull(),
-                () -> assertThat(followableDto).isExactlyInstanceOf(FollowableDto.class)
+                () -> assertThat(followResponse).isNotNull(),
+                () -> assertThat(followResponse).isExactlyInstanceOf(FollowResponse.class)
         );
     }
 
