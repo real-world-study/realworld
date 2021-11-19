@@ -1,16 +1,16 @@
 CREATE TABLE user
 (
     id              bigint          NOT NULL AUTO_INCREMENT,
-    email           varchar(50)     NOT NULL,
+    userEmail           varchar(50)     NOT NULL,
     username        varchar(20)     NOT NULL,
-    password        varchar(255)    NOT NULL,
-    bio             varchar         DEFAULT NULL,
-    image           varchar         DEFAULT NULL,
+    userPassword        varchar(255)    NOT NULL,
+    userBio             varchar         DEFAULT NULL,
+    userImage           varchar         DEFAULT NULL,
     created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     updated_at      DATETIME        DEFAULT NULL,
     deleted_at      DATETIME        DEFAULT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT unique_email UNIQUE (email)
+    CONSTRAINT unique_email UNIQUE (userEmail)
 );
 
 CREATE TABLE follow
@@ -64,7 +64,7 @@ CREATE TABLE favorite
 CREATE TABLE tag
 (
     id              bigint          NOT NULL AUTO_INCREMENT,
-    name            varchar(20)     NOT NULL UNIQUE,
+    userName            varchar(20)     NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 

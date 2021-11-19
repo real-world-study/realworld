@@ -1,4 +1,4 @@
-![realworld](./docs/image/realworld.png)
+![realworld](./docs/userImage/realworld.png)
 
 [![build](https://github.com/real-world-study/realworld/actions/workflows/build.yml/badge.svg)](https://github.com/real-world-study/realworld/actions/workflows/build.yml)   [![codecov](https://codecov.io/gh/real-world-study/realworld/branch/main/graph/badge.svg?token=K0HJBEGZ3O)](https://codecov.io/gh/real-world-study/realworld)
 
@@ -48,4 +48,4 @@ issue: #이슈번호
 
 ## ERD
 
-![realworld_erd](./docs/image/realworld_erd.png)
+![realworld_erd](./docs/userImage/realworld_erd.png)

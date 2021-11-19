@@ -5,12 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.global.error.ErrorCode;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Objects;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @JsonTypeName("errors")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class UserErrorResponse {
@@ -21,23 +25,11 @@ public class UserErrorResponse {
     @JsonProperty("body")
     private List<String> body;
 
-    UserErrorResponse() {
-    }
-
-    public UserErrorResponse(final ErrorCode errorCode) {
-        validateNull(errorCode);
-        httpStatus = errorCode.httpStatus();
-        body = List.of(errorCode.message());
-    }
-
-    private void validateNull(final ErrorCode errorCode) {
-        if (Objects.isNull(errorCode)) {
-            throw new IllegalArgumentException();
-        }
+    public static UserErrorResponse from(final ErrorCode errorCode) {
+        return new UserErrorResponse(errorCode.httpStatus(), List.of(errorCode.message()));
     }
 
     public ResponseEntity<UserErrorResponse> toResponseEntity() {
         return ResponseEntity.status(this.httpStatus).body(this);
     }
-
 }

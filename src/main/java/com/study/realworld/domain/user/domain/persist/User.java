@@ -1,16 +1,15 @@
 package com.study.realworld.domain.user.domain.persist;
 
-import com.study.realworld.domain.BaseTimeEntity;
-import com.study.realworld.domain.follow.domain.Follow;
-import com.study.realworld.domain.follow.domain.Followings;
 import com.study.realworld.domain.user.domain.vo.*;
-import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
+import com.study.realworld.global.common.BaseTimeEntity;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
-import static java.util.Objects.isNull;
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User extends BaseTimeEntity {
 
@@ -18,160 +17,75 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "member_id", nullable = false, updatable = false)
     private Long id;
 
     @Embedded
-    @AttributeOverride(name = "email", column =
-    @Column(name = "email", length = 50, nullable = false, unique = true))
-    private Email email;
+    private UserEmail userEmail;
 
     @Embedded
-    @AttributeOverride(name = "name", column =
-    @Column(name = "username", length = 20, nullable = false))
-    private Name username;
+    private UserName userName;
 
     @Embedded
-    @AttributeOverride(name = "password", column =
-    @Column(name = "password", nullable = false))
-    private Password password;
+    private UserPassword userPassword;
 
     @Embedded
-    @AttributeOverride(name = "bio", column =
-    @Column(name = "bio"))
-    private Bio bio;
+    private UserBio userBio;
 
     @Embedded
-    @AttributeOverride(name = "path", column =
-    @Column(name = "image"))
-    private Image image;
+    private UserImage userImage;
 
-    @Embedded
-    private Followings followings = new Followings();
-
-    protected User() {
+    @Builder
+    public User(final UserEmail userEmail, final UserName userName, final UserPassword userPassword, final UserBio userBio, final UserImage userImage) {
+        this.userEmail = userEmail;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userBio = userBio;
+        this.userImage = userImage;
     }
 
-    protected User(final UserBuilder userBuilder) {
-        this.email = userBuilder.email;
-        this.username = userBuilder.username;
-        this.password = userBuilder.password;
-        this.bio = userBuilder.bio;
-        this.image = userBuilder.image;
+    public void encode(final PasswordEncoder passwordEncoder) {
+        userPassword = UserPassword.encode(userPassword.value(), passwordEncoder);
     }
 
-    public void login(final Password rawPassword, final PasswordEncoder passwordEncoder) {
-        if(!password.matches(rawPassword, passwordEncoder)){
-            throw new PasswordMissMatchException();
-        }
-    }
-
-    public User encode(final PasswordEncoder passwordEncoder) {
-        this.password = Password.encode(password, passwordEncoder);
+    public User login(final UserPassword rawUserPassword, final PasswordEncoder passwordEncoder) {
+        userPassword.matches(rawUserPassword, passwordEncoder);
         return this;
     }
 
-    public User changeEmail(final Email email) {
-        validateArgumentNull(email);
-        this.email = email;
+    public User changeEmail(final UserEmail userEmail) {
+        this.userEmail = userEmail;
         return this;
     }
 
-    public User changeBio(final Bio bio) {
-        validateArgumentNull(bio);
-        this.bio = bio;
+    public User changeBio(final UserBio userBio) {
+        this.userBio = userBio;
         return this;
     }
 
-    public User changeImage(final Image image) {
-        validateArgumentNull(image);
-        this.image = image;
+    public User changeImage(final UserImage userImage) {
+        this.userImage = userImage;
         return this;
     }
 
-    public User addFollowing(final Follow following) {
-        followings.addFollowing(following);
-        following.changeFollower(this);
-        return this;
+    public UserEmail userEmail() {
+        return userEmail;
     }
 
-    private void validateArgumentNull(final Object argument) {
-        if(isNull(argument)) {
-            throw new IllegalArgumentException();
-        }
+    public UserName userName() {
+        return userName;
     }
 
-    public Long id() {
-        return id;
+    public UserBio userBio() {
+        return userBio;
     }
 
-    public Email email() {
-        return email;
+    public UserImage userImage() {
+        return userImage;
     }
 
-    public Name username() {
-        return username;
-    }
-
-    public Bio bio() {
-        return bio;
-    }
-
-    public Image image() {
-        return image;
-    }
-
-    public Password password() {
-        return password;
-    }
-
-    public Followings followings() {
-        return followings;
-    }
-
-    public static UserBuilder Builder() {
-        return new UserBuilder();
-    }
-
-    public static class UserBuilder {
-        private Email email;
-        private Name username;
-        private Password password;
-        private Bio bio;
-        private Image image;
-      
-        private UserBuilder() {
-        }
-
-        public UserBuilder email(final Email email) {
-            this.email = email;
-            return this;
-        }
-
-        public UserBuilder username(final Name username) {
-            this.username = username;
-            return this;
-        }
-
-        public UserBuilder password(final Password password) {
-            this.password = password;
-            return this;
-        }
-
-        public UserBuilder bio(final Bio bio) {
-            this.bio = bio;
-            return this;
-        }
-
-        public UserBuilder image(final Image image) {
-            this.image = image;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
-
+    public UserPassword userPassword() {
+        return userPassword;
     }
 
 }

@@ -6,11 +6,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.global.error.ErrorCode;
 import com.study.realworld.global.security.error.exception.SecurityErrorCodeNullPointerException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Objects;
 
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @JsonTypeName("errors")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class SecurityErrorResponse {
@@ -20,9 +23,6 @@ public class SecurityErrorResponse {
 
     @JsonProperty("body")
     private List<String> body;
-
-    SecurityErrorResponse() {
-    }
 
     public SecurityErrorResponse(final ErrorCode errorCode) {
         validateNull(errorCode);
@@ -35,5 +35,4 @@ public class SecurityErrorResponse {
             throw new SecurityErrorCodeNullPointerException();
         }
     }
-
 }
