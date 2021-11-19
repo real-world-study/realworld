@@ -81,7 +81,7 @@ class UserTest {
         );
     }
 
-    public User testUser(final String userEmail, final String userName,
+    public static User testUser(final String userEmail, final String userName,
                          final String userPassword, final String userBio, final String userImage) {
         return testUser(
                 UserEmail.from(userEmail), UserName.from(userName),
@@ -90,7 +90,7 @@ class UserTest {
         );
     }
 
-    public User testUser(final UserEmail userEmail, final UserName userName,
+    public static User testUser(final UserEmail userEmail, final UserName userName,
                          final UserPassword userPassword, final UserBio userBio, final UserImage userImage) {
         return User.builder()
                 .userEmail(USER_EMAIL)
