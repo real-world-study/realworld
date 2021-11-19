@@ -25,7 +25,7 @@ public class AuthApi {
     public ResponseEntity<Login.Response> login(@Valid @RequestBody final Login.Request request) {
         final User user = authService.login(request.userEmail(), request.userPassword());
         final TokenProviderDto tokenProviderDto = TokenProviderDto.from(user);
-        final AccessToken accessToken = tokenProvider.createToken(tokenProviderDto);
+        final AccessToken accessToken = tokenProvider.createAccessToken(tokenProviderDto);
         final Login.Response response = Login.Response.fromUserWithToken(user, accessToken);
         return ResponseEntity.ok().body(response);
     }

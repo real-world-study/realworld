@@ -17,7 +17,7 @@ public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false, updatable = false)
-    private Long id;
+    private Long userId;
 
     @Embedded
     private UserEmail userEmail;
@@ -68,6 +68,10 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
+    public Long userId() {
+        return userId;
+    }
+
     public UserEmail userEmail() {
         return userEmail;
     }
@@ -93,11 +97,11 @@ public class User extends BaseTimeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final User user = (User) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(userId(), user.userId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(userId());
     }
 }

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("사용자(User)")
-class UserTest {
+public class UserTest {
 
     @Test
     void 빌더를_통해_객체를_생성할_수_있다() {

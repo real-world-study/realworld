@@ -25,17 +25,18 @@ public class UserCommandService {
         return userRepository.save(user);
     }
 
-    public User update(final Long principal, final UserUpdate.Request request) {
+    public User update(final Long userId, final UserUpdate.Request request) {
         validateDuplicatedEmail(request.memberEmail());
-        final User user = findUserByEmail(principal);
+        final User user = findUserById(userId);
         return user.changeEmail(request.memberEmail())
                 .changeBio(request.memberBio())
                 .changeImage(request.memberImage());
     }
 
-    private User findUserByEmail(final Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new IdentityNotFoundException(id));
+    private User findUserById(final Long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new IdentityNotFoundException(userId));
     }
 
     private void validateDuplicatedEmail(final UserEmail userEmail) {

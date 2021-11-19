@@ -31,11 +31,11 @@ public class UserBio {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserBio userBio1 = (UserBio) o;
-        return Objects.equals(userBio, userBio1.userBio);
+        return Objects.equals(value(), userBio1.value());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userBio);
+        return Objects.hash(value());
     }
 }

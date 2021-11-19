@@ -1,8 +1,5 @@
 package com.study.realworld.global.common;
 
-import com.study.realworld.global.common.TokenProviderDto;
-import com.study.realworld.global.common.AccessToken;
-import com.study.realworld.domain.user.domain.vo.UserEmail;
 import com.study.realworld.global.jwt.JwtAuthentication;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -30,9 +27,9 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public AccessToken createToken(final TokenProviderDto tokenProviderDto) {
+    public AccessToken createAccessToken(final TokenProviderDto tokenProviderDto) {
         return new AccessToken(Jwts.builder()
-                .setSubject(tokenProviderDto.userEmail().value())
+                .setSubject(tokenProviderDto.userId().toString())
                 .setExpiration(expiration())
                 .signWith(key, HS512)
                 .compact());
@@ -62,9 +59,8 @@ public class TokenProvider {
         }
     }
 
-    public Authentication getAuthentication(final String jwt) {
-        final String email = subject(jwt).orElseThrow(IllegalArgumentException::new);
-        final UserEmail userEmail = UserEmail.from(email);
-        return JwtAuthentication.from(userEmail);
+    public Authentication getAuthentication(final String token) {
+        final String userId = subject(token).orElseThrow(IllegalArgumentException::new);
+        return JwtAuthentication.from(Long.valueOf(userId));
     }
 }

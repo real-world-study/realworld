@@ -6,6 +6,7 @@ import lombok.Builder;
 
 public class TokenProviderDto {
 
+    private Long userId;
     private UserEmail userEmail;
     private UserName userName;
     private UserPassword userPassword;
@@ -13,8 +14,9 @@ public class TokenProviderDto {
     private UserImage userImage;
 
     @Builder
-    public TokenProviderDto(final UserEmail userEmail, final UserName userName,
+    public TokenProviderDto(final Long userId, final UserEmail userEmail, final UserName userName,
                             final UserPassword userPassword, final UserBio userBio, final UserImage userImage) {
+        this.userId = userId;
         this.userEmail = userEmail;
         this.userName = userName;
         this.userPassword = userPassword;
@@ -24,12 +26,17 @@ public class TokenProviderDto {
 
     public static TokenProviderDto from(final User user) {
         return TokenProviderDto.builder()
+                .userId(user.userId())
                 .userEmail(user.userEmail())
                 .userName(user.userName())
                 .userPassword(user.userPassword())
                 .userBio(user.userBio())
                 .userImage(user.userImage())
                 .build();
+    }
+
+    public Long userId() {
+        return userId;
     }
 
     public UserEmail userEmail() {

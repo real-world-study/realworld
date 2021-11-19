@@ -27,15 +27,15 @@ Content-Type: application/json
 %}
 
 ### UPDATE
-PUT localhost:8080/api/members
+PUT localhost:8080/api/users
 Content-Type: application/json
 Authorization: {{Authorization}}
 
 {
   "user":{
-    "userEmail": "jake@jake2.jake",
-    "userBio": "I like to skateboard",
-    "userImage": "https://i.stack.imgur.com/xHWG8.jpg"
+    "email": "jake@jake2.jake",
+    "bio": "I like to skateboard",
+    "image": "https://i.stack.imgur.com/xHWG8.jpg"
   }
 }
 

@@ -3,20 +3,20 @@ package com.study.realworld.domain.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.study.realworld.global.common.AccessToken;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.UserBio;
 import com.study.realworld.domain.user.domain.vo.UserEmail;
 import com.study.realworld.domain.user.domain.vo.UserImage;
 import com.study.realworld.domain.user.domain.vo.UserName;
+import com.study.realworld.global.common.AccessToken;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 public final class UserUpdate {
 
-    @AllArgsConstructor(access = AccessLevel.PACKAGE)
-    @NoArgsConstructor(access = AccessLevel.PACKAGE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
     public static final class Request {
@@ -41,10 +41,14 @@ public final class UserUpdate {
         public final UserImage memberImage() {
             return userImage;
         }
+
+        public static final Request of(final UserEmail userEmail, final UserBio userBio, final UserImage userImage) {
+            return new Request(userEmail, userBio, userImage);
+        }
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    @NoArgsConstructor(access = AccessLevel.PACKAGE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
     public static final class Response {

@@ -1,5 +1,6 @@
 package com.study.realworld.domain.user.api;
 
+import com.study.realworld.domain.user.domain.vo.UserEmail;
 import com.study.realworld.global.common.TokenProviderDto;
 import com.study.realworld.global.common.AccessToken;
 import com.study.realworld.domain.user.application.UserCommandService;
@@ -28,17 +29,17 @@ public class UserCommandApi {
     public ResponseEntity<UserJoin.Response> join(@Valid @RequestBody final UserJoin.Request request) {
         final User user = userCommandService.join(request.toEntity());
         final TokenProviderDto tokenProviderDto = TokenProviderDto.from(user);
-        final AccessToken accessToken = tokenProvider.createToken(tokenProviderDto);
+        final AccessToken accessToken = tokenProvider.createAccessToken(tokenProviderDto);
         final UserJoin.Response response = UserJoin.Response.fromUserWithToken(user, accessToken);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/users")
-    public ResponseEntity<UserUpdate.Response> update(@AuthenticationPrincipal final Long principal,
+    public ResponseEntity<UserUpdate.Response> update(@Valid @AuthenticationPrincipal final Long userId,
                                                       @Valid @RequestBody final UserUpdate.Request request) {
-        final User user = userCommandService.update(principal, request);
+        final User user = userCommandService.update(userId, request);
         final TokenProviderDto tokenProviderDto = TokenProviderDto.from(user);
-        final AccessToken accessToken = tokenProvider.createToken(tokenProviderDto);
+        final AccessToken accessToken = tokenProvider.createAccessToken(tokenProviderDto);
         final UserUpdate.Response response = UserUpdate.Response.fromUserWithToken(user, accessToken);
         return ResponseEntity.ok().body(response);
     }
