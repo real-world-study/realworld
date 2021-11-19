@@ -7,6 +7,7 @@ import com.study.realworld.domain.user.dto.UserUpdate;
 import com.study.realworld.domain.user.error.exception.DuplicatedEmailException;
 import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
 
+@DisplayName("유저 커멘드 서비스(UserCommandService)")
 @ExtendWith(MockitoExtension.class)
 class UserCommandServiceTest {
 
@@ -76,8 +78,6 @@ class UserCommandServiceTest {
 
     @Test
     void 식별자가_올바르지_않다면_엔티티의_값을_변경할_수_없다() {
-        final User user = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
-        ReflectionTestUtils.setField(user, "userId", 1L);
         willReturn(Optional.empty()).given(userRepository).findById(any());
 
         final UserUpdate.Request request = UserUpdate.Request.of(CHANGED_USER_EMAIL, CHANGED_USER_BIO, CHANGED_USER_IMAGE);

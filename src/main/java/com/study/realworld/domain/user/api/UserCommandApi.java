@@ -1,13 +1,12 @@
 package com.study.realworld.domain.user.api;
 
-import com.study.realworld.domain.user.domain.vo.UserEmail;
-import com.study.realworld.global.common.TokenProviderDto;
-import com.study.realworld.global.common.AccessToken;
 import com.study.realworld.domain.user.application.UserCommandService;
 import com.study.realworld.domain.user.domain.persist.User;
-import com.study.realworld.domain.user.dto.UserUpdate;
 import com.study.realworld.domain.user.dto.UserJoin;
+import com.study.realworld.domain.user.dto.UserUpdate;
+import com.study.realworld.global.common.AccessToken;
 import com.study.realworld.global.common.TokenProvider;
+import com.study.realworld.global.common.TokenProviderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
