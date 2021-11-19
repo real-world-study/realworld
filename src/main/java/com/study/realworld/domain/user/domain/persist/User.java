@@ -13,11 +13,9 @@ import javax.persistence.*;
 @Entity
 public class User extends BaseTimeEntity {
 
-    public static final String DEFAULT_AUTHORITY = "USER";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id", nullable = false, updatable = false)
+    @Column(name = "user_id", nullable = false, updatable = false)
     private Long id;
 
     @Embedded
@@ -44,8 +42,9 @@ public class User extends BaseTimeEntity {
         this.userImage = userImage;
     }
 
-    public void encode(final PasswordEncoder passwordEncoder) {
+    public User encode(final PasswordEncoder passwordEncoder) {
         userPassword = UserPassword.encode(userPassword.value(), passwordEncoder);
+        return this;
     }
 
     public User login(final UserPassword rawUserPassword, final PasswordEncoder passwordEncoder) {

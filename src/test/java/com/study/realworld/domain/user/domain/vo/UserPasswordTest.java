@@ -1,12 +1,12 @@
 package com.study.realworld.domain.user.domain.vo;
 
+import com.study.realworld.domain.user.domain.vo.util.TestPasswordEncoder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -59,7 +59,7 @@ class UserPasswordTest {
     @ParameterizedTest(name = "입력값 : {0}")
     @ValueSource(strings = {"photo", "willy", "jhon", "kathy"})
     void 문자열로_객체를_생성할_수_있다(final String userPasswordString) {
-        final PasswordEncoder passwordEncoder = TestPasswordEncoder.initialize();
+        final PasswordEncoder passwordEncoder =  TestPasswordEncoder.initialize();
         final UserPassword userPassword = UserPassword.encode(userPasswordString, passwordEncoder);
 
         assertAll(
@@ -78,21 +78,3 @@ class UserPasswordTest {
     }
 }
 
-class TestPasswordEncoder implements PasswordEncoder {
-
-    private static final int LOG_ROUNDS = 4; // 암호 난이도 -> 속도 위해 4로 낮춤
-
-    @Override
-    public final String encode(final CharSequence plainTextPassword) {
-        return BCrypt.hashpw(plainTextPassword.toString(), BCrypt.gensalt(LOG_ROUNDS));
-    }
-
-    @Override
-    public final boolean matches(final CharSequence plainTextPassword, final String passwordInDatabase) {
-        return BCrypt.checkpw(plainTextPassword.toString(), passwordInDatabase);
-    }
-
-    public static PasswordEncoder initialize() {
-        return new TestPasswordEncoder();
-    }
-}
