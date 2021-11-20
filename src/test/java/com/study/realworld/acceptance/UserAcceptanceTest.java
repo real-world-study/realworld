@@ -78,6 +78,25 @@ class UserAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @Test
+    void 유저_정보_삭제_성공() {
+        final String userEmail = "kwj1270@gmail.com";
+        final UserJoin.Response joinResponse = 회원_가입_되어있음(userEmail);
+        final ExtractableResponse<Response> response = 유저_정보_삭제_요청(joinResponse.accessToken());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private ExtractableResponse<Response> 유저_정보_삭제_요청(final AccessToken accessToken) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/users")
+                .then()
+                .extract();
+    }
+
     private ExtractableResponse<Response> 유저_정보_변경_요청(final AccessToken accessToken) {
         final UserUpdate.Request request = 정상적인_회원_변경_정보();
         return RestAssured.given()

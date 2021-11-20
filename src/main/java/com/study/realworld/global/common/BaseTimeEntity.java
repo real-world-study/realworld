@@ -36,7 +36,7 @@ public abstract class BaseTimeEntity {
         return deletedAt;
     }
 
-    public void recordDeletedTime(final LocalDateTime deletedAt) {
+    protected void recordDeletedTime(final LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 

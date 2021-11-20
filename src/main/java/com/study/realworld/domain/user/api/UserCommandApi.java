@@ -8,12 +8,10 @@ import com.study.realworld.global.common.AccessToken;
 import com.study.realworld.global.common.TokenProvider;
 import com.study.realworld.global.common.TokenProviderDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -41,5 +39,11 @@ public class UserCommandApi {
         final AccessToken accessToken = tokenProvider.createAccessToken(tokenProviderDto);
         final UserUpdate.Response response = UserUpdate.Response.fromUserWithToken(user, accessToken);
         return ResponseEntity.ok().body(response);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/users")
+    public void delete(@Valid @AuthenticationPrincipal final Long userId) {
+        userCommandService.delete(userId);
     }
 }

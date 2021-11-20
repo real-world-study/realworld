@@ -24,6 +24,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final com.study.realworld.global.common.QBaseTimeEntity _super = new com.study.realworld.global.common.QBaseTimeEntity(this);
 
+    public final BooleanPath activated = createBoolean("activated");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

@@ -5,11 +5,14 @@ import com.study.realworld.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Where(clause = "activated = true")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User extends BaseTimeEntity {
@@ -33,6 +36,9 @@ public class User extends BaseTimeEntity {
 
     @Embedded
     private UserImage userImage;
+
+    @Column(name = "activated")
+    private boolean activated = true;
 
     @Builder
     public User(final UserEmail userEmail, final UserName userName, final UserPassword userPassword, final UserBio userBio, final UserImage userImage) {
@@ -94,6 +100,11 @@ public class User extends BaseTimeEntity {
 
     public boolean isSameAsUserEmail(final UserEmail otherEmail) {
         return userEmail.equals(otherEmail);
+    }
+
+    public void delete() {
+        activated = false;
+        recordDeletedTime(LocalDateTime.now());
     }
 
     @Override

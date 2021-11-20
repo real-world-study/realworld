@@ -33,6 +33,18 @@ public class UserCommandService {
                 .changeImage(request.memberImage());
     }
 
+    private void validateDuplicatedAndSameAsEmail(final Long userId, final UserEmail userEmail) {
+        final User me = findUserById(userId);
+        if (!me.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
+            throw new DuplicatedEmailException(userEmail.value());
+        }
+    }
+
+    public void delete(final Long userId) {
+        final User me = findUserById(userId);
+        me.delete();
+    }
+
     private User findUserById(final Long userId) {
         return userRepository
                 .findById(userId)
@@ -44,12 +56,4 @@ public class UserCommandService {
             throw new DuplicatedEmailException(userEmail.value());
         }
     }
-
-    private void validateDuplicatedAndSameAsEmail(final Long userId, final UserEmail userEmail) {
-        final User me = userRepository.findById(userId).orElseThrow(() -> new IdentityNotFoundException(userId));
-        if (!me.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
-            throw new DuplicatedEmailException(userEmail.value());
-        }
-    }
-
 }
