@@ -66,7 +66,7 @@ class UserCommandServiceTest {
         ReflectionTestUtils.setField(user, "userId", 1L);
         willReturn(Optional.of(user)).given(userRepository).findById(any());
 
-        final UserUpdate.Request request = UserUpdate.Request.of(CHANGED_USER_EMAIL, CHANGED_USER_BIO, CHANGED_USER_IMAGE);
+        final UserUpdate.Request request = testUserUpdateRequest();
         final User updatedUser = userCommandService.update(user.userId(), request);
 
         assertAll(
@@ -80,9 +80,17 @@ class UserCommandServiceTest {
     void 식별자가_올바르지_않다면_엔티티의_값을_변경할_수_없다() {
         willReturn(Optional.empty()).given(userRepository).findById(any());
 
-        final UserUpdate.Request request = UserUpdate.Request.of(CHANGED_USER_EMAIL, CHANGED_USER_BIO, CHANGED_USER_IMAGE);
+        final UserUpdate.Request request = testUserUpdateRequest();
         assertThatThrownBy(() -> userCommandService.update(2L, request))
                 .isExactlyInstanceOf(IdentityNotFoundException.class)
                 .hasMessage(String.format("식별자 : [ %s ] 를 찾을 수 없습니다.", 2L));
+    }
+
+    public static UserUpdate.Request testUserUpdateRequest() {
+        return UserUpdate.Request.builder()
+                .userEmail(CHANGED_USER_EMAIL)
+                .userBio(CHANGED_USER_BIO)
+                .userImage(CHANGED_USER_IMAGE)
+                .build();
     }
 }

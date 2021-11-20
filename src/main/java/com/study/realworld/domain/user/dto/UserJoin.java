@@ -1,6 +1,7 @@
 package com.study.realworld.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.global.common.AccessToken;
@@ -43,7 +44,7 @@ public final class UserJoin {
         }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PUBLIC)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -66,6 +67,10 @@ public final class UserJoin {
 
         public UserEmail userEmail() {
             return userEmail;
+        }
+
+        public AccessToken accessToken() {
+            return accessToken;
         }
 
         public static final Response fromUserWithToken(final User user, final AccessToken accessToken) {

@@ -26,7 +26,7 @@ public class UserCommandService {
     }
 
     public User update(final Long userId, final UserUpdate.Request request) {
-        validateDuplicatedEmail(request.memberEmail());
+        validateDuplicatedAndSameAsEmail(userId, request.memberEmail());
         final User user = findUserById(userId);
         return user.changeEmail(request.memberEmail())
                 .changeBio(request.memberBio())
@@ -44,4 +44,12 @@ public class UserCommandService {
             throw new DuplicatedEmailException(userEmail.value());
         }
     }
+
+    private void validateDuplicatedAndSameAsEmail(final Long userId, final UserEmail userEmail) {
+        final User me = userRepository.findById(userId).orElseThrow(() -> new IdentityNotFoundException(userId));
+        if (!me.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
+            throw new DuplicatedEmailException(userEmail.value());
+        }
+    }
+
 }

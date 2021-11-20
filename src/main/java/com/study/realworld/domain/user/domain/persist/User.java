@@ -92,6 +92,10 @@ public class User extends BaseTimeEntity {
         return userPassword;
     }
 
+    public boolean isSameAsUserEmail(final UserEmail otherEmail) {
+        return userEmail.equals(otherEmail);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

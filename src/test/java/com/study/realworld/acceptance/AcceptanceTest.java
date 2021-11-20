@@ -22,6 +22,9 @@ import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.USER_
 @ActiveProfiles("test")
 class AcceptanceTest {
 
+    protected static final String AUTHORIZATION = "Authorization";
+    protected static final String BEARER = "bearer ";
+
     @LocalServerPort
     private int port;
 

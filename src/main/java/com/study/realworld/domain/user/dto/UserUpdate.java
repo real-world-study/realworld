@@ -1,6 +1,7 @@
 package com.study.realworld.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.domain.user.domain.persist.User;
@@ -11,11 +12,11 @@ import com.study.realworld.domain.user.domain.vo.UserName;
 import com.study.realworld.global.common.AccessToken;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 public final class UserUpdate {
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -42,12 +43,15 @@ public final class UserUpdate {
             return userImage;
         }
 
-        public static final Request of(final UserEmail userEmail, final UserBio userBio, final UserImage userImage) {
-            return new Request(userEmail, userBio, userImage);
+        @Builder
+        public Request(final UserEmail userEmail, final UserBio userBio, final UserImage userImage) {
+            this.userEmail = userEmail;
+            this.userBio = userBio;
+            this.userImage = userImage;
         }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PUBLIC)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -74,6 +78,26 @@ public final class UserUpdate {
             final UserBio userBio = user.userBio();
             final UserImage userImage = user.userImage();
             return new Response(userName, userEmail, userBio, userImage, accessToken);
+        }
+
+        public UserName userName() {
+            return userName;
+        }
+
+        public UserEmail userEmail() {
+            return userEmail;
+        }
+
+        public UserBio userBio() {
+            return userBio;
+        }
+
+        public UserImage userImage() {
+            return userImage;
+        }
+
+        public AccessToken accessToken() {
+            return accessToken;
         }
     }
 }
