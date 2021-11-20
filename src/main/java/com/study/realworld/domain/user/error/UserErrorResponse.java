@@ -32,4 +32,12 @@ public class UserErrorResponse {
     public ResponseEntity<UserErrorResponse> toResponseEntity() {
         return ResponseEntity.status(this.httpStatus).body(this);
     }
+
+    public HttpStatus httpStatus() {
+        return httpStatus;
+    }
+
+    public List<String> body() {
+        return body;
+    }
 }
