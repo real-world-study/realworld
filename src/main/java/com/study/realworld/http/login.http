@@ -38,27 +38,3 @@ Authorization: {{Authorization}}
     "image": "https://i.stack.imgur.com/xHWG8.jpg"
   }
 }
-
-### FAIL_UPDATE
-PUT localhost:8080/api/members
-Content-Type: application/json
-Authorization: testestestsetestestestest
-
-{
-  "user":{
-    "userEmail": "jake@jake2.jake",
-    "userBio": "I like to skateboard",
-    "userImage": "https://i.stack.imgur.com/xHWG8.jpg"
-  }
-}
-
-### FAIL_LOGIN
-POST localhost:8080/api/members/login
-Content-Type: application/json
-
-{
-  "user":{
-    "userEmail": "jake2@jake.jake",
-    "userPassword": "jakejake"
-  }
-}
