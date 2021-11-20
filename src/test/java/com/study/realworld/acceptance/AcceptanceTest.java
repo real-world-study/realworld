@@ -40,6 +40,11 @@ class AcceptanceTest {
         databaseCleanup.execute();
     }
 
+    protected Login.Response 로그인_되어있음(final String email) {
+        final ExtractableResponse<Response> response = 로그인_요청(email);
+        return response.as(Login.Response.class);
+    }
+
     protected UserJoin.Response 회원_가입_되어있음(final String email) {
         final ExtractableResponse<Response> response = 회원_가입_요청(email);
         return response.as(UserJoin.Response.class);

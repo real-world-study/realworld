@@ -35,7 +35,8 @@ class UserCommandServiceTest {
 
     @BeforeEach
     void setUp() {
-        userCommandService = new UserCommandService(userRepository, TestPasswordEncoder.initialize());
+        final UserQueryService userQueryService = new UserQueryService(userRepository);
+        userCommandService = new UserCommandService(userQueryService, userRepository, TestPasswordEncoder.initialize());
     }
 
     @Test

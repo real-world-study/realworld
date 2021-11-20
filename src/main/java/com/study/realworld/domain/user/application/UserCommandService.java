@@ -5,7 +5,6 @@ import com.study.realworld.domain.user.domain.persist.UserRepository;
 import com.study.realworld.domain.user.domain.vo.UserEmail;
 import com.study.realworld.domain.user.dto.UserUpdate;
 import com.study.realworld.domain.user.error.exception.DuplicatedEmailException;
-import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserCommandService {
 
+    private final UserQueryService userQueryService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -27,32 +27,26 @@ public class UserCommandService {
 
     public User update(final Long userId, final UserUpdate.Request request) {
         validateDuplicatedAndSameAsEmail(userId, request.memberEmail());
-        final User user = findUserById(userId);
+        final User user = userQueryService.findById(userId);
         return user.changeEmail(request.memberEmail())
                 .changeBio(request.memberBio())
                 .changeImage(request.memberImage());
     }
 
     private void validateDuplicatedAndSameAsEmail(final Long userId, final UserEmail userEmail) {
-        final User me = findUserById(userId);
+        final User me = userQueryService.findById(userId);
         if (!me.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
             throw new DuplicatedEmailException(userEmail.value());
         }
     }
 
     public void delete(final Long userId) {
-        final User me = findUserById(userId);
+        final User me = userQueryService.findById(userId);
         me.delete();
     }
 
-    private User findUserById(final Long userId) {
-        return userRepository
-                .findById(userId)
-                .orElseThrow(() -> new IdentityNotFoundException(userId));
-    }
-
     private void validateDuplicatedEmail(final UserEmail userEmail) {
-        if (userRepository.existsByUserEmail(userEmail)) {
+        if (userQueryService.existsByUserEmail(userEmail)) {
             throw new DuplicatedEmailException(userEmail.value());
         }
     }

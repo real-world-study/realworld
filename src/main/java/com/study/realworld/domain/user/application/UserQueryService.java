@@ -4,6 +4,7 @@ import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.persist.UserRepository;
 import com.study.realworld.domain.user.domain.vo.UserEmail;
 import com.study.realworld.domain.user.error.exception.EmailNotFoundException;
+import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,5 +20,14 @@ public class UserQueryService {
         return userRepository
                 .findByUserEmail(userEmail)
                 .orElseThrow(() -> new EmailNotFoundException(userEmail.value()));
+    }
+
+    public User findById(final Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IdentityNotFoundException(userId));
+    }
+
+    public Boolean existsByUserEmail(final UserEmail userEmail) {
+        return userRepository.existsByUserEmail(userEmail);
     }
 }

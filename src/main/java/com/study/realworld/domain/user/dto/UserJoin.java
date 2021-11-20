@@ -44,7 +44,7 @@ public final class UserJoin {
         }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PUBLIC)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -65,20 +65,20 @@ public final class UserJoin {
         @JsonProperty("token")
         private AccessToken accessToken;
 
-        public UserEmail userEmail() {
-            return userEmail;
-        }
-
-        public AccessToken accessToken() {
-            return accessToken;
-        }
-
         public static final Response fromUserWithToken(final User user, final AccessToken accessToken) {
             final UserName userName = user.userName();
             final UserEmail userEmail = user.userEmail();
             final UserBio userBio = user.userBio();
             final UserImage userImage = user.userImage();
             return new Response(userName, userEmail, userBio, userImage, accessToken);
+        }
+
+        public UserEmail userEmail() {
+            return userEmail;
+        }
+
+        public AccessToken accessToken() {
+            return accessToken;
         }
     }
 }

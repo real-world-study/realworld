@@ -73,5 +73,9 @@ public final class Login {
         public UserEmail userEmail() {
             return userEmail;
         }
+
+        public AccessToken accessToken() {
+            return accessToken;
+        }
     }
 }

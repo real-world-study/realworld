@@ -1,6 +1,8 @@
 package com.study.realworld.acceptance;
 
+import com.study.realworld.domain.auth.dto.Login;
 import com.study.realworld.domain.user.domain.vo.UserEmail;
+import com.study.realworld.domain.user.dto.UserInfo;
 import com.study.realworld.domain.user.dto.UserJoin;
 import com.study.realworld.domain.user.dto.UserUpdate;
 import com.study.realworld.domain.user.error.UserErrorResponse;
@@ -47,6 +49,24 @@ class UserAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 유저_정보_얻기_성공() {
+        final String userEmail = "kwj1270@gmail.com";
+        회원_가입_되어있음(userEmail);
+        final Login.Response loginResponse = 로그인_되어있음(userEmail);
+        final ExtractableResponse<Response> response = 유저_정보_요청(loginResponse.accessToken());
+        final UserInfo userInfo = response.as(UserInfo.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(userInfo.userEmail().value()).isEqualTo(userEmail),
+                () -> assertThat(userInfo.accessToken()).isNotNull(),
+                () -> assertThat(userInfo.userName()).isEqualTo(USER_NAME),
+                () -> assertThat(userInfo.userBio()).isNull(),
+                () -> assertThat(userInfo.userImage()).isNull()
+        );
+    }
+
+    @Test
     void 유저_정보_변경_성공() {
         final String userEmail = "kwj1270@gmail.com";
         final UserJoin.Response joinResponse = 회원_가입_되어있음(userEmail);
@@ -85,6 +105,15 @@ class UserAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = 유저_정보_삭제_요청(joinResponse.accessToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private ExtractableResponse<Response> 유저_정보_요청(final AccessToken accessToken) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .when()
+                .get("/api/user")
+                .then()
+                .extract();
     }
 
     private ExtractableResponse<Response> 유저_정보_삭제_요청(final AccessToken accessToken) {

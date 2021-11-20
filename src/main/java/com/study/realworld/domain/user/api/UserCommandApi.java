@@ -32,7 +32,7 @@ public class UserCommandApi {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<UserUpdate.Response> update(@Valid @AuthenticationPrincipal final Long userId,
+    public ResponseEntity<UserUpdate.Response> update(@AuthenticationPrincipal final Long userId,
                                                       @Valid @RequestBody final UserUpdate.Request request) {
         final User user = userCommandService.update(userId, request);
         final TokenProviderDto tokenProviderDto = TokenProviderDto.from(user);

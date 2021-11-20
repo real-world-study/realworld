@@ -51,7 +51,7 @@ public final class UserUpdate {
         }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PUBLIC)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -96,9 +96,6 @@ public final class UserUpdate {
             return userImage;
         }
 
-        public AccessToken accessToken() {
-            return accessToken;
-        }
     }
 }
 
