@@ -16,15 +16,15 @@ public class UserQueryService {
 
     private final UserRepository userRepository;
 
+    public User findById(final Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IdentityNotFoundException(userId));
+    }
+
     public User findByMemberEmail(final UserEmail userEmail) {
         return userRepository
                 .findByUserEmail(userEmail)
                 .orElseThrow(() -> new EmailNotFoundException(userEmail.value()));
-    }
-
-    public User findById(final Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IdentityNotFoundException(userId));
     }
 
     public Boolean existsByUserEmail(final UserEmail userEmail) {

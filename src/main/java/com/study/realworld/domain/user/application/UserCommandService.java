@@ -34,15 +34,15 @@ public class UserCommandService {
     }
 
     private void validateDuplicatedAndSameAsEmail(final Long userId, final UserEmail userEmail) {
-        final User me = userQueryService.findById(userId);
-        if (!me.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
+        final User user = userQueryService.findById(userId);
+        if (!user.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
             throw new DuplicatedEmailException(userEmail.value());
         }
     }
 
     public void delete(final Long userId) {
-        final User me = userQueryService.findById(userId);
-        me.delete();
+        final User user = userQueryService.findById(userId);
+        user.delete();
     }
 
     private void validateDuplicatedEmail(final UserEmail userEmail) {
