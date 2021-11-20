@@ -8,11 +8,11 @@ import com.study.realworld.domain.user.domain.vo.*;
 import com.study.realworld.global.common.AccessToken;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 public final class Login {
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -24,6 +24,12 @@ public final class Login {
         @JsonProperty("password")
         private UserPassword userPassword;
 
+        @Builder
+        public Request(final UserEmail userEmail, final UserPassword userPassword) {
+            this.userEmail = userEmail;
+            this.userPassword = userPassword;
+        }
+
         public final UserEmail userEmail() {
             return userEmail;
         }
@@ -31,6 +37,7 @@ public final class Login {
         public final UserPassword userPassword() {
             return userPassword;
         }
+
     }
 
 
@@ -61,6 +68,10 @@ public final class Login {
             final UserBio userBio = user.userBio();
             final UserImage userImage = user.userImage();
             return new Response(userName, userEmail, userBio, userImage, accessToken);
+        }
+
+        public UserEmail userEmail() {
+            return userEmail;
         }
     }
 }

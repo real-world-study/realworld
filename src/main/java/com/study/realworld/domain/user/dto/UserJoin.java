@@ -8,11 +8,11 @@ import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 public final class UserJoin {
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @JsonTypeName("user")
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -26,6 +26,13 @@ public final class UserJoin {
 
         @JsonProperty("password")
         private UserPassword userPassword;
+
+        @Builder
+        public Request(final UserName userName, final UserEmail userEmail, final UserPassword userPassword) {
+            this.userName = userName;
+            this.userEmail = userEmail;
+            this.userPassword = userPassword;
+        }
 
         public final User toEntity() {
             return User.builder()
@@ -56,6 +63,10 @@ public final class UserJoin {
 
         @JsonProperty("token")
         private AccessToken accessToken;
+
+        public UserEmail userEmail() {
+            return userEmail;
+        }
 
         public static final Response fromUserWithToken(final User user, final AccessToken accessToken) {
             final UserName userName = user.userName();

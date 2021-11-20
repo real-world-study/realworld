@@ -13,6 +13,12 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+    def QEntities = []
+
+    for (qPattern in '*.QA'..'*.QZ') {
+        QEntities.add(qPattern + '*')
+    }
+
     violationRules {
         rule {
             enabled = true
@@ -29,6 +35,9 @@ jacocoTestCoverageVerification {
                 'Q*.class'
             ]
 
+            excludes = [
+                    'com/study/realworld/domain/**',
+            ] + QEntities
         }
         rule {
             enabled = true;

@@ -16,7 +16,7 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long userId;
 
     @Embedded

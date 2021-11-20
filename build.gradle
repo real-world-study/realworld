@@ -1,7 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "org.asciidoctor.convert" version "1.5.9.2"
     id 'java'
     id 'jacoco'
 }
@@ -39,10 +38,6 @@ dependencies {
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:4.4.0'
-    testImplementation 'io.rest-assured:json-path:4.4.0'
-    testImplementation 'io.rest-assured:spring-mock-mvc:4.4.0'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
     // jwt
     compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
@@ -51,51 +46,9 @@ dependencies {
 }
 
 apply from: 'jacoco.gradle'
-
-// querydsl 적용
-def querydslDir = "$buildDir/generated/querydsl"
-sourceSets {
-    main.java.srcDir querydslDir
-}
-
-tasks.withType(JavaCompile) {
-    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
-}
-
-clean.doLast {
-    file(querydslDir).deleteDir()
-}
-
-ext {
-    set('snippetsDir', file("build/generated-snippets")) // 문서 저장위치
-}
+apply from: 'querydsl.gradle'
 
 test {
-    outputs.dir snippetsDir // 선언한 디렉토리에 생성
     useJUnitPlatform()
-}
-
-asciidoctor {
-    attributes 'snippets': snippetsDir // adoc 파일 생성시 올바르게 include하기 위함
-    inputs.dir snippetsDir
-    dependsOn test
-}
-
-bootJar {
-    dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/html5") { // gradle은 src/docs/asciidoc 에 메인 adoc생성!
-        into 'static/docs' // asciidoctor로 만든 문서는 static/docs 디렉토리로.!
-    }
-}
-
-task copyDocument(type: Copy) { // 생성된 docs 파일을 build시 static 아래에 docs로 복사!
-    dependsOn bootJar
-
-    from file("build/asciidoc/html5/")
-    into file("src/main/resources/static/docs")
-}
-
-build {
-    dependsOn copyDocument // build시 copy 실행
 }
 
