@@ -16,7 +16,7 @@ import java.util.Objects;
 public class UserName {
 
     @NotBlank(message = "Name must have not blank")
-    @Column(name = "user_name", length = 20, nullable = false)
+    @Column(name = "user_name", length = 20, nullable = false, unique = true)
     private String userName;
 
     public static UserName from(final String userName) {

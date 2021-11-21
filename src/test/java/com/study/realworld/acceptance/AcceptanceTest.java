@@ -2,6 +2,7 @@ package com.study.realworld.acceptance;
 
 import com.study.realworld.domain.auth.dto.Login;
 import com.study.realworld.domain.user.domain.vo.UserEmail;
+import com.study.realworld.domain.user.domain.vo.UserName;
 import com.study.realworld.domain.user.dto.UserJoin;
 import com.study.realworld.domain.user.error.UserErrorResponse;
 import com.study.realworld.util.DatabaseCleanup;
@@ -15,15 +16,16 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
-import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.USER_NAME;
 import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.USER_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class AcceptanceTest {
 
+    public static final int FIRST = 0;
     protected static final String AUTHORIZATION = "Authorization";
     protected static final String BEARER = "bearer ";
+    public static final String AT = "@";
 
     @LocalServerPort
     private int port;
@@ -62,9 +64,10 @@ class AcceptanceTest {
     }
 
     protected UserJoin.Request 정상적인_회원가입_정보(final String email) {
+        final String userName = email.split(AT)[FIRST];
         return UserJoin.Request.builder()
                 .userEmail(UserEmail.from(email))
-                .userName(USER_NAME)
+                .userName(UserName.from(userName))
                 .userPassword(USER_PASSWORD)
                 .build();
     }

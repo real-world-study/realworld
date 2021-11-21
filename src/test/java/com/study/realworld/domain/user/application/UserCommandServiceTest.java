@@ -71,9 +71,9 @@ class UserCommandServiceTest {
         final User updatedUser = userCommandService.update(user.userId(), request);
 
         assertAll(
-                () -> assertThat(updatedUser.userEmail()).isEqualTo(CHANGED_USER_EMAIL),
-                () -> assertThat(updatedUser.userBio()).isEqualTo(CHANGED_USER_BIO),
-                () -> assertThat(updatedUser.userImage()).isEqualTo(CHANGED_USER_IMAGE)
+                () -> assertThat(updatedUser.userEmail()).isEqualTo(OTHER_USER_EMAIL),
+                () -> assertThat(updatedUser.userBio()).isEqualTo(OTHER_USER_BIO),
+                () -> assertThat(updatedUser.userImage()).isEqualTo(OTHER_USER_IMAGE)
         );
     }
 
@@ -89,9 +89,9 @@ class UserCommandServiceTest {
 
     public static UserUpdate.Request testUserUpdateRequest() {
         return UserUpdate.Request.builder()
-                .userEmail(CHANGED_USER_EMAIL)
-                .userBio(CHANGED_USER_BIO)
-                .userImage(CHANGED_USER_IMAGE)
+                .userEmail(OTHER_USER_EMAIL)
+                .userBio(OTHER_USER_BIO)
+                .userImage(OTHER_USER_IMAGE)
                 .build();
     }
 }

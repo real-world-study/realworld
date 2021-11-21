@@ -75,9 +75,9 @@ class UserAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(userUpdateResponse.userEmail()).isEqualTo(CHANGED_USER_EMAIL),
-                () -> assertThat(userUpdateResponse.userBio()).isEqualTo(CHANGED_USER_BIO),
-                () -> assertThat(userUpdateResponse.userImage()).isEqualTo(CHANGED_USER_IMAGE)
+                () -> assertThat(userUpdateResponse.userEmail()).isEqualTo(OTHER_USER_EMAIL),
+                () -> assertThat(userUpdateResponse.userBio()).isEqualTo(OTHER_USER_BIO),
+                () -> assertThat(userUpdateResponse.userImage()).isEqualTo(OTHER_USER_IMAGE)
         );
     }
 
@@ -152,17 +152,17 @@ class UserAcceptanceTest extends AcceptanceTest {
 
     protected UserUpdate.Request 정상적인_회원_변경_정보() {
         return UserUpdate.Request.builder()
-                .userEmail(CHANGED_USER_EMAIL)
-                .userBio(CHANGED_USER_BIO)
-                .userImage(CHANGED_USER_IMAGE)
+                .userEmail(OTHER_USER_EMAIL)
+                .userBio(OTHER_USER_BIO)
+                .userImage(OTHER_USER_IMAGE)
                 .build();
     }
 
     protected UserUpdate.Request 비정상적인_회원_변경_정보(final String userEmail) {
         return UserUpdate.Request.builder()
                 .userEmail(UserEmail.from(userEmail))
-                .userBio(CHANGED_USER_BIO)
-                .userImage(CHANGED_USER_IMAGE)
+                .userBio(OTHER_USER_BIO)
+                .userImage(OTHER_USER_IMAGE)
                 .build();
     }
 }

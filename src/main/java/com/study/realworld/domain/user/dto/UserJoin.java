@@ -77,6 +77,18 @@ public final class UserJoin {
             return userEmail;
         }
 
+        public UserName userName() {
+            return userName;
+        }
+
+        public UserBio userBio() {
+            return userBio;
+        }
+
+        public UserImage userImage() {
+            return userImage;
+        }
+
         public AccessToken accessToken() {
             return accessToken;
         }

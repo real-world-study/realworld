@@ -10,9 +10,11 @@ public class UserVOFixture {
     public static final UserBio USER_BIO = UserBio.from("userBio");
     public static final UserImage USER_IMAGE = UserImage.from("userImage");
 
-    public static final UserEmail CHANGED_USER_EMAIL = UserEmail.from("changeEmail@email.com");
-    public static final UserBio CHANGED_USER_BIO = UserBio.from("changedUserBio");
-    public static final UserImage CHANGED_USER_IMAGE = UserImage.from("changedUserImage");
+    public static final UserEmail OTHER_USER_EMAIL = UserEmail.from("otherEmail@email.com");
+    public static final UserName OTHER_USER_NAME = UserName.from("otherUserName");
+    public static final UserPassword OTHER_USER_PASSWORD = UserPassword.encode("otherUserPassword", TestPasswordEncoder.initialize());
+    public static final UserBio OTHER_USER_BIO = UserBio.from("otherUserBio");
+    public static final UserImage OTHER_USER_IMAGE = UserImage.from("otherUserImage");
 
     public static final UserEmail INVALID_USER_EMAIL = UserEmail.from("invalidEmail@email.com");
 }

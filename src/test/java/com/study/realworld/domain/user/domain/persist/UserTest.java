@@ -93,11 +93,11 @@ public class UserTest {
     public static User testUser(final UserEmail userEmail, final UserName userName,
                          final UserPassword userPassword, final UserBio userBio, final UserImage userImage) {
         return User.builder()
-                .userEmail(USER_EMAIL)
-                .userName(USER_NAME)
-                .userPassword(USER_PASSWORD)
-                .userBio(USER_BIO)
-                .userImage(USER_IMAGE)
+                .userEmail(userEmail)
+                .userName(userName)
+                .userPassword(userPassword)
+                .userBio(userBio)
+                .userImage(userImage)
                 .build();
     }
 
