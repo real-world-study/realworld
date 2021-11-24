@@ -33,7 +33,7 @@ public class FollowCommandService {
     public UnFollowResponse unfollow(final Long suerId, final UserName userName) {
         final User followee = userQueryService.findByUserName(userName);
         final User follower = userQueryService.findById(suerId);
-        if (followQueryService.existsByFolloweeAndFollower(followee, follower)) {
+        if (!followQueryService.existsByFolloweeAndFollower(followee, follower)) {
             return UnFollowResponse.from(followee);
         }
         final Follow follow = followQueryService.findByFolloweeAndFollower(followee, follower);

@@ -25,7 +25,7 @@ public class FollowCommandApi {
         return ResponseEntity.ok().body(followResponse);
     }
 
-    @DeleteMapping("/profiles2/{username}/follow")
+    @DeleteMapping("/profiles/{username}/follow")
     public ResponseEntity<UnFollowResponse> profile(@AuthenticationPrincipal final Long userId,
                                                     @PathVariable final String username) {
         final UnFollowResponse unfollowResponse = followCommandService.unfollow(userId, UserName.from(username));

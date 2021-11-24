@@ -2,7 +2,9 @@ package com.study.realworld.acceptance;
 
 
 import com.study.realworld.domain.auth.dto.Login;
+import com.study.realworld.domain.follow.dto.FollowResponse;
 import com.study.realworld.domain.follow.dto.ProfileResponse;
+import com.study.realworld.domain.follow.dto.UnFollowResponse;
 import com.study.realworld.domain.user.dto.UserJoin;
 import com.study.realworld.global.common.AccessToken;
 import io.restassured.RestAssured;
@@ -51,11 +53,65 @@ class FollowAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @Test
+    void 특정_사람을_팔로우한다() {
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().value());
+        final ExtractableResponse<Response> response = 팔로우_요청(
+                loginResponse.accessToken(),
+                user2.userName().value());
+
+        final FollowResponse followResponse = response.as(FollowResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(followResponse.userName()).isEqualTo(user2.userName()),
+                () -> assertThat(followResponse.userBio()).isEqualTo(user2.userBio()),
+                () -> assertThat(followResponse.userImage()).isEqualTo(user2.userImage()),
+                () -> assertThat(followResponse.isFollowing()).isTrue()
+        );
+    }
+
+    @Test
+    void 특정_사람을_언팔로우한다() {
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().value());
+        final ExtractableResponse<Response> response = 언팔로우_요청(
+                loginResponse.accessToken(),
+                user2.userName().value());
+
+        final UnFollowResponse unFollowResponse = response.as(UnFollowResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(unFollowResponse.userName()).isEqualTo(user2.userName()),
+                () -> assertThat(unFollowResponse.userBio()).isEqualTo(user2.userBio()),
+                () -> assertThat(unFollowResponse.userImage()).isEqualTo(user2.userImage()),
+                () -> assertThat(unFollowResponse.isFollowing()).isFalse()
+        );
+    }
+
     protected ExtractableResponse<Response> 프로필_조회_요청(final AccessToken accessToken, final String userName) {
         return RestAssured.given()
                 .header(AUTHORIZATION, BEARER + accessToken.accessToken())
                 .when()
                 .get(String.format("/api/profiles/%s", userName))
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 팔로우_요청(final AccessToken accessToken, final String userName) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .when()
+                .post(String.format("/api/profiles/%s/follow", userName))
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 언팔로우_요청(final AccessToken accessToken, final String userName) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .when()
+                .delete(String.format("/api/profiles/%s/follow", userName))
                 .then()
                 .extract();
     }

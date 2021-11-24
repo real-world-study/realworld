@@ -93,5 +93,4 @@ class AcceptanceTest {
     protected UserErrorResponse 유저_예외_결과(final ExtractableResponse<Response> response) {
         return response.as(UserErrorResponse.class);
     }
-
 }

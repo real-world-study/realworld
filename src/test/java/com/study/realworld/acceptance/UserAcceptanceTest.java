@@ -108,7 +108,7 @@ class UserAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
-    private ExtractableResponse<Response> 유저_정보_요청(final AccessToken accessToken) {
+    protected ExtractableResponse<Response> 유저_정보_요청(final AccessToken accessToken) {
         return RestAssured.given()
                 .header(AUTHORIZATION, BEARER + accessToken.accessToken())
                 .when()
@@ -117,7 +117,7 @@ class UserAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 유저_정보_삭제_요청(final AccessToken accessToken) {
+    protected ExtractableResponse<Response> 유저_정보_삭제_요청(final AccessToken accessToken) {
         return RestAssured.given()
                 .header(AUTHORIZATION, BEARER + accessToken.accessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -127,7 +127,7 @@ class UserAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 유저_정보_변경_요청(final AccessToken accessToken) {
+    protected ExtractableResponse<Response> 유저_정보_변경_요청(final AccessToken accessToken) {
         final UserUpdate.Request request = 정상적인_회원_변경_정보();
         return RestAssured.given()
                 .header(AUTHORIZATION, BEARER + accessToken.accessToken())
@@ -139,7 +139,7 @@ class UserAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ExtractableResponse<Response> 비정상적인_유저_정보_변경_요청(final String userEmail, final AccessToken accessToken) {
+    protected ExtractableResponse<Response> 비정상적인_유저_정보_변경_요청(final String userEmail, final AccessToken accessToken) {
         final UserUpdate.Request request = 비정상적인_회원_변경_정보(userEmail);
         return RestAssured.given()
                 .header(AUTHORIZATION, BEARER + accessToken.accessToken())

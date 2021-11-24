@@ -17,14 +17,14 @@ public class FollowQueryApi {
     private final FollowQueryService followQueryService;
 
     @GetMapping("/profiles/{username}")
-    public ResponseEntity<ProfileResponse> profile2(@AuthenticationPrincipal final Long userId,
+    public ResponseEntity<ProfileResponse> profile(@AuthenticationPrincipal final Long userId,
                                                     @PathVariable final String username) {
         final ProfileResponse profile = followQueryService.profile(userId, UserName.from(username));
         return ResponseEntity.ok().body(profile);
     }
 
     @GetMapping("/profiles2/{username}")
-    public ResponseEntity<ProfileResponse> profile(@AuthenticationPrincipal final Long userId,
+    public ResponseEntity<ProfileResponse> profile2(@AuthenticationPrincipal final Long userId,
                                                    @PathVariable final String username) {
         final ProfileResponse profile = followQueryService.profile2(userId, UserName.from(username));
         return ResponseEntity.ok().body(profile);

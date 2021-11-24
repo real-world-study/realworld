@@ -3,6 +3,7 @@ package com.study.realworld.domain.follow.domain;
 import com.study.realworld.domain.user.domain.persist.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
 import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.*;
@@ -29,8 +30,10 @@ class FollowTest {
         final User follower = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final User followee = testUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
         final Follow follow = testFollower(followee, follower);
+        ReflectionTestUtils.setField(follow, "id", 1L);
 
         assertAll(
+                () -> assertThat(follow.id()).isEqualTo(1L),
                 () -> assertThat(follow.followee()).isEqualTo(followee),
                 () -> assertThat(follow.follower()).isEqualTo(follower)
         );
