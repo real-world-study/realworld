@@ -19,12 +19,12 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void 로그인_성공() {
         final String expected = "kwj1270@gmail.com";
         final UserJoin.Response userJoinResponse = 회원_가입_되어있음(expected);
-        final ExtractableResponse<Response> response = 로그인_요청(userJoinResponse.userEmail().value());
+        final ExtractableResponse<Response> response = 로그인_요청(userJoinResponse.userEmail().userEmail());
         final Login.Response loginResponse = response.as(Login.Response.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(loginResponse.userEmail().value()).isEqualTo(expected)
+                () -> assertThat(loginResponse.userEmail().userEmail()).isEqualTo(expected)
         );
     }
 

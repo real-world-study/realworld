@@ -26,7 +26,7 @@ public class UserEmail {
     }
 
     @JsonValue
-    public String value() {
+    public String userEmail() {
         return userEmail;
     }
 
@@ -35,12 +35,12 @@ public class UserEmail {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEmail userEmail1 = (UserEmail) o;
-        return Objects.equals(value(), userEmail1.value());
+        return Objects.equals(userEmail(), userEmail1.userEmail());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value());
+        return Objects.hash(userEmail());
     }
 
 }

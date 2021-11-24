@@ -38,10 +38,10 @@ class FollowAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 특정_사람의_프로필을_조회한다() {
-        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().value());
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
         final ExtractableResponse<Response> response = 프로필_조회_요청(
                 loginResponse.accessToken(),
-                user2.userName().value());
+                user2.userName().userName());
         final ProfileResponse profileResponse = response.as(ProfileResponse.class);
 
         assertAll(
@@ -55,10 +55,10 @@ class FollowAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 특정_사람을_팔로우한다() {
-        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().value());
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
         final ExtractableResponse<Response> response = 팔로우_요청(
                 loginResponse.accessToken(),
-                user2.userName().value());
+                user2.userName().userName());
 
         final FollowResponse followResponse = response.as(FollowResponse.class);
 
@@ -73,10 +73,10 @@ class FollowAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 특정_사람을_언팔로우한다() {
-        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().value());
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
         final ExtractableResponse<Response> response = 언팔로우_요청(
                 loginResponse.accessToken(),
-                user2.userName().value());
+                user2.userName().userName());
 
         final UnFollowResponse unFollowResponse = response.as(UnFollowResponse.class);
 

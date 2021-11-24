@@ -22,7 +22,7 @@ public class UserBio {
     }
 
     @JsonValue
-    public String value() {
+    public String userBio() {
         return userBio;
     }
 
@@ -31,11 +31,11 @@ public class UserBio {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserBio userBio1 = (UserBio) o;
-        return Objects.equals(value(), userBio1.value());
+        return Objects.equals(userBio(), userBio1.userBio());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value());
+        return Objects.hash(userBio());
     }
 }

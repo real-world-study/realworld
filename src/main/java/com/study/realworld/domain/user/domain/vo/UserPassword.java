@@ -39,7 +39,7 @@ public class UserPassword {
     }
 
     @JsonValue
-    public String value() {
+    public String userPassword() {
         return userPassword;
     }
 

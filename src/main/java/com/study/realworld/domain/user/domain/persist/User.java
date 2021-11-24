@@ -50,7 +50,7 @@ public class User extends BaseTimeEntity {
     }
 
     public User encode(final PasswordEncoder passwordEncoder) {
-        userPassword = UserPassword.encode(userPassword.value(), passwordEncoder);
+        userPassword = UserPassword.encode(userPassword.userPassword(), passwordEncoder);
         return this;
     }
 

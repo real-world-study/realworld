@@ -31,7 +31,7 @@ class UserAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(userJoinResponse.userEmail().value()).isEqualTo(userEmail)
+                () -> assertThat(userJoinResponse.userEmail().userEmail()).isEqualTo(userEmail)
         );
     }
 
@@ -59,7 +59,7 @@ class UserAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(userInfo.userEmail().value()).isEqualTo(userEmail),
+                () -> assertThat(userInfo.userEmail().userEmail()).isEqualTo(userEmail),
                 () -> assertThat(userInfo.accessToken()).isNotNull(),
                 () -> assertThat(userInfo.userName()).isEqualTo(UserName.from(userEmail.split("@")[0])),
                 () -> assertThat(userInfo.userBio()).isNull(),

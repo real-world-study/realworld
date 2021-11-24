@@ -83,6 +83,6 @@ class UserQueryServiceTest {
 
         assertThatThrownBy(() -> userQueryService.findByMemberEmail(INVALID_USER_EMAIL))
                 .isExactlyInstanceOf(EmailNotFoundException.class)
-                .hasMessage(String.format("이메일 : [ %s ] 를 찾을 수 없습니다.", INVALID_USER_EMAIL.value()));
+                .hasMessage(String.format("이메일 : [ %s ] 를 찾을 수 없습니다.", INVALID_USER_EMAIL.userEmail()));
     }
 }

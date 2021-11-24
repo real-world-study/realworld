@@ -67,7 +67,7 @@ class UserNameTest {
     void 값을_반환할_수_있다(final String userNameString) {
         final UserName userName = UserName.from(userNameString);
 
-        assertThat(userName.value()).isEqualTo(userNameString);
+        assertThat(userName.userName()).isEqualTo(userNameString);
     }
 
     @ParameterizedTest(name = "입력값 : {0}")

@@ -37,7 +37,7 @@ public class UserTest {
 
         assertAll(
                 () -> assertThat(user.userPassword()).isNotEqualTo(USER_PASSWORD),
-                () -> assertThat(passwordEncoder.matches(USER_PASSWORD.value(), user.userPassword().value())).isTrue()
+                () -> assertThat(passwordEncoder.matches(USER_PASSWORD.userPassword(), user.userPassword().userPassword())).isTrue()
         );
     }
 
@@ -79,6 +79,10 @@ public class UserTest {
                 () -> assertThat(user.userBio()).isEqualTo(USER_BIO),
                 () -> assertThat(user.userImage()).isEqualTo(USER_IMAGE)
         );
+    }
+
+    public static User tesDefaultUser() {
+        return testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
     }
 
     public static User testUser(final String userEmail, final String userName,

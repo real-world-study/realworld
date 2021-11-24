@@ -67,7 +67,7 @@ class UserEmailTest {
     void 값을_반환할_수_있다(final String userEmailString) {
         final UserEmail userEmail = UserEmail.from(userEmailString);
 
-        assertThat(userEmail.value()).isEqualTo(userEmailString);
+        assertThat(userEmail.userEmail()).isEqualTo(userEmailString);
     }
 
     @ParameterizedTest(name = "입력값 : {0}")

@@ -1,4 +1,4 @@
-package com.study.realworld.domain.user.domain.vo;
+package com.study.realworld.domain.article.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AccessLevel;
@@ -7,36 +7,37 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
-public class UserImage {
+public class ArticleTitle {
 
-    @Column(name = "user_image")
-    private String userImage;
-
-    public static UserImage from(final String userImage) {
-        return new UserImage(userImage);
-    }
+    @NotBlank(message = "")
+    @Column(name = "article_title")
+    private String articleTitle;
 
     @JsonValue
-    public String userImage() {
-        return userImage;
+    public String articleTitle() {
+        return articleTitle;
+    }
+
+    public static ArticleTitle from(final String articleTitle) {
+        return new ArticleTitle(articleTitle);
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final UserImage userImage = (UserImage) o;
-        return Objects.equals(userImage(), userImage.userImage());
+        final ArticleTitle that = (ArticleTitle) o;
+        return Objects.equals(articleTitle(), that.articleTitle());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userImage());
+        return Objects.hash(articleTitle());
     }
-
 }

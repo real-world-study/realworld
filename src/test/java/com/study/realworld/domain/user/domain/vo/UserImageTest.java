@@ -26,7 +26,7 @@ class UserImageTest {
     void 값을_반환할_수_있다(final String userImageString) {
         final UserImage userImage = UserImage.from(userImageString);
 
-        assertThat(userImage.value()).isEqualTo(userImageString);
+        assertThat(userImage.userImage()).isEqualTo(userImageString);
     }
 
     @ParameterizedTest(name = "입력값 : {0}")

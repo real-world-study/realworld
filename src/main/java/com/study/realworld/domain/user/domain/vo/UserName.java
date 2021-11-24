@@ -24,7 +24,7 @@ public class UserName {
     }
 
     @JsonValue
-    public String value() {
+    public String userName() {
         return userName;
     }
 
@@ -33,11 +33,11 @@ public class UserName {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserName userName1 = (UserName) o;
-        return Objects.equals(value(), userName1.value());
+        return Objects.equals(userName(), userName1.userName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value());
+        return Objects.hash(userName());
     }
 }

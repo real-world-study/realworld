@@ -26,7 +26,7 @@ class UserBioTest {
     void 값을_반환할_수_있다(final String userBioString) {
         final UserBio userBio = UserBio.from(userBioString);
 
-        assertThat(userBio.value()).isEqualTo(userBioString);
+        assertThat(userBio.userBio()).isEqualTo(userBioString);
     }
 
     @ParameterizedTest(name = "입력값 : {0}")

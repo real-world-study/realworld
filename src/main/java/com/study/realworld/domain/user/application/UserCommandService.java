@@ -36,7 +36,7 @@ public class UserCommandService {
     private void validateDuplicatedAndSameAsEmail(final Long userId, final UserEmail userEmail) {
         final User user = userQueryService.findById(userId);
         if (!user.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
-            throw new DuplicatedEmailException(userEmail.value());
+            throw new DuplicatedEmailException(userEmail.userEmail());
         }
     }
 
@@ -47,7 +47,7 @@ public class UserCommandService {
 
     private void validateDuplicatedEmail(final UserEmail userEmail) {
         if (userQueryService.existsByUserEmail(userEmail)) {
-            throw new DuplicatedEmailException(userEmail.value());
+            throw new DuplicatedEmailException(userEmail.userEmail());
         }
     }
 }

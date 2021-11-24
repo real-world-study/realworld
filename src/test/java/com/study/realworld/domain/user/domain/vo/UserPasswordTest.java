@@ -74,7 +74,7 @@ class UserPasswordTest {
         final PasswordEncoder passwordEncoder = TestPasswordEncoder.initialize();
         final UserPassword userPassword = UserPassword.encode(userPasswordString, passwordEncoder);
 
-        assertThat(passwordEncoder.matches(userPasswordString, userPassword.value())).isTrue();
+        assertThat(passwordEncoder.matches(userPasswordString, userPassword.userPassword())).isTrue();
     }
 }
 

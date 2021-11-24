@@ -25,7 +25,7 @@ public class UserQueryService {
     public User findByMemberEmail(final UserEmail userEmail) {
         return userRepository
                 .findByUserEmail(userEmail)
-                .orElseThrow(() -> new EmailNotFoundException(userEmail.value()));
+                .orElseThrow(() -> new EmailNotFoundException(userEmail.userEmail()));
     }
 
     public User findByUserName(final UserName userName) {

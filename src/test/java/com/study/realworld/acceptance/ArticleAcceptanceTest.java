@@ -36,7 +36,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 게시글을_등록한다() {
-        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().value());
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
         final ExtractableResponse<Response> response = 정상적인_게시글_등록_요청(loginResponse.accessToken());
         final ArticleSave.Response articleResponse = response.as(ArticleSave.Response.class);
 

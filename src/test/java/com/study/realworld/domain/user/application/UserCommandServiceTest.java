@@ -58,7 +58,7 @@ class UserCommandServiceTest {
 
         assertThatThrownBy(() -> userCommandService.join(user))
                 .isExactlyInstanceOf(DuplicatedEmailException.class)
-                .hasMessage(String.format("이메일 : [ %s ] 가 이미 존재합니다.", user.userEmail().value()));
+                .hasMessage(String.format("이메일 : [ %s ] 가 이미 존재합니다.", user.userEmail().userEmail()));
     }
 
     @Test
