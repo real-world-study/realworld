@@ -73,6 +73,11 @@ public class Article extends BaseTimeEntity {
         return author;
     }
 
+    public Article changeAuthor(final User user) {
+        this.author = author;
+        return this;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

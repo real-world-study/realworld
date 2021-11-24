@@ -1,6 +1,7 @@
 package com.study.realworld.domain.article.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.study.realworld.domain.article.domain.persist.Article;
 import lombok.Builder;
 
 import java.util.List;
@@ -29,9 +30,18 @@ public class ArticleSave {
             this.body = body;
             this.tags = tags;
         }
+
+        public Article toEntity() {
+            return null;
+        }
     }
 
     public static class Response {
+
+        public static Response from(final Article article) {
+            return new Response();
+        }
+
         public String slug() {
             return "how-to-train-your-dragon";
         }

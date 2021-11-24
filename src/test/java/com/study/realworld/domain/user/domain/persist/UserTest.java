@@ -81,7 +81,7 @@ public class UserTest {
         );
     }
 
-    public static User tesDefaultUser() {
+    public static User testDefaultUser() {
         return testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
     }
 

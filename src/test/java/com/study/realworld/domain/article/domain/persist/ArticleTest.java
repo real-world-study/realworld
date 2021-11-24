@@ -7,12 +7,12 @@ import com.study.realworld.domain.article.domain.vo.ArticleTitle;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.study.realworld.domain.user.domain.persist.UserTest.tesDefaultUser;
+import static com.study.realworld.domain.user.domain.persist.UserTest.testDefaultUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("게시글(Article)")
-class ArticleTest {
+public class ArticleTest {
 
     @Test
     void 게시글_관련_요소를_통해_객체_생성이_가능하다() {
@@ -30,7 +30,7 @@ class ArticleTest {
                 .articleTitle(ArticleTitle.from("how to train your dragon"))
                 .articleDescription(ArticleDescription.from("Ever wonder how?"))
                 .articleBody(ArticleBody.from("It takes a Jacobian"))
-                .author(tesDefaultUser())
+                .author(testDefaultUser())
                 .build();
     }
 }
