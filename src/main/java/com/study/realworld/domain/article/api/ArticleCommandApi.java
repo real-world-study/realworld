@@ -1,7 +1,6 @@
 package com.study.realworld.domain.article.api;
 
 import com.study.realworld.domain.article.application.ArticleCommandService;
-import com.study.realworld.domain.article.domain.persist.Article;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,7 @@ public class ArticleCommandApi {
     @PostMapping("/articles")
     public ResponseEntity<?> save(@AuthenticationPrincipal final Long userId,
                                   @Valid @RequestBody ArticleSave.Request request) {
-        final Article article = articleCommandService.save(userId, request.toEntity());
-        ArticleSave.Response response = ArticleSave.Response.from(article);
+        final ArticleSave.Response response = articleCommandService.save(userId, request.toEntity());
         return ResponseEntity.ok().body(response);
     }
 }

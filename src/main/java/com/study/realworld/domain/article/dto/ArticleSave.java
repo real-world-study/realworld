@@ -2,8 +2,20 @@ package com.study.realworld.domain.article.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.study.realworld.domain.article.domain.persist.Article;
+import com.study.realworld.domain.article.domain.vo.ArticleBody;
+import com.study.realworld.domain.article.domain.vo.ArticleDescription;
+import com.study.realworld.domain.article.domain.vo.ArticleSlug;
+import com.study.realworld.domain.article.domain.vo.ArticleTitle;
+import com.study.realworld.domain.user.domain.persist.User;
+import com.study.realworld.domain.user.domain.vo.UserBio;
+import com.study.realworld.domain.user.domain.vo.UserImage;
+import com.study.realworld.domain.user.domain.vo.UserName;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ArticleSave {
@@ -36,50 +48,123 @@ public class ArticleSave {
         }
     }
 
+    @AllArgsConstructor(access = AccessLevel.PUBLIC)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Response {
 
+        @JsonProperty("slug")
+        private ArticleSlug articleSlug;
+
+        @JsonProperty("title")
+        private ArticleTitle articleTitle;
+
+        @JsonProperty("description")
+        private ArticleDescription articleDescription;
+
+        @JsonProperty("body")
+        private ArticleBody articleBody;
+
+        @JsonProperty("createdAt")
+        private LocalDateTime createdAt;
+
+        @JsonProperty("updatedAt")
+        private LocalDateTime updatedAt;
+
+        @JsonProperty("tagList")
+        private List<String> tags;
+
+        @JsonProperty("favorited")
+        private boolean favorited;
+
+        @JsonProperty("favoritesCount")
+        private int favoritesCount = 0;
+
+        @JsonProperty("author")
+        private AuthorDto authorDto;
+
         public static Response from(final Article article) {
-            return new Response();
+            final ArticleSlug articleSlug = article.articleSlug();
+            final ArticleTitle articleTitle = article.articleTitle();
+            final ArticleDescription articleDescription = article.articleDescription();
+            final ArticleBody articleBody = article.articleBody();
+            final LocalDateTime createdAt = article.createdAt();
+            final LocalDateTime updatedAt = article.updatedAt();
+            final AuthorDto authorDto = AuthorDto.from(article.author());
+
+            return new Response(
+                    articleSlug, articleTitle, articleDescription, articleBody,
+                    createdAt, updatedAt, List.of("dragons", "training"),
+                    false, 0, authorDto
+            );
         }
 
-        public String slug() {
-            return "how-to-train-your-dragon";
+        public ArticleSlug slug() {
+            return articleSlug;
         }
 
-        public String title() {
-            return "how to train your dragon";
+        public ArticleTitle title() {
+            return articleTitle;
         }
 
-        public String description() {
-            return "Ever wonder how?";
+        public ArticleDescription description() {
+            return articleDescription;
         }
 
-        public String body() {
-            return "It takes a Jacobian";
+        public ArticleBody body() {
+            return articleBody;
         }
 
         public List<String> tags() {
-            return List.of("dragons", "training");
+            return tags;
         }
 
-        public String createdAt() {
-            return "2016-02-18T03:22:56.637Z";
+        public LocalDateTime createdAt() {
+            return createdAt;
         }
 
-        public String updatedAt() {
-            return "2016-02-18T03:48:35.824Z";
+        public LocalDateTime updatedAt() {
+            return updatedAt;
         }
 
         public boolean favorited() {
-            return false;
+            return favorited;
         }
 
         public int favoritesCount() {
-            return 0;
+            return favoritesCount;
         }
 
-        public AuthDto author() {
-            return new AuthDto();
+        public AuthorDto author() {
+            return authorDto;
+        }
+
+        @AllArgsConstructor(access = AccessLevel.PUBLIC)
+        @NoArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class AuthorDto {
+            private UserName userName;
+            private UserBio userBio;
+            private UserImage userImage;
+            private boolean following;
+
+            public static AuthorDto from(final User author) {
+                return new AuthorDto(author.userName(), author.userBio(), author.userImage(), false);
+            }
+
+            public UserName userName() {
+                return userName;
+            }
+
+            public UserBio userBio() {
+                return userBio;
+            }
+
+            public UserImage userImage() {
+                return userImage;
+            }
+
+            public boolean following() {
+                return following;
+            }
         }
     }
 }
