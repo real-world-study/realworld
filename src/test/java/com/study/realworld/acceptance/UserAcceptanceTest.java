@@ -2,6 +2,7 @@ package com.study.realworld.acceptance;
 
 import com.study.realworld.domain.auth.dto.Login;
 import com.study.realworld.domain.user.domain.vo.UserEmail;
+import com.study.realworld.domain.user.domain.vo.UserName;
 import com.study.realworld.domain.user.dto.UserInfo;
 import com.study.realworld.domain.user.dto.UserJoin;
 import com.study.realworld.domain.user.dto.UserUpdate;
@@ -60,7 +61,7 @@ class UserAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(userInfo.userEmail().value()).isEqualTo(userEmail),
                 () -> assertThat(userInfo.accessToken()).isNotNull(),
-                () -> assertThat(userInfo.userName()).isEqualTo(USER_NAME),
+                () -> assertThat(userInfo.userName()).isEqualTo(UserName.from(userEmail.split("@")[0])),
                 () -> assertThat(userInfo.userBio()).isNull(),
                 () -> assertThat(userInfo.userImage()).isNull()
         );

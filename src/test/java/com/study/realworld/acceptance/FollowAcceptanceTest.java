@@ -37,7 +37,9 @@ class FollowAcceptanceTest extends AcceptanceTest {
     @Test
     void 특정_사람의_프로필을_조회한다() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().value());
-        final ExtractableResponse<Response> response = 프로필_조회_요청(loginResponse.accessToken(), user2.userName().value());
+        final ExtractableResponse<Response> response = 프로필_조회_요청(
+                loginResponse.accessToken(),
+                user2.userName().value());
         final ProfileResponse profileResponse = response.as(ProfileResponse.class);
 
         assertAll(

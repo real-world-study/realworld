@@ -30,7 +30,7 @@ public class UnFollowResponse {
     private Boolean followable;
 
     public static UnFollowResponse from(final User user) {
-        return of(user, true);
+        return of(user, false);
     }
 
     private static UnFollowResponse of(final User user, final boolean followable) {

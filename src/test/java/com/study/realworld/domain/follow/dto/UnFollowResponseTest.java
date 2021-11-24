@@ -19,7 +19,7 @@ class UnFollowResponseTest {
 
         assertAll(
                 () -> assertThat(unFollowResponse).isNotNull(),
-                () -> assertThat(unFollowResponse).isExactlyInstanceOf(FollowResponse.class)
+                () -> assertThat(unFollowResponse).isExactlyInstanceOf(UnFollowResponse.class)
         );
     }
 

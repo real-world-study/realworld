@@ -21,7 +21,7 @@ class ProfileResponseTest {
 
         assertAll(
                 () -> assertThat(profileResponse).isNotNull(),
-                () -> assertThat(profileResponse).isExactlyInstanceOf(FollowResponse.class)
+                () -> assertThat(profileResponse).isExactlyInstanceOf(ProfileResponse.class)
         );
     }
 
