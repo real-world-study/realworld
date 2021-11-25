@@ -51,15 +51,15 @@ class ArticleCommandServiceTest {
 
         final ArticleSave.Response response = articleCommandService.save(1L, article);
         assertAll(
-                () -> assertThat(response.slug()).isEqualTo(article.articleSlug()),
-                () -> assertThat(response.title()).isEqualTo(article.articleTitle()),
-                () -> assertThat(response.body()).isEqualTo(article.articleBody()),
-                () -> assertThat(response.description()).isEqualTo(article.articleDescription()),
+                () -> assertThat(response.articleSlug()).isEqualTo(article.articleSlug()),
+                () -> assertThat(response.articleTitle()).isEqualTo(article.articleTitle()),
+                () -> assertThat(response.articleBody()).isEqualTo(article.articleBody()),
+                () -> assertThat(response.articleDescription()).isEqualTo(article.articleDescription()),
                 () -> assertThat(response.createdAt()).isNotNull(),
                 () -> assertThat(response.updatedAt()).isNotNull(),
                 () -> assertThat(response.favorited()).isFalse(),
                 () -> assertThat(response.favoritesCount()).isZero(),
-                () -> assertThat(response.tags()).isEqualTo(List.of("dragons", "training")),
+                () -> assertThat(response.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
                 () -> assertThat(response.author().userName()).isEqualTo(user.userName()),
                 () -> assertThat(response.author().userBio()).isEqualTo(user.userBio()),
                 () -> assertThat(response.author().userImage()).isEqualTo(user.userImage()),

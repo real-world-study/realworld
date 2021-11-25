@@ -1,7 +1,9 @@
 package com.study.realworld.domain.article.api;
 
 import com.study.realworld.domain.article.application.ArticleCommandService;
+import com.study.realworld.domain.article.domain.persist.Article;
 import com.study.realworld.domain.article.dto.ArticleSave;
+import com.study.realworld.domain.article.strategy.SlugStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,11 +18,13 @@ import javax.validation.Valid;
 public class ArticleCommandApi {
 
     private final ArticleCommandService articleCommandService;
+    private final SlugStrategy slugStrategy;
 
     @PostMapping("/articles")
-    public ResponseEntity<?> save(@AuthenticationPrincipal final Long userId,
-                                  @Valid @RequestBody ArticleSave.Request request) {
-        final ArticleSave.Response response = articleCommandService.save(userId, request.toEntity());
+    public ResponseEntity<ArticleSave.Response> save(@AuthenticationPrincipal final Long userId,
+                                                     @Valid @RequestBody final ArticleSave.Request request) {
+        final Article article = request.toEntity(slugStrategy);
+        final ArticleSave.Response response = articleCommandService.save(userId, article);
         return ResponseEntity.ok().body(response);
     }
 }

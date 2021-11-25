@@ -20,6 +20,7 @@ public class ArticleCommandService {
     public ArticleSave.Response save(final Long userId, final Article article) {
         final User user = userQueryService.findById(userId);
         article.changeAuthor(user);
-        return ArticleSave.Response.from(articleRepository.save(article));
+        final Article savedArticle = articleRepository.save(article);
+        return ArticleSave.Response.from(savedArticle);
     }
 }

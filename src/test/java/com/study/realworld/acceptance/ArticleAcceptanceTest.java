@@ -1,5 +1,8 @@
 package com.study.realworld.acceptance;
 
+import com.study.realworld.domain.article.domain.vo.ArticleBody;
+import com.study.realworld.domain.article.domain.vo.ArticleDescription;
+import com.study.realworld.domain.article.domain.vo.ArticleTitle;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.auth.dto.Login;
 import com.study.realworld.domain.user.dto.UserJoin;
@@ -42,18 +45,18 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(articleResponse.slug()).isEqualTo("how-to-train-your-dragon"),
-                () -> assertThat(articleResponse.title()).isEqualTo("how to train your dragon"),
-                () -> assertThat(articleResponse.description()).isEqualTo("Ever wonder how?"),
-                () -> assertThat(articleResponse.body()).isEqualTo("It takes a Jacobian"),
-                () -> assertThat(articleResponse.tags()).isEqualTo(List.of("dragons", "training")),
-                () -> assertThat(articleResponse.createdAt()).isEqualTo("2016-02-18T03:22:56.637Z"),
-                () -> assertThat(articleResponse.updatedAt()).isEqualTo("2016-02-18T03:48:35.824Z"),
+                () -> assertThat(articleResponse.articleSlug().articleSlug()).isEqualTo("how-to-train-your-dragon"),
+                () -> assertThat(articleResponse.articleTitle().articleTitle()).isEqualTo("How to train your dragon"),
+                () -> assertThat(articleResponse.articleDescription().articleDescription()).isEqualTo("Ever wonder how?"),
+                () -> assertThat(articleResponse.articleBody().articleBody()).isEqualTo("You have to believe"),
+                () -> assertThat(articleResponse.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(articleResponse.createdAt()).isNotNull(),
+                () -> assertThat(articleResponse.updatedAt()).isNotNull(),
                 () -> assertThat(articleResponse.favorited()).isEqualTo(false),
                 () -> assertThat(articleResponse.favoritesCount()).isEqualTo(0),
-                () -> assertThat(articleResponse.author().userName()).isEqualTo("jake"),
-                () -> assertThat(articleResponse.author().userBio()).isEqualTo("I work at statefarm"),
-                () -> assertThat(articleResponse.author().userImage()).isEqualTo("https://i.stack.imgur.com/xHWG8.jpg"),
+                () -> assertThat(articleResponse.author().userName().userName()).isEqualTo("woozi"),
+                () -> assertThat(articleResponse.author().userBio()).isNull(),
+                () -> assertThat(articleResponse.author().userImage()).isNull(),
                 () -> assertThat(articleResponse.author().following()).isEqualTo(false)
         );
     }
@@ -61,6 +64,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
     protected ExtractableResponse<Response> 정상적인_게시글_등록_요청(final AccessToken accessToken) {
         final ArticleSave.Request request = 정상적인_게시글_정보();
         return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -71,9 +75,9 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
 
     protected ArticleSave.Request 정상적인_게시글_정보() {
         return ArticleSave.Request.builder()
-                .title("How to train your dragon")
-                .description("Ever wonder how?")
-                .body("You have to believe")
+                .articleTitle(ArticleTitle.from("How to train your dragon"))
+                .articleDescription(ArticleDescription.from("Ever wonder how?"))
+                .articleBody(ArticleBody.from("You have to believe"))
                 .tags(List.of("reactjs", "angularjs", "dragons"))
                 .build();
     }

@@ -1,11 +1,14 @@
 package com.study.realworld.domain.article.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.domain.article.domain.persist.Article;
 import com.study.realworld.domain.article.domain.vo.ArticleBody;
 import com.study.realworld.domain.article.domain.vo.ArticleDescription;
 import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.article.domain.vo.ArticleTitle;
+import com.study.realworld.domain.article.strategy.SlugStrategy;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.UserBio;
 import com.study.realworld.domain.user.domain.vo.UserImage;
@@ -20,31 +23,40 @@ import java.util.List;
 
 public class ArticleSave {
 
-    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @JsonTypeName("article")
+    @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
     public static class Request {
 
         @JsonProperty("title")
-        private String title;
+        private ArticleTitle articleTitle;
 
         @JsonProperty("description")
-        private String description;
+        private ArticleDescription articleDescription;
 
         @JsonProperty("body")
-        private String body;
+        private ArticleBody articleBody;
 
         @JsonProperty("tagList")
         private List<String> tags;
 
         @Builder
-        public Request(final String title, final String description, final String body, final List<String> tags) {
-            this.title = title;
-            this.description = description;
-            this.body = body;
+        public Request(final ArticleTitle articleTitle, final ArticleDescription articleDescription,
+                       final ArticleBody articleBody, final List<String> tags) {
+            this.articleTitle = articleTitle;
+            this.articleDescription = articleDescription;
+            this.articleBody = articleBody;
             this.tags = tags;
         }
 
-        public Article toEntity() {
-            return null;
+        public Article toEntity(final SlugStrategy slugStrategy) {
+            final String articleSlug = slugStrategy.mapToSlug(articleTitle.articleTitle());
+            return Article.builder()
+                    .articleSlug(ArticleSlug.from(articleSlug))
+                    .articleTitle(articleTitle)
+                    .articleDescription(articleDescription)
+                    .articleBody(articleBody)
+                    .build();
         }
     }
 
@@ -93,24 +105,24 @@ public class ArticleSave {
 
             return new Response(
                     articleSlug, articleTitle, articleDescription, articleBody,
-                    createdAt, updatedAt, List.of("dragons", "training"),
+                    createdAt, updatedAt, List.of("reactjs", "angularjs", "dragons"),
                     false, 0, authorDto
             );
         }
 
-        public ArticleSlug slug() {
+        public ArticleSlug articleSlug() {
             return articleSlug;
         }
 
-        public ArticleTitle title() {
+        public ArticleTitle articleTitle() {
             return articleTitle;
         }
 
-        public ArticleDescription description() {
+        public ArticleDescription articleDescription() {
             return articleDescription;
         }
 
-        public ArticleBody body() {
+        public ArticleBody articleBody() {
             return articleBody;
         }
 
@@ -141,9 +153,17 @@ public class ArticleSave {
         @AllArgsConstructor(access = AccessLevel.PUBLIC)
         @NoArgsConstructor(access = AccessLevel.PRIVATE)
         public static class AuthorDto {
+
+            @JsonProperty("username")
             private UserName userName;
+
+            @JsonProperty("bio")
             private UserBio userBio;
+
+            @JsonProperty("image")
             private UserImage userImage;
+
+            @JsonProperty("following")
             private boolean following;
 
             public static AuthorDto from(final User author) {

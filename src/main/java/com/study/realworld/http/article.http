@@ -1,0 +1,45 @@
+### JOIN
+POST localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "woojiji",
+    "email": "woojiji@jake.jake",
+    "password": "woojijiwoojiji"
+  }
+}
+
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "woojiji@jake.jake",
+    "password": "woojijiwoojiji"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
+%}
+
+### ARTICLE_SAVE
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "article": {
+    "title": "How to train your dragon",
+    "description": "Ever wonder how?",
+    "body": "You have to believe",
+    "tagList": [
+      "reactjs",
+      "angularjs",
+      "dragons"
+    ]
+  }
+}

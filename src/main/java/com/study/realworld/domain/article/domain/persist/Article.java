@@ -73,7 +73,7 @@ public class Article extends BaseTimeEntity {
         return author;
     }
 
-    public Article changeAuthor(final User user) {
+    public Article changeAuthor(final User author) {
         this.author = author;
         return this;
     }
