@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("팔로우 (Follow)")
-class FollowTest {
+public class FollowTest {
 
     @Test
     void 두명의_유저들을_토대로_객체를_생성할_수_있다() {

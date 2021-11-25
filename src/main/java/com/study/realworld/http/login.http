@@ -1,4 +1,4 @@
-### JOIN
+### JOIN, 삭제한 데이터에 대해서 배치나 스케줄링 써서 삭제하는 작업해야겠다.
 POST localhost:8080/api/users
 Content-Type: application/json
 
@@ -38,3 +38,7 @@ Authorization: {{Authorization}}
     "image": "https://i.stack.imgur.com/xHWG8.jpg"
   }
 }
+
+### DELETE
+DELETE localhost:8080/api/users
+Authorization: {{Authorization}}

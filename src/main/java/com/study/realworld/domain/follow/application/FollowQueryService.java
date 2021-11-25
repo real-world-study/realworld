@@ -4,6 +4,7 @@ import com.study.realworld.domain.follow.domain.Follow;
 import com.study.realworld.domain.follow.domain.FollowQueryDSLRepository;
 import com.study.realworld.domain.follow.domain.FollowRepository;
 import com.study.realworld.domain.follow.dto.ProfileResponse;
+import com.study.realworld.domain.follow.error.exception.FollowNotFoundException;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.UserName;
@@ -21,20 +22,20 @@ public class FollowQueryService {
     private final FollowRepository followRepository;
 
     public ProfileResponse profile(final Long userId, final UserName username) {
-        final User user = userQueryService.findById(userId);
+        final User me = userQueryService.findById(userId);
         final User target = userQueryService.findByUserName(username);
-        final boolean isFollow = existsByFolloweeAndFollower(user, target);
+        final boolean isFollow = existsByFolloweeAndFollower(target, me);
         return new ProfileResponse(target, isFollow);
     }
 
-    public boolean existsByFolloweeAndFollower(final User user, final User target) {
-        return followRepository.existsByFolloweeAndFollower(target, user);
+    public boolean existsByFolloweeAndFollower(final User followee, final User follower) {
+        return followRepository.existsByFolloweeAndFollower(followee, follower);
     }
 
     public Follow findByFolloweeAndFollower(final User followee, final User follower) {
         return followRepository
                 .findByFolloweeAndFollower(followee, follower)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(FollowNotFoundException::new);
     }
 
     public ProfileResponse profile2(final Long userId, final UserName username) {
