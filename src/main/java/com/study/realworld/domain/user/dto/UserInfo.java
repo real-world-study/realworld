@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class UserInfo {
+public final class UserInfo {
 
     @JsonProperty("username")
     private UserName userName;
@@ -42,23 +42,23 @@ public class UserInfo {
         return new UserInfo(userName, userEmail, userBio, userImage, accessToken);
     }
 
-    public UserName userName() {
+    public final UserName userName() {
         return userName;
     }
 
-    public UserEmail userEmail() {
+    public final UserEmail userEmail() {
         return userEmail;
     }
 
-    public UserBio userBio() {
+    public final UserBio userBio() {
         return userBio;
     }
 
-    public UserImage userImage() {
+    public final UserImage userImage() {
         return userImage;
     }
 
-    public AccessToken accessToken() {
+    public final AccessToken accessToken() {
         return accessToken;
     }
 }

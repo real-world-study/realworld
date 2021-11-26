@@ -23,7 +23,7 @@ public class FollowQueryApi {
         return ResponseEntity.ok().body(profile);
     }
 
-    @GetMapping("/profiles2/{username}")
+    @GetMapping("/profiles/querydsl/{username}")
     public ResponseEntity<ProfileResponse> profile2(@AuthenticationPrincipal final Long userId,
                                                    @PathVariable final String username) {
         final ProfileResponse profile = followQueryService.profile2(userId, UserName.from(username));

@@ -73,23 +73,23 @@ public final class UserJoin {
             return new Response(userName, userEmail, userBio, userImage, accessToken);
         }
 
-        public UserEmail userEmail() {
+        public final UserEmail userEmail() {
             return userEmail;
         }
 
-        public UserName userName() {
+        public final UserName userName() {
             return userName;
         }
 
-        public UserBio userBio() {
+        public final UserBio userBio() {
             return userBio;
         }
 
-        public UserImage userImage() {
+        public final UserImage userImage() {
             return userImage;
         }
 
-        public AccessToken accessToken() {
+        public final AccessToken accessToken() {
             return accessToken;
         }
     }

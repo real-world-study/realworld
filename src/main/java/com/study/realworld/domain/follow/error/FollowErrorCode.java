@@ -10,8 +10,8 @@ import java.util.Arrays;
 
 public enum FollowErrorCode implements ErrorCode {
 
-    FOLLOW_NOT_FOUND(FollowNotFoundException.class, HttpStatus.BAD_REQUEST, "Follow is not exist"),
-    DUPLICATED_FOLLOW(DuplicatedFollowException.class, HttpStatus.BAD_REQUEST, "Follow is already exist");
+    DUPLICATED_FOLLOW(DuplicatedFollowException.class, HttpStatus.BAD_REQUEST, "Follow is already exist"),
+    FOLLOW_NOT_FOUND(FollowNotFoundException.class, HttpStatus.BAD_REQUEST, "Follow is not exist");
 
     private final Class exceptionClass;
     private final HttpStatus httpStatus;

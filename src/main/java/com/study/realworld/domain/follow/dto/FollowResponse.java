@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonTypeName("profile")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class FollowResponse {
+public final class FollowResponse {
 
     @JsonProperty("username")
     private UserName userName;
@@ -30,27 +30,27 @@ public class FollowResponse {
     private Boolean followable;
 
 
-    public static FollowResponse from(final User user) {
+    public static final FollowResponse from(final User user) {
         return of(user, true);
     }
 
-    private static FollowResponse of(final User user, final boolean followable) {
+    private static final FollowResponse of(final User user, final boolean followable) {
         return new FollowResponse(user.userName(), user.userBio(), user.userImage(), followable);
     }
 
-    public UserName userName() {
+    public final UserName userName() {
         return userName;
     }
 
-    public UserBio userBio() {
+    public final UserBio userBio() {
         return userBio;
     }
 
-    public UserImage userImage() {
+    public final UserImage userImage() {
         return userImage;
     }
 
-    public Boolean isFollowing() {
+    public final Boolean isFollowing() {
         return followable;
     }
 }

@@ -1,6 +1,7 @@
 package com.study.realworld.domain.user.domain.vo;
 
 import com.study.realworld.domain.user.domain.vo.util.TestPasswordEncoder;
+import com.study.realworld.domain.user.error.exception.PasswordNullOrEmptyException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("사용자 비밀번호(UserPassword)")
@@ -66,6 +68,15 @@ class UserPasswordTest {
                 () -> assertThat(userPassword).isNotNull(),
                 () -> assertThat(userPassword).isExactlyInstanceOf(UserPassword.class)
         );
+    }
+
+    @ParameterizedTest(name = "입력값 : {0}")
+    @NullAndEmptySource
+    void 널또는_빈값으로_객체를_생성할_수_없다(final String userPasswordString) {
+        final PasswordEncoder passwordEncoder =  TestPasswordEncoder.initialize();
+        assertThatThrownBy(() -> UserPassword.encode(userPasswordString, passwordEncoder))
+                .isExactlyInstanceOf(PasswordNullOrEmptyException.class)
+                .hasMessage("올바르지 않은 패스워드입니다.");
     }
 
     @ParameterizedTest(name = "입력값 : {0}")

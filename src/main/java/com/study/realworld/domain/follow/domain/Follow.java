@@ -15,7 +15,7 @@ public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
+    private Long followId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "followee", nullable = false, foreignKey = @ForeignKey(name = "fk_follow_to_followee"))
@@ -31,8 +31,8 @@ public class Follow {
         this.follower = follower;
     }
 
-    public Long id() {
-        return id;
+    public Long followId() {
+        return followId;
     }
 
     public User followee() {
@@ -48,11 +48,11 @@ public class Follow {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Follow follow = (Follow) o;
-        return Objects.equals(id(), follow.id());
+        return Objects.equals(followId(), follow.followId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id());
+        return Objects.hash(followId());
     }
 }

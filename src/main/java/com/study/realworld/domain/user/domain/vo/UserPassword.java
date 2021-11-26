@@ -2,6 +2,7 @@ package com.study.realworld.domain.user.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.study.realworld.domain.user.error.exception.PasswordMissMatchException;
+import com.study.realworld.domain.user.error.exception.PasswordNullOrEmptyException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -27,8 +28,8 @@ public class UserPassword {
     }
 
     private static void validateNullOrBlank(final String rawPassword) {
-        if (rawPassword.isBlank()) {
-            throw new IllegalArgumentException();
+        if (Objects.isNull(rawPassword) || rawPassword.isBlank()) {
+            throw new PasswordNullOrEmptyException();
         }
     }
 

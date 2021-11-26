@@ -5,6 +5,7 @@ import com.study.realworld.domain.user.domain.vo.util.TestPasswordEncoder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +28,17 @@ public class UserTest {
                 () -> assertThat(user).isNotNull(),
                 () -> assertThat(user).isExactlyInstanceOf(User.class)
         );
+    }
+
+    @Test
+    void 아이덴티티가_같다면_동일한_객체이다() {
+        final User user = new User();
+        final User other = new User();
+
+        ReflectionTestUtils.setField(user, "userId", 1L);
+        ReflectionTestUtils.setField(other, "userId", 1L);
+
+        assertThat(user).isEqualTo(other);
     }
 
     @Test

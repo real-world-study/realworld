@@ -31,6 +31,13 @@ public final class UserUpdate {
         @JsonProperty("image")
         private UserImage userImage;
 
+        @Builder
+        public Request(final UserEmail userEmail, final UserBio userBio, final UserImage userImage) {
+            this.userEmail = userEmail;
+            this.userBio = userBio;
+            this.userImage = userImage;
+        }
+
         public final UserEmail memberEmail() {
             return userEmail;
         }
@@ -41,13 +48,6 @@ public final class UserUpdate {
 
         public final UserImage memberImage() {
             return userImage;
-        }
-
-        @Builder
-        public Request(final UserEmail userEmail, final UserBio userBio, final UserImage userImage) {
-            this.userEmail = userEmail;
-            this.userBio = userBio;
-            this.userImage = userImage;
         }
     }
 
@@ -95,7 +95,6 @@ public final class UserUpdate {
         public UserImage userImage() {
             return userImage;
         }
-
     }
 }
 

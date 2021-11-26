@@ -26,14 +26,30 @@ public class FollowTest {
     }
 
     @Test
+    void 팔로우는_식별자를_기준으로_동등성_비교를한다() {
+        final User follower = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final User followee = testUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final Follow follow = testFollow(followee, follower);
+        final Follow other = testFollow(followee, follower);
+
+        ReflectionTestUtils.setField(follow, "followId", 1L);
+        ReflectionTestUtils.setField(other, "followId", 1L);
+
+        assertAll(
+                () -> assertThat(follow).isEqualTo(other),
+                () -> assertThat(follow).hasSameHashCodeAs(other)
+        );
+    }
+
+    @Test
     void 팔로위_팔로워_정보를_반환한다() {
         final User follower = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final User followee = testUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
         final Follow follow = testFollow(followee, follower);
-        ReflectionTestUtils.setField(follow, "id", 1L);
+        ReflectionTestUtils.setField(follow, "followId", 1L);
 
         assertAll(
-                () -> assertThat(follow.id()).isEqualTo(1L),
+                () -> assertThat(follow.followId()).isEqualTo(1L),
                 () -> assertThat(follow.followee()).isEqualTo(followee),
                 () -> assertThat(follow.follower()).isEqualTo(follower)
         );
