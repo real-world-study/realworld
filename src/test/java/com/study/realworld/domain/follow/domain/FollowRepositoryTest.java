@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import static com.study.realworld.domain.follow.domain.FollowTest.testFollower;
+import static com.study.realworld.domain.follow.domain.FollowTest.testFollow;
 import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
 import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +33,7 @@ class FollowRepositoryTest {
 
         testEntityManager.persist(follower);
         testEntityManager.persist(followee);
-        testEntityManager.persist(testFollower(followee, follower));
+        testEntityManager.persist(testFollow(followee, follower));
 
         assertThat(followRepository.existsByFolloweeAndFollower(followee, follower)).isTrue();
     }
@@ -56,7 +56,7 @@ class FollowRepositoryTest {
 
         testEntityManager.persist(follower);
         testEntityManager.persist(followee);
-        testEntityManager.persist(testFollower(followee, follower));
+        testEntityManager.persist(testFollow(followee, follower));
 
         final Follow follow = followRepository.findByFolloweeAndFollower(followee, follower).get();
         assertAll(

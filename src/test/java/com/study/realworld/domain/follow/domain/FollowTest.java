@@ -17,7 +17,7 @@ public class FollowTest {
     void 두명의_유저들을_토대로_객체를_생성할_수_있다() {
         final User user = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final User other = testUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
-        final Follow follow = testFollower(other, user);
+        final Follow follow = testFollow(other, user);
 
         assertAll(
                 () -> assertThat(follow).isNotNull(),
@@ -29,7 +29,7 @@ public class FollowTest {
     void 팔로위_팔로워_정보를_반환한다() {
         final User follower = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final User followee = testUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
-        final Follow follow = testFollower(followee, follower);
+        final Follow follow = testFollow(followee, follower);
         ReflectionTestUtils.setField(follow, "id", 1L);
 
         assertAll(
@@ -39,7 +39,7 @@ public class FollowTest {
         );
     }
 
-    public static Follow testFollower(final User other, final User user) {
+    public static Follow testFollow(final User other, final User user) {
         return Follow.builder()
                 .followee(other)
                 .follower(user)

@@ -32,8 +32,7 @@ public class UserTest {
     @Test
     void 패스워드를_인코딩_할_수_있다() {
         final PasswordEncoder passwordEncoder = TestPasswordEncoder.initialize();
-        final User user = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE)
-                .encode(passwordEncoder);
+        final User user = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE).encode(passwordEncoder);
 
         assertAll(
                 () -> assertThat(user.userPassword()).isNotEqualTo(USER_PASSWORD),

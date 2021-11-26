@@ -76,6 +76,7 @@ class UserAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(userUpdateResponse.userName()).isEqualTo(UserName.from(userEmail.split("@")[0])),
                 () -> assertThat(userUpdateResponse.userEmail()).isEqualTo(OTHER_USER_EMAIL),
                 () -> assertThat(userUpdateResponse.userBio()).isEqualTo(OTHER_USER_BIO),
                 () -> assertThat(userUpdateResponse.userImage()).isEqualTo(OTHER_USER_IMAGE)

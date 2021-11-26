@@ -74,6 +74,7 @@ class FollowAcceptanceTest extends AcceptanceTest {
     @Test
     void 특정_사람을_언팔로우한다() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        팔로우_요청(loginResponse.accessToken(), user2.userName().userName());
         final ExtractableResponse<Response> response = 언팔로우_요청(
                 loginResponse.accessToken(),
                 user2.userName().userName());

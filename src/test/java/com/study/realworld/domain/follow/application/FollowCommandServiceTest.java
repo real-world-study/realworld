@@ -4,6 +4,7 @@ import com.study.realworld.domain.follow.domain.Follow;
 import com.study.realworld.domain.follow.domain.FollowRepository;
 import com.study.realworld.domain.follow.dto.FollowResponse;
 import com.study.realworld.domain.follow.dto.UnFollowResponse;
+import com.study.realworld.domain.follow.error.exception.DuplicatedFollowException;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.UserBio;
@@ -16,9 +17,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.study.realworld.domain.follow.domain.FollowTest.testFollower;
+import static com.study.realworld.domain.follow.domain.FollowTest.testFollow;
 import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
@@ -43,7 +45,7 @@ class FollowCommandServiceTest {
     void 팔로워_아이덴티티와_팔로위_이름을_입력하면_팔로우_할_수_있다() {
         final User follower = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
         final User followee = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
-        final Follow follow = testFollower(followee, follower);
+        final Follow follow = testFollow(followee, follower);
         willReturn(follower).given(userQueryService).findById(any());
         willReturn(followee).given(userQueryService).findByUserName(any());
         willReturn(false).given(followQueryService).existsByFolloweeAndFollower(any(), any());
@@ -59,10 +61,23 @@ class FollowCommandServiceTest {
     }
 
     @Test
+    void 이미_팔로우_정보가_있다면_팔로우_할_수_없다() {
+        final User follower = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
+        final User followee = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
+        willReturn(follower).given(userQueryService).findById(any());
+        willReturn(followee).given(userQueryService).findByUserName(any());
+        willReturn(true).given(followQueryService).existsByFolloweeAndFollower(any(), any());
+
+        assertThatThrownBy(() -> followCommandService.follow(1L, UserName.from("user2")))
+                .isExactlyInstanceOf(DuplicatedFollowException.class)
+                .hasMessage("팔로우 정보가 이미 있습니다");
+    }
+
+    @Test
     void 팔로워_아이덴티티와_팔로위_이름을_입력하면_언팔로우_할_수_있다() {
         final User follower = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
         final User followee = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
-        final Follow follow = testFollower(followee, follower);
+        final Follow follow = testFollow(followee, follower);
         willReturn(follower).given(userQueryService).findById(any());
         willReturn(followee).given(userQueryService).findByUserName(any());
         willReturn(follow).given(followQueryService).findByFolloweeAndFollower(any(), any());
