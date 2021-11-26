@@ -49,7 +49,7 @@ class ArticleCommandServiceTest {
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
         willReturn(article).given(articleRepository).save(any());
 
-        final ArticleSave.Response response = articleCommandService.save(1L, article);
+        final ArticleSave.Response response = ArticleSave.Response.from(articleCommandService.save(1L, article));
         assertAll(
                 () -> assertThat(response.articleSlug()).isEqualTo(article.articleSlug()),
                 () -> assertThat(response.articleTitle()).isEqualTo(article.articleTitle()),

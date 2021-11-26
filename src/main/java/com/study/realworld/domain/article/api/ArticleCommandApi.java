@@ -23,8 +23,8 @@ public class ArticleCommandApi {
     @PostMapping("/articles")
     public ResponseEntity<ArticleSave.Response> save(@AuthenticationPrincipal final Long userId,
                                                      @Valid @RequestBody final ArticleSave.Request request) {
-        final Article article = request.toEntity(slugStrategy);
-        final ArticleSave.Response response = articleCommandService.save(userId, article);
+        final Article article = articleCommandService.save(userId, request.toEntity(slugStrategy));
+        final ArticleSave.Response response = ArticleSave.Response.from(article);
         return ResponseEntity.ok().body(response);
     }
 }

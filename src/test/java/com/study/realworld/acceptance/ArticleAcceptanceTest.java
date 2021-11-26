@@ -2,7 +2,9 @@ package com.study.realworld.acceptance;
 
 import com.study.realworld.domain.article.domain.vo.ArticleBody;
 import com.study.realworld.domain.article.domain.vo.ArticleDescription;
+import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.article.domain.vo.ArticleTitle;
+import com.study.realworld.domain.article.dto.ArticleInfo;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.auth.dto.Login;
 import com.study.realworld.domain.user.dto.UserJoin;
@@ -59,6 +61,41 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(articleResponse.author().userImage()).isNull(),
                 () -> assertThat(articleResponse.author().following()).isEqualTo(false)
         );
+    }
+
+    @Test
+    void 슬러그를_통해_게시글을_조회한다() {
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        final ExtractableResponse<Response> articleSaveResponse = 정상적인_게시글_등록_요청(loginResponse.accessToken());
+        final ArticleSave.Response articleResponse = articleSaveResponse.as(ArticleSave.Response.class);
+        final ExtractableResponse<Response> articleFindResponse = 정상적인_게시글_조회_요청(loginResponse.accessToken(), articleResponse.articleSlug());
+        final ArticleInfo articleInfo = articleFindResponse.as(ArticleInfo.class);
+
+        assertAll(
+                () -> assertThat(articleFindResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(articleInfo.articleSlug().articleSlug()).isEqualTo("how-to-train-your-dragon"),
+                () -> assertThat(articleInfo.articleTitle().articleTitle()).isEqualTo("How to train your dragon"),
+                () -> assertThat(articleInfo.articleDescription().articleDescription()).isEqualTo("Ever wonder how?"),
+                () -> assertThat(articleInfo.articleBody().articleBody()).isEqualTo("You have to believe"),
+                () -> assertThat(articleInfo.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(articleInfo.createdAt()).isNotNull(),
+                () -> assertThat(articleInfo.updatedAt()).isNotNull(),
+                () -> assertThat(articleInfo.favorited()).isEqualTo(false),
+                () -> assertThat(articleInfo.favoritesCount()).isEqualTo(0),
+                () -> assertThat(articleInfo.author().userName().userName()).isEqualTo("woozi"),
+                () -> assertThat(articleInfo.author().userBio()).isNull(),
+                () -> assertThat(articleInfo.author().userImage()).isNull(),
+                () -> assertThat(articleInfo.author().following()).isEqualTo(false)
+        );
+    }
+
+    private ExtractableResponse<Response> 정상적인_게시글_조회_요청(final AccessToken accessToken, final ArticleSlug articleSlug) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .when()
+                .get(String.format("/api/articles/%s", articleSlug.articleSlug()))
+                .then()
+                .extract();
     }
 
     protected ExtractableResponse<Response> 정상적인_게시글_등록_요청(final AccessToken accessToken) {
