@@ -2,6 +2,7 @@ package com.study.realworld.domain.follow.domain;
 
 import com.study.realworld.domain.user.domain.persist.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,11 +14,13 @@ import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@DisplayName("팔로우 저장소(FollowRepository)")
 @DataJpaTest
 class FollowRepositoryTest {
 
     @Autowired
     private TestEntityManager testEntityManager;
+
     @Autowired
     private FollowRepository followRepository;
 

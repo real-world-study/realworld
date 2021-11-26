@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.study.realworld.domain.follow.dto.ProfileResponse;
 import com.study.realworld.domain.user.domain.persist.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,6 +15,7 @@ import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@DisplayName("팔로우 QueryDsl 저장소 테스트(FollowQueryDSLRepository)")
 @DataJpaTest
 class FollowQueryDSLRepositoryTest {
 
