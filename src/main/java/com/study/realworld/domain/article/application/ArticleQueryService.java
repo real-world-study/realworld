@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleQueryService {
 
     private final ArticleRepository articleRepository;
-    private final UserQueryService userQueryService;
 
     public Article findByArticleSlug(final ArticleSlug articleSlug) {
         return articleRepository.findByArticleSlug(articleSlug)

@@ -4,9 +4,9 @@ Content-Type: application/json
 
 {
   "user" :{
-    "username": "Jacob",
-    "email": "jake@jake.jake",
-    "password": "jakejake"
+    "username": "wooji",
+    "email": "wooji@jake.jake",
+    "password": "woojiwooji"
   }
 }
 
@@ -16,9 +16,9 @@ Content-Type: application/json
 
 {
   "user" :{
-    "username": "wooji",
-    "email": "wooji@jake.jake",
-    "password": "woojiwooji"
+    "username": "ori",
+    "email": "ori@jake.jake",
+    "password": "oriori"
   }
 }
 
@@ -28,8 +28,8 @@ Content-Type: application/json
 
 {
   "user" :{
-    "email": "jake@jake.jake",
-    "password": "jakejake"
+    "email": "ori@jake.jake",
+    "password": "oriori"
   }
 }
 

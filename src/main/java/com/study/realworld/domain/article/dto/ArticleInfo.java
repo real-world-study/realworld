@@ -14,7 +14,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
@@ -34,10 +36,10 @@ public class ArticleInfo {
     private ArticleBody articleBody;
 
     @JsonProperty("createdAt")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @JsonProperty("updatedAt")
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     @JsonProperty("tagList")
     private List<String> tags;
@@ -56,8 +58,8 @@ public class ArticleInfo {
         final ArticleTitle articleTitle = article.articleTitle();
         final ArticleDescription articleDescription = article.articleDescription();
         final ArticleBody articleBody = article.articleBody();
-        final LocalDateTime createdAt = article.createdAt();
-        final LocalDateTime updatedAt = article.updatedAt();
+        final Instant createdAt = article.createdAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
+        final Instant updatedAt = article.updatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
         final ArticleInfo.AuthorDto authorDto = ArticleInfo.AuthorDto.from(article.author());
 
         return new ArticleInfo(
@@ -87,11 +89,11 @@ public class ArticleInfo {
         return tags;
     }
 
-    public LocalDateTime createdAt() {
+    public Instant createdAt() {
         return createdAt;
     }
 
-    public LocalDateTime updatedAt() {
+    public Instant updatedAt() {
         return updatedAt;
     }
 

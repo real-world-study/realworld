@@ -1,4 +1,4 @@
-package com.study.realworld.domain.article.api.util;
+package com.study.realworld.domain.article.api.converter;
 
 import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import org.slf4j.Logger;

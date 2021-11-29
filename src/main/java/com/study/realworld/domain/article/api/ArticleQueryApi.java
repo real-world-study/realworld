@@ -19,10 +19,13 @@ public class ArticleQueryApi {
 
     private final ArticleQueryService articleQueryService;
 
-    @GetMapping("/articles/{slug}")
-    public ResponseEntity<ArticleInfo> findByArticleSlug(@Valid @PathVariable("slug") final ArticleSlug articleSlug) {
+    @GetMapping("/articles/{articleSlug}")
+    public ResponseEntity<ArticleInfo> findByArticleSlug(@Valid @PathVariable final ArticleSlug articleSlug) {
         final Article article = articleQueryService.findByArticleSlug(articleSlug);
         final ArticleInfo articleInfo = ArticleInfo.from(article);
         return ResponseEntity.ok().body(articleInfo);
     }
 }
+// 조회시 팔로우 여부, 같은거 팔로우 도메인이랑 연결하기
+
+
