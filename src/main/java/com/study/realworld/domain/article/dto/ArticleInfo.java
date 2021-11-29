@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -53,14 +52,14 @@ public class ArticleInfo {
     @JsonProperty("author")
     private ArticleInfo.AuthorDto authorDto;
 
-    public static ArticleInfo from(final Article article) {
+    public static ArticleInfo from(final Article article, final Boolean following) {
         final ArticleSlug articleSlug = article.articleSlug();
         final ArticleTitle articleTitle = article.articleTitle();
         final ArticleDescription articleDescription = article.articleDescription();
         final ArticleBody articleBody = article.articleBody();
         final Instant createdAt = article.createdAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
         final Instant updatedAt = article.updatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
-        final ArticleInfo.AuthorDto authorDto = ArticleInfo.AuthorDto.from(article.author());
+        final ArticleInfo.AuthorDto authorDto = ArticleInfo.AuthorDto.from(article.author(), following);
 
         return new ArticleInfo(
                 articleSlug, articleTitle, articleDescription, articleBody,
@@ -125,8 +124,8 @@ public class ArticleInfo {
         @JsonProperty("following")
         private boolean following;
 
-        public static ArticleInfo.AuthorDto from(final User author) {
-            return new ArticleInfo.AuthorDto(author.userName(), author.userBio(), author.userImage(), false);
+        public static ArticleInfo.AuthorDto from(final User author, final Boolean following) {
+            return new ArticleInfo.AuthorDto(author.userName(), author.userBio(), author.userImage(), following);
         }
 
         public UserName userName() {

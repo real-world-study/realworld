@@ -26,9 +26,6 @@ class ArticleQueryServiceTest {
     @Mock
     private ArticleRepository articleRepository;
 
-    @Mock
-    private UserQueryService userQueryService;
-
     @InjectMocks
     private ArticleQueryService articleQueryService;
 

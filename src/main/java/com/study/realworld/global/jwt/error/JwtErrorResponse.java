@@ -35,5 +35,4 @@ public class JwtErrorResponse {
             throw new JwtErrorCodeNullPointerException();
         }
     }
-
 }

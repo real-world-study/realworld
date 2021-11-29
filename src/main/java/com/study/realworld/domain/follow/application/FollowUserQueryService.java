@@ -17,9 +17,9 @@ public class FollowUserQueryService {
     private final FollowQueryService followQueryService;
 
     public ProfileResponse profile(final Long userId, final UserName username) {
-        final User me = userQueryService.findById(userId);
+        final User user = userQueryService.findById(userId);
         final User target = userQueryService.findByUserName(username);
-        final boolean isFollow = followQueryService.existsByFolloweeAndFollower(target, me);
+        final boolean isFollow = followQueryService.existsByFolloweeAndFollower(target, user);
         return new ProfileResponse(target, isFollow);
     }
 

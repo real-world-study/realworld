@@ -3,6 +3,18 @@ POST localhost:8080/api/users
 Content-Type: application/json
 
 {
+  "user" :{
+    "username": "jimmy",
+    "email": "jimmy@jake.jake",
+    "password": "jimmy"
+  }
+}
+
+### JOIN
+POST localhost:8080/api/users
+Content-Type: application/json
+
+{
   "user": {
     "username": "woojiji",
     "email": "woojiji@jake.jake",
@@ -44,6 +56,37 @@ Authorization: {{Authorization}}
   }
 }
 
-### ARTICLE_FIND
+### ARTICLE_FIND_SELF
 GET localhost:8080/api/articles/how-to-train-your-dragon
 Authorization: {{Authorization}}
+
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user" :{
+    "email": "jimmy@jake.jake",
+    "password": "jimmy"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
+%}
+
+### ARTICLE_FIND_FOLLOW_BEFORE
+GET localhost:8080/api/articles/how-to-train-your-dragon
+Authorization: {{Authorization}}
+
+### Follow
+POST localhost:8080/api/profiles/woojiji/follow
+Authorization: {{Authorization}}
+
+### ARTICLE_FIND_FOLOW_AFTAER
+GET localhost:8080/api/articles/how-to-train-your-dragon
+Authorization: {{Authorization}}
+
+### ARTICLE_FIND_NO_AUTHORIATION
+GET localhost:8080/api/articles/how-to-train-your-dragon

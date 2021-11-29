@@ -66,11 +66,11 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 슬러그를_통해_게시글을_조회한다() {
+    void 슬러그를_통해_게시글을_조회한다_인가안됨() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
         final ExtractableResponse<Response> articleSaveResponse = 정상적인_게시글_등록_요청(loginResponse.accessToken());
         final ArticleSave.Response articleResponse = articleSaveResponse.as(ArticleSave.Response.class);
-        final ExtractableResponse<Response> articleFindResponse = 정상적인_게시글_조회_요청(loginResponse.accessToken(), articleResponse.articleSlug());
+        final ExtractableResponse<Response> articleFindResponse = 정상적인_인가되지_않은_게시글_조회_요청(loginResponse.accessToken(), articleResponse.articleSlug());
         final ArticleInfo articleInfo = articleFindResponse.as(ArticleInfo.class);
 
         assertAll(
@@ -91,13 +91,30 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private ExtractableResponse<Response> 정상적인_게시글_조회_요청(final AccessToken accessToken, final ArticleSlug articleSlug) {
-        return RestAssured.given()
-                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
-                .when()
-                .get(String.format("/api/articles/%s", articleSlug.articleSlug()))
-                .then()
-                .extract();
+    @Test
+    void 슬러그를_통해_게시글을_조회한다_인가됨() {
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        final ExtractableResponse<Response> articleSaveResponse = 정상적인_게시글_등록_요청(loginResponse.accessToken());
+        final ArticleSave.Response articleResponse = articleSaveResponse.as(ArticleSave.Response.class);
+        final ExtractableResponse<Response> articleFindResponse = 정상적인_인가된_게시글_조회_요청(loginResponse.accessToken(), articleResponse.articleSlug());
+        final ArticleInfo articleInfo = articleFindResponse.as(ArticleInfo.class);
+
+        assertAll(
+                () -> assertThat(articleFindResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(articleInfo.articleSlug().articleSlug()).isEqualTo("how-to-train-your-dragon"),
+                () -> assertThat(articleInfo.articleTitle().articleTitle()).isEqualTo("How to train your dragon"),
+                () -> assertThat(articleInfo.articleDescription().articleDescription()).isEqualTo("Ever wonder how?"),
+                () -> assertThat(articleInfo.articleBody().articleBody()).isEqualTo("You have to believe"),
+                () -> assertThat(articleInfo.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(articleInfo.createdAt()).isNotNull(),
+                () -> assertThat(articleInfo.updatedAt()).isNotNull(),
+                () -> assertThat(articleInfo.favorited()).isEqualTo(false),
+                () -> assertThat(articleInfo.favoritesCount()).isEqualTo(0),
+                () -> assertThat(articleInfo.author().userName().userName()).isEqualTo("woozi"),
+                () -> assertThat(articleInfo.author().userBio()).isNull(),
+                () -> assertThat(articleInfo.author().userImage()).isNull(),
+                () -> assertThat(articleInfo.author().following()).isEqualTo(false)
+        );
     }
 
     protected ExtractableResponse<Response> 정상적인_게시글_등록_요청(final AccessToken accessToken) {
@@ -108,6 +125,23 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when()
                 .post("/api/articles")
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 정상적인_인가되지_않은_게시글_조회_요청(final AccessToken accessToken, final ArticleSlug articleSlug) {
+        return RestAssured.given()
+                .when()
+                .get(String.format("/api/articles/%s", articleSlug.articleSlug()))
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 정상적인_인가된_게시글_조회_요청(final AccessToken accessToken, final ArticleSlug articleSlug) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .when()
+                .get(String.format("/api/articles/%s", articleSlug.articleSlug()))
                 .then()
                 .extract();
     }
