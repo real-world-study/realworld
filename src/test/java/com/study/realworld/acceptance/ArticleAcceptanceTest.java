@@ -4,7 +4,9 @@ import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.article.dto.ArticleInfo;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.article.dto.ArticleUpdate;
+import com.study.realworld.domain.article.error.ArticleErrorResponse;
 import com.study.realworld.domain.auth.dto.Login;
+import com.study.realworld.domain.follow.error.FollowErrorResponse;
 import com.study.realworld.domain.user.dto.UserJoin;
 import com.study.realworld.global.common.AccessToken;
 import io.restassured.RestAssured;
@@ -137,6 +139,17 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(updateResponse.author().userImage()).isNull(),
                 () -> assertThat(updateResponse.author().following()).isEqualTo(false)
         );
+    }
+
+    @Test
+    void 다른_사람이_게시글의_정보를_변경하면_예외를_발생한다() {
+        final Login.Response authorLoginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        final Login.Response otherLoginResponse = 로그인_되어있음(user2.userEmail().userEmail());
+        final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(authorLoginResponse.accessToken());
+        final ExtractableResponse<Response> response = 정상적인_게시글_변경_요청(otherLoginResponse.accessToken(), saveResponse.articleSlug());
+        final ArticleErrorResponse ArticleErrorResponse = response.as(ArticleErrorResponse.class);
+
+        assertThat(ArticleErrorResponse.body().get(0)).isEqualTo("login user is not author");
     }
 
     protected ArticleSave.Response 정상적인_게시글_등록되어_있음(final AccessToken accessToken) {
