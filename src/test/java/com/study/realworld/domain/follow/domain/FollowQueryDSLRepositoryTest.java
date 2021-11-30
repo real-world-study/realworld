@@ -11,7 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import javax.persistence.EntityManager;
 
-import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
+import static com.study.realworld.domain.follow.util.FollowFixture.createFollow;
+import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -32,15 +33,12 @@ class FollowQueryDSLRepositoryTest {
 
     @Test
     void userInfoAndFollowable() {
-        final User follower = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
-        final User followee = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
-        entityManager.persist(follower);
-        entityManager.persist(followee);
+        final User followee = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User follower = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final Follow follow = createFollow(followee, follower);
 
-        final Follow follow = Follow.builder()
-                .follower(follower)
-                .followee(followee)
-                .build();
+        entityManager.persist(followee);
+        entityManager.persist(follower);
         entityManager.persist(follow);
 
         final ProfileResponse profileResponse = followQueryDSLRepository.userInfoAndFollowable(followee, follower);
@@ -51,5 +49,4 @@ class FollowQueryDSLRepositoryTest {
                 () -> assertThat(profileResponse.isFollowing()).isEqualTo(true)
         );
     }
-
 }

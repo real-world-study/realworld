@@ -24,7 +24,7 @@ public class UserCommandApi {
 
     @PostMapping("/users")
     public ResponseEntity<UserJoin.Response> join(@Valid @RequestBody final UserJoin.Request request) {
-        final User user = userCommandService.join(request.toEntity());
+        final User user = userCommandService.join(request);
         final TokenProviderDto tokenProviderDto = TokenProviderDto.from(user);
         final AccessToken accessToken = tokenProvider.createAccessToken(tokenProviderDto);
         final UserJoin.Response response = UserJoin.Response.fromUserWithToken(user, accessToken);

@@ -3,9 +3,6 @@ package com.study.realworld.domain.follow.application;
 import com.study.realworld.domain.follow.dto.ProfileResponse;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
-import com.study.realworld.domain.user.domain.vo.UserBio;
-import com.study.realworld.domain.user.domain.vo.UserImage;
-import com.study.realworld.domain.user.domain.vo.UserName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
+import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
 
@@ -34,35 +31,37 @@ class FollowUserQueryServiceTest {
 
     @Test
     void 특정_유저_정보_및_팔로우_여부_조회() {
-        final User me = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
-        final User target = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
-        willReturn(me).given(userQueryService).findById(any());
-        willReturn(target).given(userQueryService).findByUserName(any());
+        final User followee = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User follower = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+
+        willReturn(followee).given(userQueryService).findByUserName(any());
+        willReturn(follower).given(userQueryService).findById(any());
         willReturn(false).given(followQueryService).existsByFolloweeAndFollower(any(), any());
 
-        final ProfileResponse profileResponse = followUserQueryService.profile(1L, UserName.from("user2"));
+        final ProfileResponse profileResponse = followUserQueryService.profile(1L, followee.userName());
         assertAll(
-                () -> assertThat(profileResponse.userName()).isEqualTo(UserName.from("user2")),
-                () -> assertThat(profileResponse.userBio()).isEqualTo(UserBio.from("bio2")),
-                () -> assertThat(profileResponse.userImage()).isEqualTo(UserImage.from("image2")),
+                () -> assertThat(profileResponse.userName()).isEqualTo(followee.userName()),
+                () -> assertThat(profileResponse.userBio()).isEqualTo(followee.userBio()),
+                () -> assertThat(profileResponse.userImage()).isEqualTo(followee.userImage()),
                 () -> assertThat(profileResponse.isFollowing()).isFalse()
         );
     }
 
     @Test
     void QueryDSL_로_특정_유저_정보_및_팔로우_여부_조회() {
-        final User me = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
-        final User target = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
-        final ProfileResponse profileResponse = new ProfileResponse(target, false);
-        willReturn(me).given(userQueryService).findById(any());
-        willReturn(target).given(userQueryService).findByUserName(any());
+        final User followee = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User follower = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final ProfileResponse profileResponse = new ProfileResponse(followee, false);
+
+        willReturn(follower).given(userQueryService).findById(any());
+        willReturn(followee).given(userQueryService).findByUserName(any());
         willReturn(profileResponse).given(followQueryService).userInfoAndFollowable(any(), any());
 
-        final ProfileResponse findProfileResponse = followUserQueryService.profile2(1L, UserName.from("user2"));
+        final ProfileResponse findProfileResponse = followUserQueryService.profile2(1L, followee.userName());
         assertAll(
-                () -> assertThat(findProfileResponse.userName()).isEqualTo(UserName.from("user2")),
-                () -> assertThat(findProfileResponse.userBio()).isEqualTo(UserBio.from("bio2")),
-                () -> assertThat(findProfileResponse.userImage()).isEqualTo(UserImage.from("image2")),
+                () -> assertThat(findProfileResponse.userName()).isEqualTo(followee.userName()),
+                () -> assertThat(findProfileResponse.userBio()).isEqualTo(followee.userBio()),
+                () -> assertThat(findProfileResponse.userImage()).isEqualTo(followee.userImage()),
                 () -> assertThat(findProfileResponse.isFollowing()).isFalse()
         );
     }

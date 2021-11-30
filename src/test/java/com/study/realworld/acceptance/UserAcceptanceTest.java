@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.*;
+import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

@@ -2,7 +2,7 @@ package com.study.realworld.domain.article.application;
 
 import com.study.realworld.domain.article.domain.persist.Article;
 import com.study.realworld.domain.article.domain.persist.ArticleRepository;
-import com.study.realworld.domain.user.application.UserQueryService;
+import com.study.realworld.domain.user.domain.persist.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +13,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
-import static com.study.realworld.domain.article.domain.persist.ArticleTest.testArticle;
+import static com.study.realworld.domain.article.util.ArticleFixture.*;
+import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,8 +32,11 @@ class ArticleQueryServiceTest {
 
     @Test
     void 슬러그로_게시글_찾기() {
-        final Article article = testArticle();
+        final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
+
         ReflectionTestUtils.setField(article, "articleId", 1L);
+
         willReturn(Optional.of(article)).given(articleRepository).findByArticleSlug(any());
 
         final Article findArticle = articleQueryService.findByArticleSlug(article.articleSlug());

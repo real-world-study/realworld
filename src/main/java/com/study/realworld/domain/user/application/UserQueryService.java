@@ -37,5 +37,4 @@ public class UserQueryService {
     public Boolean existsByUserEmail(final UserEmail userEmail) {
         return userRepository.existsByUserEmail(userEmail);
     }
-
 }

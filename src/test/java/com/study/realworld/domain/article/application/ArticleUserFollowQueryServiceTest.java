@@ -15,8 +15,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 
-import static com.study.realworld.domain.article.domain.persist.ArticleTest.testArticle;
-import static com.study.realworld.domain.user.domain.persist.UserTest.testDefaultUser;
+import static com.study.realworld.domain.article.util.ArticleFixture.*;
+import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,12 +40,12 @@ class ArticleUserFollowQueryServiceTest {
 
     @Test
     void 유저_아이덴티티와_슬러그를_통해_게시글_정보_조회하기() {
-        final User user = testDefaultUser();
-        final Article article = testArticle();
+        final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
         ReflectionTestUtils.setField(article, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
 
-        willReturn(user).given(userQueryService).findById(any());
+        willReturn(author).given(userQueryService).findById(any());
         willReturn(true).given(followQueryService).existsByFolloweeAndFollower(any(), any());
         willReturn(article).given(articleQueryService).findByArticleSlug(any());
 
@@ -64,7 +64,9 @@ class ArticleUserFollowQueryServiceTest {
 
     @Test
     void 슬러그를_통해서만_게시글_정보_조회하기() {
-        final Article article = testArticle();
+        final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
+
         ReflectionTestUtils.setField(article, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
 

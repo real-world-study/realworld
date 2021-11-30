@@ -1,4 +1,4 @@
-package com.study.realworld.domain.user.domain.vo.util;
+package com.study.realworld.domain.user.util;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;

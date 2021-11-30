@@ -14,8 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 
-import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
-import static com.study.realworld.domain.user.domain.vo.util.UserVOFixture.*;
+import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +32,7 @@ class UserQueryServiceTest {
 
     @Test
     void 아이덴티티로_유저를_찾는다() {
-        final User entity = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final User entity = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         ReflectionTestUtils.setField(entity, "userId", 1L);
         willReturn(Optional.of(entity)).given(userRepository).findById(any());
 
@@ -43,7 +42,7 @@ class UserQueryServiceTest {
 
     @Test
     void 아이덴티티가_다르면_유저를_찾을_수_없다() {
-        final User entity = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final User entity = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         ReflectionTestUtils.setField(entity, "userId", 1L);
         willReturn(Optional.empty()).given(userRepository).findById(any());
 
@@ -54,7 +53,7 @@ class UserQueryServiceTest {
 
     @Test
     void 이메일로_유저를_찾는다() {
-        final User entity = testUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final User entity = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         willReturn(Optional.of(entity)).given(userRepository).findByUserEmail(any());
 
         final User user = userQueryService.findByMemberEmail(entity.userEmail());

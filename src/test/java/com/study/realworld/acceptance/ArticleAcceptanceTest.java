@@ -1,11 +1,9 @@
 package com.study.realworld.acceptance;
 
-import com.study.realworld.domain.article.domain.vo.ArticleBody;
-import com.study.realworld.domain.article.domain.vo.ArticleDescription;
 import com.study.realworld.domain.article.domain.vo.ArticleSlug;
-import com.study.realworld.domain.article.domain.vo.ArticleTitle;
 import com.study.realworld.domain.article.dto.ArticleInfo;
 import com.study.realworld.domain.article.dto.ArticleSave;
+import com.study.realworld.domain.article.dto.ArticleUpdate;
 import com.study.realworld.domain.auth.dto.Login;
 import com.study.realworld.domain.user.dto.UserJoin;
 import com.study.realworld.global.common.AccessToken;
@@ -20,6 +18,7 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
+import static com.study.realworld.domain.article.util.ArticleFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -45,40 +44,39 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
     void 게시글을_등록한다() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
         final ExtractableResponse<Response> response = 정상적인_게시글_등록_요청(loginResponse.accessToken());
-        final ArticleSave.Response articleResponse = response.as(ArticleSave.Response.class);
+        final ArticleSave.Response saveResponse = response.as(ArticleSave.Response.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(articleResponse.articleSlug().articleSlug()).isEqualTo("how-to-train-your-dragon"),
-                () -> assertThat(articleResponse.articleTitle().articleTitle()).isEqualTo("How to train your dragon"),
-                () -> assertThat(articleResponse.articleDescription().articleDescription()).isEqualTo("Ever wonder how?"),
-                () -> assertThat(articleResponse.articleBody().articleBody()).isEqualTo("You have to believe"),
-                () -> assertThat(articleResponse.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
-                () -> assertThat(articleResponse.createdAt()).isNotNull(),
-                () -> assertThat(articleResponse.updatedAt()).isNotNull(),
-                () -> assertThat(articleResponse.favorited()).isEqualTo(false),
-                () -> assertThat(articleResponse.favoritesCount()).isEqualTo(0),
-                () -> assertThat(articleResponse.author().userName().userName()).isEqualTo("woozi"),
-                () -> assertThat(articleResponse.author().userBio()).isNull(),
-                () -> assertThat(articleResponse.author().userImage()).isNull(),
-                () -> assertThat(articleResponse.author().following()).isEqualTo(false)
+                () -> assertThat(saveResponse.articleSlug()).isEqualTo(ARTICLE_SLUG),
+                () -> assertThat(saveResponse.articleTitle()).isEqualTo(ARTICLE_TITLE),
+                () -> assertThat(saveResponse.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
+                () -> assertThat(saveResponse.articleBody()).isEqualTo(ARTICLE_BODY),
+                () -> assertThat(saveResponse.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(saveResponse.createdAt()).isNotNull(),
+                () -> assertThat(saveResponse.updatedAt()).isNotNull(),
+                () -> assertThat(saveResponse.favorited()).isEqualTo(false),
+                () -> assertThat(saveResponse.favoritesCount()).isEqualTo(0),
+                () -> assertThat(saveResponse.author().userName().userName()).isEqualTo("woozi"),
+                () -> assertThat(saveResponse.author().userBio()).isNull(),
+                () -> assertThat(saveResponse.author().userImage()).isNull(),
+                () -> assertThat(saveResponse.author().following()).isEqualTo(false)
         );
     }
 
     @Test
     void 슬러그를_통해_게시글을_조회한다_인가안됨() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
-        final ExtractableResponse<Response> articleSaveResponse = 정상적인_게시글_등록_요청(loginResponse.accessToken());
-        final ArticleSave.Response articleResponse = articleSaveResponse.as(ArticleSave.Response.class);
-        final ExtractableResponse<Response> articleFindResponse = 정상적인_인가되지_않은_게시글_조회_요청(loginResponse.accessToken(), articleResponse.articleSlug());
-        final ArticleInfo articleInfo = articleFindResponse.as(ArticleInfo.class);
+        final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(loginResponse.accessToken());
+        final ExtractableResponse<Response> response = 정상적인_인가되지_않은_게시글_조회_요청(loginResponse.accessToken(), saveResponse.articleSlug());
+        final ArticleInfo articleInfo = response.as(ArticleInfo.class);
 
         assertAll(
-                () -> assertThat(articleFindResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(articleInfo.articleSlug().articleSlug()).isEqualTo("how-to-train-your-dragon"),
-                () -> assertThat(articleInfo.articleTitle().articleTitle()).isEqualTo("How to train your dragon"),
-                () -> assertThat(articleInfo.articleDescription().articleDescription()).isEqualTo("Ever wonder how?"),
-                () -> assertThat(articleInfo.articleBody().articleBody()).isEqualTo("You have to believe"),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(saveResponse.articleSlug()).isEqualTo(ARTICLE_SLUG),
+                () -> assertThat(saveResponse.articleTitle()).isEqualTo(ARTICLE_TITLE),
+                () -> assertThat(saveResponse.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
+                () -> assertThat(saveResponse.articleBody()).isEqualTo(ARTICLE_BODY),
                 () -> assertThat(articleInfo.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
                 () -> assertThat(articleInfo.createdAt()).isNotNull(),
                 () -> assertThat(articleInfo.updatedAt()).isNotNull(),
@@ -94,17 +92,16 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
     @Test
     void 슬러그를_통해_게시글을_조회한다_인가됨() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
-        final ExtractableResponse<Response> articleSaveResponse = 정상적인_게시글_등록_요청(loginResponse.accessToken());
-        final ArticleSave.Response articleResponse = articleSaveResponse.as(ArticleSave.Response.class);
-        final ExtractableResponse<Response> articleFindResponse = 정상적인_인가된_게시글_조회_요청(loginResponse.accessToken(), articleResponse.articleSlug());
-        final ArticleInfo articleInfo = articleFindResponse.as(ArticleInfo.class);
+        final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(loginResponse.accessToken());
+        final ExtractableResponse<Response> response = 정상적인_인가된_게시글_조회_요청(loginResponse.accessToken(), saveResponse.articleSlug());
+        final ArticleInfo articleInfo = response.as(ArticleInfo.class);
 
         assertAll(
-                () -> assertThat(articleFindResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(articleInfo.articleSlug().articleSlug()).isEqualTo("how-to-train-your-dragon"),
-                () -> assertThat(articleInfo.articleTitle().articleTitle()).isEqualTo("How to train your dragon"),
-                () -> assertThat(articleInfo.articleDescription().articleDescription()).isEqualTo("Ever wonder how?"),
-                () -> assertThat(articleInfo.articleBody().articleBody()).isEqualTo("You have to believe"),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(saveResponse.articleSlug()).isEqualTo(ARTICLE_SLUG),
+                () -> assertThat(saveResponse.articleTitle()).isEqualTo(ARTICLE_TITLE),
+                () -> assertThat(saveResponse.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
+                () -> assertThat(saveResponse.articleBody()).isEqualTo(ARTICLE_BODY),
                 () -> assertThat(articleInfo.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
                 () -> assertThat(articleInfo.createdAt()).isNotNull(),
                 () -> assertThat(articleInfo.updatedAt()).isNotNull(),
@@ -115,6 +112,36 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(articleInfo.author().userImage()).isNull(),
                 () -> assertThat(articleInfo.author().following()).isEqualTo(false)
         );
+    }
+
+    @Test
+    void 게시글의_정보를_변경한다() {
+        final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(loginResponse.accessToken());
+        final ExtractableResponse<Response> response = 정상적인_게시글_변경_요청(loginResponse.accessToken(), saveResponse.articleSlug());
+        final ArticleUpdate.Response updateResponse = response.as(ArticleUpdate.Response.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(updateResponse.articleSlug()).isEqualTo(OTHER_ARTICLE_SLUG),
+                () -> assertThat(updateResponse.articleTitle()).isEqualTo(OTHER_ARTICLE_TITLE),
+                () -> assertThat(updateResponse.articleDescription()).isEqualTo(OTHER_ARTICLE_DESCRIPTION),
+                () -> assertThat(updateResponse.articleBody()).isEqualTo(OTHER_ARTICLE_BODY),
+                () -> assertThat(updateResponse.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(updateResponse.createdAt()).isNotNull(),
+                () -> assertThat(updateResponse.updatedAt()).isNotNull(),
+                () -> assertThat(updateResponse.favorited()).isEqualTo(false),
+                () -> assertThat(updateResponse.favoritesCount()).isEqualTo(0),
+                () -> assertThat(updateResponse.author().userName().userName()).isEqualTo("woozi"),
+                () -> assertThat(updateResponse.author().userBio()).isNull(),
+                () -> assertThat(updateResponse.author().userImage()).isNull(),
+                () -> assertThat(updateResponse.author().following()).isEqualTo(false)
+        );
+    }
+
+    protected ArticleSave.Response 정상적인_게시글_등록되어_있음(final AccessToken accessToken) {
+        final ExtractableResponse<Response> articleSaveResponse = 정상적인_게시글_등록_요청(accessToken);
+        return articleSaveResponse.as(ArticleSave.Response.class);
     }
 
     protected ExtractableResponse<Response> 정상적인_게시글_등록_요청(final AccessToken accessToken) {
@@ -146,11 +173,31 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
+    protected ExtractableResponse<Response> 정상적인_게시글_변경_요청(final AccessToken accessToken, final ArticleSlug articleSlug) {
+        final ArticleUpdate.Request request = 정상적인_게시글_변경_정보();
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .put(String.format("/api/articles/%s", articleSlug.articleSlug()))
+                .then()
+                .extract();
+    }
+
+    private ArticleUpdate.Request 정상적인_게시글_변경_정보() {
+        return ArticleUpdate.Request.builder()
+                .articleTitle(OTHER_ARTICLE_TITLE)
+                .articleBody(OTHER_ARTICLE_BODY)
+                .articleDescription(OTHER_ARTICLE_DESCRIPTION)
+                .build();
+    }
+
     protected ArticleSave.Request 정상적인_게시글_정보() {
         return ArticleSave.Request.builder()
-                .articleTitle(ArticleTitle.from("How to train your dragon"))
-                .articleDescription(ArticleDescription.from("Ever wonder how?"))
-                .articleBody(ArticleBody.from("You have to believe"))
+                .articleTitle(ARTICLE_TITLE)
+                .articleBody(ARTICLE_BODY)
+                .articleDescription(ARTICLE_DESCRIPTION)
                 .tags(List.of("reactjs", "angularjs", "dragons"))
                 .build();
     }

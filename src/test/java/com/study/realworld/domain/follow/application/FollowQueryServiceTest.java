@@ -3,13 +3,9 @@ package com.study.realworld.domain.follow.application;
 import com.study.realworld.domain.follow.domain.Follow;
 import com.study.realworld.domain.follow.domain.FollowQueryDSLRepository;
 import com.study.realworld.domain.follow.domain.FollowRepository;
-import com.study.realworld.domain.follow.domain.FollowTest;
 import com.study.realworld.domain.follow.dto.ProfileResponse;
 import com.study.realworld.domain.follow.error.exception.FollowNotFoundException;
 import com.study.realworld.domain.user.domain.persist.User;
-import com.study.realworld.domain.user.domain.vo.UserBio;
-import com.study.realworld.domain.user.domain.vo.UserImage;
-import com.study.realworld.domain.user.domain.vo.UserName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.study.realworld.domain.user.domain.persist.UserTest.testUser;
+import static com.study.realworld.domain.follow.util.FollowFixture.createFollow;
+import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -42,19 +39,21 @@ class FollowQueryServiceTest {
 
     @Test
     void 팔로우_여부를_반환한다() {
-        final User user1 = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
-        final User user2 = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
+        final User followee = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User follower = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+
         willReturn(false).given(followRepository).existsByFolloweeAndFollower(any(), any());
 
-        final boolean actual = followQueryService.existsByFolloweeAndFollower(user1, user2);
+        final boolean actual = followQueryService.existsByFolloweeAndFollower(followee, follower);
         assertThat(actual).isFalse();
     }
 
     @Test
     void 팔로우_정보를_찾는다() {
-        final User followee = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
-        final User follower = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
-        final Follow follow = FollowTest.testFollow(follower, followee);
+        final User followee = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User follower = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final Follow follow = createFollow(follower, followee);
+
         willReturn(Optional.of(follow)).given(followRepository).findByFolloweeAndFollower(any(), any());
 
         final Follow findFollow = followQueryService.findByFolloweeAndFollower(followee, follower);
@@ -63,8 +62,9 @@ class FollowQueryServiceTest {
 
     @Test
     void 팔로우_정보가_없다면_예외를_발생시킨다() {
-        final User followee = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
-        final User follower = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
+        final User followee = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User follower = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+
         willReturn(Optional.empty()).given(followRepository).findByFolloweeAndFollower(any(), any());
 
         assertThatThrownBy(() -> followQueryService.findByFolloweeAndFollower(followee, follower))
@@ -74,16 +74,17 @@ class FollowQueryServiceTest {
 
     @Test
     void 팔로우_정보를_찾는다_QueryDSL() {
-        final User me = testUser("user1@gmail.com", "user1", "password1", "bio1", "image1");
-        final User target = testUser("user2@gmail.com", "user2", "password2", "bio2", "image2");
-        final ProfileResponse profileResponse = new ProfileResponse(target, false);
+        final User followee = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User follower = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final ProfileResponse profileResponse = new ProfileResponse(followee, false);
+
         willReturn(profileResponse).given(followQueryDSLRepository).userInfoAndFollowable(any(), any());
 
-        final ProfileResponse findProfileResponse = followQueryService.userInfoAndFollowable(me, target);
+        final ProfileResponse findProfileResponse = followQueryService.userInfoAndFollowable(followee, follower);
         assertAll(
-                () -> assertThat(findProfileResponse.userName()).isEqualTo(UserName.from("user2")),
-                () -> assertThat(findProfileResponse.userBio()).isEqualTo(UserBio.from("bio2")),
-                () -> assertThat(findProfileResponse.userImage()).isEqualTo(UserImage.from("image2")),
+                () -> assertThat(findProfileResponse.userName()).isEqualTo(followee.userName()),
+                () -> assertThat(findProfileResponse.userBio()).isEqualTo(followee.userBio()),
+                () -> assertThat(findProfileResponse.userImage()).isEqualTo(followee.userImage()),
                 () -> assertThat(findProfileResponse.isFollowing()).isFalse()
         );
     }

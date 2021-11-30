@@ -90,3 +90,14 @@ Authorization: {{Authorization}}
 
 ### ARTICLE_FIND_NO_AUTHORIATION
 GET localhost:8080/api/articles/how-to-train-your-dragon
+
+### ARTICLE_UPDATE
+PUT http://localhost:8080/api/articles/how-to-train-your-dragon
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "article": {
+    "title": "Did you train your dragon?"
+  }
+}

@@ -4,6 +4,7 @@ import com.study.realworld.domain.article.domain.vo.ArticleBody;
 import com.study.realworld.domain.article.domain.vo.ArticleDescription;
 import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.article.domain.vo.ArticleTitle;
+import com.study.realworld.domain.article.strategy.SlugStrategy;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -49,6 +50,10 @@ public class Article extends BaseTimeEntity {
         this.author = author;
     }
 
+    public boolean isSameAuthor(final User user) {
+        return author.equals(user);
+    }
+
     public Long articleId() {
         return articleId;
     }
@@ -75,6 +80,32 @@ public class Article extends BaseTimeEntity {
 
     public Article changeAuthor(final User author) {
         this.author = author;
+        return this;
+    }
+
+    public Article changeArticleTitleAndSlug(final ArticleTitle articleTitle, final SlugStrategy slugStrategy) {
+        final String articleSlug = slugStrategy.mapToSlug(articleTitle.articleTitle());
+        return changeArticleTitle(articleTitle)
+                .changeArticleSlug(ArticleSlug.from(articleSlug));
+    }
+
+    private Article changeArticleTitle(final ArticleTitle articleTitle) {
+        this.articleTitle = articleTitle;
+        return this;
+    }
+
+    private Article changeArticleSlug(final ArticleSlug articleSlug) {
+        this.articleSlug = articleSlug;
+        return this;
+    }
+
+    public Article changeArticleBody(final ArticleBody articleBody) {
+        this.articleBody = articleBody;
+        return this;
+    }
+
+    public Article changeArticleDescription(final ArticleDescription articleDescription) {
+        this.articleDescription = articleDescription;
         return this;
     }
 

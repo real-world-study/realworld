@@ -11,6 +11,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static com.study.realworld.domain.user.domain.vo.UserPassword.encode;
 
 public final class UserJoin {
 
@@ -35,11 +38,11 @@ public final class UserJoin {
             this.userPassword = userPassword;
         }
 
-        public final User toEntity() {
+        public final User toEntity(final PasswordEncoder passwordEncoder) {
             return User.builder()
                     .userName(userName)
                     .userEmail(userEmail)
-                    .userPassword(userPassword)
+                    .userPassword(encode(userPassword.userPassword(), passwordEncoder))
                     .build();
         }
     }
