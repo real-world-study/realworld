@@ -5,6 +5,7 @@ import com.study.realworld.domain.article.domain.persist.ArticleRepository;
 import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.article.dto.ArticleUpdate;
+import com.study.realworld.domain.article.error.exception.AuthorMissMatchException;
 import com.study.realworld.domain.article.strategy.SlugStrategy;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
@@ -46,7 +47,7 @@ public class ArticleCommandService {
 
     private void validateSameAuthor(final Article article, final User user) {
         if (!article.isSameAuthor(user)) {
-            throw new IllegalArgumentException();
+            throw new AuthorMissMatchException();
         }
     }
 }

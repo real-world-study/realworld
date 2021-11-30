@@ -4,6 +4,7 @@ import com.study.realworld.domain.article.domain.persist.Article;
 import com.study.realworld.domain.article.domain.persist.ArticleRepository;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.article.dto.ArticleUpdate;
+import com.study.realworld.domain.article.error.exception.AuthorMissMatchException;
 import com.study.realworld.domain.article.strategy.SlugStrategy;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;

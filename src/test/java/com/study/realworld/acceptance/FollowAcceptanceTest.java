@@ -123,6 +123,7 @@ class FollowAcceptanceTest extends AcceptanceTest {
     @Test
     void 특정_사람을_언팔로우했는데_한번_더_언팔로우하면_예외를_발생시킨다() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        팔로우_요청(loginResponse.accessToken(), user2.userName().userName());
         언팔로우_요청(loginResponse.accessToken(), user2.userName().userName());
         final ExtractableResponse<Response> response = 언팔로우_요청(
                 loginResponse.accessToken(),

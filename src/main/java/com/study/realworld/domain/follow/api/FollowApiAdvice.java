@@ -9,14 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
 @RestControllerAdvice
 public class FollowApiAdvice {
 
     private final Logger log = LogManager.getLogger(getClass());
 
     @ExceptionHandler(FollowBusinessException.class)
-    protected ResponseEntity<FollowErrorResponse> handleUserBusinessException(final FollowBusinessException followBusinessException) {
+    protected ResponseEntity<FollowErrorResponse> handleFollowBusinessException(final FollowBusinessException followBusinessException) {
 
         log.error("FollowBusinessException: {}", followBusinessException.getMessage());
 
