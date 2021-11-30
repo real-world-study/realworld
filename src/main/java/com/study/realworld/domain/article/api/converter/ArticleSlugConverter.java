@@ -11,7 +11,7 @@ public class ArticleSlugConverter {
     private static final Logger logger = LoggerFactory.getLogger(ArticleSlugConverter.class);
 
     @Component
-    public class StringToArticleSlugConverter implements Converter<String, ArticleSlug> {
+    public static class StringToArticleSlugConverter implements Converter<String, ArticleSlug> {
         @Override
         public ArticleSlug convert(final String source) {
             logger.info("StringToArticleSlugConverter : " + source);
@@ -20,7 +20,7 @@ public class ArticleSlugConverter {
     }
 
     @Component
-    public class ArticleSlugToStringConverter implements Converter<ArticleSlug, String> {
+    public static class ArticleSlugToStringConverter implements Converter<ArticleSlug, String> {
         @Override
         public String convert(final ArticleSlug source) {
             logger.info("ArticleSlugToStringConverter : " + source.toString());

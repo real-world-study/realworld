@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class FollowCommandService {
+public class FollowUserCommandService {
 
     private final UserQueryService userQueryService;
     private final FollowRepository followRepository;

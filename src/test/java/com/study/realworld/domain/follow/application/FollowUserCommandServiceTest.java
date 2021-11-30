@@ -26,7 +26,7 @@ import static org.mockito.BDDMockito.willReturn;
 
 @DisplayName("팔로우 커멘드 서비스(FollowCommandService)")
 @ExtendWith(MockitoExtension.class)
-class FollowCommandServiceTest {
+class FollowUserCommandServiceTest {
 
     @Mock
     private UserQueryService userQueryService;
@@ -35,7 +35,7 @@ class FollowCommandServiceTest {
     private FollowRepository followRepository;
 
     @InjectMocks
-    private FollowCommandService followCommandService;
+    private FollowUserCommandService followUserCommandService;
 
     @Test
     void 팔로워_아이덴티티와_팔로위_이름을_입력하면_팔로우_할_수_있다() {
@@ -48,7 +48,7 @@ class FollowCommandServiceTest {
         willReturn(false).given(followRepository).existsByFolloweeAndFollower(any(), any());
         willReturn(follow).given(followRepository).save(any());
 
-        final FollowResponse followResponse = followCommandService.follow(1L, followee.userName());
+        final FollowResponse followResponse = followUserCommandService.follow(1L, followee.userName());
         assertAll(
                 () -> assertThat(followResponse.userName()).isEqualTo(followee.userName()),
                 () -> assertThat(followResponse.userBio()).isEqualTo(followee.userBio()),
@@ -66,7 +66,7 @@ class FollowCommandServiceTest {
         willReturn(followee).given(userQueryService).findByUserName(any());
         willReturn(true).given(followRepository).existsByFolloweeAndFollower(any(), any());
 
-        assertThatThrownBy(() -> followCommandService.follow(1L, followee.userName()))
+        assertThatThrownBy(() -> followUserCommandService.follow(1L, followee.userName()))
                 .isExactlyInstanceOf(DuplicatedFollowException.class)
                 .hasMessage("팔로우 정보가 이미 있습니다");
     }
@@ -81,7 +81,7 @@ class FollowCommandServiceTest {
         willReturn(followee).given(userQueryService).findByUserName(any());
         willReturn(Optional.of(follow)).given(followRepository).findByFolloweeAndFollower(any(), any());
 
-        final UnFollowResponse unFollowResponse = followCommandService.unfollow(1L, followee.userName());
+        final UnFollowResponse unFollowResponse = followUserCommandService.unfollow(1L, followee.userName());
         assertAll(
                 () -> assertThat(unFollowResponse.userName()).isEqualTo(followee.userName()),
                 () -> assertThat(unFollowResponse.userBio()).isEqualTo(followee.userBio()),
