@@ -17,10 +17,12 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.study.realworld.domain.article.util.ArticleFixture.*;
 import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willReturn;
@@ -73,17 +75,20 @@ class ArticleCommandServiceTest {
     }
 
     @Test
-    void 저자_정보가_일치하지_않는다면_게시글을_변경_수_앖다() {
+    void 저자_정보가_일치하지_않는다면_게시글을_변경_수_없다() {
         final User loginUser = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
         final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
         final ArticleUpdate.Request request = createArticleUpdateRequest(OTHER_ARTICLE_TITLE, OTHER_ARTICLE_BODY, OTHER_ARTICLE_DESCRIPTION);
 
-        willReturn(loginUser).given(userQueryService).findById(any());
-        willReturn(article.articleSlug().articleSlug()).given(slugStrategy).mapToSlug(any());
+        ReflectionTestUtils.setField(loginUser, "userId", 1L);
+        ReflectionTestUtils.setField(author, "userId", 2L);
 
-//        assertThatThrownBy(() -> articleCommandService.update(1L, article.articleSlug(), request))
-//                .isExactlyInstanceOf()
-//                .hasMessage();
+        willReturn(loginUser).given(userQueryService).findById(any());
+        willReturn(Optional.of(article)).given(articleRepository).findByArticleSlug(any());
+
+        assertThatThrownBy(() -> articleCommandService.update(1L, article.articleSlug(), request))
+                .isExactlyInstanceOf(AuthorMissMatchException.class)
+                .hasMessage("수정자와 저자가 다릅니다");
     }
 }
