@@ -91,6 +91,22 @@ Authorization: {{Authorization}}
 ### ARTICLE_FIND_NO_AUTHORIATION
 GET localhost:8080/api/articles/how-to-train-your-dragon
 
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "woojiji@jake.jake",
+    "password": "woojijiwoojiji"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
+%}
+
 ### ARTICLE_UPDATE
 PUT http://localhost:8080/api/articles/how-to-train-your-dragon
 Authorization: {{Authorization}}
@@ -101,3 +117,8 @@ Content-Type: application/json
     "title": "Did you train your dragon?"
   }
 }
+
+### ARTICLE_DELTE
+DELETE http://localhost:8080/api/articles/did-you-train-your-dragon
+Authorization: {{Authorization}}
+Content-Type: application/json

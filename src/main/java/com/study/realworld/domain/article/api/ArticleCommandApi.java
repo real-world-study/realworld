@@ -6,6 +6,7 @@ import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.article.dto.ArticleUpdate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -31,5 +32,12 @@ public class ArticleCommandApi {
                                                          @Valid @PathVariable final ArticleSlug articleSlug,
                                                          @Valid @RequestBody final ArticleUpdate.Request request) {
         return ResponseEntity.ok().body(articleCommandService.update(userId, articleSlug, request));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/articles/{articleSlug}")
+    public void delete(@AuthenticationPrincipal final Long userId,
+                       @Valid @PathVariable final ArticleSlug articleSlug) {
+        articleCommandService.delete(userId, articleSlug);
     }
 }

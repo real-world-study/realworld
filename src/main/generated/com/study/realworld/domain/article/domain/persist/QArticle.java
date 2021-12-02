@@ -24,6 +24,8 @@ public class QArticle extends EntityPathBase<Article> {
 
     public final com.study.realworld.global.common.QBaseTimeEntity _super = new com.study.realworld.global.common.QBaseTimeEntity(this);
 
+    public final BooleanPath activated = createBoolean("activated");
+
     public final com.study.realworld.domain.article.domain.vo.QArticleBody articleBody;
 
     public final com.study.realworld.domain.article.domain.vo.QArticleDescription articleDescription;

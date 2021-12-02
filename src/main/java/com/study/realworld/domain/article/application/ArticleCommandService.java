@@ -33,20 +33,29 @@ public class ArticleCommandService {
                                          final ArticleSlug articleSlug,
                                          final ArticleUpdate.Request request) {
         final User user = userQueryService.findById(userId);
-        final Article article = articleRepository
-                .findByArticleSlug(articleSlug)
-                .orElseThrow(IllegalArgumentException::new);
-
+        final Article article = findArticleBySlug(articleSlug);
         validateSameAuthor(article, user);
-
         article.changeArticleTitleAndSlug(request.optionalArticleTitle().orElse(article.articleTitle()), slugStrategy)
                 .changeArticleBody(request.optionalArticleBody().orElse(article.articleBody()))
                 .changeArticleDescription(request.optionalArticleDescription().orElse(article.articleDescription()));
         return ArticleUpdate.Response.from(article);
     }
 
+    public void delete(final Long userId, final ArticleSlug articleSlug) {
+        final User user = userQueryService.findById(userId);
+        final Article article = findArticleBySlug(articleSlug);
+        validateSameAuthor(article, user);
+        article.delete();
+    }
+
+    private Article findArticleBySlug(final ArticleSlug articleSlug) {
+        return articleRepository
+                .findByArticleSlug(articleSlug)
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
     private void validateSameAuthor(final Article article, final User user) {
-        if (!article.isSameAuthor(user)) {
+        if (!article.isAuthor(user)) {
             throw new AuthorMissMatchException();
         }
     }

@@ -10,10 +10,13 @@ import com.study.realworld.global.common.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Where(clause = "activated = true")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Article extends BaseTimeEntity {
@@ -39,6 +42,9 @@ public class Article extends BaseTimeEntity {
     @JoinColumn(name = "author", nullable = false, updatable = false)
     private User author;
 
+    @Column(name = "activated")
+    private boolean activated = true;
+
     @Builder
     public Article(final ArticleSlug articleSlug, final ArticleTitle articleTitle,
                    final ArticleBody articleBody, final ArticleDescription articleDescription,
@@ -50,7 +56,7 @@ public class Article extends BaseTimeEntity {
         this.author = author;
     }
 
-    public boolean isSameAuthor(final User user) {
+    public boolean isAuthor(final User user) {
         return author.equals(user);
     }
 
@@ -109,6 +115,11 @@ public class Article extends BaseTimeEntity {
         return this;
     }
 
+    public void delete() {
+        activated = false;
+        recordDeletedTime(LocalDateTime.now());
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -121,4 +132,5 @@ public class Article extends BaseTimeEntity {
     public int hashCode() {
         return Objects.hash(articleId());
     }
+
 }

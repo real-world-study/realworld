@@ -6,7 +6,6 @@ import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.article.dto.ArticleUpdate;
 import com.study.realworld.domain.article.error.ArticleErrorResponse;
 import com.study.realworld.domain.auth.dto.Login;
-import com.study.realworld.domain.follow.error.FollowErrorResponse;
 import com.study.realworld.domain.user.dto.UserJoin;
 import com.study.realworld.global.common.AccessToken;
 import io.restassured.RestAssured;
@@ -147,9 +146,18 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
         final Login.Response otherLoginResponse = 로그인_되어있음(user2.userEmail().userEmail());
         final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(authorLoginResponse.accessToken());
         final ExtractableResponse<Response> response = 정상적인_게시글_변경_요청(otherLoginResponse.accessToken(), saveResponse.articleSlug());
-        final ArticleErrorResponse ArticleErrorResponse = response.as(ArticleErrorResponse.class);
+        final ArticleErrorResponse articleErrorResponse = response.as(ArticleErrorResponse.class);
 
-        assertThat(ArticleErrorResponse.body().get(0)).isEqualTo("login user is not author");
+        assertThat(articleErrorResponse.body().get(0)).isEqualTo("login user is not author");
+    }
+
+    @Test
+    void 게시글을_삭제한다() {
+        final Login.Response authorLoginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(authorLoginResponse.accessToken());
+        final ExtractableResponse<Response> response = 정상적인_게시글_삭제_요청(authorLoginResponse.accessToken(), saveResponse.articleSlug());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     protected ArticleSave.Response 정상적인_게시글_등록되어_있음(final AccessToken accessToken) {
@@ -194,6 +202,16 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 .body(request)
                 .when()
                 .put(String.format("/api/articles/%s", articleSlug.articleSlug()))
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 정상적인_게시글_삭제_요청(final AccessToken accessToken, final ArticleSlug articleSlug) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete(String.format("/api/articles/%s", articleSlug.articleSlug()))
                 .then()
                 .extract();
     }
