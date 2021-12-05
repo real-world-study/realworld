@@ -18,7 +18,7 @@ import static com.study.realworld.domain.article.domain.persist.QArticle.article
 import static com.study.realworld.domain.article.domain.persist.QArticleTag.articleTag;
 import static com.study.realworld.domain.favorite.QFavorite.favorite;
 import static com.study.realworld.domain.follow.domain.QFollow.follow;
-import static com.study.realworld.domain.tag.domain.QTag.tag;
+import static com.study.realworld.domain.tag.domain.persist.QTag.tag;
 import static com.study.realworld.domain.user.domain.persist.QUser.user;
 
 @RequiredArgsConstructor

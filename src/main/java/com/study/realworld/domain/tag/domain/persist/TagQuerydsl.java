@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.study.realworld.domain.tag.domain.QTag.tag;
+import static com.study.realworld.domain.tag.domain.persist.QTag.tag;
 
 
 @RequiredArgsConstructor

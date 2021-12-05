@@ -1,6 +1,5 @@
 package com.study.realworld.domain.tag.domain.vo;
 
-import com.study.realworld.domain.tag.domain.vo.TagName;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
