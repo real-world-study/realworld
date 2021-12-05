@@ -4,6 +4,7 @@ import com.study.realworld.domain.tag.domain.persist.Tag;
 import com.study.realworld.domain.tag.domain.persist.TagRepository;
 import com.study.realworld.domain.tag.domain.vo.TagName;
 import com.study.realworld.domain.tag.dto.TagSave;
+import com.study.realworld.domain.tag.error.DuplicatedTagNameException;
 import com.study.realworld.domain.user.error.exception.DuplicatedEmailException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,9 +48,8 @@ class TagCommandServiceTest {
 
         willReturn(true).given(tagRepository).existsByTagName(any());
 
-        DuplicatedEmailException
         assertThatThrownBy(() -> tagCommandService.save(request))
                 .isExactlyInstanceOf(DuplicatedTagNameException.class)
-                .hasMessage("태그 이름 : [ %s ] 가 이미 존재합니다.";);
+                .hasMessage(String.format("태그 이름 : [ %s ] 가 이미 존재합니다.", tagName.tagName()));
     }
 }
