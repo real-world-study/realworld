@@ -1,8 +1,8 @@
 package com.study.realworld.domain.tag.application;
 
 import com.study.realworld.domain.tag.domain.persist.Tag;
-import com.study.realworld.domain.tag.domain.vo.TagName;
 import com.study.realworld.domain.tag.domain.persist.TagRepository;
+import com.study.realworld.domain.tag.domain.vo.TagName;
 import com.study.realworld.domain.tag.dto.TagSave;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
