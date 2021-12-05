@@ -1,3 +1,0 @@
-1638260416357|0|statement|connection 100|url jdbc:h2:mem:real-world|drop table if exists article CASCADE |drop table if exists article CASCADE 
-1638260416357|0|statement|connection 100|url jdbc:h2:mem:real-world|drop table if exists follow CASCADE |drop table if exists follow CASCADE 
-1638260416358|0|statement|connection 100|url jdbc:h2:mem:real-world|drop table if exists user CASCADE |drop table if exists user CASCADE 

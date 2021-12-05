@@ -7,6 +7,7 @@ import com.study.realworld.domain.follow.application.FollowQueryService;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,5 +30,14 @@ public class ArticleUserFollowQueryService {
     public ArticleInfo findByArticleSlugAndExcludeUser(final ArticleSlug articleSlug) {
         final Article article = articleQueryService.findByArticleSlug(articleSlug);
         return ArticleInfo.from(article, false);
+    }
+
+    public String findArticles(final Long userId, final Pageable pageable, final String tag, final String author, final String favorited) {
+        final User user = userQueryService.findById(userId);
+        return articleQueryService.findArticles(user, pageable, tag, author, favorited);
+    }
+
+    public String findArticles(final Pageable pageable, final String tag, final String author, final String favorited) {
+        return articleQueryService.findArticles(pageable, tag, author, favorited);
     }
 }

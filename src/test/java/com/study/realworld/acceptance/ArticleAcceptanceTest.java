@@ -66,7 +66,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 슬러그를_통해_게시글을_조회한다_인가안됨() {
+    void 슬러그를_통해_게시글을_조회한다_인가_안됨() {
         final Login.Response loginResponse = 로그인_되어있음(user1.userEmail().userEmail());
         final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(loginResponse.accessToken());
         final ExtractableResponse<Response> response = 정상적인_인가되지_않은_게시글_조회_요청(loginResponse.accessToken(), saveResponse.articleSlug());
@@ -160,6 +160,28 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
+    @Test
+    void 다른_사람이_게시글을_삭제하면_예외를_발생한다() {
+        final Login.Response authorLoginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        final Login.Response otherLoginResponse = 로그인_되어있음(user2.userEmail().userEmail());
+        final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(authorLoginResponse.accessToken());
+        final ExtractableResponse<Response> response = 정상적인_게시글_삭제_요청(otherLoginResponse.accessToken(), saveResponse.articleSlug());
+        final ArticleErrorResponse articleErrorResponse = response.as(ArticleErrorResponse.class);
+
+        assertThat(articleErrorResponse.body().get(0)).isEqualTo("login user is not author");
+    }
+
+    @Test
+    void 게시글들을_조회한다() {
+        final Login.Response authorLoginResponse = 로그인_되어있음(user1.userEmail().userEmail());
+        final ArticleSave.Response saveResponse = 정상적인_게시글_등록되어_있음(authorLoginResponse.accessToken());
+        final ExtractableResponse<Response> response = 정상적인_게시글_조회_요청(authorLoginResponse.accessToken());
+
+        /***
+         * TODO
+         */
+    }
+
     protected ArticleSave.Response 정상적인_게시글_등록되어_있음(final AccessToken accessToken) {
         final ExtractableResponse<Response> articleSaveResponse = 정상적인_게시글_등록_요청(accessToken);
         return articleSaveResponse.as(ArticleSave.Response.class);
@@ -216,7 +238,17 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 .extract();
     }
 
-    private ArticleUpdate.Request 정상적인_게시글_변경_정보() {
+    private ExtractableResponse<Response> 정상적인_게시글_조회_요청(final AccessToken accessToken) {
+        return RestAssured.given()
+                .header(AUTHORIZATION, BEARER + accessToken.accessToken())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/articles?limit=20&offset=0&tag=AngularJS&author=jake&favorited=jake")
+                .then()
+                .extract();
+    }
+
+    protected ArticleUpdate.Request 정상적인_게시글_변경_정보() {
         return ArticleUpdate.Request.builder()
                 .articleTitle(OTHER_ARTICLE_TITLE)
                 .articleBody(OTHER_ARTICLE_BODY)
