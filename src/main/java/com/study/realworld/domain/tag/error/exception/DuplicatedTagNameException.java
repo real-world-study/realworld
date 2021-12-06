@@ -1,4 +1,4 @@
-package com.study.realworld.domain.tag.error;
+package com.study.realworld.domain.tag.error.exception;
 
 public class DuplicatedTagNameException extends TagBusinessException {
 

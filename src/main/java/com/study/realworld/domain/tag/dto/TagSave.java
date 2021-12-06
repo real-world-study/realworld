@@ -36,5 +36,9 @@ public class TagSave {
         public static Response from(final Tag tag) {
             return new Response(tag.tagName());
         }
+
+        public TagName tagName() {
+            return tagName;
+        }
     }
 }

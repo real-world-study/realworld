@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,5 +23,9 @@ public class TagFindResponse {
         return new TagFindResponse(tags.stream()
                 .map(Tag::tagName)
                 .collect(Collectors.toSet()));
+    }
+
+    public Set<TagName> tags() {
+        return Collections.unmodifiableSet(tags);
     }
 }

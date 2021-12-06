@@ -4,7 +4,7 @@ import com.study.realworld.domain.tag.domain.persist.Tag;
 import com.study.realworld.domain.tag.domain.persist.TagRepository;
 import com.study.realworld.domain.tag.domain.vo.TagName;
 import com.study.realworld.domain.tag.dto.TagSave;
-import com.study.realworld.domain.tag.error.DuplicatedTagNameException;
+import com.study.realworld.domain.tag.error.exception.DuplicatedTagNameException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +18,8 @@ public class TagCommandService {
 
     public Tag save(final TagSave.Request request) {
         final Tag entity = request.toEntity();
-        validateDuplicatedTag(entity.tagName());
-        return tagRepository.save(entity);
+        return tagRepository.findByTagName(entity.tagName())
+                .orElse(tagRepository.save(entity));
     }
 
     private void validateDuplicatedTag(final TagName tagName) {
