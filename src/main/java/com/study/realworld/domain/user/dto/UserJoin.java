@@ -1,12 +1,11 @@
 package com.study.realworld.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.study.realworld.global.common.AccessToken;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.*;
+import com.study.realworld.global.common.AccessToken;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

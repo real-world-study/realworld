@@ -29,4 +29,12 @@ public class ArticleTag {
         this.article = article;
         this.tag = tag;
     }
+
+    public Article article() {
+        return article;
+    }
+
+    public Tag tag() {
+        return tag;
+    }
 }

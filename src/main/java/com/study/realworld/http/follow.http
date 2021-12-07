@@ -42,6 +42,10 @@ Content-Type: application/json
 GET localhost:8080/api/profiles/wooji
 Authorization: {{Authorization}}
 
+### PROFILE
+GET localhost:8080/api/profiles/querydsl/wooji
+Authorization: {{Authorization}}
+
 ### Follow
 POST localhost:8080/api/profiles/wooji/follow
 Authorization: {{Authorization}}

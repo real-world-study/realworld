@@ -3,29 +3,38 @@ package com.study.realworld.domain.article.domain.persist;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.study.realworld.domain.favorite.QFavorite;
+import com.study.realworld.domain.article.domain.vo.ArticleSlug;
+import com.study.realworld.domain.favorite.domain.QFavorite;
 import com.study.realworld.domain.user.domain.persist.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.querydsl.core.types.ExpressionUtils.count;
 import static com.querydsl.core.types.ExpressionUtils.isNotNull;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
 import static com.study.realworld.domain.article.domain.persist.QArticle.article;
 import static com.study.realworld.domain.article.domain.persist.QArticleTag.articleTag;
-import static com.study.realworld.domain.favorite.QFavorite.favorite;
+import static com.study.realworld.domain.favorite.domain.QFavorite.favorite;
 import static com.study.realworld.domain.follow.domain.QFollow.follow;
 import static com.study.realworld.domain.tag.domain.persist.QTag.tag;
 import static com.study.realworld.domain.user.domain.persist.QUser.user;
 
 @RequiredArgsConstructor
 @Repository
-public class ArticleQueryDSLRepository {
+public class ArticleQueryRepository {
 
     private final JPAQueryFactory query;
+
+    public Optional<Article> findByArticleSlug(final ArticleSlug articleSlug) {
+        return Optional.ofNullable(query
+                .selectFrom(article)
+                .where(article.articleSlug.eq(articleSlug))
+                .fetchOne());
+    }
 
     /**
      * SELECT

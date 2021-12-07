@@ -5,5 +5,4 @@ public class UserBusinessException extends RuntimeException {
     public UserBusinessException(final String message) {
         super(message);
     }
-
 }

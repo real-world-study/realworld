@@ -7,5 +7,4 @@ public class IdentityNotFoundException extends UserBusinessException {
     public IdentityNotFoundException(final Long identity) {
         super(String.format(MESSAGE, identity));
     }
-
 }

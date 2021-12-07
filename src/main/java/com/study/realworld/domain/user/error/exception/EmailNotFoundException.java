@@ -7,5 +7,4 @@ public class EmailNotFoundException extends UserBusinessException {
     public EmailNotFoundException(final String email) {
         super(String.format(MESSAGE, email));
     }
-
 }

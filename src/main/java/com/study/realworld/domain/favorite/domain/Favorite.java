@@ -1,4 +1,4 @@
-package com.study.realworld.domain.favorite;
+package com.study.realworld.domain.favorite.domain;
 
 import com.study.realworld.domain.article.domain.persist.Article;
 import com.study.realworld.domain.user.domain.persist.User;

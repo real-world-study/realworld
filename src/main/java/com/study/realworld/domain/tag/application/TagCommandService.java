@@ -18,8 +18,8 @@ public class TagCommandService {
 
     public Tag save(final TagSave.Request request) {
         final Tag entity = request.toEntity();
-        return tagRepository.findByTagName(entity.tagName())
-                .orElse(tagRepository.save(entity));
+        validateDuplicatedTag(entity.tagName());
+        return tagRepository.save(entity);
     }
 
     private void validateDuplicatedTag(final TagName tagName) {

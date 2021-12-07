@@ -6,6 +6,9 @@ import com.study.realworld.domain.user.domain.persist.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import static com.querydsl.core.types.ExpressionUtils.isNotNull;
 import static com.querydsl.core.types.Projections.constructor;
 import static com.querydsl.jpa.JPAExpressions.selectOne;
@@ -14,9 +17,23 @@ import static com.study.realworld.domain.user.domain.persist.QUser.user;
 
 @RequiredArgsConstructor
 @Repository
-public class FollowQueryDSLRepository {
+public class FollowQueryRepository {
 
     private final JPAQueryFactory query;
+
+    public boolean existsByFolloweeAndFollower(final User followee, final User follower) {
+        return Objects.nonNull(findFollow(followee, follower));
+    }
+
+    public Optional<Follow> findByFolloweeAndFollower(final User followee, final User follower) {
+        return Optional.ofNullable(findFollow(followee, follower));
+    }
+
+    private Follow findFollow(final User followee, final User follower) {
+        return query.selectFrom(follow)
+                .where(follow.followee.eq(followee), follow.follower.eq(follower))
+                .fetchOne();
+    }
 
     public ProfileResponse userInfoAndFollowable(final User followee, final User follower) {
         return query.select(constructor(ProfileResponse.class, user,

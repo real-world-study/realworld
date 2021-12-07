@@ -19,15 +19,15 @@ public class FollowCommandApi {
     private final FollowUserCommandService followUserCommandService;
 
     @PostMapping("/profiles/{username}/follow")
-    public ResponseEntity<FollowResponse> profile2(@AuthenticationPrincipal final Long userId,
-                                                   @PathVariable final String username) {
+    public ResponseEntity<FollowResponse> follow(@AuthenticationPrincipal final Long userId,
+                                                 @PathVariable final String username) {
         final FollowResponse followResponse = followUserCommandService.follow(userId, UserName.from(username));
         return ResponseEntity.ok().body(followResponse);
     }
 
     @DeleteMapping("/profiles/{username}/follow")
-    public ResponseEntity<UnFollowResponse> profile(@AuthenticationPrincipal final Long userId,
-                                                    @PathVariable final String username) {
+    public ResponseEntity<UnFollowResponse> unfollow(@AuthenticationPrincipal final Long userId,
+                                                     @PathVariable final String username) {
         final UnFollowResponse unfollowResponse = followUserCommandService.unfollow(userId, UserName.from(username));
         return ResponseEntity.ok().body(unfollowResponse);
     }

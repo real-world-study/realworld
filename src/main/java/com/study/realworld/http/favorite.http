@@ -1,0 +1,93 @@
+### JOIN
+POST localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "user" :{
+    "username": "woojikim",
+    "email": "woojikim@woojikim.woojikim",
+    "password": "woojikim"
+  }
+}
+
+### JOIN
+POST localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "jojoldu",
+    "email": "jojoldu@jojoldu.jojoldu",
+    "password": "jojoldu"
+  }
+}
+
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user": {
+    "email": "jojoldu@jojoldu.jojoldu",
+    "password": "jojoldu"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
+%}
+
+### ARTICLE_SAVE
+POST localhost:8080/api/articles
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "article": {
+    "title": "Show me the money",
+    "description": "Ever wonder how?",
+    "body": "You have to believe",
+    "tagList": [
+      "reactjs",
+      "angularjs",
+      "dragons"
+    ]
+  }
+}
+
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user" :{
+    "email": "woojikim@woojikim.woojikim",
+    "password": "woojikim"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
+%}
+
+### FAVORITE
+POST http://localhost:8080/api/articles/show-me-the-money/favorite
+Authorization: {{Authorization}}
+
+### Follow
+POST localhost:8080/api/profiles/jojoldu/follow
+Authorization: {{Authorization}}
+
+### FAVORITE
+POST http://localhost:8080/api/articles/show-me-the-money/favorite
+Authorization: {{Authorization}}
+
+### UnFollow
+DELETE localhost:8080/api/profiles/jojoldu/follow
+Authorization: {{Authorization}}
+
+### FAVORITE
+POST http://localhost:8080/api/articles/show-me-the-money/favorite
+Authorization: {{Authorization}}

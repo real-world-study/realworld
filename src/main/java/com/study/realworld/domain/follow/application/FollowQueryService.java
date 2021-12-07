@@ -1,8 +1,7 @@
 package com.study.realworld.domain.follow.application;
 
 import com.study.realworld.domain.follow.domain.Follow;
-import com.study.realworld.domain.follow.domain.FollowQueryDSLRepository;
-import com.study.realworld.domain.follow.domain.FollowRepository;
+import com.study.realworld.domain.follow.domain.FollowQueryRepository;
 import com.study.realworld.domain.follow.dto.ProfileResponse;
 import com.study.realworld.domain.follow.error.exception.FollowNotFoundException;
 import com.study.realworld.domain.user.domain.persist.User;
@@ -15,20 +14,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FollowQueryService {
 
-    private final FollowQueryDSLRepository followQueryDSLRepository;
-    private final FollowRepository followRepository;
+    private final FollowQueryRepository followQueryRepository;
 
     public boolean existsByFolloweeAndFollower(final User followee, final User follower) {
-        return followRepository.existsByFolloweeAndFollower(followee, follower);
+        return followQueryRepository.existsByFolloweeAndFollower(followee, follower);
     }
 
     public Follow findByFolloweeAndFollower(final User followee, final User follower) {
-        return followRepository
+        return followQueryRepository
                 .findByFolloweeAndFollower(followee, follower)
                 .orElseThrow(FollowNotFoundException::new);
     }
 
     public ProfileResponse userInfoAndFollowable(final User followee, final User follower) {
-        return followQueryDSLRepository.userInfoAndFollowable(followee, follower);
+        return followQueryRepository.userInfoAndFollowable(followee, follower);
     }
 }

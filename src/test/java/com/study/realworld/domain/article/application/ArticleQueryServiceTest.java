@@ -1,7 +1,7 @@
 package com.study.realworld.domain.article.application;
 
 import com.study.realworld.domain.article.domain.persist.Article;
-import com.study.realworld.domain.article.domain.persist.ArticleRepository;
+import com.study.realworld.domain.article.domain.persist.ArticleQueryRepository;
 import com.study.realworld.domain.user.domain.persist.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.mockito.BDDMockito.willReturn;
 class ArticleQueryServiceTest {
 
     @Mock
-    private ArticleRepository articleRepository;
+    private ArticleQueryRepository articleQueryRepository;
 
     @InjectMocks
     private ArticleQueryService articleQueryService;
@@ -37,7 +37,7 @@ class ArticleQueryServiceTest {
 
         ReflectionTestUtils.setField(article, "articleId", 1L);
 
-        willReturn(Optional.of(article)).given(articleRepository).findByArticleSlug(any());
+        willReturn(Optional.of(article)).given(articleQueryRepository).findByArticleSlug(any());
 
         final Article findArticle = articleQueryService.findByArticleSlug(article.articleSlug());
         assertAll(

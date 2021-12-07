@@ -1,9 +1,6 @@
 package com.study.realworld.domain.article.domain.persist;
 
-import com.study.realworld.domain.article.domain.vo.ArticleBody;
-import com.study.realworld.domain.article.domain.vo.ArticleDescription;
-import com.study.realworld.domain.article.domain.vo.ArticleSlug;
-import com.study.realworld.domain.article.domain.vo.ArticleTitle;
+import com.study.realworld.domain.article.domain.vo.*;
 import com.study.realworld.domain.article.strategy.SlugStrategy;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.global.common.BaseTimeEntity;
@@ -37,6 +34,9 @@ public class Article extends BaseTimeEntity {
 
     @Embedded
     private ArticleDescription articleDescription;
+
+    @Embedded
+    private ArticleTags articleTags = new ArticleTags();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author", nullable = false, updatable = false)
@@ -78,6 +78,10 @@ public class Article extends BaseTimeEntity {
 
     public ArticleDescription articleDescription() {
         return articleDescription;
+    }
+
+    public ArticleTags articleTags() {
+        return articleTags;
     }
 
     public User author() {
@@ -132,5 +136,4 @@ public class Article extends BaseTimeEntity {
     public int hashCode() {
         return Objects.hash(articleId());
     }
-
 }

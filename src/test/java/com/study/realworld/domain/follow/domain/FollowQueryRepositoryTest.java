@@ -18,17 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("팔로우 QueryDsl 저장소 테스트(FollowQueryDSLRepository)")
 @DataJpaTest
-class FollowQueryDSLRepositoryTest {
+class FollowQueryRepositoryTest {
 
     @Autowired
     private EntityManager entityManager;
 
-    private FollowQueryDSLRepository followQueryDSLRepository;
+    private FollowQueryRepository followQueryRepository;
 
     @BeforeEach
     void setUp() {
         final JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
-        followQueryDSLRepository = new FollowQueryDSLRepository(queryFactory);
+        followQueryRepository = new FollowQueryRepository(queryFactory);
     }
 
     @Test
@@ -41,7 +41,7 @@ class FollowQueryDSLRepositoryTest {
         entityManager.persist(follower);
         entityManager.persist(follow);
 
-        final ProfileResponse profileResponse = followQueryDSLRepository.userInfoAndFollowable(followee, follower);
+        final ProfileResponse profileResponse = followQueryRepository.userInfoAndFollowable(followee, follower);
         assertAll(
                 () -> assertThat(profileResponse.userName()).isEqualTo(followee.userName()),
                 () -> assertThat(profileResponse.userBio()).isEqualTo(followee.userBio()),

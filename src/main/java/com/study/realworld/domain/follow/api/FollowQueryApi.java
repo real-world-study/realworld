@@ -1,6 +1,5 @@
 package com.study.realworld.domain.follow.api;
 
-import com.study.realworld.domain.follow.application.FollowQueryService;
 import com.study.realworld.domain.follow.application.FollowUserQueryService;
 import com.study.realworld.domain.follow.dto.ProfileResponse;
 import com.study.realworld.domain.user.domain.vo.UserName;

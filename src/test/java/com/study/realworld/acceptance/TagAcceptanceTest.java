@@ -49,19 +49,6 @@ public class TagAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 동일한_태그를_등록해도_문제없다() {
-        final Login.Response loginUserResponse = 로그인_되어있음(user1.userEmail().userEmail());
-        태그_등록_요청(loginUserResponse.accessToken());
-        final ExtractableResponse<Response> response = 태그_등록_요청(loginUserResponse.accessToken());
-
-        final TagSave.Response tagSaveResponse = response.as(TagSave.Response.class);
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(tagSaveResponse.tagName()).isEqualTo(TagName.from("tagName"))
-        );
-    }
-
-    @Test
     void 태그를_조회한다() {
         final Login.Response loginUserResponse = 로그인_되어있음(user1.userEmail().userEmail());
         태그_등록_요청(loginUserResponse.accessToken());

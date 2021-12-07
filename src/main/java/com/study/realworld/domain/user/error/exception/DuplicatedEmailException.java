@@ -7,5 +7,4 @@ public class DuplicatedEmailException extends UserBusinessException {
     public DuplicatedEmailException(final String email) {
         super(String.format(MESSAGE, email));
     }
-
 }

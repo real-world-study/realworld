@@ -1,7 +1,6 @@
 package com.study.realworld.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.study.realworld.domain.user.domain.persist.User;
@@ -97,4 +96,3 @@ public final class UserUpdate {
         }
     }
 }
-
