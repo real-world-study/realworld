@@ -55,7 +55,7 @@ public class FavoriteInfo {
     private int favoritesCount;
 
     @JsonProperty("author")
-    private AuthorDto authorDto;
+    private AuthorInfo authorInfo;
 
     public static FavoriteInfo of(final Article article, int favoritesCount, boolean following) {
         final ArticleSlug articleSlug = article.articleSlug();
@@ -65,10 +65,10 @@ public class FavoriteInfo {
         final Set<TagName> tagNames = articleTagsToTagNames(article.articleTags());
         final Instant createdAt = article.createdAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
         final Instant updatedAt = article.updatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
-        final AuthorDto authorDto = AuthorDto.from(article.author(), following);
+        final AuthorInfo authorInfo = AuthorInfo.from(article.author(), following);
         return new FavoriteInfo(
                 articleSlug, articleTitle, articleDescription,
-                articleBody, tagNames, createdAt, updatedAt, true, favoritesCount, authorDto);
+                articleBody, tagNames, createdAt, updatedAt, true, favoritesCount, authorInfo);
     }
 
     private static Set<TagName> articleTagsToTagNames(final ArticleTags articleTags) {
@@ -78,9 +78,49 @@ public class FavoriteInfo {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
+    public ArticleSlug articleSlug() {
+        return articleSlug;
+    }
+
+    public ArticleTitle articleTitle() {
+        return articleTitle;
+    }
+
+    public ArticleDescription articleDescription() {
+        return articleDescription;
+    }
+
+    public ArticleBody articleBody() {
+        return articleBody;
+    }
+
+    public Set<TagName> tagNames() {
+        return tagNames;
+    }
+
+    public Instant createdAt() {
+        return createdAt;
+    }
+
+    public Instant updatedAt() {
+        return updatedAt;
+    }
+
+    public boolean favorited() {
+        return favorited;
+    }
+
+    public int favoritesCount() {
+        return favoritesCount;
+    }
+
+    public AuthorInfo authorInfo() {
+        return authorInfo;
+    }
+
     @AllArgsConstructor(access = AccessLevel.PUBLIC)
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class AuthorDto {
+    public static class AuthorInfo {
 
         @JsonProperty("username")
         private UserName userName;
@@ -94,8 +134,8 @@ public class FavoriteInfo {
         @JsonProperty("following")
         private boolean following;
 
-        public static AuthorDto from(final User author, final boolean following) {
-            return new AuthorDto(author.userName(), author.userBio(), author.userImage(), following);
+        public static AuthorInfo from(final User author, final boolean following) {
+            return new AuthorInfo(author.userName(), author.userBio(), author.userImage(), following);
         }
 
         public UserName userName() {

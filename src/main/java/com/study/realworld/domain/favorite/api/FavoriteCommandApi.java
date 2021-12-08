@@ -1,7 +1,7 @@
 package com.study.realworld.domain.favorite.api;
 
 import com.study.realworld.domain.article.domain.vo.ArticleSlug;
-import com.study.realworld.domain.favorite.application.FavoriteFacadeCommandService;
+import com.study.realworld.domain.favorite.application.FavoriteCommandService;
 import com.study.realworld.domain.favorite.dto.FavoriteInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +16,13 @@ import javax.validation.Valid;
 @RestController
 public class FavoriteCommandApi {
 
-    private final FavoriteFacadeCommandService favoriteFacadeCommandService;
+    private final FavoriteCommandService favoriteCommandService;
 
     @PostMapping("/articles/{articleSlug}/favorite")
     public ResponseEntity<FavoriteInfo> favorite(@AuthenticationPrincipal final Long userId,
                                                  @Valid @PathVariable final ArticleSlug articleSlug) {
 
-        final FavoriteInfo favoriteInfo = favoriteFacadeCommandService.favorite(userId, articleSlug);
+        final FavoriteInfo favoriteInfo = favoriteCommandService.favorite(userId, articleSlug);
         return ResponseEntity.ok().body(favoriteInfo);
     }
 }

@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class FavoriteFacadeCommandService {
+public class FavoriteCommandService {
 
     private final FavoriteRepository favoriteRepository;
     private final UserQueryService userQueryService;
@@ -26,7 +26,8 @@ public class FavoriteFacadeCommandService {
     public FavoriteInfo favorite(final Long userId, final ArticleSlug articleSlug) {
         final User user = userQueryService.findById(userId);
         final Article article = articleQueryService.findByArticleSlug(articleSlug);
-        favoriteRepository.findByUserAndArticle(user, article).orElseGet(() -> favoriteRepository.save(favorite(user, article)));
+        favoriteRepository.findByUserAndArticle(user, article)
+                .orElseGet(() -> favoriteRepository.save(favorite(user, article)));
         final int favoriteCount = favoriteRepository.countByArticle(article);
         final boolean following = followQueryService.existsByFolloweeAndFollower(article.author(), user);
         return FavoriteInfo.of(article, favoriteCount, following);
