@@ -25,6 +25,7 @@ import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
 
 @DisplayName("FavoriteCommandService")
@@ -78,11 +79,42 @@ class FavoriteCommandServiceTest {
         );
     }
 
+    @Test
+    void 게시글에_좋아요를_취소한다() {
+        final User user = createUser(OTHER_USER_EMAIL, OTHER_USER_NAME, OTHER_USER_PASSWORD, OTHER_USER_BIO, OTHER_USER_IMAGE);
+        final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
+        final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
+
+        ReflectionTestUtils.setField(article, "createdAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
+
+        willReturn(user).given(userQueryService).findById(any());
+        willReturn(article).given(articleQueryService).findByArticleSlug(any());
+        willReturn(true).given(followQueryService).existsByFolloweeAndFollower(article.author(), user);
+        willReturn(Optional.ofNullable(createFavorite(user, article))).given(favoriteRepository).findByUserAndArticle(any(), any());
+        willDoNothing().given(favoriteRepository).delete(any());
+        willReturn(0).given(favoriteRepository).countByArticle(any());
+
+        final FavoriteInfo favoriteInfo = favoriteCommandService.favorite(1L, ARTICLE_SLUG);
+        assertAll(
+                () -> assertThat(favoriteInfo.articleSlug()).isEqualTo(ARTICLE_SLUG),
+                () -> assertThat(favoriteInfo.articleTitle()).isEqualTo(ARTICLE_TITLE),
+                () -> assertThat(favoriteInfo.articleBody()).isEqualTo(ARTICLE_BODY),
+                () -> assertThat(favoriteInfo.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
+                () -> assertThat(favoriteInfo.favorited()).isFalse(),
+                () -> assertThat(favoriteInfo.favoritesCount()).isEqualTo(0),
+                () -> assertThat(favoriteInfo.tagNames()).isEqualTo(Set.of()),
+                () -> assertThat(favoriteInfo.authorInfo().userName()).isEqualTo(USER_NAME),
+                () -> assertThat(favoriteInfo.authorInfo().userBio()).isEqualTo(USER_BIO),
+                () -> assertThat(favoriteInfo.authorInfo().userImage()).isEqualTo(USER_IMAGE),
+                () -> assertThat(favoriteInfo.authorInfo().following()).isTrue()
+        );
+    }
+
     private Favorite createFavorite(final User user, final Article article) {
         return Favorite.builder()
                 .user(user)
                 .article(article)
                 .build();
     }
-
 }
