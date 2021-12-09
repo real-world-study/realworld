@@ -5,6 +5,7 @@ import com.study.realworld.domain.article.domain.persist.Article;
 import com.study.realworld.domain.favorite.domain.Favorite;
 import com.study.realworld.domain.favorite.domain.FavoriteRepository;
 import com.study.realworld.domain.favorite.dto.FavoriteInfo;
+import com.study.realworld.domain.favorite.dto.UnFavoriteInfo;
 import com.study.realworld.domain.follow.application.FollowQueryService;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
@@ -95,19 +96,19 @@ class FavoriteCommandServiceTest {
         willDoNothing().given(favoriteRepository).delete(any());
         willReturn(0).given(favoriteRepository).countByArticle(any());
 
-        final FavoriteInfo favoriteInfo = favoriteCommandService.favorite(1L, ARTICLE_SLUG);
+        final UnFavoriteInfo unFavoriteInfo = favoriteCommandService.unFavorite(1L, ARTICLE_SLUG);
         assertAll(
-                () -> assertThat(favoriteInfo.articleSlug()).isEqualTo(ARTICLE_SLUG),
-                () -> assertThat(favoriteInfo.articleTitle()).isEqualTo(ARTICLE_TITLE),
-                () -> assertThat(favoriteInfo.articleBody()).isEqualTo(ARTICLE_BODY),
-                () -> assertThat(favoriteInfo.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
-                () -> assertThat(favoriteInfo.favorited()).isFalse(),
-                () -> assertThat(favoriteInfo.favoritesCount()).isEqualTo(0),
-                () -> assertThat(favoriteInfo.tagNames()).isEqualTo(Set.of()),
-                () -> assertThat(favoriteInfo.authorInfo().userName()).isEqualTo(USER_NAME),
-                () -> assertThat(favoriteInfo.authorInfo().userBio()).isEqualTo(USER_BIO),
-                () -> assertThat(favoriteInfo.authorInfo().userImage()).isEqualTo(USER_IMAGE),
-                () -> assertThat(favoriteInfo.authorInfo().following()).isTrue()
+                () -> assertThat(unFavoriteInfo.articleSlug()).isEqualTo(ARTICLE_SLUG),
+                () -> assertThat(unFavoriteInfo.articleTitle()).isEqualTo(ARTICLE_TITLE),
+                () -> assertThat(unFavoriteInfo.articleBody()).isEqualTo(ARTICLE_BODY),
+                () -> assertThat(unFavoriteInfo.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
+                () -> assertThat(unFavoriteInfo.favorited()).isFalse(),
+                () -> assertThat(unFavoriteInfo.favoritesCount()).isEqualTo(0),
+                () -> assertThat(unFavoriteInfo.tagNames()).isEqualTo(Set.of()),
+                () -> assertThat(unFavoriteInfo.authorInfo().userName()).isEqualTo(USER_NAME),
+                () -> assertThat(unFavoriteInfo.authorInfo().userBio()).isEqualTo(USER_BIO),
+                () -> assertThat(unFavoriteInfo.authorInfo().userImage()).isEqualTo(USER_IMAGE),
+                () -> assertThat(unFavoriteInfo.authorInfo().following()).isTrue()
         );
     }
 

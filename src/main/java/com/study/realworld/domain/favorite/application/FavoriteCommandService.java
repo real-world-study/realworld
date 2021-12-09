@@ -6,6 +6,7 @@ import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.favorite.domain.Favorite;
 import com.study.realworld.domain.favorite.domain.FavoriteRepository;
 import com.study.realworld.domain.favorite.dto.FavoriteInfo;
+import com.study.realworld.domain.favorite.dto.UnFavoriteInfo;
 import com.study.realworld.domain.follow.application.FollowQueryService;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
@@ -38,5 +39,14 @@ public class FavoriteCommandService {
                 .user(user)
                 .article(article)
                 .build();
+    }
+
+    public UnFavoriteInfo unFavorite(final long userId, final ArticleSlug articleSlug) {
+        final User user = userQueryService.findById(userId);
+        final Article article = articleQueryService.findByArticleSlug(articleSlug);
+        favoriteRepository.findByUserAndArticle(user, article).ifPresent(favoriteRepository::delete);
+        final int favoriteCount = favoriteRepository.countByArticle(article);
+        final boolean following = followQueryService.existsByFolloweeAndFollower(article.author(), user);
+        return UnFavoriteInfo.of(article, favoriteCount, following);
     }
 }
