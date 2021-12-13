@@ -62,7 +62,7 @@ class FavoriteCommandServiceTest {
         willReturn(true).given(followQueryService).existsByFolloweeAndFollower(article.author(), user);
         willReturn(Optional.empty()).given(favoriteRepository).findByUserAndArticle(any(), any());
         willReturn(createFavorite(user, article)).given(favoriteRepository).save(any());
-        willReturn(1).given(favoriteRepository).countByArticle(any());
+        willReturn(1L).given(favoriteRepository).countByArticle(any());
 
         final FavoriteInfo favoriteInfo = favoriteCommandService.favorite(1L, ARTICLE_SLUG);
         assertAll(
@@ -94,7 +94,7 @@ class FavoriteCommandServiceTest {
         willReturn(true).given(followQueryService).existsByFolloweeAndFollower(article.author(), user);
         willReturn(Optional.ofNullable(createFavorite(user, article))).given(favoriteRepository).findByUserAndArticle(any(), any());
         willDoNothing().given(favoriteRepository).delete(any());
-        willReturn(0).given(favoriteRepository).countByArticle(any());
+        willReturn(0L).given(favoriteRepository).countByArticle(any());
 
         final UnFavoriteInfo unFavoriteInfo = favoriteCommandService.unFavorite(1L, ARTICLE_SLUG);
         assertAll(

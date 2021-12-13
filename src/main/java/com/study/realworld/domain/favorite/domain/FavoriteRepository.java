@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     Optional<Favorite> findByUserAndArticle(final User user, final Article article);
 
-    int countByArticle(final Article article);
+    long countByArticle(final Article article);
 }

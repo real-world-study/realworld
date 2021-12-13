@@ -52,12 +52,12 @@ public class FavoriteInfo {
     private boolean favorited;
 
     @JsonProperty("favoritesCount")
-    private int favoritesCount;
+    private long favoritesCount;
 
     @JsonProperty("author")
     private AuthorInfo authorInfo;
 
-    public static FavoriteInfo of(final Article article, int favoritesCount, boolean following) {
+    public static FavoriteInfo of(final Article article, long favoritesCount, boolean following) {
         final ArticleSlug articleSlug = article.articleSlug();
         final ArticleTitle articleTitle = article.articleTitle();
         final ArticleDescription articleDescription = article.articleDescription();
@@ -110,7 +110,7 @@ public class FavoriteInfo {
         return favorited;
     }
 
-    public int favoritesCount() {
+    public long favoritesCount() {
         return favoritesCount;
     }
 

@@ -19,34 +19,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FavoriteCommandService {
 
-    private final FavoriteRepository favoriteRepository;
     private final UserQueryService userQueryService;
     private final ArticleQueryService articleQueryService;
     private final FollowQueryService followQueryService;
+    private final FavoriteRepository favoriteRepository;
 
     public FavoriteInfo favorite(final Long userId, final ArticleSlug articleSlug) {
         final User user = userQueryService.findById(userId);
         final Article article = articleQueryService.findByArticleSlug(articleSlug);
         favoriteRepository.findByUserAndArticle(user, article)
-                .orElseGet(() -> favoriteRepository.save(favorite(user, article)));
-        final int favoriteCount = favoriteRepository.countByArticle(article);
+                .orElseGet(() -> favoriteRepository.save(createFavorite(user, article)));
+        final long favoriteCount = favoriteRepository.countByArticle(article);
         final boolean following = followQueryService.existsByFolloweeAndFollower(article.author(), user);
         return FavoriteInfo.of(article, favoriteCount, following);
-    }
-
-    private Favorite favorite(final User user, final Article article) {
-        return Favorite.builder()
-                .user(user)
-                .article(article)
-                .build();
     }
 
     public UnFavoriteInfo unFavorite(final long userId, final ArticleSlug articleSlug) {
         final User user = userQueryService.findById(userId);
         final Article article = articleQueryService.findByArticleSlug(articleSlug);
         favoriteRepository.findByUserAndArticle(user, article).ifPresent(favoriteRepository::delete);
-        final int favoriteCount = favoriteRepository.countByArticle(article);
+        final long favoriteCount = favoriteRepository.countByArticle(article);
         final boolean following = followQueryService.existsByFolloweeAndFollower(article.author(), user);
         return UnFavoriteInfo.of(article, favoriteCount, following);
+    }
+
+    private Favorite createFavorite(final User user, final Article article) {
+        return Favorite.builder()
+                .user(user)
+                .article(article)
+                .build();
     }
 }

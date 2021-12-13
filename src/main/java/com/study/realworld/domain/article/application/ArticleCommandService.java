@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ArticleCommandService {
 
-    private final ArticleRepository articleRepository;
     private final UserQueryService userQueryService;
+    private final ArticleRepository articleRepository;
     private final SlugStrategy slugStrategy;
 
     public Article save(final Long userId, final ArticleSave.Request request) {

@@ -60,7 +60,7 @@ class FavoriteRepositoryTest {
         testEntityManager.persist(article);
         testEntityManager.persist(createFavorite(user, article));
 
-        final int actual = favoriteRepository.countByArticle(article);
+        final long actual = favoriteRepository.countByArticle(article);
         assertThat(actual).isEqualTo(1);
     }
 

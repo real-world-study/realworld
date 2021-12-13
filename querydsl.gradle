@@ -1,14 +1,14 @@
 
-def querydslDir = "$buildDir/generated/querydsl"
+def generated = "${buildDir}/generated/querydsl"
 
 sourceSets {
-    main.java.srcDir querydslDir
+    main.java.srcDirs += [ generated ]
 }
 
 tasks.withType(JavaCompile) {
-    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+    options.annotationProcessorGeneratedSourcesDirectory = file(generated)
 }
 
 clean.doLast {
-    file(querydslDir).deleteDir()
+    file(generated).deleteDir()
 }
