@@ -41,7 +41,8 @@ public class User extends BaseTimeEntity {
     private boolean activated = true;
 
     @Builder
-    public User(final UserEmail userEmail, final UserName userName, final UserPassword userPassword, final UserBio userBio, final UserImage userImage) {
+    public User(final UserEmail userEmail, final UserName userName,
+                final UserPassword userPassword, final UserBio userBio, final UserImage userImage) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.userPassword = userPassword;
@@ -98,7 +99,7 @@ public class User extends BaseTimeEntity {
         return userPassword;
     }
 
-    public boolean isSameAsUserEmail(final UserEmail otherEmail) {
+    public boolean isSameUserEmail(final UserEmail otherEmail) {
         return userEmail.equals(otherEmail);
     }
 

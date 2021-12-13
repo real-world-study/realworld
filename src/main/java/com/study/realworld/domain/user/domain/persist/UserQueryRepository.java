@@ -12,7 +12,7 @@ import static com.study.realworld.domain.user.domain.persist.QUser.user;
 
 @RequiredArgsConstructor
 @Repository
-public class UserQuerydsl {
+public class UserQueryRepository {
 
     private final JPAQueryFactory query;
 

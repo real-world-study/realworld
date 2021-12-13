@@ -1,14 +1,12 @@
 package com.study.realworld.domain.user.application;
 
 import com.study.realworld.domain.user.domain.persist.User;
-import com.study.realworld.domain.user.domain.persist.UserQuerydsl;
-import com.study.realworld.domain.user.domain.persist.UserRepository;
+import com.study.realworld.domain.user.domain.persist.UserQueryRepository;
 import com.study.realworld.domain.user.domain.vo.UserEmail;
 import com.study.realworld.domain.user.domain.vo.UserName;
 import com.study.realworld.domain.user.error.exception.EmailNotFoundException;
 import com.study.realworld.domain.user.error.exception.IdentityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,21 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserQueryService {
 
-    private final UserQuerydsl userQuerydsl;
+    private final UserQueryRepository userQueryRepository;
 
     public User findById(final Long userId) {
-        return userQuerydsl.findById(userId)
+        return userQueryRepository.findById(userId)
                 .orElseThrow(() -> new IdentityNotFoundException(userId));
     }
 
     public User findByMemberEmail(final UserEmail userEmail) {
-        return userQuerydsl
+        return userQueryRepository
                 .findByUserEmail(userEmail)
                 .orElseThrow(() -> new EmailNotFoundException(userEmail.userEmail()));
     }
 
     public User findByUserName(final UserName userName) {
-        return userQuerydsl
+        return userQueryRepository
                 .findByUserName(userName)
                 .orElseThrow(() -> new IllegalArgumentException());
     }

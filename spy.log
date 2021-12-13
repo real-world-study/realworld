@@ -10,3 +10,9 @@
 1638800958772|0|statement|connection 136|url jdbc:h2:mem:real-world|drop table if exists follow CASCADE |drop table if exists follow CASCADE 
 1638800958773|0|statement|connection 136|url jdbc:h2:mem:real-world|drop table if exists tag CASCADE |drop table if exists tag CASCADE 
 1638800958773|0|statement|connection 136|url jdbc:h2:mem:real-world|drop table if exists user CASCADE |drop table if exists user CASCADE 
+1639374713404|0|statement|connection 145|url jdbc:h2:mem:real-world|drop table if exists article CASCADE |drop table if exists article CASCADE 
+1639374713407|0|statement|connection 145|url jdbc:h2:mem:real-world|drop table if exists article_tag CASCADE |drop table if exists article_tag CASCADE 
+1639374713407|0|statement|connection 145|url jdbc:h2:mem:real-world|drop table if exists favorite CASCADE |drop table if exists favorite CASCADE 
+1639374713408|0|statement|connection 145|url jdbc:h2:mem:real-world|drop table if exists follow CASCADE |drop table if exists follow CASCADE 
+1639374713408|0|statement|connection 145|url jdbc:h2:mem:real-world|drop table if exists tag CASCADE |drop table if exists tag CASCADE 
+1639374713408|0|statement|connection 145|url jdbc:h2:mem:real-world|drop table if exists user CASCADE |drop table if exists user CASCADE 

@@ -43,7 +43,7 @@ public class UserCommandApi {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users")
-    public void delete(@Valid @AuthenticationPrincipal final Long userId) {
+    public void delete(@AuthenticationPrincipal final Long userId) {
         userCommandService.delete(userId);
     }
 }

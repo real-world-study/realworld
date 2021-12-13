@@ -52,7 +52,7 @@ public class UserCommandService {
 
     private void validateDuplicatedAndSameAsEmail(final Long userId, final UserEmail userEmail) {
         final User user = findUserById(userId);
-        if (!user.isSameAsUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
+        if (!user.isSameUserEmail(userEmail) && userRepository.existsByUserEmail(userEmail)) {
             throw new DuplicatedEmailException(userEmail.userEmail());
         }
     }
