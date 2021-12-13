@@ -17,9 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.util.List;
-
 import static com.study.realworld.domain.article.util.ArticleFixture.*;
+import static com.study.realworld.domain.tag.util.TagFixture.TAG_NAMES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -53,7 +52,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(saveResponse.articleTitle()).isEqualTo(ARTICLE_TITLE),
                 () -> assertThat(saveResponse.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
                 () -> assertThat(saveResponse.articleBody()).isEqualTo(ARTICLE_BODY),
-                () -> assertThat(saveResponse.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(saveResponse.tags()).isEqualTo(TAG_NAMES),
                 () -> assertThat(saveResponse.createdAt()).isNotNull(),
                 () -> assertThat(saveResponse.updatedAt()).isNotNull(),
                 () -> assertThat(saveResponse.favorited()).isEqualTo(false),
@@ -78,7 +77,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(saveResponse.articleTitle()).isEqualTo(ARTICLE_TITLE),
                 () -> assertThat(saveResponse.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
                 () -> assertThat(saveResponse.articleBody()).isEqualTo(ARTICLE_BODY),
-                () -> assertThat(articleInfo.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(articleInfo.tags()).isEqualTo(TAG_NAMES),
                 () -> assertThat(articleInfo.createdAt()).isNotNull(),
                 () -> assertThat(articleInfo.updatedAt()).isNotNull(),
                 () -> assertThat(articleInfo.favorited()).isEqualTo(false),
@@ -103,7 +102,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(saveResponse.articleTitle()).isEqualTo(ARTICLE_TITLE),
                 () -> assertThat(saveResponse.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
                 () -> assertThat(saveResponse.articleBody()).isEqualTo(ARTICLE_BODY),
-                () -> assertThat(articleInfo.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(articleInfo.tags()).isEqualTo(TAG_NAMES),
                 () -> assertThat(articleInfo.createdAt()).isNotNull(),
                 () -> assertThat(articleInfo.updatedAt()).isNotNull(),
                 () -> assertThat(articleInfo.favorited()).isEqualTo(false),
@@ -128,7 +127,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(updateResponse.articleTitle()).isEqualTo(OTHER_ARTICLE_TITLE),
                 () -> assertThat(updateResponse.articleDescription()).isEqualTo(OTHER_ARTICLE_DESCRIPTION),
                 () -> assertThat(updateResponse.articleBody()).isEqualTo(OTHER_ARTICLE_BODY),
-                () -> assertThat(updateResponse.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(updateResponse.tags()).isEqualTo(TAG_NAMES),
                 () -> assertThat(updateResponse.createdAt()).isNotNull(),
                 () -> assertThat(updateResponse.updatedAt()).isNotNull(),
                 () -> assertThat(updateResponse.favorited()).isEqualTo(false),
@@ -261,7 +260,7 @@ public class ArticleAcceptanceTest extends AcceptanceTest {
                 .articleTitle(ARTICLE_TITLE)
                 .articleBody(ARTICLE_BODY)
                 .articleDescription(ARTICLE_DESCRIPTION)
-                .tags(List.of("reactjs", "angularjs", "dragons"))
+                .tags(TAG_NAMES)
                 .build();
     }
 }

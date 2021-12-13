@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,7 @@ public class FavoriteInfo {
     private ArticleBody articleBody;
 
     @JsonProperty("tags")
-    private Set<TagName> tagNames;
+    private List<TagName> tagNames;
 
     @JsonProperty("createdAt")
     private Instant createdAt;
@@ -62,7 +63,7 @@ public class FavoriteInfo {
         final ArticleTitle articleTitle = article.articleTitle();
         final ArticleDescription articleDescription = article.articleDescription();
         final ArticleBody articleBody = article.articleBody();
-        final Set<TagName> tagNames = articleTagsToTagNames(article.articleTags());
+        final List<TagName> tagNames = articleTagsToTagNames(article.articleTags());
         final Instant createdAt = article.createdAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
         final Instant updatedAt = article.updatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
         final AuthorInfo authorInfo = AuthorInfo.from(article.author(), following);
@@ -71,11 +72,11 @@ public class FavoriteInfo {
                 articleBody, tagNames, createdAt, updatedAt, true, favoritesCount, authorInfo);
     }
 
-    private static Set<TagName> articleTagsToTagNames(final ArticleTags articleTags) {
+    private static List<TagName> articleTagsToTagNames(final ArticleTags articleTags) {
         return articleTags.articleTags().stream()
                 .map(ArticleTag::tag)
                 .map(Tag::tagName)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public ArticleSlug articleSlug() {
@@ -94,7 +95,7 @@ public class FavoriteInfo {
         return articleBody;
     }
 
-    public Set<TagName> tagNames() {
+    public List<TagName> tagNames() {
         return tagNames;
     }
 

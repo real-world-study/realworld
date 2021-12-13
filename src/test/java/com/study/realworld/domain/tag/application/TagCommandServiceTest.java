@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,27 +30,16 @@ class TagCommandServiceTest {
     private TagCommandService tagCommandService;
 
     @Test
-    void 올바른_데이터_입력시_저장한다() {
+    void
+
+    올바른_데이터_입력시_저장한다() {
         final TagName tagName = TagName.from("tagName");
         final Tag expected = new Tag(tagName);
-        final TagSave.Request request = TagSave.Request.from(tagName);
 
-        willReturn(false).given(tagRepository).existsByTagName(any());
+        willReturn(Optional.empty()).given(tagRepository).findByTagName(any());
         willReturn(expected).given(tagRepository).save(any());
 
-        final Tag actual = tagCommandService.save(request);
+        final Tag actual = tagCommandService.save(tagName);
         assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 올바르지_않은_데이터_입력시_저장되지_않는다() {
-        final TagName tagName = TagName.from("tagName");
-        final TagSave.Request request = TagSave.Request.from(tagName);
-
-        willReturn(true).given(tagRepository).existsByTagName(any());
-
-        assertThatThrownBy(() -> tagCommandService.save(request))
-                .isExactlyInstanceOf(DuplicatedTagNameException.class)
-                .hasMessage(String.format("태그 이름 : [ %s ] 가 이미 존재합니다.", tagName.tagName()));
     }
 }

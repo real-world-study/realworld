@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Set;
 
+import static com.study.realworld.domain.tag.util.TagFixture.TAG_NAMES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -58,7 +59,7 @@ public class FavoriteAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(favoriteResponse.articleDescription()).isEqualTo(articleSaveResponse.articleDescription()),
                 () -> assertThat(favoriteResponse.favorited()).isTrue(),
                 () -> assertThat(favoriteResponse.favoritesCount()).isEqualTo(1L),
-                () -> assertThat(favoriteResponse.tagNames()).isEqualTo(Set.of()),
+                () -> assertThat(favoriteResponse.tagNames()).isEqualTo(TAG_NAMES),
                 () -> assertThat(favoriteResponse.createdAt()).isNotNull(),
                 () -> assertThat(favoriteResponse.updatedAt()).isNotNull(),
                 () -> assertThat(favoriteResponse.authorInfo().userName()).isEqualTo(articleSaveResponse.author().userName()),
@@ -85,7 +86,7 @@ public class FavoriteAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(unFavoriteResponse.articleDescription()).isEqualTo(articleSaveResponse.articleDescription()),
                 () -> assertThat(unFavoriteResponse.favorited()).isFalse(),
                 () -> assertThat(unFavoriteResponse.favoritesCount()).isEqualTo(0),
-                () -> assertThat(unFavoriteResponse.tagNames()).isEqualTo(Set.of()),
+                () -> assertThat(unFavoriteResponse.tagNames()).isEqualTo(TAG_NAMES),
                 () -> assertThat(unFavoriteResponse.createdAt()).isNotNull(),
                 () -> assertThat(unFavoriteResponse.updatedAt()).isNotNull(),
                 () -> assertThat(unFavoriteResponse.authorInfo().userName()).isEqualTo(articleSaveResponse.author().userName()),

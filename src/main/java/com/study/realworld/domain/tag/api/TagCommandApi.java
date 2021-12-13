@@ -18,7 +18,7 @@ public class TagCommandApi {
 
     @PostMapping("/tags")
     public ResponseEntity<TagSave.Response> save(@Valid @RequestBody final TagSave.Request request) {
-        final TagSave.Response response = TagSave.Response.from(tagCommandService.save(request));
+        final TagSave.Response response = TagSave.Response.from(tagCommandService.save(request.tagName()));
         return ResponseEntity.ok().body(response);
     }
 }

@@ -21,8 +21,8 @@ public class TagSave {
             return new Request(tagName);
         }
 
-        public Tag toEntity() {
-            return new Tag(tagName);
+        public TagName tagName() {
+            return tagName;
         }
     }
 

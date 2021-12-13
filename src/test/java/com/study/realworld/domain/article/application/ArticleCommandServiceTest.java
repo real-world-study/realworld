@@ -6,6 +6,7 @@ import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.article.dto.ArticleUpdate;
 import com.study.realworld.domain.article.error.exception.AuthorMissMatchException;
 import com.study.realworld.domain.article.strategy.SlugStrategy;
+import com.study.realworld.domain.tag.application.TagCommandService;
 import com.study.realworld.domain.user.application.UserQueryService;
 import com.study.realworld.domain.user.domain.persist.User;
 import org.junit.jupiter.api.DisplayName;
@@ -17,10 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.study.realworld.domain.article.util.ArticleFixture.*;
+import static com.study.realworld.domain.article.util.ArticleTagFixture.createArticleTag;
+import static com.study.realworld.domain.tag.util.TagFixture.*;
 import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,6 +44,9 @@ class ArticleCommandServiceTest {
     @Mock
     private UserQueryService userQueryService;
 
+    @Mock
+    private TagCommandService tagCommandService;
+
     @InjectMocks
     private ArticleCommandService articleCommandService;
 
@@ -50,11 +56,19 @@ class ArticleCommandServiceTest {
         final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
         final ArticleSave.Request request = createArticleSaveRequest(ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION);
 
+        article.addArticleTags(createTags(TAG_NAME_REACT_JS, TAG_NAME_ANGULAR_JS, TAG_NAME_DRAGONS).stream()
+                .map(it -> createArticleTag(article, it))
+                .collect(Collectors.toList()));
         ReflectionTestUtils.setField(article, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
 
         willReturn(article).given(articleRepository).save(any());
         willReturn(author).given(userQueryService).findById(any());
+        willReturn(createTag(TAG_NAME_REACT_JS))
+                .willReturn(createTag(TAG_NAME_ANGULAR_JS))
+                .willReturn(createTag(TAG_NAME_DRAGONS))
+                .given(tagCommandService).save(any());
+
         willReturn(article.articleSlug().articleSlug()).given(slugStrategy).mapToSlug(any());
 
         final ArticleSave.Response response = ArticleSave.Response.from(articleCommandService.save(1L, request));
@@ -67,7 +81,7 @@ class ArticleCommandServiceTest {
                 () -> assertThat(response.updatedAt()).isNotNull(),
                 () -> assertThat(response.favorited()).isFalse(),
                 () -> assertThat(response.favoritesCount()).isZero(),
-                () -> assertThat(response.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(response.tags()).isEqualTo(TAG_NAMES),
                 () -> assertThat(response.author().userName()).isEqualTo(author.userName()),
                 () -> assertThat(response.author().userBio()).isEqualTo(author.userBio()),
                 () -> assertThat(response.author().userImage()).isEqualTo(author.userImage()),
@@ -100,7 +114,7 @@ class ArticleCommandServiceTest {
                 () -> assertThat(response.updatedAt()).isNotNull(),
                 () -> assertThat(response.favorited()).isFalse(),
                 () -> assertThat(response.favoritesCount()).isZero(),
-                () -> assertThat(response.tags()).isEqualTo(List.of("reactjs", "angularjs", "dragons")),
+                () -> assertThat(response.tags()).isEqualTo(TAG_NAMES),
                 () -> assertThat(response.author().userName()).isEqualTo(author.userName()),
                 () -> assertThat(response.author().userBio()).isEqualTo(author.userBio()),
                 () -> assertThat(response.author().userImage()).isEqualTo(author.userImage()),

@@ -6,6 +6,7 @@ import com.study.realworld.domain.article.domain.vo.ArticleBody;
 import com.study.realworld.domain.article.domain.vo.ArticleDescription;
 import com.study.realworld.domain.article.domain.vo.ArticleSlug;
 import com.study.realworld.domain.article.domain.vo.ArticleTitle;
+import com.study.realworld.domain.tag.domain.vo.TagName;
 import com.study.realworld.domain.user.domain.persist.User;
 import com.study.realworld.domain.user.domain.vo.UserBio;
 import com.study.realworld.domain.user.domain.vo.UserImage;
@@ -41,7 +42,7 @@ public class ArticleInfo {
     private Instant updatedAt;
 
     @JsonProperty("tagList")
-    private List<String> tags;
+    private List<TagName> tags;
 
     @JsonProperty("favorited")
     private boolean favorited;
@@ -63,7 +64,7 @@ public class ArticleInfo {
 
         return new ArticleInfo(
                 articleSlug, articleTitle, articleDescription, articleBody,
-                createdAt, updatedAt, List.of("reactjs", "angularjs", "dragons"),
+                createdAt, updatedAt, List.of(TagName.from("reactjs"), TagName.from("angularjs"), TagName.from("dragons")),
                 false, 0, authorDto
         );
     }
@@ -84,7 +85,7 @@ public class ArticleInfo {
         return articleBody;
     }
 
-    public List<String> tags() {
+    public List<TagName> tags() {
         return tags;
     }
 

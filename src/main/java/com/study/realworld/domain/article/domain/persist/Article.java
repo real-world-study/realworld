@@ -11,6 +11,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Where(clause = "activated = true")
@@ -48,7 +49,7 @@ public class Article extends BaseTimeEntity {
     @Builder
     public Article(final ArticleSlug articleSlug, final ArticleTitle articleTitle,
                    final ArticleBody articleBody, final ArticleDescription articleDescription,
-                   final User author) {
+                   final ArticleTags articleTags, final User author) {
         this.articleSlug = articleSlug;
         this.articleTitle = articleTitle;
         this.articleBody = articleBody;
@@ -119,6 +120,11 @@ public class Article extends BaseTimeEntity {
         return this;
     }
 
+    public Article addArticleTags(final List<ArticleTag> articleTags) {
+        this.articleTags.addArticleTags(articleTags);
+        return this;
+    }
+
     public void delete() {
         activated = false;
         recordDeletedTime(LocalDateTime.now());
@@ -136,4 +142,5 @@ public class Article extends BaseTimeEntity {
     public int hashCode() {
         return Objects.hash(articleId());
     }
+
 }

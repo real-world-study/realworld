@@ -20,8 +20,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.study.realworld.domain.article.util.ArticleFixture.*;
+import static com.study.realworld.domain.article.util.ArticleTagFixture.createArticleTag;
+import static com.study.realworld.domain.tag.util.TagFixture.*;
 import static com.study.realworld.domain.user.util.UserFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -54,6 +57,9 @@ class FavoriteCommandServiceTest {
         final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
 
+        article.addArticleTags(createTags(TAG_NAME_REACT_JS, TAG_NAME_ANGULAR_JS, TAG_NAME_DRAGONS).stream()
+                .map(it -> createArticleTag(article, it))
+                .collect(Collectors.toList()));
         ReflectionTestUtils.setField(article, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
 
@@ -72,7 +78,7 @@ class FavoriteCommandServiceTest {
                 () -> assertThat(favoriteInfo.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
                 () -> assertThat(favoriteInfo.favorited()).isTrue(),
                 () -> assertThat(favoriteInfo.favoritesCount()).isEqualTo(1),
-                () -> assertThat(favoriteInfo.tagNames()).isEqualTo(Set.of()),
+                () -> assertThat(favoriteInfo.tagNames()).isEqualTo(TAG_NAMES),
                 () -> assertThat(favoriteInfo.authorInfo().userName()).isEqualTo(USER_NAME),
                 () -> assertThat(favoriteInfo.authorInfo().userBio()).isEqualTo(USER_BIO),
                 () -> assertThat(favoriteInfo.authorInfo().userImage()).isEqualTo(USER_IMAGE),
@@ -86,6 +92,9 @@ class FavoriteCommandServiceTest {
         final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
 
+        article.addArticleTags(createTags(TAG_NAME_REACT_JS, TAG_NAME_ANGULAR_JS, TAG_NAME_DRAGONS).stream()
+                .map(it -> createArticleTag(article, it))
+                .collect(Collectors.toList()));
         ReflectionTestUtils.setField(article, "createdAt", LocalDateTime.now());
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
 
@@ -104,7 +113,7 @@ class FavoriteCommandServiceTest {
                 () -> assertThat(unFavoriteInfo.articleDescription()).isEqualTo(ARTICLE_DESCRIPTION),
                 () -> assertThat(unFavoriteInfo.favorited()).isFalse(),
                 () -> assertThat(unFavoriteInfo.favoritesCount()).isEqualTo(0),
-                () -> assertThat(unFavoriteInfo.tagNames()).isEqualTo(Set.of()),
+                () -> assertThat(unFavoriteInfo.tagNames()).isEqualTo(TAG_NAMES),
                 () -> assertThat(unFavoriteInfo.authorInfo().userName()).isEqualTo(USER_NAME),
                 () -> assertThat(unFavoriteInfo.authorInfo().userBio()).isEqualTo(USER_BIO),
                 () -> assertThat(unFavoriteInfo.authorInfo().userImage()).isEqualTo(USER_IMAGE),

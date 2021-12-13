@@ -1,12 +1,10 @@
 package com.study.realworld.domain.article.util;
 
 import com.study.realworld.domain.article.domain.persist.Article;
-import com.study.realworld.domain.article.domain.vo.ArticleBody;
-import com.study.realworld.domain.article.domain.vo.ArticleDescription;
-import com.study.realworld.domain.article.domain.vo.ArticleSlug;
-import com.study.realworld.domain.article.domain.vo.ArticleTitle;
+import com.study.realworld.domain.article.domain.vo.*;
 import com.study.realworld.domain.article.dto.ArticleSave;
 import com.study.realworld.domain.article.dto.ArticleUpdate;
+import com.study.realworld.domain.tag.domain.vo.TagName;
 import com.study.realworld.domain.user.domain.persist.User;
 
 import java.util.List;
@@ -42,7 +40,7 @@ public class ArticleFixture {
                 .articleTitle(articleTitle)
                 .articleBody(articleBody)
                 .articleDescription(articleDescription)
-                .tags(List.of("reactjs", "angularjs", "dragons"))
+                .tags(List.of(TagName.from("reactjs"), TagName.from("angularjs"), TagName.from("dragons")))
                 .build();
     }
 

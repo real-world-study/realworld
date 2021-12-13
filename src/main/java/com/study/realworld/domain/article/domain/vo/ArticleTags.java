@@ -2,27 +2,28 @@ package com.study.realworld.domain.article.domain.vo;
 
 import com.study.realworld.domain.article.domain.persist.ArticleTag;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Embeddable
 public class ArticleTags {
 
-    @OneToMany(mappedBy = "article")
-    private Set<ArticleTag> articleTags;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.PERSIST)
+    private List<ArticleTag> articleTags;
 
     public ArticleTags() {
-        this.articleTags = new HashSet<>();
+        this.articleTags = new ArrayList<>();
     }
 
-    public void addTag(final ArticleTag articleTag) {
-        articleTags.add(articleTag);
+    public List<ArticleTag> articleTags() {
+        return Collections.unmodifiableList(articleTags);
     }
 
-    public Set<ArticleTag> articleTags() {
-        return Collections.unmodifiableSet(articleTags);
+    public void addArticleTags(final List<ArticleTag> articleTags) {
+        this.articleTags.addAll(articleTags);
     }
 }
