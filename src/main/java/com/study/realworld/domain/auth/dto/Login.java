@@ -40,7 +40,6 @@ public final class Login {
 
     }
 
-
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PACKAGE)
     @JsonTypeName("user")
