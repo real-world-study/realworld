@@ -52,7 +52,9 @@ public class ArticleUpdate {
             return Optional.ofNullable(articleTitle);
         }
 
-        public Optional<ArticleDescription> optionalArticleDescription() { return Optional.ofNullable(articleDescription); }
+        public Optional<ArticleDescription> optionalArticleDescription() {
+            return Optional.ofNullable(articleDescription);
+        }
 
         public Optional<ArticleBody> optionalArticleBody() {
             return Optional.ofNullable(articleBody);
@@ -98,13 +100,14 @@ public class ArticleUpdate {
             final ArticleTitle articleTitle = article.articleTitle();
             final ArticleDescription articleDescription = article.articleDescription();
             final ArticleBody articleBody = article.articleBody();
+            final List<TagName> tags = article.articleTags().tagNames();
             final Instant createdAt = article.createdAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
             final Instant updatedAt = article.updatedAt().atZone(ZoneId.of("Asia/Seoul")).toInstant();
             final AuthorDto authorDto = AuthorDto.from(article.author());
 
             return new Response(
                     articleSlug, articleTitle, articleDescription, articleBody,
-                    createdAt, updatedAt, List.of(TagName.from("reactjs"), TagName.from("angularjs"), TagName.from("dragons")),
+                    createdAt, updatedAt, tags,
                     false, 0, authorDto
             );
         }

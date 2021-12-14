@@ -14,6 +14,11 @@ spring:
       minimum-idle: 1
       maximum-pool-size: 5
       pool-name: H2_DB
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        format_sql: true
   h2:
     console:
       enabled: true

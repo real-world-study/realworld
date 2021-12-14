@@ -118,6 +118,54 @@ Content-Type: application/json
   }
 }
 
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user" :{
+    "email": "jimmy@jake.jake",
+    "password": "jimmy"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
+%}
+
+### FAVORITE
+POST http://localhost:8080/api/articles/did-you-train-your-dragon/favorite
+Authorization: {{Authorization}}
+
+### ARTICLE_FIND_FILTER_AND_PAGE
+GET http://localhost:8080/api/articles
+Authorization: {{Authorization}}
+
+### UNFAVORITE
+DELETE http://localhost:8080/api/articles/did-you-train-your-dragon/favorite
+Authorization: {{Authorization}}
+
+### ARTICLE_FIND_FILTER_AND_PAGE
+GET http://localhost:8080/api/articles
+Authorization: {{Authorization}}
+
+### UnFollow
+DELETE localhost:8080/api/profiles/woojiji/follow
+Authorization: {{Authorization}}
+
+### ARTICLE_FIND_FILTER_AND_PAGE
+GET http://localhost:8080/api/articles
+Authorization: {{Authorization}}
+
+### Follow
+POST localhost:8080/api/profiles/woojiji/follow
+Authorization: {{Authorization}}
+
+### ARTICLE_FIND_FILTER_AND_PAGE
+GET http://localhost:8080/api/articles
+Authorization: {{Authorization}}
+
 ### ARTICLE_DELTE
 DELETE http://localhost:8080/api/articles/did-you-train-your-dragon
 Authorization: {{Authorization}}

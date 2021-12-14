@@ -21,7 +21,7 @@ import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ArticleInfo {
+public class ArticleListInfo {
 
     @JsonProperty("slug")
     private ArticleSlug articleSlug;
@@ -48,12 +48,12 @@ public class ArticleInfo {
     private boolean favorited;
 
     @JsonProperty("favoritesCount")
-    private long favoritesCount = 0;
+    private long favoritesCount;
 
     @JsonProperty("author")
-    private ArticleInfo.AuthorDto authorDto;
+    private ArticleListInfo.AuthorDto authorDto;
 
-    public ArticleInfo(final Article article, final boolean favorited, final long favoritesCount, final Boolean following) {
+    public ArticleListInfo(final Article article, final boolean favorited, final long favoritesCount, final Boolean following) {
         this.articleSlug = article.articleSlug();
         this.articleTitle = article.articleTitle();
         this.articleDescription = article.articleDescription();
@@ -102,7 +102,7 @@ public class ArticleInfo {
         return favoritesCount;
     }
 
-    public ArticleInfo.AuthorDto author() {
+    public ArticleListInfo.AuthorDto author() {
         return authorDto;
     }
 
@@ -122,8 +122,8 @@ public class ArticleInfo {
         @JsonProperty("following")
         private boolean following;
 
-        public static ArticleInfo.AuthorDto from(final User author, final Boolean following) {
-            return new ArticleInfo.AuthorDto(author.userName(), author.userBio(), author.userImage(), following);
+        public static ArticleListInfo.AuthorDto from(final User author, final Boolean following) {
+            return new ArticleListInfo.AuthorDto(author.userName(), author.userBio(), author.userImage(), following);
         }
 
         public UserName userName() {

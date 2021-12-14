@@ -19,7 +19,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.study.realworld.domain.article.util.ArticleFixture.*;
@@ -64,7 +63,7 @@ class FavoriteCommandServiceTest {
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
 
         willReturn(user).given(userQueryService).findById(any());
-        willReturn(article).given(articleQueryService).findByArticleSlug(any());
+        willReturn(article).given(articleQueryService).findArticleByArticleSlug(any());
         willReturn(true).given(followQueryService).existsByFolloweeAndFollower(article.author(), user);
         willReturn(Optional.empty()).given(favoriteRepository).findByUserAndArticle(any(), any());
         willReturn(createFavorite(user, article)).given(favoriteRepository).save(any());
@@ -99,7 +98,7 @@ class FavoriteCommandServiceTest {
         ReflectionTestUtils.setField(article, "updatedAt", LocalDateTime.now());
 
         willReturn(user).given(userQueryService).findById(any());
-        willReturn(article).given(articleQueryService).findByArticleSlug(any());
+        willReturn(article).given(articleQueryService).findArticleByArticleSlug(any());
         willReturn(true).given(followQueryService).existsByFolloweeAndFollower(article.author(), user);
         willReturn(Optional.ofNullable(createFavorite(user, article))).given(favoriteRepository).findByUserAndArticle(any(), any());
         willDoNothing().given(favoriteRepository).delete(any());

@@ -26,7 +26,7 @@ public class FavoriteCommandService {
 
     public FavoriteInfo favorite(final Long userId, final ArticleSlug articleSlug) {
         final User user = userQueryService.findById(userId);
-        final Article article = articleQueryService.findByArticleSlug(articleSlug);
+        final Article article = articleQueryService.findArticleByArticleSlug(articleSlug);
         favoriteRepository.findByUserAndArticle(user, article)
                 .orElseGet(() -> favoriteRepository.save(createFavorite(user, article)));
         final long favoriteCount = favoriteRepository.countByArticle(article);
@@ -36,7 +36,7 @@ public class FavoriteCommandService {
 
     public UnFavoriteInfo unFavorite(final long userId, final ArticleSlug articleSlug) {
         final User user = userQueryService.findById(userId);
-        final Article article = articleQueryService.findByArticleSlug(articleSlug);
+        final Article article = articleQueryService.findArticleByArticleSlug(articleSlug);
         favoriteRepository.findByUserAndArticle(user, article).ifPresent(favoriteRepository::delete);
         final long favoriteCount = favoriteRepository.countByArticle(article);
         final boolean following = followQueryService.existsByFolloweeAndFollower(article.author(), user);
