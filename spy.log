@@ -1,0 +1,6 @@
+1640171498994|0|statement|connection 145|url jdbc:h2:mem:real-world|     drop table if exists article CASCADE |     drop table if exists article CASCADE 
+1640171498994|0|statement|connection 145|url jdbc:h2:mem:real-world|     drop table if exists article_tag CASCADE |     drop table if exists article_tag CASCADE 
+1640171498994|0|statement|connection 145|url jdbc:h2:mem:real-world|     drop table if exists favorite CASCADE |     drop table if exists favorite CASCADE 
+1640171498995|0|statement|connection 145|url jdbc:h2:mem:real-world|     drop table if exists follow CASCADE |     drop table if exists follow CASCADE 
+1640171498995|0|statement|connection 145|url jdbc:h2:mem:real-world|     drop table if exists tag CASCADE |     drop table if exists tag CASCADE 
+1640171498995|0|statement|connection 145|url jdbc:h2:mem:real-world|     drop table if exists user CASCADE |     drop table if exists user CASCADE 

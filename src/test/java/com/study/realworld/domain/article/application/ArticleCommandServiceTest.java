@@ -94,6 +94,9 @@ class ArticleCommandServiceTest {
         final User author = createUser(USER_EMAIL, USER_NAME, USER_PASSWORD, USER_BIO, USER_IMAGE);
         final Article article = createArticle(ARTICLE_SLUG, ARTICLE_TITLE, ARTICLE_BODY, ARTICLE_DESCRIPTION, author);
         final ArticleUpdate.Request request = createArticleUpdateRequest(OTHER_ARTICLE_TITLE, OTHER_ARTICLE_BODY, OTHER_ARTICLE_DESCRIPTION);
+        article.addArticleTags(createTags(TAG_NAME_REACT_JS, TAG_NAME_ANGULAR_JS, TAG_NAME_DRAGONS).stream()
+                .map(it -> createArticleTag(article, it))
+                .collect(Collectors.toList()));
 
         ReflectionTestUtils.setField(author, "userId", 1L);
         ReflectionTestUtils.setField(article, "articleId", 1L);
