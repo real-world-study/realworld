@@ -1,9 +1,9 @@
-### JOIN
+### JOIN, 삭제한 데이터에 대해서 배치나 스케줄링 써서 삭제하는 작업해야겠다.
 POST localhost:8080/api/users
 Content-Type: application/json
 
 {
-  "user":{
+  "user" :{
     "username": "Jacob",
     "email": "jake@jake.jake",
     "password": "jakejake"
@@ -15,14 +15,14 @@ POST localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-  "user":{
+  "user" :{
     "email": "jake@jake.jake",
     "password": "jakejake"
   }
 }
 
 > {%
- client.global.set("Authorization", response.body.user.token.accessToken);
+ client.global.set("Authorization", response.body.user.token);
  client.log("생성된 Authorization : " + client.global.get("Authorization"));
 %}
 
@@ -39,26 +39,6 @@ Authorization: {{Authorization}}
   }
 }
 
-### FAIL_UPDATE
-PUT localhost:8080/api/users
-Content-Type: application/json
-Authorization: testestestsetestestestest
-
-{
-  "user":{
-    "email": "jake@jake2.jake",
-    "bio": "I like to skateboard",
-    "image": "https://i.stack.imgur.com/xHWG8.jpg"
-  }
-}
-
-### FAIL_LOGIN
-POST localhost:8080/api/users/login
-Content-Type: application/json
-
-{
-  "user":{
-    "email": "jake2@jake.jake",
-    "password": "jakejake"
-  }
-}
+### DELETE
+DELETE localhost:8080/api/users
+Authorization: {{Authorization}}

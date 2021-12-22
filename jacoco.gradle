@@ -1,0 +1,53 @@
+test {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled true
+    }
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    def QEntities = []
+
+    for (qPattern in '*.QA'..'*.QZ') {
+        QEntities.add(qPattern + '*')
+    }
+
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0
+            }
+
+            excludes = [
+                // '*.test.*', Q클래스 제거
+                'Q*.class'
+            ]
+
+            excludes = [
+                    'com/study/realworld/domain/**',
+            ] + QEntities
+        }
+        rule {
+            enabled = true;
+            element = 'BUNDLE'
+
+            limit {
+                counter = 'CLASS'
+                value = 'COVEREDRATIO'
+                minimum = 0
+            }
+        }
+    }
+}

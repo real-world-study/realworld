@@ -28,11 +28,11 @@ Make sure the right content type like `Content-Type: application/json; charset=u
 ```JSON
 {
   "user": {
-    "email": "jake@jake.jake",
+    "userEmail": "jake@jake.jake",
     "token": "jwt.token.here",
     "username": "jake",
-    "bio": "I work at statefarm",
-    "image": null
+    "userBio": "I work at statefarm",
+    "userImage": null
   }
 }
 ```
@@ -43,8 +43,8 @@ Make sure the right content type like `Content-Type: application/json; charset=u
 {
   "profile": {
     "username": "jake",
-    "bio": "I work at statefarm",
-    "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+    "userBio": "I work at statefarm",
+    "userImage": "https://static.productionready.io/images/smiley-cyrus.jpg",
     "following": false
   }
 }
@@ -66,8 +66,8 @@ Make sure the right content type like `Content-Type: application/json; charset=u
     "favoritesCount": 0,
     "author": {
       "username": "jake",
-      "bio": "I work at statefarm",
-      "image": "https://i.stack.imgur.com/xHWG8.jpg",
+      "userBio": "I work at statefarm",
+      "userImage": "https://i.stack.imgur.com/xHWG8.jpg",
       "following": false
     }
   }
@@ -90,8 +90,8 @@ Make sure the right content type like `Content-Type: application/json; charset=u
     "favoritesCount": 0,
     "author": {
       "username": "jake",
-      "bio": "I work at statefarm",
-      "image": "https://i.stack.imgur.com/xHWG8.jpg",
+      "userBio": "I work at statefarm",
+      "userImage": "https://i.stack.imgur.com/xHWG8.jpg",
       "following": false
     }
   }, {
@@ -106,8 +106,8 @@ Make sure the right content type like `Content-Type: application/json; charset=u
     "favoritesCount": 0,
     "author": {
       "username": "jake",
-      "bio": "I work at statefarm",
-      "image": "https://i.stack.imgur.com/xHWG8.jpg",
+      "userBio": "I work at statefarm",
+      "userImage": "https://i.stack.imgur.com/xHWG8.jpg",
       "following": false
     }
   }],
@@ -126,8 +126,8 @@ Make sure the right content type like `Content-Type: application/json; charset=u
     "body": "It takes a Jacobian",
     "author": {
       "username": "jake",
-      "bio": "I work at statefarm",
-      "image": "https://i.stack.imgur.com/xHWG8.jpg",
+      "userBio": "I work at statefarm",
+      "userImage": "https://i.stack.imgur.com/xHWG8.jpg",
       "following": false
     }
   }
@@ -145,8 +145,8 @@ Make sure the right content type like `Content-Type: application/json; charset=u
     "body": "It takes a Jacobian",
     "author": {
       "username": "jake",
-      "bio": "I work at statefarm",
-      "image": "https://i.stack.imgur.com/xHWG8.jpg",
+      "userBio": "I work at statefarm",
+      "userImage": "https://i.stack.imgur.com/xHWG8.jpg",
       "following": false
     }
   }]
@@ -190,26 +190,26 @@ If a request fails any validations, expect a 422 and errors in the following for
 
 ### Authentication:
 
-`POST /api/users/login`
+`POST /api/members/login`
 
 Example request body:
 
 ```JSON
 {
   "user":{
-    "email": "jake@jake.jake",
-    "password": "jakejake"
+    "userEmail": "jake@jake.jake",
+    "userPassword": "jakejake"
   }
 }
 ```
 
-No authentication required, returns a [User](#users-for-authentication)
+No authentication required, returns a [User](#members-for-authentication)
 
-Required fields: `email`, `password`
+Required fields: `userEmail`, `userPassword`
 
 ### Registration:
 
-`POST /api/users`
+`POST /api/members`
 
 Example request body:
 
@@ -217,21 +217,21 @@ Example request body:
 {
   "user":{
     "username": "Jacob",
-    "email": "jake@jake.jake",
-    "password": "jakejake"
+    "userEmail": "jake@jake.jake",
+    "userPassword": "jakejake"
   }
 }
 ```
 
-No authentication required, returns a [User](#users-for-authentication)
+No authentication required, returns a [User](#members-for-authentication)
 
-Required fields: `email`, `username`, `password`
+Required fields: `userEmail`, `username`, `userPassword`
 
 ### Get Current User
 
 `GET /api/user`
 
-Authentication required, returns a [User](#users-for-authentication) that's the current user
+Authentication required, returns a [User](#members-for-authentication) that's the current user
 
 ### Update User
 
@@ -242,16 +242,16 @@ Example request body:
 ```JSON
 {
   "user":{
-    "email": "jake@jake.jake",
-    "bio": "I like to skateboard",
-    "image": "https://i.stack.imgur.com/xHWG8.jpg"
+    "userEmail": "jake@jake.jake",
+    "userBio": "I like to skateboard",
+    "userImage": "https://i.stack.imgur.com/xHWG8.jpg"
   }
 }
 ```
 
-Authentication required, returns the [User](#users-for-authentication)
+Authentication required, returns the [User](#members-for-authentication)
 
-Accepted fields: `email`, `username`, `password`, `image`, `bio`
+Accepted fields: `userEmail`, `username`, `userPassword`, `userImage`, `userBio`
 
 ### Get Profile
 
@@ -312,7 +312,7 @@ Authentication optional, will return [multiple articles](#multiple-articles), or
 
 Can also take `limit` and `offset` query parameters like [List Articles](#list-articles)
 
-Authentication required, will return [multiple articles](#multiple-articles) created by followed users, ordered by most
+Authentication required, will return [multiple articles](#multiple-articles) created by followed members, ordered by most
 recent first.
 
 ### Get Article
@@ -379,7 +379,7 @@ Example request body:
 ```JSON
 {
   "comment": {
-    "body": "His name was my name too."
+    "body": "His userName was my userName too."
   }
 }
 ```

@@ -1,0 +1,55 @@
+### JOIN
+POST localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "user" :{
+    "username": "wooji",
+    "email": "wooji@jake.jake",
+    "password": "woojiwooji"
+  }
+}
+
+### JOIN2
+POST localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "user" :{
+    "username": "ori",
+    "email": "ori@jake.jake",
+    "password": "oriori"
+  }
+}
+
+### LOGIN
+POST localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "user" :{
+    "email": "ori@jake.jake",
+    "password": "oriori"
+  }
+}
+
+> {%
+ client.global.set("Authorization", response.body.user.token);
+ client.log("생성된 Authorization : " + client.global.get("Authorization"));
+%}
+
+### PROFILE
+GET localhost:8080/api/profiles/wooji
+Authorization: {{Authorization}}
+
+### PROFILE
+GET localhost:8080/api/profiles/querydsl/wooji
+Authorization: {{Authorization}}
+
+### Follow
+POST localhost:8080/api/profiles/wooji/follow
+Authorization: {{Authorization}}
+
+### UnFollow
+DELETE localhost:8080/api/profiles/wooji/follow
+Authorization: {{Authorization}}

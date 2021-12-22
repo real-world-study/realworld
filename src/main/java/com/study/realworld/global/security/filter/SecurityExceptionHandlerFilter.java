@@ -37,5 +37,4 @@ public class SecurityExceptionHandlerFilter extends OncePerRequestFilter {
             response.getWriter().write(responseJson);
         }
     }
-
 }

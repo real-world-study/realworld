@@ -7,5 +7,4 @@ public final class PasswordMissMatchException extends UserBusinessException {
     public PasswordMissMatchException() {
         super(MESSAGE);
     }
-
 }
